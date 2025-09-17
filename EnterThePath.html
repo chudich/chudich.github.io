@@ -20,7 +20,7 @@
 
     /* Banner */
     header {
-      background: #4D807A; /* màu pha xanh lá & tím nho */
+      background: #4D807A;
       padding: 15px 25px;
       display: flex;
       align-items: center;
@@ -34,8 +34,8 @@
       position: absolute;
       left: 20px;
       padding: 12px 20px;
-      background: #6C9E91;   /* xanh ngọc hài hòa với banner */
-      color: #fff;
+      background: #6C9E91;
+      color: #e74c3c; /* đỏ nhạt */
       font-weight: bold;
       font-size: 16px;
       line-height: 1.4;
@@ -56,16 +56,17 @@
     }
 
     header h1 {
-      color: #F4E1B9; /* vàng ngà sang trọng */
+      color: #F4E1B9;
       font-size: 32px;
       font-weight: 700;
       text-transform: uppercase;
       text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+      margin-left: 80px; /* dịch chữ sang phải để tránh bị che */
     }
 
     /* Section button với background image */
     .button-section {
-      background: url("https://chudich.github.io/bg_enter.jpeg") no-repeat center center;
+      background: url("https://chudich.github.io/bg_enter") no-repeat center center;
       background-size: cover;
       background-attachment: fixed;
       padding: 60px 20px;
@@ -124,6 +125,7 @@
     @media (max-width: 768px) {
       header h1 {
         font-size: 24px;
+        margin-left: 60px; /* giảm dịch khi màn nhỏ */
       }
       .home-btn {
         font-size: 14px;
