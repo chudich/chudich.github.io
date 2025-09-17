@@ -18,12 +18,36 @@
       color: #6C3483;
     }
 
-    /* Banner giữ nguyên */
+    /* Banner */
     header {
       background: #4D807A; /* màu pha xanh lá & tím nho */
-      padding: 20px 0;
-      text-align: center;
+      padding: 15px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    /* Menu Trang Chủ */
+    .home-btn {
+      position: absolute;
+      left: 20px;
+      padding: 8px 16px;
+      background: #6C9E91;   /* xanh ngọc hài hòa với banner */
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 6px;
+      border: 2px solid #3d5c54;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .home-btn:hover {
+      background: #5b877c;
+      transform: translateY(-2px);
     }
 
     header h1 {
@@ -36,14 +60,13 @@
 
     /* Section button với background image */
     .button-section {
-      background: url("https://chudich.github.io/bg_enter.jpeg") no-repeat center center;
-      background-size: cover;      /* phủ kín màn hình */
-      background-attachment: fixed; /* tạo cảm giác parallax nhẹ trên PC */
+      background: url("https://chudich.github.io/bg_enter") no-repeat center center;
+      background-size: cover;
+      background-attachment: fixed;
       padding: 60px 20px;
       position: relative;
     }
 
-    /* Overlay mờ để chữ & button nổi bật */
     .button-section::before {
       content: "";
       position: absolute;
@@ -66,7 +89,7 @@
     .btn {
       display: block;
       padding: 18px;
-      background: #c0392b; /* đỏ Enter The Path */
+      background: #c0392b;
       color: #fff;
       text-decoration: none;
       font-size: 20px;
@@ -97,12 +120,17 @@
       header h1 {
         font-size: 24px;
       }
+      .home-btn {
+        font-size: 14px;
+        padding: 6px 12px;
+        left: 10px;
+      }
       .btn {
         font-size: 18px;
         padding: 15px;
       }
       .button-section {
-        background-attachment: scroll; /* tránh lỗi giật trên mobile */
+        background-attachment: scroll;
       }
     }
   </style>
@@ -111,6 +139,7 @@
 
   <!-- Banner -->
   <header>
+    <a href="https://chudich.github.io/IChing.html" class="home-btn">Trang Chủ</a>
     <h1>Đông Tây Vibes</h1>
   </header>
 
