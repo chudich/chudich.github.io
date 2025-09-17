@@ -128,6 +128,30 @@
             overflow-y: auto;
             text-align: left;
         }
+
+        /* Nút về trang chủ */
+        .home-button {
+            text-align: left;
+            margin: 15px 0 30px 20px;
+        }
+
+        .home-button a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #FFD700; /* vàng sáng */
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .home-button a:hover {
+            background: #FFC300; /* vàng đậm hơn khi hover */
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -138,6 +162,11 @@
     </div>
 
     <h2>QUÁN ÂM LINH XĂM</h2>
+
+    <!-- Nút Về Trang Chủ -->
+    <div class="home-button">
+        <a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a>
+    </div>
 
     <!-- Ống lắc bằng ảnh -->
     <div id="tube">
