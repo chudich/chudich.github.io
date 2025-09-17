@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter The Path - Đông Tây Vibes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f9f9f9;
+      color: #6C3483;
+    }
+
+    /* Banner giữ nguyên */
+    header {
+      background: #4D807A; /* màu pha xanh lá & tím nho */
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      color: #F4E1B9; /* vàng ngà sang trọng */
+      font-size: 32px;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Section button với background image */
+    .button-section {
+      background: url("https://chudich.github.io/bg_enter.jpeg") no-repeat center center;
+      background-size: cover;      /* phủ kín màn hình */
+      background-attachment: fixed; /* tạo cảm giác parallax nhẹ trên PC */
+      padding: 60px 20px;
+      position: relative;
+    }
+
+    /* Overlay mờ để chữ & button nổi bật */
+    .button-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 0;
+    }
+
+    .button-grid {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+    }
+
+    .btn {
+      display: block;
+      padding: 18px;
+      background: #c0392b; /* đỏ Enter The Path */
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px solid #a93226;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+      background: #a93226;
+      transform: translateY(-3px);
+    }
+
+    /* Footer */
+    footer {
+      background: #ECF0F1;
+      text-align: center;
+      padding: 15px;
+      color: #333;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Mobile tối ưu */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 24px;
+      }
+      .btn {
+        font-size: 18px;
+        padding: 15px;
+      }
+      .button-section {
+        background-attachment: scroll; /* tránh lỗi giật trên mobile */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banner -->
+  <header>
+    <h1>Đông Tây Vibes</h1>
+  </header>
+
+  <!-- Buttons Section -->
+  <section class="button-section">
+    <div class="button-grid">
+      <a href="#kinh-dich" class="btn">Kinh Dịch</a>
+      <a href="#tu-vi" class="btn">Tử Vi</a>
+      <a href="#tu-tru" class="btn">Tứ Trụ</a>
+      <a href="#ky-mon" class="btn">Kỳ Môn</a>
+
+      <a href="#phong-thuy" class="btn">Phong Thủy</a>
+      <a href="#xem-ngay" class="btn">Xem Ngày</a>
+      <a href="#tarot" class="btn">Tarot</a>
+      <a href="#chiem-tinh" class="btn">Chiêm Tinh</a>
+
+      <a href="#ton-giao" class="btn">Tôn Giáo</a>
+      <a href="#thong-thien-hoc" class="btn">Thông Thiên Học</a>
+      <a href="#chuyen-tam-linh" class="btn">Chuyện Tâm Linh</a>
+      <a href="#khoa-hoc" class="btn">Khoa Học</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Đông Tây Vibes. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
