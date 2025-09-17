@@ -19,7 +19,6 @@
             background-color: #f9f9f9;
         }
 
-        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -28,7 +27,7 @@
 
         /* Header */
         header {
-            background: linear-gradient(90deg, #2ECC71, #6C3483); /* Mộc -> Hỏa */
+            background: #4D807A; /* Màu pha xanh lá & tím nho */
             padding: 20px 0;
             position: fixed;
             width: 100%;
@@ -38,7 +37,7 @@
         }
 
         .logo h1 {
-            color: #FFC107; /* Vàng ánh kim */
+            color: #F4E1B9; /* vàng ngà sang trọng */
             font-size: 26px;
             font-weight: 700;
             text-transform: uppercase;
@@ -60,7 +59,7 @@
         .main-menu ul li a {
             display: block;
             padding: 12px 25px;
-            background: linear-gradient(90deg, #2ECC71, #27AE60); /* Xanh lá gradient */
+            background: linear-gradient(90deg, #2ECC71, #27AE60);
             color: #fff;
             text-decoration: none;
             font-weight: 400;
@@ -70,12 +69,11 @@
         }
 
         .main-menu ul li a:hover {
-            background: #FFC107; /* Vàng ánh kim khi hover */
-            color: #6C3483; /* tím phong thủy */
+            background: #F4E1B9; /* vàng ngà khi hover */
+            color: #6C3483;
             transform: translateY(-3px);
         }
 
-        /* Menu toggle cho mobile */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -90,7 +88,7 @@
             transition: all 0.3s;
         }
 
-        /* Hero Section */
+        /* Hero */
         .hero {
             background: url('https://chudich.github.io/background.jpeg') no-repeat center center/cover;
             text-align: center;
@@ -101,14 +99,14 @@
         .hero h2 {
             font-size: 36px;
             margin-bottom: 20px;
-            color: #FFC107; /* Vàng ánh kim */
+            color: #F4E1B9; /* logo đồng bộ */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
 
         .hero p {
             font-size: 18px;
             margin-bottom: 30px;
-            color: #6C3483; /* tím phong thủy */
+            color: #6C3483;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
         }
 
@@ -116,7 +114,7 @@
         .btn {
             display: block;
             padding: 15px 30px;
-            background: #e67e22; /* Cam */
+            background: #e67e22;
             color: #fff;
             text-decoration: none;
             border-radius: 8px;
@@ -132,13 +130,12 @@
         }
 
         .primary-btn {
-            background: #c0392b; /* Đỏ */
+            background: #c0392b;
             border: 2px solid #fff;
         }
 
         .primary-btn:hover {
             background: #a93226;
-            transform: translateY(-3px);
         }
 
         .button-grid {
@@ -157,44 +154,36 @@
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .main-menu {
                 display: none;
             }
-
             .main-menu.active {
                 display: block;
                 position: absolute;
                 top: 80px;
                 left: 0;
                 width: 100%;
-                background: linear-gradient(180deg, #2ECC71, #6C3483);
+                background: #4D807A;
             }
-
             .main-menu ul {
                 flex-direction: column;
                 text-align: center;
                 padding: 20px 0;
             }
-
             .main-menu ul li {
                 margin: 10px 0;
             }
-
             .menu-toggle {
                 display: flex;
                 justify-content: flex-end;
             }
-
             .hero h2 {
                 font-size: 28px;
             }
-
             .hero p {
                 font-size: 16px;
             }
-
             .button-grid {
                 grid-template-columns: 1fr;
                 gap: 30px;
@@ -203,7 +192,6 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
@@ -224,14 +212,11 @@
                 </ul>
             </nav>
             <div class="menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </div>
         </div>
     </header>
 
-    <!-- Hero -->
     <section class="hero">
         <div class="container">
             <h2>Đông Tây Vibes</h2>
@@ -240,7 +225,6 @@
         </div>
     </section>
 
-    <!-- Buttons -->
     <section class="buttons">
         <div class="container">
             <div class="button-grid">
@@ -259,14 +243,12 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <p>&copy; 2025 Đông Tây Vibes. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- Script -->
     <script>
         const menuToggle = document.querySelector('.menu-toggle');
         const mainMenu = document.querySelector('.main-menu');
