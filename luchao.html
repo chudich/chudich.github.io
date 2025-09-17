@@ -80,6 +80,12 @@
         button:hover {
             background-color: #45a049;
         }
+        .menu-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
         #ket_qua {
             margin-top: 20px;
             text-align: left;
@@ -90,7 +96,7 @@
             margin-bottom: 10px;
         }
         .hao-dong {
-            color: red; /* Hào động hiển thị màu đỏ */
+            color: red;
         }
         #ten_que {
             margin-top: 10px;
@@ -112,14 +118,17 @@
             <div class="coin" id="coin2"><img src="https://sophiemeisam.github.io/duong.jpg" alt="Coin"></div>
             <div class="coin" id="coin3"><img src="https://sophiemeisam.github.io/duong.jpg" alt="Coin"></div>
         </div>
-        <!-- Ô nhập sự việc, nút Gieo Quẻ, và tên quẻ -->
+        <!-- Ô nhập sự việc, nút Gieo Quẻ -->
         <div>
             <h2>Gieo Quẻ Dịch</h2>
             <input type="text" id="su_viec" placeholder="Nhập sự việc cần xem">
             <button onclick="gieoQue()">Gieo Quẻ</button>
             <div id="ten_que"></div>
-            <!-- nút chụp quẻ -->
-            <button onclick="chupQue()">📸 Chụp quẻ</button>
+            <!-- Nhóm menu: Trang Chủ & Chụp Quẻ -->
+            <div class="menu-buttons">
+                <button onclick="window.location.href='https://chudich.github.io/IChing.html'">Trang Chủ</button>
+                <button onclick="chupQue()">📸 Chụp Quẻ</button>
+            </div>
         </div>
         <!-- Kết quả quẻ ở dưới cùng -->
         <div id="ket_qua">
@@ -133,7 +142,6 @@
     </div>
 
     <script>
-        // Link ảnh cho mặt hình và mặt chữ
         const headsImage = 'https://sophiemeisam.github.io/duong.jpg';
         const tailsImage = 'https://sophiemeisam.github.io/am.jpg';
         const queDon = {
@@ -179,15 +187,13 @@
             const ketQuaDiv = document.getElementById('ket_qua');
             const tenQueDiv = document.getElementById('ten_que');
 
-            // reset/hiển thị sự việc
             ketQuaDiv.innerHTML = `<p>Sự việc: ${suViec || 'Không nhập'}</p>`;
             tenQueDiv.innerHTML = '';
 
-            const lines = [];     // giữ 'duong' hoặc 'am' theo thứ tự lấy
-            const dongHao = [];   // danh sách hào động (số)
+            const lines = [];
+            const dongHao = [];
             let haoIndex = 0;
 
-            // tạo 6 hào placeholder (hào6..hao1 đã tồn tại trong HTML, nhưng ta đặt lại nội dung)
             for (let i = 6; i >= 1; i--) {
                 const haoDiv = document.createElement('div');
                 haoDiv.className = 'hao';
@@ -196,31 +202,20 @@
                 ketQuaDiv.appendChild(haoDiv);
             }
 
-            // tungHao: gieo từng hào, giữa các hào chờ 9s,
-            // nhưng sau khi hào6 xong => hiện tên quẻ ngay lập tức (không chờ).
             function tungHao() {
                 if (haoIndex < 6) {
                     const coinResults = flipCoins();
                     const sum = coinResults.filter(result => result === 'duong').length;
                     let haoType, haoDisplay, isDong;
                     if (sum === 0) {
-                        haoType = 'am';
-                        haoDisplay = '— — (âm, động)';
-                        isDong = true;
+                        haoType = 'am'; haoDisplay = '— — (âm, động)'; isDong = true;
                     } else if (sum === 1) {
-                        haoType = 'am';
-                        haoDisplay = '— — (âm)';
-                        isDong = false;
+                        haoType = 'am'; haoDisplay = '— — (âm)'; isDong = false;
                     } else if (sum === 2) {
-                        haoType = 'duong';
-                        haoDisplay = '————— (dương)';
-                        isDong = false;
+                        haoType = 'duong'; haoDisplay = '————— (dương)'; isDong = false;
                     } else {
-                        haoType = 'duong';
-                        haoDisplay = '——o—— (dương, động)';
-                        isDong = true;
+                        haoType = 'duong'; haoDisplay = '——o—— (dương, động)'; isDong = true;
                     }
-
                     lines.push(haoType);
                     if (isDong) dongHao.push(haoIndex + 1);
 
@@ -229,12 +224,9 @@
                     if (isDong) haoToUpdate.classList.add('hao-dong'); else haoToUpdate.classList.remove('hao-dong');
 
                     haoIndex++;
-
-                    // nếu chưa đủ 6 hào -> chờ 9s để gieo tiếp (thời gian để khấn)
                     if (haoIndex < 6) {
                         setTimeout(tungHao, 9000);
                     } else {
-                        // đã lấy đủ 6 hào -> hiện tên quẻ ngay lập tức (không chờ thêm)
                         const binaryLines = [...lines].reverse().map(line => line === 'duong' ? '1' : '0');
                         const thuongQuai = [binaryLines[0], binaryLines[1], binaryLines[2]].join('');
                         const haQuai = [binaryLines[3], binaryLines[4], binaryLines[5]].join('');
@@ -254,16 +246,12 @@
                     }
                 }
             }
-
-            // bắt đầu gieo từ hào 1
             tungHao();
         }
 
-        // Tự động tung xu khi tải trang (không can thiệp chức năng gieo quẻ)
         setInterval(flipCoins, 9000);
     </script>
 
-    <!-- html2canvas + chupQue (giữ nguyên logic: download trên Chrome; fallback hiển thị ảnh cho Zalo) -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
     function chupQue() {
@@ -275,7 +263,6 @@
                 return;
             }
 
-            // Thời gian hiện tại
             let now = new Date();
             let hours = String(now.getHours()).padStart(2, '0');
             let minutes = String(now.getMinutes()).padStart(2, '0');
@@ -284,7 +271,6 @@
             let year = now.getFullYear();
             let text = `${hours}:${minutes}     ${day}.${month}.${year}`;
 
-            // Vùng tạm (off-screen)
             const tmp = document.createElement("div");
             tmp.style.position = "fixed";
             tmp.style.left = "-9999px";
@@ -294,7 +280,6 @@
             tmp.style.boxSizing = "border-box";
             tmp.style.fontFamily = window.getComputedStyle(document.body).fontFamily;
 
-            // Thêm dòng thời gian trước tên quẻ (màu đỏ đậm)
             const timeDiv = document.createElement("div");
             timeDiv.textContent = text;
             timeDiv.style.fontSize = "18px";
@@ -313,7 +298,6 @@
                 backgroundColor: "#ffffff"
             })
             .then(canvas => {
-                // Nếu browser hỗ trợ download (Chrome/Edge/Firefox)
                 if (typeof canvas.toBlob === "function" && "download" in document.createElement("a")) {
                     canvas.toBlob(function(blob) {
                         const url = URL.createObjectURL(blob);
@@ -329,7 +313,6 @@
                         }, 150);
                     }, "image/png");
                 } else {
-                    // Zalo browser hoặc browser hạn chế -> hiển thị ảnh cho user nhấn giữ lưu
                     const dataUrl = canvas.toDataURL("image/png");
                     const img = new Image();
                     img.src = dataUrl;
