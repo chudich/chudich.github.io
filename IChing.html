@@ -108,10 +108,18 @@
         }
 
         .hero p {
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.8;
             margin-bottom: 30px;
             color: #6C3483;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+            opacity: 0; /* ban đầu ẩn để fade-in */
+            transition: opacity 1.5s ease;
+            min-height: 120px; /* chừa chỗ khi typing */
+        }
+
+        .hero p.visible {
+            opacity: 1;
         }
 
         /* Buttons */
@@ -186,7 +194,8 @@
                 font-size: 28px;
             }
             .hero p {
-                font-size: 16px;
+                font-size: 18px;
+                line-height: 1.6;
             }
             .button-grid {
                 grid-template-columns: 1fr;
@@ -208,7 +217,7 @@
                     <li><a href="#tu-vi">Tử Vi</a></li>
                     <li><a href="#tu-tru">Tứ Trụ</a></li>
                     <li><a href="#xem-ngay-gio">Xem Ngày Giờ</a></li>
-                    <li><a href="#xin-keo">Xin Keo Âm Dương</a></li>
+                    <li><a href="#xin-keo">Xin Kèo Âm Dương</a></li>
                     <li><a href="#xin-xam">Xin Xăm</a></li>
                     <li><a href="#bai-tarot">Bài Tarot</a></li>
                     <li><a href="#thu-vien-audio">Thư Viện Audio</a></li>
@@ -224,7 +233,7 @@
     <section class="hero">
         <div class="container">
             <h2></h2>
-            <p>Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.</p>
+            <p id="hero-text"></p>
             <a href="#hoc-kinh-dich" class="btn primary-btn">Enter The Path</a>
         </div>
     </section>
@@ -254,10 +263,30 @@
     </footer>
 
     <script>
+        // Toggle menu
         const menuToggle = document.querySelector('.menu-toggle');
         const mainMenu = document.querySelector('.main-menu');
         menuToggle.addEventListener('click', () => {
             mainMenu.classList.toggle('active');
+        });
+
+        // Typing + fade-in cho hero text
+        const text = "Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.";
+        const heroText = document.getElementById("hero-text");
+        let index = 0;
+
+        function typeEffect() {
+            if (index < text.length) {
+                heroText.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 30); // tốc độ typing
+            } else {
+                heroText.classList.add("visible"); // fade-in sau khi gõ xong
+            }
+        }
+
+        window.addEventListener("load", () => {
+            setTimeout(typeEffect, 500); // delay nhỏ trước khi bắt đầu gõ
         });
     </script>
 </body>
