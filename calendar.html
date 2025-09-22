@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Âm Dương với Can Chi và Tiết Khí</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        select, input, button {
+            padding: 8px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer; /* Để ô ngày có thể click */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .sunday {
+            color: red;
+        }
+        .today {
+            background-color: #ffffcc;
+        }
+        .calendar-container {
+            margin-top: 20px;
+        }
+        /* CSS cho modal/box popup */
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* Nền mờ */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Lịch Âm Dương (Can Chi + Tiết Khí)</h2>
+    <div class="controls">
+        <label for="month">Tháng:</label>
+        <select id="month">
+            <option value="1">Tháng 1</option>
+            <option value="2">Tháng 2</option>
+            <option value="3">Tháng 3</option>
+            <option value="4">Tháng 4</option>
+            <option value="5">Tháng 5</option>
+            <option value="6">Tháng 6</option>
+            <option value="7">Tháng 7</option>
+            <option value="8">Tháng 8</option>
+            <option value="9">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+        </select>
+        <label for="year">Năm:</label>
+        <input type="number" id="year" min="1900" max="2100" value="2025">
+        <button onclick="generateCalendar()">Xem lịch</button>
+    </div>
+    <div id="calendar" class="calendar-container"></div>
+
+    <!-- Modal/Box popup -->
+    <div id="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-details"></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@nghiavuive/lunar_date_vi@latest/dist/index.umd.js"></script>
+    <script>
+        // Sử dụng thư viện LunarDate
+        const LunarDateLib = window._calendar;
+
+        // Hàm tạo bảng lịch cho tháng/năm được chọn
+        function generateCalendar() {
+            const month = parseInt(document.getElementById('month').value);
+            const year = parseInt(document.getElementById('year').value);
+            const calendarDiv = document.getElementById('calendar');
+
+            if (isNaN(year) || year < 1900 || year > 2100) {
+                calendarDiv.innerHTML = '<p>Vui lòng nhập năm từ 1900 đến 2100.</p>';
+                return;
+            }
+
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const firstDay = new Date(year, month - 1, 1).getDay(); // 0: Chủ Nhật, 1: Thứ 2, ...
+
+            let table = '<table><tr><th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th></tr><tr>';
+            let day = 1;
+
+            // Đệm ô trống đầu tháng
+            for (let i = 0; i < firstDay; i++) {
+                table += '<td></td>';
+            }
+
+            // Ngày đầu tuần
+            for (let i = firstDay; i < 7; i++) {
+                if (day <= daysInMonth) {
+                    table += getDayCell(year, month, day);
+                    day++;
+                } else {
+                    table += '<td></td>';
+                }
+            }
+            table += '</tr>';
+
+            // Các tuần còn lại
+            while (day <= daysInMonth) {
+                table += '<tr>';
+                for (let i = 0; i < 7 && day <= daysInMonth; i++) {
+                    table += getDayCell(year, month, day);
+                    day++;
+                }
+                // Đệm ô trống cuối tuần nếu cần
+                while (day > daysInMonth && (day - 1) % 7 !== 0) {
+                    table += '<td></td>';
+                    day++;
+                }
+                table += '</tr>';
+            }
+            table += '</table>';
+
+            calendarDiv.innerHTML = `<h3>Lịch tháng ${month}/${year}</h3>${table}`;
+        }
+
+        // Hàm lấy thông tin ngày cho ô lưới: Chỉ dương to, âm nhỏ, với onclick
+        function getDayCell(year, month, day) {
+            const solarDate = new LunarDateLib.SolarDate({ day, month, year });
+            const lunarDate = solarDate.toLunarDate();
+            lunarDate.init();
+
+            const isSunday = new Date(year, month - 1, day).getDay() === 0;
+            const className = isSunday ? ' class="sunday"' : '';
+            const todayClass = (day === new Date().getDate() && month === new Date().getMonth() + 1 && year === new Date().getFullYear()) ? ' class="today"' : '';
+
+            const lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
+
+            return `<td${className}${todayClass} onclick="showDetails(${year}, ${month}, ${day})">
+                <strong style="font-size: 18px;">${day}</strong><br>
+                <small style="font-size: 12px; color: #666;">${lunarDay}</small>
+            </td>`;
+        }
+
+        // Hàm hiển thị chi tiết ngày trong modal
+        function showDetails(year, month, day) {
+            const solarDate = new LunarDateLib.SolarDate({ day, month, year });
+            const lunarDate = solarDate.toLunarDate();
+            lunarDate.init();
+
+            const lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
+            const canChiDay = lunarDate.getDayName();
+            const canChiMonth = lunarDate.getMonthName();
+            const canChiYear = lunarDate.getYearName();
+            const tietKhi = lunarDate.getSolarTerm() || 'Không có tiết khí';
+
+            document.getElementById('modal-title').innerHTML = `Thông tin ngày ${day}/${month}/${year}`;
+            document.getElementById('modal-details').innerHTML = `
+                <p><strong>Ngày âm lịch:</strong> ${lunarDay}</p>
+                <p><strong>Can Chi ngày:</strong> ${canChiDay}</p>
+                <p><strong>Can Chi tháng:</strong> ${canChiMonth}</p>
+                <p><strong>Can Chi năm:</strong> ${canChiYear}</p>
+                <p><strong>Tiết khí:</strong> ${tietKhi}</p>
+            `;
+
+            document.getElementById('modal').style.display = 'flex';
+
+            // Đóng modal khi click ngoài box
+            document.getElementById('modal').onclick = function(event) {
+                if (event.target === document.getElementById('modal')) {
+                    closeModal();
+                }
+            };
+        }
+
+        // Hàm đóng modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Tự động hiển thị lịch tháng hiện tại khi tải trang
+        document.getElementById('month').value = new Date().getMonth() + 1;
+        document.getElementById('year').value = new Date().getFullYear();
+        generateCalendar();
+    </script>
+</body>
+</html>
