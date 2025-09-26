@@ -1,28 +1,47 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Lịch Âm Dương với Can Chi và Tiết Khí</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
+            color: #333;
+        }
+        h2, h3, h4 {
+            color: #2196f3;
         }
         .controls {
+            display: flex;
+            align-items: center;
             margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        select, input, button {
-            padding: 8px;
-            margin: 5px;
+        select, input {
+            padding: 10px;
+            margin: 0 10px;
             font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
         button {
-            background-color: #4CAF50;
+            padding: 10px 20px;
+            background-color: #4caf50;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #45a049;
@@ -30,26 +49,53 @@
         table {
             border-collapse: collapse;
             width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            cursor: pointer; /* Để ô ngày có thể click */
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #2196f3;
+            color: white;
+        }
+        td:hover {
+            background-color: #e0f7fa;
         }
         .sunday {
-            color: red;
+            color: #f44336;
+        }
+        .saturday {
+            color: #2196f3;
         }
         .today {
-            background-color: #ffffcc;
+            background-color: #fff9c4;
         }
         .calendar-container {
             margin-top: 20px;
         }
-        /* CSS cho modal/box popup */
+        #notes {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #notes ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #notes li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        /* Modal */
         #modal {
             display: none;
             position: fixed;
@@ -59,19 +105,19 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4); /* Nền mờ */
+            background-color: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: #fff;
             margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
+            padding: 25px;
             border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: left;
         }
         .close {
             color: #aaa;
@@ -81,9 +127,12 @@
         }
         .close:hover,
         .close:focus {
-            color: black;
-            text-decoration: none;
+            color: #000;
             cursor: pointer;
+        }
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -111,21 +160,26 @@
     </div>
     <div id="calendar" class="calendar-container"></div>
 
-    <!-- Modal/Box popup -->
+    <!-- Modal -->
     <div id="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3 id="modal-title"></h3>
-            <p id="modal-details"></p>
+            <div id="modal-details"></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@nghiavuive/lunar_date_vi@latest/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/date-chinese@1.0.5/index.js"></script>
     <script>
-        // Sử dụng thư viện LunarDate
         const LunarDateLib = window._calendar;
+        const tietKhiNames = [
+            "", "Lập Xuân", "Vũ Thủy", "Kinh Trập", "Xuân Phân", "Thanh Minh", "Cốc Vũ",
+            "Lập Hạ", "Tiểu Mãn", "Mang Chủng", "Hạ Chí", "Tiểu Thử", "Đại Thử",
+            "Lập Thu", "Xử Thử", "Bạch Lộ", "Thu Phân", "Hàn Lộ", "Sương Giáng",
+            "Lập Đông", "Tiểu Tuyết", "Đại Tuyết", "Đông Chí", "Tiểu Hàn", "Đại Hàn"
+        ];
 
-        // Hàm tạo bảng lịch cho tháng/năm được chọn
         function generateCalendar() {
             const month = parseInt(document.getElementById('month').value);
             const year = parseInt(document.getElementById('year').value);
@@ -137,17 +191,15 @@
             }
 
             const daysInMonth = new Date(year, month, 0).getDate();
-            const firstDay = new Date(year, month - 1, 1).getDay(); // 0: Chủ Nhật, 1: Thứ 2, ...
+            const firstDay = new Date(year, month - 1, 1).getDay();
 
             let table = '<table><tr><th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th></tr><tr>';
             let day = 1;
 
-            // Đệm ô trống đầu tháng
             for (let i = 0; i < firstDay; i++) {
                 table += '<td></td>';
             }
 
-            // Ngày đầu tuần
             for (let i = firstDay; i < 7; i++) {
                 if (day <= daysInMonth) {
                     table += getDayCell(year, month, day);
@@ -158,44 +210,44 @@
             }
             table += '</tr>';
 
-            // Các tuần còn lại
             while (day <= daysInMonth) {
                 table += '<tr>';
                 for (let i = 0; i < 7 && day <= daysInMonth; i++) {
                     table += getDayCell(year, month, day);
                     day++;
                 }
-                // Đệm ô trống cuối tuần nếu cần
-                while (day > daysInMonth && (day - 1) % 7 !== 0) {
+                for (let i = (day - 1) % 7; i < 7 && (day - 1) % 7 !== 0; i++) {
                     table += '<td></td>';
-                    day++;
                 }
                 table += '</tr>';
             }
             table += '</table>';
 
-            calendarDiv.innerHTML = `<h3>Lịch tháng ${month}/${year}</h3>${table}`;
+            // Tính toán ghi chú tiết khí
+            const notes = getSolarTermNotes(year, month);
+
+            calendarDiv.innerHTML = `<h3>Lịch tháng ${month}/${year}</h3>${notes}${table}`;
         }
 
-        // Hàm lấy thông tin ngày cho ô lưới: Chỉ dương to, âm nhỏ, với onclick
         function getDayCell(year, month, day) {
             const solarDate = new LunarDateLib.SolarDate({ day, month, year });
             const lunarDate = solarDate.toLunarDate();
             lunarDate.init();
 
-            const isSunday = new Date(year, month - 1, day).getDay() === 0;
-            const className = isSunday ? ' class="sunday"' : '';
-            const todayClass = (day === new Date().getDate() && month === new Date().getMonth() + 1 && year === new Date().getFullYear()) ? ' class="today"' : '';
+            const weekday = new Date(year, month - 1, day).getDay();
+            let className = '';
+            if (weekday === 0) className = 'sunday';
+            if (weekday === 6) className = 'saturday';
+            const todayClass = (day === new Date().getDate() && month === new Date().getMonth() + 1 && year === new Date().getFullYear()) ? ' today' : '';
 
             const lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
 
-            return `<td${className}${todayClass} onclick="showDetails(${year}, ${month}, ${day})">
-                <strong style="font-size: 18px;">${day}</strong><br>
-                <small style="font-size: 12px; color: #666;">${lunarDay}</small>
+            return `<td class="${className}${todayClass}" onclick="showDetails(${year}, ${month}, ${day})">
+                <strong style="font-size: 20px;">${day}</strong><br>
+                <small style="font-size: 14px; color: #666;">${lunarDay}</small>
             </td>`;
         }
 
-        // Hàm hiển thị chi tiết ngày trong modal
         function showDetails(year, month, day) {
             const solarDate = new LunarDateLib.SolarDate({ day, month, year });
             const lunarDate = solarDate.toLunarDate();
@@ -218,7 +270,6 @@
 
             document.getElementById('modal').style.display = 'flex';
 
-            // Đóng modal khi click ngoài box
             document.getElementById('modal').onclick = function(event) {
                 if (event.target === document.getElementById('modal')) {
                     closeModal();
@@ -226,15 +277,58 @@
             };
         }
 
-        // Hàm đóng modal
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
 
-        // Tự động hiển thị lịch tháng hiện tại khi tải trang
+        function getSolarTermNotes(year, month) {
+            const cal = new dateChinese.CalendarChinese();
+            let terms = [];
+
+            for (let n = 1; n <= 12; n++) {
+                // Minor solar terms
+                let qm = cal.minorSolarTerm(n, year);
+                cal.fromJDE(qm);
+                let date = cal.toGregorian();
+                if (date.month === month && date.year === year) {
+                    let index = 2 * n - 1;
+                    let name = tietKhiNames[index];
+                    let hour = String(Math.floor(date.hour)).padStart(2, '0');
+                    let minute = String(Math.floor(date.minute)).padStart(2, '0');
+                    terms.push({ day: date.day, time: `${hour}:${minute}`, name });
+                }
+
+                // Major solar terms
+                qm = cal.majorSolarTerm(n, year);
+                cal.fromJDE(qm);
+                date = cal.toGregorian();
+                if (date.month === month && date.year === year) {
+                    let index = 2 * n;
+                    let name = tietKhiNames[index];
+                    let hour = String(Math.floor(date.hour)).padStart(2, '0');
+                    let minute = String(Math.floor(date.minute)).padStart(2, '0');
+                    terms.push({ day: date.day, time: `${hour}:${minute}`, name });
+                }
+            }
+
+            // Sort by day
+            terms.sort((a, b) => a.day - b.day);
+
+            if (terms.length === 0) return '';
+
+            let notesHtml = '<div id="notes"><h4>Ghi chú tiết khí:</h4><ul>';
+            terms.forEach(term => {
+                notesHtml += `<li>Tiết ${term.name} bắt đầu vào ${term.time} ngày ${term.day < 10 ? '0' + term.day : term.day}.${month < 10 ? '0' + month : month}.${year}</li>`;
+            });
+            notesHtml += '</ul></div>';
+            return notesHtml;
+        }
+
+        // Tự động hiển thị lịch tháng hiện tại
         document.getElementById('month').value = new Date().getMonth() + 1;
         document.getElementById('year').value = new Date().getFullYear();
         generateCalendar();
     </script>
 </body>
 </html>
+```
