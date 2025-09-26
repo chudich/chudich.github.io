@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Lịch Âm Dương với Can Chi và Tiết Khí</title>
+    <title>Lịch Âm Dương với Can Chi, Tiết Khí và Ngày Thiên Xá</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -84,21 +84,29 @@
         .calendar-container {
             margin-top: 20px;
         }
-        #notes {
+        #notes, #importantDays, #thienXaDays {
             margin-top: 20px;
             background-color: #fff;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        #notes ul {
+        #notes ul, #importantDaysList ul, #thienXaDaysList ul {
             list-style-type: none;
             padding: 0;
         }
-        #notes li {
+        #notes li, #importantDaysList li {
             margin-bottom: 10px;
             color: #555;
             font-size: 14px;
+        }
+        #thienXaDaysList {
+            font-weight: bold;
+            font-size: 18px;
+            color: #d32f2f; /* Màu đỏ nổi bật cho ngày Thiên Xá */
+        }
+        #thienXaDaysList li {
+            margin-bottom: 10px;
         }
         .additional-buttons {
             display: flex;
@@ -164,7 +172,7 @@
     </style>
 </head>
 <body>
-    <h2>Lịch Âm Dương (Can Chi + Tiết Khí)</h2>
+    <h2>Lịch Âm Dương (Can Chi + Tiết Khí + Ngày Thiên Xá)</h2>
     <div class="controls">
         <label for="month">Tháng:</label>
         <select id="month">
@@ -186,6 +194,19 @@
         <button onclick="generateCalendar()">Xem lịch</button>
     </div>
     <div id="calendar" class="calendar-container"></div>
+
+    <!-- Form hiển thị ngày quan trọng -->
+    <div id="importantDays" class="calendar-container">
+        <h3>Ngày quan trọng trong tháng</h3>
+        <div id="importantDaysList"></div>
+    </div>
+
+    <!-- Form hiển thị ngày Thiên Xá -->
+    <div id="thienXaDays" class="calendar-container">
+        <h3>Ngày Thiên Xá trong tháng</h3>
+        <div id="thienXaDaysList"></div>
+    </div>
+
     <div class="additional-buttons">
         <button onclick="showCalcDaysModal()">Tính số ngày</button>
         <button onclick="showFindTimeModal()">Tìm thời điểm</button>
@@ -281,7 +302,7 @@
     <script>
         const LunarDateLib = window._calendar;
 
-        // Hardcoded solar terms for 2025 (based on accurate astronomical data)
+        // Hardcoded solar terms for 2025
         const solarTerms2025 = {
             1: [
                 { name: "Tiểu Hàn", day: 5, time: "22:34" },
@@ -333,6 +354,128 @@
             ]
         };
 
+        // URL giả định cho dữ liệu ngày quan trọng
+        const IMPORTANT_DAYS_URL = 'https://example.com/api/important-days';
+
+        // Hàm lấy dữ liệu ngày quan trọng từ URL
+        async function fetchImportantDays(year, month) {
+            try {
+                // Giả lập dữ liệu (thay bằng fetch thực tế khi có URL chính thức)
+                const mockData = {
+                    2025: {
+                        1: ["01/01: Tết Dương Lịch", "15/01: Ngày đặc biệt"],
+                        2: ["10/02: Lễ hội mùa xuân"],
+                        3: [],
+                        4: ["20/04: Giỗ Tổ Hùng Vương"],
+                        5: ["01/05: Ngày Quốc tế Lao động"],
+                        6: [],
+                        7: [],
+                        8: [],
+                        9: ["02/09: Quốc khánh"],
+                        10: [],
+                        11: [],
+                        12: ["25/12: Giáng sinh"]
+                    }
+                };
+                // Thay bằng fetch thực tế:
+                // const response = await fetch(`${IMPORTANT_DAYS_URL}?year=${year}&month=${month}`);
+                // const data = await response.json();
+                const days = mockData[year] && mockData[year][month] ? mockData[year][month] : [];
+                return days;
+            } catch (error) {
+                console.error('Error fetching important days:', error);
+                return [];
+            }
+        }
+
+        // Hàm hiển thị ngày quan trọng
+        async function displayImportantDays(year, month) {
+            const importantDaysList = document.getElementById('importantDaysList');
+            const days = await fetchImportantDays(year, month);
+
+            if (days.length === 0) {
+                importantDaysList.innerHTML = '<p>Không có ngày quan trọng trong tháng này.</p>';
+                return;
+            }
+
+            let html = '<ul>';
+            days.forEach(day => {
+                html += `<li>${day}</li>`;
+            });
+            html += '</ul>';
+            importantDaysList.innerHTML = html;
+        }
+
+        // Hàm kiểm tra mùa theo tháng âm lịch
+        function getSeason(lunarMonth) {
+            if ([1, 2, 3].includes(lunarMonth)) return 'Xuân';
+            if ([4, 5, 6].includes(lunarMonth)) return 'Hạ';
+            if ([7, 8, 9].includes(lunarMonth)) return 'Thu';
+            if ([10, 11, 12].includes(lunarMonth)) return 'Đông';
+            return null;
+        }
+
+        // Hàm kiểm tra ngày Thiên Xá
+        function isThienXaDay(canChiDay, season) {
+            const thienXaRules = {
+                'Xuân': 'Mậu Dần',
+                'Hạ': 'Giáp Ngọ',
+                'Thu': 'Mậu Thân',
+                'Đông': 'Giáp Tý'
+            };
+            return canChiDay === thienXaRules[season];
+        }
+
+        // Hàm tìm ngày Thiên Xá trong tháng
+        function findThienXaDays(year, month) {
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const thienXaDays = [];
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                try {
+                    const solarDate = new LunarDateLib.SolarDate({ day, month, year });
+                    const lunarDate = solarDate.toLunarDate();
+                    lunarDate.init();
+                    const lunarDay = lunarDate.day;
+                    const lunarMonth = lunarDate.month;
+                    const canChiDay = lunarDate.getDayName();
+                    const season = getSeason(lunarMonth);
+
+                    if (season && isThienXaDay(canChiDay, season)) {
+                        const formattedSolarDate = `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
+                        const formattedLunarDate = `${lunarDay < 10 ? '0' + lunarDay : lunarDay}/${lunarMonth < 10 ? '0' + lunarMonth : lunarMonth}${lunarDate.leap ? ' nhuận' : ''}`;
+                        thienXaDays.push({
+                            solar: formattedSolarDate,
+                            lunar: formattedLunarDate,
+                            canChi: canChiDay,
+                            season
+                        });
+                    }
+                } catch (e) {
+                    console.error('Lunar date calculation error:', e);
+                }
+            }
+            return thienXaDays;
+        }
+
+        // Hàm hiển thị ngày Thiên Xá
+        function displayThienXaDays(year, month) {
+            const thienXaDaysList = document.getElementById('thienXaDaysList');
+            const thienXaDays = findThienXaDays(year, month);
+
+            if (thienXaDays.length === 0) {
+                thienXaDaysList.innerHTML = '<p>Không có ngày Thiên Xá trong tháng này.</p>';
+                return;
+            }
+
+            let html = '<ul>';
+            thienXaDays.forEach(day => {
+                html += `<li>Ngày Thiên Xá (${day.season}): ${day.solar} (Âm lịch: ${day.lunar}, Can Chi: ${day.canChi})</li>`;
+            });
+            html += '</ul>';
+            thienXaDaysList.innerHTML = html;
+        }
+
         function generateCalendar() {
             const month = parseInt(document.getElementById('month').value);
             const year = parseInt(document.getElementById('year').value);
@@ -383,6 +526,10 @@
             const notes = getSolarTermNotes(year, month);
 
             calendarDiv.innerHTML = `<h3>Lịch tháng ${month < 10 ? '0' + month : month}/${year}</h3>${notes}${table}`;
+
+            // Hiển thị ngày quan trọng và ngày Thiên Xá
+            displayImportantDays(year, month);
+            displayThienXaDays(year, month);
         }
 
         function getDayCell(year, month, day) {
@@ -460,7 +607,6 @@
             return notesHtml;
         }
 
-        // Functions for new buttons
         function showCalcDaysModal() {
             document.getElementById('calcDaysModal').style.display = 'flex';
             document.getElementById('calcResult').innerHTML = '';
