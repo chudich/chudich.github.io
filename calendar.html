@@ -44,6 +44,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            margin: 0 5px;
         }
         button:hover {
             background-color: #388e3c;
@@ -99,8 +100,13 @@
             color: #555;
             font-size: 14px;
         }
+        .additional-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
         /* Modal */
-        #modal {
+        .modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -118,7 +124,7 @@
             padding: 20px;
             border-radius: 10px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             text-align: left;
         }
@@ -136,6 +142,24 @@
         .modal-content p {
             margin: 10px 0;
             font-size: 16px;
+        }
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-content label {
+            margin-top: 10px;
+        }
+        .modal-content input, .modal-content select {
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .modal-content button {
+            margin-top: 15px;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -162,13 +186,94 @@
         <button onclick="generateCalendar()">Xem lịch</button>
     </div>
     <div id="calendar" class="calendar-container"></div>
+    <div class="additional-buttons">
+        <button onclick="showCalcDaysModal()">Tính số ngày</button>
+        <button onclick="showFindTimeModal()">Tìm thời điểm</button>
+    </div>
 
-    <!-- Modal -->
-    <div id="modal">
+    <!-- Modal for Day Details -->
+    <div id="dayModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeModal('dayModal')">&times;</span>
             <h3 id="modal-title"></h3>
             <div id="modal-details"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Tính số ngày -->
+    <div id="calcDaysModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('calcDaysModal')">&times;</span>
+            <h3>Tính số ngày</h3>
+            <form id="calcDaysForm">
+                <label>Chọn mốc thời gian:</label>
+                <input type="number" id="startDay" placeholder="Ngày" min="1" max="31" required>
+                <select id="startMonth">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                </select>
+                <input type="number" id="startYear" placeholder="Năm" min="1900" max="2100" required>
+                <label>Số ngày (dương để đếm tới, âm để đếm lùi):</label>
+                <input type="number" id="numDays" placeholder="Số ngày" required>
+                <button type="button" onclick="calculateDate()">Tính toán</button>
+            </form>
+            <div id="calcResult"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Tìm thời điểm -->
+    <div id="findTimeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('findTimeModal')">&times;</span>
+            <h3>Tìm thời điểm</h3>
+            <form id="findTimeForm">
+                <label>Mốc thời gian 1:</label>
+                <input type="number" id="date1Day" placeholder="Ngày" min="1" max="31" required>
+                <select id="date1Month">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                </select>
+                <input type="number" id="date1Year" placeholder="Năm" min="1900" max="2100" required>
+                <label>Mốc thời gian 2:</label>
+                <input type="number" id="date2Day" placeholder="Ngày" min="1" max="31" required>
+                <select id="date2Month">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                </select>
+                <input type="number" id="date2Year" placeholder="Năm" min="1900" max="2100" required>
+                <button type="button" onclick="calculateDaysBetween()">Tính toán</button>
+            </form>
+            <div id="findResult"></div>
         </div>
     </div>
 
@@ -322,17 +427,17 @@
                 <p><strong>Tiết khí:</strong> ${tietKhi}</p>
             `;
 
-            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('dayModal').style.display = 'flex';
 
-            document.getElementById('modal').onclick = function(event) {
-                if (event.target === document.getElementById('modal')) {
-                    closeModal();
+            document.getElementById('dayModal').onclick = function(event) {
+                if (event.target === document.getElementById('dayModal')) {
+                    closeModal('dayModal');
                 }
             };
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
         function getSolarTermNotes(year, month) {
@@ -353,6 +458,71 @@
             });
             notesHtml += '</ul></div>';
             return notesHtml;
+        }
+
+        // Functions for new buttons
+        function showCalcDaysModal() {
+            document.getElementById('calcDaysModal').style.display = 'flex';
+            document.getElementById('calcResult').innerHTML = '';
+            document.getElementById('calcDaysModal').onclick = function(event) {
+                if (event.target === document.getElementById('calcDaysModal')) {
+                    closeModal('calcDaysModal');
+                }
+            };
+        }
+
+        function calculateDate() {
+            const day = parseInt(document.getElementById('startDay').value);
+            const month = parseInt(document.getElementById('startMonth').value);
+            const year = parseInt(document.getElementById('startYear').value);
+            const numDays = parseInt(document.getElementById('numDays').value);
+
+            if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(numDays)) {
+                document.getElementById('calcResult').innerHTML = '<p style="color: red;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                return;
+            }
+
+            const startDate = new Date(year, month - 1, day);
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const resultDate = new Date(startDate.getTime() + numDays * msPerDay);
+
+            const resultDay = resultDate.getDate();
+            const resultMonth = resultDate.getMonth() + 1;
+            const resultYear = resultDate.getFullYear();
+
+            const direction = numDays >= 0 ? 'tới' : 'lùi';
+            document.getElementById('calcResult').innerHTML = `<p>Kết quả: Từ ${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year} đếm ${direction} ${Math.abs(numDays)} ngày là ngày ${resultDay < 10 ? '0' + resultDay : resultDay}.${resultMonth < 10 ? '0' + resultMonth : resultMonth}.${resultYear}.</p>`;
+        }
+
+        function showFindTimeModal() {
+            document.getElementById('findTimeModal').style.display = 'flex';
+            document.getElementById('findResult').innerHTML = '';
+            document.getElementById('findTimeModal').onclick = function(event) {
+                if (event.target === document.getElementById('findTimeModal')) {
+                    closeModal('findTimeModal');
+                }
+            };
+        }
+
+        function calculateDaysBetween() {
+            const day1 = parseInt(document.getElementById('date1Day').value);
+            const month1 = parseInt(document.getElementById('date1Month').value);
+            const year1 = parseInt(document.getElementById('date1Year').value);
+            const day2 = parseInt(document.getElementById('date2Day').value);
+            const month2 = parseInt(document.getElementById('date2Month').value);
+            const year2 = parseInt(document.getElementById('date2Year').value);
+
+            if (isNaN(day1) || isNaN(month1) || isNaN(year1) || isNaN(day2) || isNaN(month2) || isNaN(year2)) {
+                document.getElementById('findResult').innerHTML = '<p style="color: red;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                return;
+            }
+
+            const date1 = new Date(year1, month1 - 1, day1);
+            const date2 = new Date(year2, month2 - 1, day2);
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const daysBetween = Math.floor(Math.abs(date2 - date1) / msPerDay);
+
+            document.getElementById('findResult').innerHTML = `<p>Kết quả: Giữa ${day1 < 10 ? '0' + day1 : day1}.${month1 < 10 ? '0' + month1 : month1}.${year1} và ${day2 < 10 ? '0' + day2 : day2}.${month2 < 10 ? '0' + month2 : month2}.${year2} là ${daysBetween} ngày.</p>`;
         }
 
         // Initialize calendar
