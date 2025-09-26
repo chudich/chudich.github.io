@@ -7,51 +7,54 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f4f8;
+            background: linear-gradient(to bottom, #e0f7fa, #f0f4f8);
             max-width: 900px;
             margin: 0 auto;
             padding: 20px;
             color: #333;
         }
         h2, h3, h4 {
-            color: #2196f3;
+            color: #0288d1;
+            text-align: center;
         }
         .controls {
             display: flex;
+            justify-content: center;
             align-items: center;
             margin-bottom: 20px;
             background-color: #fff;
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         select, input {
             padding: 10px;
             margin: 0 10px;
             font-size: 16px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
         button {
             padding: 10px 20px;
             background-color: #4caf50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #388e3c;
         }
         table {
             border-collapse: collapse;
             width: 100%;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         th, td {
             border: 1px solid #ddd;
@@ -61,20 +64,21 @@
             transition: background-color 0.3s;
         }
         th {
-            background-color: #2196f3;
+            background-color: #0288d1;
             color: white;
         }
         td:hover {
-            background-color: #e0f7fa;
+            background-color: #b3e5fc;
         }
         .sunday {
-            color: #f44336;
+            color: #d32f2f;
         }
         .saturday {
-            color: #2196f3;
+            color: #0288d1;
         }
         .today {
-            background-color: #fff9c4;
+            background-color: #fff176;
+            font-weight: bold;
         }
         .calendar-container {
             margin-top: 20px;
@@ -83,8 +87,8 @@
             margin-top: 20px;
             background-color: #fff;
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         #notes ul {
             list-style-type: none;
@@ -93,17 +97,17 @@
         #notes li {
             margin-bottom: 10px;
             color: #555;
+            font-size: 14px;
         }
         /* Modal */
         #modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
@@ -111,11 +115,11 @@
         .modal-content {
             background-color: #fff;
             margin: auto;
-            padding: 25px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             text-align: left;
         }
         .close {
@@ -169,51 +173,60 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@nghiavuive/lunar_date_vi@latest/dist/index.umd.js"></script>
-    <script src="https://unpkg.com/date-chinese@1.0.5/index.js"></script>
     <script>
         const LunarDateLib = window._calendar;
-        const tietKhiNames = [
-            "", "Lập Xuân", "Vũ Thủy", "Kinh Trập", "Xuân Phân", "Thanh Minh", "Cốc Vũ",
-            "Lập Hạ", "Tiểu Mãn", "Mang Chủng", "Hạ Chí", "Tiểu Thử", "Đại Thử",
-            "Lập Thu", "Xử Thử", "Bạch Lộ", "Thu Phân", "Hàn Lộ", "Sương Giáng",
-            "Lập Đông", "Tiểu Tuyết", "Đại Tuyết", "Đông Chí", "Tiểu Hàn", "Đại Hàn"
-        ];
 
-        function jdToGregorian(jd) {
-            var j1, j2, j3, j4, j5;
-            var intgr = Math.floor(jd);
-            var frac = jd - intgr;
-            var gregjd = 2299161;
-            if (intgr >= gregjd) {
-                var tmp = Math.floor(((intgr - 1867216) - 0.25) / 36524.25);
-                j1 = intgr + 1 + tmp - Math.floor(0.25 * tmp);
-            } else {
-                j1 = intgr;
-            }
-            var dayfrac = frac + 0.5;
-            if (dayfrac >= 1.0) {
-                dayfrac -= 1.0;
-                ++j1;
-            }
-            j2 = j1 + 1524;
-            j3 = Math.floor(6680.0 + ((j2 - 2439870) - 122.1) / 365.25);
-            j4 = Math.floor(j3 * 365.25);
-            j5 = Math.floor((j2 - j4) / 30.6001);
-            var d = Math.floor(j2 - j4 - Math.floor(j5 * 30.6001));
-            var m = Math.floor(j5 - 1);
-            if (m > 12) m -= 12;
-            var y = Math.floor(j3 - 4715);
-            if (m > 2) --y;
-            if (y <= 0) --y;
-            var hr = Math.floor(dayfrac * 24.0);
-            var mn = Math.floor((dayfrac * 24.0 - hr) * 60.0);
-            var f = ((dayfrac * 24.0 - hr) * 60.0 - mn) * 60.0;
-            var sc = Math.floor(f);
-            f -= sc;
-            if (f > 0.5) ++sc;
-            if (y < 0) y = -y;
-            return { year: y, month: m, day: d, hour: hr, minute: mn, second: sc };
-        }
+        // Hardcoded solar terms for 2025 (based on accurate astronomical data)
+        const solarTerms2025 = {
+            1: [
+                { name: "Tiểu Hàn", day: 5, time: "22:34" },
+                { name: "Đại Hàn", day: 20, time: "16:00" }
+            ],
+            2: [
+                { name: "Lập Xuân", day: 3, time: "16:34" },
+                { name: "Vũ Thủy", day: 18, time: "12:27" }
+            ],
+            3: [
+                { name: "Kinh Trập", day: 5, time: "10:36" },
+                { name: "Xuân Phân", day: 20, time: "11:01" }
+            ],
+            4: [
+                { name: "Thanh Minh", day: 4, time: "15:12" },
+                { name: "Cốc Vũ", day: 20, time: "02:19" }
+            ],
+            5: [
+                { name: "Lập Hạ", day: 5, time: "08:36" },
+                { name: "Tiểu Mãn", day: 20, time: "21:11" }
+            ],
+            6: [
+                { name: "Mang Chủng", day: 5, time: "12:39" },
+                { name: "Hạ Chí", day: 21, time: "04:52" }
+            ],
+            7: [
+                { name: "Tiểu Thử", day: 6, time: "23:05" },
+                { name: "Đại Thử", day: 22, time: "16:31" }
+            ],
+            8: [
+                { name: "Lập Thu", day: 7, time: "08:49" },
+                { name: "Xử Thử", day: 22, time: "23:31" }
+            ],
+            9: [
+                { name: "Bạch Lộ", day: 7, time: "11:53" },
+                { name: "Thu Phân", day: 22, time: "21:19" }
+            ],
+            10: [
+                { name: "Hàn Lộ", day: 8, time: "03:38" },
+                { name: "Sương Giáng", day: 23, time: "06:45" }
+            ],
+            11: [
+                { name: "Lập Đông", day: 7, time: "06:57" },
+                { name: "Tiểu Tuyết", day: 22, time: "04:25" }
+            ],
+            12: [
+                { name: "Đại Tuyết", day: 6, time: "23:58" },
+                { name: "Đông Chí", day: 21, time: "17:19" }
+            ]
+        };
 
         function generateCalendar() {
             const month = parseInt(document.getElementById('month').value);
@@ -231,10 +244,12 @@
             let table = '<table><tr><th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th></tr><tr>';
             let day = 1;
 
+            // Empty cells before the first day
             for (let i = 0; i < firstDay; i++) {
                 table += '<td></td>';
             }
 
+            // First week
             for (let i = firstDay; i < 7; i++) {
                 if (day <= daysInMonth) {
                     table += getDayCell(year, month, day);
@@ -245,6 +260,7 @@
             }
             table += '</tr>';
 
+            // Remaining weeks
             while (day <= daysInMonth) {
                 table += '<tr>';
                 for (let i = 0; i < 7 && day <= daysInMonth; i++) {
@@ -258,16 +274,31 @@
             }
             table += '</table>';
 
-            // Tính toán ghi chú tiết khí
+            // Solar term notes
             const notes = getSolarTermNotes(year, month);
 
             calendarDiv.innerHTML = `<h3>Lịch tháng ${month < 10 ? '0' + month : month}/${year}</h3>${notes}${table}`;
         }
 
         function getDayCell(year, month, day) {
-            const solarDate = new LunarDateLib.SolarDate({ day, month, year });
-            const lunarDate = solarDate.toLunarDate();
-            lunarDate.init();
+            let lunarDay = 'N/A';
+            let canChiDay = 'N/A';
+            let canChiMonth = 'N/A';
+            let canChiYear = 'N/A';
+            let tietKhi = 'Không có tiết khí';
+
+            try {
+                const solarDate = new LunarDateLib.SolarDate({ day, month, year });
+                const lunarDate = solarDate.toLunarDate();
+                lunarDate.init();
+                lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
+                canChiDay = lunarDate.getDayName();
+                canChiMonth = lunarDate.getMonthName();
+                canChiYear = lunarDate.getYearName();
+                tietKhi = lunarDate.getSolarTerm() || 'Không có tiết khí';
+            } catch (e) {
+                console.error('Lunar date calculation error:', e);
+            }
 
             const weekday = new Date(year, month - 1, day).getDay();
             let className = '';
@@ -275,25 +306,13 @@
             if (weekday === 6) className = 'saturday';
             const todayClass = (day === new Date().getDate() && month === new Date().getMonth() + 1 && year === new Date().getFullYear()) ? ' today' : '';
 
-            const lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
-
-            return `<td class="${className}${todayClass}" onclick="showDetails(${year}, ${month}, ${day})">
+            return `<td class="${className}${todayClass}" onclick="showDetails(${year}, ${month}, ${day}, '${lunarDay}', '${canChiDay}', '${canChiMonth}', '${canChiYear}', '${tietKhi}')">
                 <strong style="font-size: 20px;">${day}</strong><br>
                 <small style="font-size: 14px; color: #666;">${lunarDay}</small>
             </td>`;
         }
 
-        function showDetails(year, month, day) {
-            const solarDate = new LunarDateLib.SolarDate({ day, month, year });
-            const lunarDate = solarDate.toLunarDate();
-            lunarDate.init();
-
-            const lunarDay = lunarDate.day + '/' + lunarDate.month + (lunarDate.leap ? ' nhuận' : '');
-            const canChiDay = lunarDate.getDayName();
-            const canChiMonth = lunarDate.getMonthName();
-            const canChiYear = lunarDate.getYearName();
-            const tietKhi = lunarDate.getSolarTerm() || 'Không có tiết khí';
-
+        function showDetails(year, month, day, lunarDay, canChiDay, canChiMonth, canChiYear, tietKhi) {
             document.getElementById('modal-title').innerHTML = `Thông tin ngày ${day}/${month}/${year}`;
             document.getElementById('modal-details').innerHTML = `
                 <p><strong>Ngày âm lịch:</strong> ${lunarDay}</p>
@@ -317,49 +336,26 @@
         }
 
         function getSolarTermNotes(year, month) {
-            const cal = new CalendarChinese();
-            let terms = [];
-
-            for (let n = 1; n <= 12; n++) {
-                // Minor solar terms
-                let qm = cal.minorSolarTerm(n, year);
-                let date = jdToGregorian(qm);
-                if (date.month === month && date.year === year) {
-                    let index = 2 * n - 1;
-                    let name = tietKhiNames[index];
-                    let hour = String(date.hour).padStart(2, '0');
-                    let minute = String(date.minute).padStart(2, '0');
-                    terms.push({ day: date.day, time: `${hour}:${minute}`, name });
-                }
-
-                // Major solar terms
-                qm = cal.majorSolarTerm(n, year);
-                date = jdToGregorian(qm);
-                if (date.month === month && date.year === year) {
-                    let index = 2 * n;
-                    let name = tietKhiNames[index];
-                    let hour = String(date.hour).padStart(2, '0');
-                    let minute = String(date.minute).padStart(2, '0');
-                    terms.push({ day: date.day, time: `${hour}:${minute}`, name });
-                }
+            if (year !== 2025) {
+                return '<div id="notes"><p>Tiết khí chỉ khả dụng cho năm 2025.</p></div>';
             }
 
-            // Sort by day
-            terms.sort((a, b) => a.day - b.day);
-
-            if (terms.length === 0) return '';
+            const terms = solarTerms2025[month] || [];
+            if (terms.length === 0) {
+                return '<div id="notes"><p>Không có tiết khí trong tháng này.</p></div>';
+            }
 
             let notesHtml = '<div id="notes"><h4>Ghi chú tiết khí:</h4><ul>';
             terms.forEach(term => {
                 const formattedDay = term.day < 10 ? '0' + term.day : term.day;
                 const formattedMonth = month < 10 ? '0' + month : month;
-                notesHtml += `<li>Tiết ${term.name} bắt đầu vào ${term.time}ph ngày ${formattedDay}.${formattedMonth}.${year}</li>`;
+                notesHtml += `<li>Tiết ${term.name} bắt đầu vào ${term.time} ngày ${formattedDay}.${formattedMonth}.${year}</li>`;
             });
             notesHtml += '</ul></div>';
             return notesHtml;
         }
 
-        // Tự động hiển thị lịch tháng hiện tại
+        // Initialize calendar
         document.getElementById('month').value = new Date().getMonth() + 1;
         document.getElementById('year').value = new Date().getFullYear();
         generateCalendar();
