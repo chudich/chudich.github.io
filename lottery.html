@@ -131,6 +131,16 @@
             text-decoration: none;
             cursor: pointer;
         }
+        #disclaimer {
+            background-color: #fff8e1; /* Màu nền vàng nhạt ấm */
+            border: 1px solid #ffe082;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            color: #5c4033; /* Màu chữ nâu đậm ấm */
+            font-weight: bold; /* Chữ đậm */
+            line-height: 2.0;
+        }
     </style>
 </head>
 <body>
@@ -142,6 +152,9 @@
     </div>
     
     <div id="inputTab" class="tab-content">
+        <div id="disclaimer">
+            Đây là chương trình lấy số ngẫu nhiên theo Entropy không theo truyền thống. Thuật toán này gợi ý người dùng lựa chọn vé số khi bạn phân vân không biết chọn số nào. Đây chỉ là gợi tham khảo nên không khẳng định người dùng chọn các số này sẽ trúng xổ số. Chúng tôi không đảm bảo tính chính xác, không chắc chắn về kết quả, và không chịu bất kỳ trách nhiệm nào liên quan đến việc sử dụng các dãy số được tạo ra. Người dùng tự chịu trách nhiệm cho mọi quyết định của mình.
+        </div>
         <form id="entropyForm">
             <label for="name">Tên của bạn (ít nhất 3 ký tự):</label>
             <input type="text" id="name" minlength="3" required>
@@ -156,7 +169,7 @@
             <span class="error" id="favoriteNumberError">Số yêu thích phải từ 0 đến 99.</span>
 
             <label for="luckyWord">Từ may mắn (ít nhất 4 ký tự, chỉ chữ cái và khoảng trắng):</label>
-            <input type="text" id="luckyWord" pattern="^[\\p{L}\\s]+$" minlength="4" required>
+            <input type="text" id="luckyWord" pattern="^[\p{L}\s]+$" minlength="4" required>
             <span class="error" id="luckyWordError">Từ may mắn phải có ít nhất 4 ký tự, chỉ chứa chữ cái (bao gồm chữ có dấu tiếng Việt) và khoảng trắng.</span>
 
             <label for="currentMood">Tâm trạng hiện tại (chọn từ danh sách):</label>
@@ -214,8 +227,6 @@
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.getElementById(tabId).style.display = 'block';
-            event.target.classList.remove('active');
-            event.target.classList.add('active');
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
