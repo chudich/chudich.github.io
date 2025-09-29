@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đông Tây Vibes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -13,10 +14,11 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #6C3483; /* tím phong thủy */
-            background-color: #f9f9f9;
+            color: #6C3483; /* Tím phong thủy */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
 
         .container {
@@ -27,149 +29,248 @@
 
         /* Header */
         header {
-            background: #4D807A; /* Màu pha xanh lá & tím nho */
+            background: linear-gradient(135deg, #4D807A, #6C3483);
             padding: 20px 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
         }
 
         .logo h1 {
-            color: #F4E1B9; /* vàng ngà sang trọng */
-            font-size: 26px;
+            color: #F4E1B9; /* Vàng ngà */
+            font-size: 28px;
             font-weight: 700;
             text-transform: uppercase;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+            text-align: center;
         }
 
         /* Menu */
         .main-menu ul {
             list-style: none;
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
             flex-wrap: wrap;
+            margin-top: 10px;
         }
 
         .main-menu ul li {
             margin: 10px 15px;
+            opacity: 0;
+            animation: fadeInMenu 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .main-menu ul li:nth-child(1) { --i: 1; }
+        .main-menu ul li:nth-child(2) { --i: 2; }
+        .main-menu ul li:nth-child(3) { --i: 3; }
+        .main-menu ul li:nth-child(4) { --i: 4; }
+        .main-menu ul li:nth-child(5) { --i: 5; }
+        .main-menu ul li:nth-child(6) { --i: 6; }
+        .main-menu ul li:nth-child(7) { --i: 7; }
+        .main-menu ul li:nth-child(8) { --i: 8; }
+        .main-menu ul li:nth-child(9) { --i: 9; }
+        .main-menu ul li:nth-child(10) { --i: 10; }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .main-menu ul li a {
             display: block;
-            padding: 14px 28px;
-            background: #c0392b; /* đỏ Enter The Path */
-            color: #fff;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #007AFF, #00C6FF); /* iOS blue */
+            color: #FFFFFF;
             text-decoration: none;
-            font-size: 20px; /* chữ to */
-            font-weight: bold; /* chữ đậm */
-            border-radius: 8px;
-            border: 2px solid #a93226;
-            transition: background 0.3s, color 0.3s, transform 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            min-width: 130px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            border: 2px solid #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            min-width: 140px;
             text-align: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .main-menu ul li a:hover {
-            background: #a93226; /* đỏ sẫm khi hover */
-            color: #fff;
+            background: linear-gradient(135deg, #005BB5, #0096D6);
             transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
         }
 
         .menu-toggle {
             display: none;
             flex-direction: column;
             cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
         .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: #fff;
+            width: 30px;
+            height: 4px;
+            background: #FFFFFF;
             margin: 4px 0;
             transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
         }
 
         /* Hero */
         .hero {
             background: url('https://chudich.github.io/background.jpeg') no-repeat center center/cover;
             text-align: center;
-            padding: 150px 0 100px;
+            padding: 120px 20px 80px;
             margin-top: 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
         }
 
         .hero h2 {
-            font-size: 36px;
+            font-size: 40px;
             margin-bottom: 20px;
-            color: #F4E1B9; /* logo đồng bộ */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            color: #FFD700; /* Vàng ấm */
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: fadeInSlide 0.8s ease forwards;
         }
 
         .hero p {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
             line-height: 1.8;
             margin-bottom: 30px;
-            color: #6C3483;
-            opacity: 0; /* ban đầu ẩn để fade-in */
-            transition: opacity 1.5s ease;
-            min-height: 120px; /* chừa chỗ khi typing */
+            color: #FFD700;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeInSlide 0.8s ease 0.2s forwards;
         }
 
-        .hero p.visible {
-            opacity: 1;
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero .btn {
+            background: linear-gradient(135deg, #007AFF, #00C6FF); /* iOS blue */
+            border: 2px solid #FFFFFF;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            animation: fadeInSlide 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero .btn:hover {
+            background: linear-gradient(135deg, #005BB5, #0096D6);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
         }
 
         /* Buttons section */
         .buttons {
             background: url("https://chudich.github.io/bg_menu_iching.jpeg") no-repeat center center/cover;
             padding: 60px 0;
+            position: relative;
+        }
+
+        .buttons::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
         }
 
         .button-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
-            margin: 0;
+            position: relative;
         }
 
-        /* Buttons */
-        .btn {
-            display: block;
+        .button-grid .btn {
+            background: linear-gradient(135deg, #007AFF, #00C6FF);
+            color: #FFFFFF;
             padding: 15px 30px;
-            background: #e67e22; /* cam */
-            color: #FFF8E7; /* trắng ngà dịu mắt */
-            text-decoration: none;
-            border-radius: 8px;
-            border: 2px solid #fff;
-            font-weight: 700; /* chữ đậm hơn */
+            border-radius: 14px;
+            border: 2px solid #FFFFFF;
+            font-weight: 700;
+            font-size: 1.1rem;
             text-align: center;
-            transition: background 0.3s, transform 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            animation: fadeInSlide 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--i));
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .btn:hover {
-            background: #d35400;
+        .button-grid .btn:nth-child(1) { --i: 1; }
+        .button-grid .btn:nth-child(2) { --i: 2; }
+        .button-grid .btn:nth-child(3) { --i: 3; }
+        .button-grid .btn:nth-child(4) { --i: 4; }
+        .button-grid .btn:nth-child(5) { --i: 5; }
+        .button-grid .btn:nth-child(6) { --i: 6; }
+        .button-grid .btn:nth-child(7) { --i: 7; }
+        .button-grid .btn:nth-child(8) { --i: 8; }
+        .button-grid .btn:nth-child(9) { --i: 9; }
+        .button-grid .btn:nth-child(10) { --i: 10; }
+        .button-grid .btn:nth-child(11) { --i: 11; }
+
+        .button-grid .btn:hover {
+            background: linear-gradient(135deg, #005BB5, #0096D6);
             transform: translateY(-3px);
-        }
-
-        .primary-btn {
-            background: #c0392b;
-            border: 2px solid #fff;
-        }
-
-        .primary-btn:hover {
-            background: #a93226;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
         }
 
         /* Footer */
         footer {
-            background: #ECF0F1;
-            color: #333;
+            background: linear-gradient(135deg, #4D807A, #6C3483);
+            color: #F4E1B9;
             text-align: center;
             padding: 20px 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            margin-top: 40px;
         }
 
         @media (max-width: 768px) {
@@ -182,7 +283,8 @@
                 top: 80px;
                 left: 0;
                 width: 100%;
-                background: #4D807A;
+                background: linear-gradient(135deg, #4D807A, #6C3483);
+                backdrop-filter: blur(8px);
             }
             .main-menu ul {
                 flex-direction: column;
@@ -192,20 +294,47 @@
             .main-menu ul li {
                 margin: 10px 0;
             }
+            .main-menu ul li a {
+                font-size: 1rem;
+                padding: 10px 20px;
+                min-width: 120px;
+            }
             .menu-toggle {
                 display: flex;
                 justify-content: flex-end;
+            }
+            .hero {
+                padding: 100px 15px 60px;
             }
             .hero h2 {
                 font-size: 28px;
             }
             .hero p {
-                font-size: 18px;
+                font-size: 1rem;
                 line-height: 1.6;
+                max-width: 100%;
+                padding: 0 10px;
+            }
+            .hero .btn {
+                font-size: 1rem;
+                padding: 12px 30px;
             }
             .button-grid {
                 grid-template-columns: 1fr;
                 gap: 30px;
+            }
+            .button-grid .btn {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h2 {
+                font-size: 24px;
+            }
+            .hero p {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -238,8 +367,8 @@
 
     <section class="hero">
         <div class="container">
-            <h2></h2>
-            <p id="hero-text"></p>
+            <h2>Khám Phá Đông Tây Vibes</h2>
+            <p id="hero-text">Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.</p>
             <a href="https://chudich.github.io/EnterThePath.html" class="btn primary-btn">Enter The Path</a>
         </div>
     </section>
@@ -274,25 +403,12 @@
         const mainMenu = document.querySelector('.main-menu');
         menuToggle.addEventListener('click', () => {
             mainMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
         });
 
-        // Typing + fade-in cho hero text
-        const text = "Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.";
-        const heroText = document.getElementById("hero-text");
-        let index = 0;
-
-        function typeEffect() {
-            if (index < text.length) {
-                heroText.textContent += text.charAt(index);
-                index++;
-                setTimeout(typeEffect, 30); // tốc độ typing
-            } else {
-                heroText.classList.add("visible"); // fade-in sau khi gõ xong
-            }
-        }
-
+        // Fade-in hero text on load
         window.addEventListener("load", () => {
-            setTimeout(typeEffect, 500); // delay nhỏ trước khi bắt đầu gõ
+            document.getElementById("hero-text").classList.add("visible");
         });
     </script>
 </body>
