@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Dãy Số Xổ Số</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Tạo Dãy Số Xổ Số</h1>
+    <form id="entropyForm">
+        <label for="name">Tên của bạn:</label>
+        <input type="text" id="name" required>
+
+        <label for="birthday">Ngày sinh (dd/mm/yyyy):</label>
+        <input type="text" id="birthday" placeholder="dd/mm/yyyy" required>
+
+        <label for="favoriteNumber">Số yêu thích:</label>
+        <input type="text" id="favoriteNumber" required>
+
+        <label for="luckyWord">Từ may mắn:</label>
+        <input type="text" id="luckyWord" required>
+
+        <label for="currentMood">Tâm trạng hiện tại:</label>
+        <input type="text" id="currentMood" required>
+
+        <label for="lotteryType">Chọn đài xổ số:</label>
+        <select id="lotteryType" required>
+            <option value="" disabled selected>Chọn đài</option>
+            <option value="1">Miền Nam</option>
+            <option value="2">Miền Trung</option>
+            <option value="3">Miền Bắc</option>
+            <option value="4">Vietlott</option>
+        </select>
+
+        <button type="submit">Tạo dãy số</button>
+    </form>
+    <div id="result"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    <script>
+        // Hàm tạo seed từ chuỗi entropy
+        function generateSeed(entropyStr) {
+            const hash = sha256(entropyStr);
+            const seed = parseInt(hash.substring(0, 16), 16) % 0xFFFFFFFF;
+            return seed;
+        }
+
+        // Hàm tạo dãy số ngẫu nhiên với độ dài chỉ định
+        function generateNumberSequence(length, seed) {
+            // Tạo một PRNG với seed
+            const rng = new Math.seedrandom(seed);
+            let sequence = '';
+            for (let i = 0; i < length; i++) {
+                sequence += Math.floor(rng() * 10);
+            }
+            return sequence;
+        }
+
+        // Hàm xử lý khi submit form
+        document.getElementById('entropyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Lấy giá trị từ form
+            const name = document.getElementById('name').value;
+            const birthday = document.getElementById('birthday').value;
+            const favoriteNumber = document.getElementById('favoriteNumber').value;
+            const luckyWord = document.getElementById('luckyWord').value;
+            const currentMood = document.getElementById('currentMood').value;
+            const lotteryType = document.getElementById('lotteryType').value;
+
+            // Kiểm tra định dạng ngày sinh
+            const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (!datePattern.test(birthday)) {
+                alert('Ngày sinh không hợp lệ, vui lòng nhập theo định dạng dd/mm/yyyy');
+                return;
+            }
+
+            // Tạo chuỗi entropy
+            const now = new Date().toISOString();
+            const entropyStr = `${name}|${birthday}|${favoriteNumber}|${luckyWord}|${currentMood}|${now}`;
+
+            // Tạo seed từ entropy
+            const seed = generateSeed(entropyStr);
+
+            // Xác định độ dài dãy số dựa trên loại xổ số
+            let lengths;
+            if (lotteryType === '4') {
+                lengths = [7, 8, 9, 10]; // Vietlott
+            } else {
+                lengths = [2, 3, 4, 5, 6]; // Miền Nam, Miền Trung, Miền Bắc
+            }
+
+            // Tạo và hiển thị dãy số
+            let resultHtml = '<h3>Kết quả dãy số:</h3>';
+            lengths.forEach(length => {
+                const sequence = generateNumberSequence(length, seed + length); // Thêm length để tạo sự khác biệt
+                resultHtml += `<p>Dãy số ${length} chữ số: ${sequence}</p>`;
+            });
+
+            document.getElementById('result').innerHTML = resultHtml;
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+</body>
+</html>
