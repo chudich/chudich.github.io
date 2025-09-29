@@ -5,80 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nhịp Sinh Học</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .home-menu {
+            margin-bottom: 20px;
+        }
+        .home-menu a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #007aff, #00c6ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        .home-menu a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
         }
         form {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            width: 100%;
+            max-width: 600px;
         }
         label {
             display: block;
             margin: 10px 0 5px;
-            font-weight: bold;
+            font-weight: 500;
+            color: #333;
         }
         input {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            padding: 12px;
+            background: linear-gradient(135deg, #007aff, #00c6ff);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
         button:hover {
-            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
         #chartContainer {
             margin-top: 20px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            width: 100%;
         }
         #error {
-            color: red;
+            color: #ff3b30;
             margin-top: 10px;
+            font-weight: 500;
         }
         #analysisTable {
             margin-top: 20px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            width: 100%;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 12px;
             text-align: left;
+            transition: background 0.3s ease;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: rgba(0, 122, 255, 0.1);
+            color: #007aff;
+            font-weight: 600;
+        }
+        td {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        tr:hover td {
+            background: rgba(0, 122, 255, 0.05);
+        }
+        .min-cell {
+            color: #ff3b30;
+            font-weight: 500;
+        }
+        .avg-cell {
+            color: #8e8e93;
+            font-weight: 500;
+        }
+        .max-cell {
+            color: #28a745; /* Darker green for Max */
+            font-weight: 500;
+        }
+        .intersect-dir {
+            white-space: pre-line; /* Cho phép xuống dòng */
+        }
+        .bold-name {
+            font-weight: 600;
+        }
+        .up {
+            color: #28a745; /* Darker green for Tăng */
+            font-weight: 600;
+        }
+        .down {
+            color: #ff3b30; /* Red for Giảm */
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
+    <div class="home-menu">
+        <a href="#">Về Trang Chủ</a>
+    </div>
     <h1>Tính Nhịp Sinh Học</h1>
     <form id="biorhythmForm">
         <label for="birthday">Ngày sinh (dd/mm/yyyy):</label>
@@ -91,7 +180,7 @@
         <div id="error"></div>
     </form>
     <div id="chartContainer">
-        <canvas id="biorhythmChart" style="width: 100%; height: 600px;"></canvas> <!-- Tăng kích thước biểu đồ -->
+        <canvas id="biorhythmChart" style="width: 100%; height: 600px;"></canvas>
     </div>
     <div id="analysisTable"></div>
 
@@ -178,7 +267,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Cho phép biểu đồ mở rộng theo height
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             min: -100,
@@ -196,15 +285,15 @@
                 }
             });
 
-            // Phân tích Min, Max, Trung bình, và Giao điểm
+            // Phân tích Min, Max, Trung bình
             const states = {
-                physical: { name: 'Năng lượng thể chất', data: physical },
-                emotional: { name: 'Cảm xúc', data: emotional },
-                intellectual: { name: 'Trí tuệ', data: intellectual },
-                love: { name: 'Tình yêu', data: love }
+                physical: { name: 'Năng lượng thể chất', data: physical, color: 'red' },
+                emotional: { name: 'Cảm xúc', data: emotional, color: 'blue' },
+                intellectual: { name: 'Trí tuệ', data: intellectual, color: 'green' },
+                love: { name: 'Tình yêu', data: love, color: 'purple' }
             };
 
-            let tableHtml = '<h3>Phân Tích Trạng Thái</h3><table><tr><th>Trạng thái</th><th>Min (thấp nhất)</th><th>Trung bình (gần 0)</th><th>Max (cao nhất)</th></tr>';
+            let tableHtml = '<h3>Phân Tích Trạng Thái Min, Trung Bình, Max</h3><table><tr><th>Trạng thái</th><th class="min-cell">Min (thấp nhất)</th><th class="avg-cell">Trung bình (gần 0)</th><th class="max-cell">Max (cao nhất)</th></tr>';
             for (const key in states) {
                 const state = states[key];
                 const minDays = [];
@@ -217,12 +306,12 @@
                     if (Math.abs(val) < 10) avgDays.push(labels[idx]);
                     if (Math.abs(val - maxVal) < 0.01) maxDays.push(labels[idx]);
                 });
-                tableHtml += `<tr><td>${state.name}</td><td>${minDays.join(', ') || 'Không có'}</td><td>${avgDays.join(', ') || 'Không có'}</td><td>${maxDays.join(', ') || 'Không có'}</td></tr>`;
+                tableHtml += `<tr><td class="bold-name">${state.name}</td><td class="min-cell">${minDays.join(', ') || 'Không có'}</td><td class="avg-cell">${avgDays.join(', ') || 'Không có'}</td><td class="max-cell">${maxDays.join(', ') || 'Không có'}</td></tr>`;
             }
             tableHtml += '</table>';
 
-            // Tìm giao điểm (các ngày mà hai đường gần bằng nhau, ngưỡng < 1)
-            tableHtml += '<h3>Mốc Thời Gian Giao Điểm</h3><table><tr><th>Cặp trạng thái</th><th>Ngày giao điểm</th></tr>';
+            // Phân tích giao điểm giữa 2 đường
+            tableHtml += '<h3>Giao Điểm Giữa 2 Trạng Thái</h3><table><tr><th>Cặp trạng thái</th><th>Ngày giao điểm (khoảng)</th><th>Trạng thái tại giao điểm</th><th>Hướng (tăng/giảm)</th></tr>';
             const pairs = [
                 { a: 'physical', b: 'emotional', name: 'Năng lượng thể chất & Cảm xúc' },
                 { a: 'physical', b: 'intellectual', name: 'Năng lượng thể chất & Trí tuệ' },
@@ -232,14 +321,110 @@
                 { a: 'intellectual', b: 'love', name: 'Trí tuệ & Tình yêu' }
             ];
             pairs.forEach(pair => {
-                const intersectDays = [];
-                days.forEach((_, idx) => {
-                    if (Math.abs(states[pair.a].data[idx] - states[pair.b].data[idx]) < 1) {
-                        intersectDays.push(labels[idx]);
+                const intersectInfo = [];
+                for (let i = 0; i < days.length - 1; i++) {
+                    const diff1 = states[pair.a].data[i] - states[pair.b].data[i];
+                    const diff2 = states[pair.a].data[i + 1] - states[pair.b].data[i + 1];
+                    if (diff1 * diff2 < 0) {
+                        const approxVal = (states[pair.a].data[i] + states[pair.b].data[i]) / 2;
+                        const dirA = states[pair.a].data[i + 1] > states[pair.a].data[i] ? 'Tăng' : 'Giảm';
+                        const dirB = states[pair.b].data[i + 1] > states[pair.b].data[i] ? 'Tăng' : 'Giảm';
+                        intersectInfo.push({
+                            day: `Giữa ${labels[i]} và ${labels[i + 1]}`,
+                            value: approxVal.toFixed(2),
+                            dir: `${states[pair.a].name}: <span class="${dirA === 'Tăng' ? 'up' : 'down'}">${dirA}</span>\n${states[pair.b].name}: <span class="${dirB === 'Tăng' ? 'up' : 'down'}">${dirB}</span>`
+                        });
                     }
-                });
-                tableHtml += `<tr><td>${pair.name}</td><td>${intersectDays.join(', ') || 'Không có'}</td></tr>`;
+                }
+                let row = `<tr><td class="bold-name">${pair.name}</td><td>`;
+                let valueCell = '<td>';
+                let dirCell = '<td class="intersect-dir">';
+                if (intersectInfo.length > 0) {
+                    intersectInfo.forEach(info => {
+                        row += `${info.day}<br>`;
+                        valueCell += `${info.value}%<br>`;
+                        dirCell += `${info.dir}<br><br>`;
+                    });
+                } else {
+                    row += 'Không có';
+                    valueCell += 'N/A';
+                    dirCell += 'N/A';
+                }
+                row += '</td>' + valueCell + '</td>' + dirCell + '</td></tr>';
+                tableHtml += row;
             });
+            tableHtml += '</table>';
+
+            // Phân tích giao điểm giữa 3 đường và 4 đường (trạng thái gần bằng nhau, ngưỡng 5%)
+            tableHtml += '<h3>Giao Điểm Giữa 3 hoặc 4 Trạng Thái</h3><table><tr><th>Số trạng thái</th><th>Ngày</th><th>Trạng thái tại giao điểm</th><th>Hướng (tăng/giảm)</th></tr>';
+            const triples = [
+                { keys: ['physical', 'emotional', 'intellectual'], name: 'Năng lượng thể chất, Cảm xúc, Trí tuệ' },
+                { keys: ['physical', 'emotional', 'love'], name: 'Năng lượng thể chất, Cảm xúc, Tình yêu' },
+                { keys: ['physical', 'intellectual', 'love'], name: 'Năng lượng thể chất, Trí tuệ, Tình yêu' },
+                { keys: ['emotional', 'intellectual', 'love'], name: 'Cảm xúc, Trí tuệ, Tình yêu' }
+            ];
+            const quadruple = { keys: ['physical', 'emotional', 'intellectual', 'love'], name: 'Tất cả 4 trạng thái' };
+
+            // Hàm kiểm tra giao điểm cho nhóm
+            function findGroupIntersects(group) {
+                const intersectDays = [];
+                for (let i = 0; i < days.length; i++) {
+                    const values = group.keys.map(k => states[k].data[i]);
+                    if (Math.max(...values) - Math.min(...values) < 5) {
+                        const avgVal = values.reduce((a, b) => a + b, 0) / values.length;
+                        let dirs = '';
+                        group.keys.forEach(k => {
+                            let dir = 'N/A';
+                            if (i < days.length - 1) {
+                                dir = states[k].data[i + 1] > states[k].data[i] ? 'Tăng' : 'Giảm';
+                            }
+                            dirs += `${states[k].name}: <span class="${dir === 'Tăng' ? 'up' : 'down'}">${dir}</span>\n`;
+                        });
+                        intersectDays.push({ day: labels[i], value: avgVal.toFixed(2), dirs: dirs.trim() });
+                    }
+                }
+                return intersectDays;
+            }
+
+            // Cho 3 đường
+            triples.forEach(triple => {
+                const info = findGroupIntersects(triple);
+                let row = `<tr><td class="bold-name">3: ${triple.name}</td><td>`;
+                let valueCell = '<td>';
+                let dirCell = '<td class="intersect-dir">';
+                if (info.length > 0) {
+                    info.forEach(d => {
+                        row += `${d.day}<br>`;
+                        valueCell += `${d.value}%<br>`;
+                        dirCell += `${d.dirs}<br><br>`;
+                    });
+                } else {
+                    row += 'Không có';
+                    valueCell += 'N/A';
+                    dirCell += 'N/A';
+                }
+                row += '</td>' + valueCell + '</td>' + dirCell + '</td></tr>';
+                tableHtml += row;
+            });
+
+            // Cho 4 đường
+            const quadInfo = findGroupIntersects(quadruple);
+            let quadRow = `<tr><td class="bold-name">4: ${quadruple.name}</td><td>`;
+            let quadValue = '<td>';
+            let quadDir = '<td class="intersect-dir">';
+            if (quadInfo.length > 0) {
+                quadInfo.forEach(info => {
+                    quadRow += `${info.day}<br>`;
+                    quadValue += `${info.value}%<br>`;
+                    quadDir += `${info.dirs}<br><br>`;
+                });
+            } else {
+                quadRow += 'Không có';
+                quadValue += 'N/A';
+                quadDir += 'N/A';
+            }
+            quadRow += '</td>' + quadValue + '</td>' + quadDir + '</td></tr>';
+            tableHtml += quadRow;
             tableHtml += '</table>';
 
             document.getElementById('analysisTable').innerHTML = tableHtml;
