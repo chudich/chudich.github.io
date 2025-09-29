@@ -155,9 +155,9 @@
             <input type="number" id="favoriteNumber" min="0" max="99" required>
             <span class="error" id="favoriteNumberError">Số yêu thích phải từ 0 đến 99.</span>
 
-            <label for="luckyWord">Từ may mắn (ít nhất 4 ký tự, không chứa số):</label>
-            <input type="text" id="luckyWord" pattern="[a-zA-Z]+" minlength="4" required>
-            <span class="error" id="luckyWordError">Từ may mắn phải có ít nhất 4 ký tự chữ cái, không chứa số.</span>
+            <label for="luckyWord">Từ may mắn (ít nhất 4 ký tự, chỉ chữ cái và khoảng trắng):</label>
+            <input type="text" id="luckyWord" pattern="^[\\p{L}\\s]+$" minlength="4" required>
+            <span class="error" id="luckyWordError">Từ may mắn phải có ít nhất 4 ký tự, chỉ chứa chữ cái (bao gồm chữ có dấu tiếng Việt) và khoảng trắng.</span>
 
             <label for="currentMood">Tâm trạng hiện tại (chọn từ danh sách):</label>
             <select id="currentMood" required>
@@ -214,6 +214,8 @@
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
             document.getElementById(tabId).style.display = 'block';
+            event.target.classList.remove('active');
+            event.target.classList.add('active');
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
@@ -236,23 +238,21 @@
             return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
         }
 
-        // Hàm tạo seed từ chuỗi entropy (tối ưu: sử dụng toàn bộ hash và kết hợp với browser entropy)
+        // Hàm tạo seed từ chuỗi entropy
         function generateSeed(entropyStr) {
             const hash = sha256(entropyStr);
-            // Tối ưu: Sử dụng toàn bộ hash để tạo seed lớn hơn, kết hợp với performance.now() cho entropy browser
             const browserEntropy = performance.now();
             const fullSeedStr = hash + browserEntropy.toString();
             const fullHash = sha256(fullSeedStr);
-            return parseInt(fullHash.substring(0, 16), 16) % 0xFFFFFFFFFFFF; // Mở rộng modulus cho seed lớn hơn
+            return parseInt(fullHash.substring(0, 16), 16) % 0xFFFFFFFFFFFF;
         }
 
-        // Hàm tạo dãy số ngẫu nhiên với độ dài chỉ định (tối ưu: hỗ trợ số không lặp)
+        // Hàm tạo dãy số ngẫu nhiên với độ dài chỉ định
         function generateNumberSequence(length, seed, unique = false) {
             const rng = new Math.seedrandom(seed);
             let numbers = [];
             if (unique) {
-                // Tạo số không lặp (cho Vietlott, giả sử phạm vi 0-99 cho đơn giản, điều chỉnh nếu cần)
-                let pool = Array.from({length: 100}, (_, i) => i); // 00 đến 99
+                let pool = Array.from({length: 100}, (_, i) => i);
                 for (let i = 0; i < length; i++) {
                     const index = Math.floor(rng() * pool.length);
                     numbers.push(pool.splice(index, 1)[0].toString().padStart(2, '0'));
@@ -269,7 +269,7 @@
         function saveToHistory(resultHtml, lotteryType) {
             let history = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
             history.push({ date: new Date().toLocaleString(), type: lotteryType, result: resultHtml });
-            if (history.length > 10) history.shift(); // Giới hạn 10 lịch sử
+            if (history.length > 10) history.shift();
             localStorage.setItem('lotteryHistory', JSON.stringify(history));
             loadHistory();
         }
@@ -309,13 +309,14 @@
             hideAllErrors();
             let valid = true;
 
-            // Lấy giá trị
+            // Kiểm tra tên
             const name = document.getElementById('name').value.trim();
             if (name.length < 3) {
                 document.getElementById('nameError').style.display = 'block';
                 valid = false;
             }
 
+            // Kiểm tra ngày sinh
             const birthday = document.getElementById('birthday').value.trim();
             const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
             const match = birthday.match(datePattern);
@@ -324,24 +325,28 @@
                 valid = false;
             }
 
+            // Kiểm tra số yêu thích
             const favoriteNumber = parseInt(document.getElementById('favoriteNumber').value);
             if (isNaN(favoriteNumber) || favoriteNumber < 0 || favoriteNumber > 99) {
                 document.getElementById('favoriteNumberError').style.display = 'block';
                 valid = false;
             }
 
+            // Kiểm tra từ may mắn
             const luckyWord = document.getElementById('luckyWord').value.trim();
-            if (luckyWord.length < 4 || !/^[a-zA-Z]+$/.test(luckyWord)) {
+            if (luckyWord.length < 4 || !/^[\p{L}\s]+$/u.test(luckyWord)) {
                 document.getElementById('luckyWordError').style.display = 'block';
                 valid = false;
             }
 
+            // Kiểm tra tâm trạng
             const currentMood = document.getElementById('currentMood').value;
             if (!currentMood) {
                 document.getElementById('currentMoodError').style.display = 'block';
                 valid = false;
             }
 
+            // Kiểm tra loại xổ số
             const lotteryType = document.getElementById('lotteryType').value;
             if (!lotteryType) {
                 document.getElementById('lotteryTypeError').style.display = 'block';
@@ -353,11 +358,11 @@
                 return;
             }
 
-            // Định dạng ngày sinh thành YYYY-MM-DD
+            // Định dạng ngày sinh
             const [day, month, year] = birthday.split('/');
             const formattedBirthday = `${year}-${month}-${day}`;
 
-            // Tạo chuỗi entropy (tối ưu: thêm user agent cho entropy browser)
+            // Tạo chuỗi entropy
             const now = new Date().toISOString();
             const userAgent = navigator.userAgent;
             const entropyStr = `${name}|${formattedBirthday}|${favoriteNumber}|${luckyWord}|${currentMood}|${now}|${userAgent}`;
