@@ -7,6 +7,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap');
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             max-width: 1000px;
@@ -17,34 +23,125 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-top: 100px; /* Increased for header space */
         }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #007aff, #00c6ff);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Menu */
+        .main-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .main-menu ul li {
+            margin: 0 10px;
+            opacity: 0;
+            animation: fadeInMenu 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .main-menu ul li:nth-child(1) { --i: 1; }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #007AFF, #00C6FF);
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 2px solid #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .main-menu ul li a:hover {
+            background: linear-gradient(135deg, #005BB5, #0096D6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #FFFFFF;
+            margin: 4px 0;
+            transition: all 0.3s;
+        }
+
+        .main-menu.active {
+            display: block;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #007aff, #00c6ff);
+            backdrop-filter: blur(8px);
+            padding: 10px 0;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
         h1 {
             text-align: center;
             color: #1a1a1a;
             font-weight: 600;
             font-size: 2rem;
             margin-bottom: 20px;
+            margin-top: 20px; /* Added to ensure title is not too close to header */
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .home-menu {
-            margin-bottom: 20px;
-        }
-        .home-menu a {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #007aff, #00c6ff);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        }
-        .home-menu a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
-        }
+
         form {
             background: rgba(255, 255, 255, 0.95);
             padding: 20px;
@@ -54,12 +151,14 @@
             width: 100%;
             max-width: 600px;
         }
+
         label {
             display: block;
             margin: 10px 0 5px;
             font-weight: 500;
             color: #333;
         }
+
         input {
             width: 100%;
             padding: 12px;
@@ -70,11 +169,13 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
+
         input:focus {
             outline: none;
             border-color: #007aff;
             box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
+
         button {
             width: 100%;
             padding: 12px;
@@ -87,10 +188,12 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
+
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
+
         #chartContainer {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.95);
@@ -100,11 +203,13 @@
             backdrop-filter: blur(8px);
             width: 100%;
         }
+
         #error {
             color: #ff3b30;
             margin-top: 10px;
             font-weight: 500;
         }
+
         #analysisTable {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.95);
@@ -114,60 +219,133 @@
             backdrop-filter: blur(8px);
             width: 100%;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+
         th, td {
             border: 1px solid rgba(0, 0, 0, 0.1);
             padding: 12px;
             text-align: left;
             transition: background 0.3s ease;
         }
+
         th {
             background-color: rgba(0, 122, 255, 0.1);
             color: #007aff;
             font-weight: 600;
         }
+
         td {
             background: rgba(255, 255, 255, 0.8);
         }
+
         tr:hover td {
             background: rgba(0, 122, 255, 0.05);
         }
+
         .min-cell {
             color: #ff3b30;
             font-weight: 500;
         }
+
         .avg-cell {
             color: #8e8e93;
             font-weight: 500;
         }
+
         .max-cell {
-            color: #28a745; /* Darker green for Max */
+            color: #28a745;
             font-weight: 500;
         }
+
         .intersect-dir {
-            white-space: pre-line; /* Cho phép xuống dòng */
+            white-space: pre-line;
         }
+
         .bold-name {
             font-weight: 600;
         }
+
         .up {
-            color: #28a745; /* Darker green for Tăng */
+            color: #28a745;
             font-weight: 600;
         }
+
         .down {
-            color: #ff3b30; /* Red for Giảm */
+            color: #ff3b30;
             font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                padding-top: 80px; /* Adjusted for mobile to ensure title visibility */
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 10px; /* Slightly reduced for mobile */
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            .main-menu {
+                display: none;
+            }
+
+            .main-menu.active {
+                display: block;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, #007aff, #00c6ff);
+                backdrop-filter: blur(8px);
+                padding: 10px 0;
+            }
+
+            .main-menu ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-menu ul li {
+                margin: 5px 0;
+            }
+
+            .main-menu ul li a {
+                font-size: 1.1rem;
+                padding: 8px 16px;
+            }
+
+            .menu-toggle {
+                display: flex;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="home-menu">
-        <a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a>
-    </div>
+    <header>
+        <div class="container">
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
     <h1>Tính Nhịp Sinh Học</h1>
     <form id="biorhythmForm">
         <label for="birthday">Ngày sinh (dd/mm/yyyy):</label>
@@ -186,8 +364,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Toggle menu
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mainMenu = document.querySelector('.main-menu');
+        menuToggle.addEventListener('click', () => {
+            mainMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
         // Ngày hiện tại (hardcode theo yêu cầu: September 29, 2025)
-        const currentDate = new Date(2025, 8, 29, 0, 0, 0); // Tháng bắt đầu từ 0 trong JS
+        const currentDate = new Date(2025, 8, 29, 0, 0, 0);
 
         // Xử lý form submit
         document.getElementById('biorhythmForm').addEventListener('submit', function(event) {
@@ -239,21 +425,21 @@
                 return date;
             });
 
-            // Tính số ngày sống cho từng ngày (chính xác đến milliseconds, chia cho 86400000 để lấy ngày)
+            // Tính số ngày sống cho từng ngày
             const daysLived = dates.map(d => (d - birthDate) / (1000 * 60 * 60 * 24));
 
-            // Tính giá trị sin (nhân 100 để thành %)
-            const physical = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 23) * 100); // Năng lượng thể chất
-            const emotional = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 28) * 100); // Cảm xúc
-            const intellectual = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 33) * 100); // Trí tuệ
-            const love = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 38) * 100); // Tình yêu
+            // Tính giá trị sin
+            const physical = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 23) * 100);
+            const emotional = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 28) * 100);
+            const intellectual = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 33) * 100);
+            const love = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 38) * 100);
 
-            // Chuẩn bị labels cho biểu đồ (ngày/tháng/năm)
+            // Chuẩn bị labels cho biểu đồ
             const labels = dates.map(d => d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
 
-            // Vẽ biểu đồ sử dụng Chart.js
+            // Vẽ biểu đồ
             const ctx = document.getElementById('biorhythmChart').getContext('2d');
-            if (window.myChart) window.myChart.destroy(); // Xóa biểu đồ cũ nếu có
+            if (window.myChart) window.myChart.destroy();
             window.myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -355,7 +541,7 @@
             });
             tableHtml += '</table>';
 
-            // Phân tích giao điểm giữa 3 đường và 4 đường (trạng thái gần bằng nhau, ngưỡng 5%)
+            // Phân tích giao điểm giữa 3 đường và 4 đường
             tableHtml += '<h3>Giao Điểm Giữa 3 hoặc 4 Trạng Thái</h3><table><tr><th>Số trạng thái</th><th>Ngày</th><th>Trạng thái tại giao điểm</th><th>Hướng (tăng/giảm)</th></tr>';
             const triples = [
                 { keys: ['physical', 'emotional', 'intellectual'], name: 'Năng lượng thể chất, Cảm xúc, Trí tuệ' },
@@ -365,7 +551,6 @@
             ];
             const quadruple = { keys: ['physical', 'emotional', 'intellectual', 'love'], name: 'Tất cả 4 trạng thái' };
 
-            // Hàm kiểm tra giao điểm cho nhóm
             function findGroupIntersects(group) {
                 const intersectDays = [];
                 for (let i = 0; i < days.length; i++) {
@@ -386,7 +571,6 @@
                 return intersectDays;
             }
 
-            // Cho 3 đường
             triples.forEach(triple => {
                 const info = findGroupIntersects(triple);
                 let row = `<tr><td class="bold-name">3: ${triple.name}</td><td>`;
@@ -407,7 +591,6 @@
                 tableHtml += row;
             });
 
-            // Cho 4 đường
             const quadInfo = findGroupIntersects(quadruple);
             let quadRow = `<tr><td class="bold-name">4: ${quadruple.name}</td><td>`;
             let quadValue = '<td>';
