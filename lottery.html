@@ -7,6 +7,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap');
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             max-width: 800px;
@@ -17,7 +23,105 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-top: 80px; /* Space for fixed header */
         }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #007aff, #00c6ff); /* Match submit button gradient */
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Menu */
+        .main-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .main-menu ul li {
+            margin: 0 10px;
+            opacity: 0;
+            animation: fadeInMenu 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .main-menu ul li:nth-child(1) { --i: 1; }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #007AFF, #00C6FF); /* iOS blue */
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.2rem; /* Medium text size */
+            font-weight: 700; /* Bold */
+            border-radius: 10px;
+            border: 2px solid #FFFFFF;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .main-menu ul li a:hover {
+            background: linear-gradient(135deg, #005BB5, #0096D6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            position diyen
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #FFFFFF;
+            margin: 4px 0;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
         h1 {
             text-align: center;
             color: #1a1a1a;
@@ -26,6 +130,7 @@
             margin-bottom: 20px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         #tabs {
             display: flex;
             justify-content: center;
@@ -37,6 +142,7 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
         .tab-button {
             padding: 10px 20px;
             background: rgba(255, 255, 255, 0.3);
@@ -47,15 +153,18 @@
             color: #333;
             transition: all 0.3s ease;
         }
+
         .tab-button.active {
             background: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             color: #007aff;
         }
+
         .tab-button:hover {
             background: rgba(255, 255, 255, 0.5);
             transform: translateY(-1px);
         }
+
         form {
             background: rgba(255, 255, 255, 0.95);
             padding: 20px;
@@ -65,12 +174,14 @@
             width: 100%;
             max-width: 600px;
         }
+
         label {
             display: block;
             margin: 10px 0 5px;
             font-weight: 500;
             color: #333;
         }
+
         input, select {
             width: 100%;
             padding: 12px;
@@ -81,17 +192,20 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
+
         input:focus, select:focus {
             outline: none;
             border-color: #007aff;
             box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
+
         .error {
             color: #ff3b30;
             font-size: 0.8em;
             display: none;
             margin-bottom: 10px;
         }
+
         button {
             width: 48%;
             padding: 12px;
@@ -103,22 +217,27 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
+
         #submitBtn {
             background: linear-gradient(135deg, #007aff, #00c6ff);
             color: white;
         }
+
         #submitBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
+
         #resetBtn {
             background: linear-gradient(135deg, #ff3b30, #ff9500);
             color: white;
         }
+
         #resetBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
         }
+
         #result {
             margin-top: 20px;
             padding: 20px;
@@ -127,6 +246,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(8px);
         }
+
         #history {
             margin-top: 20px;
             padding: 20px;
@@ -135,15 +255,18 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(8px);
         }
+
         #history ul {
             list-style-type: none;
             padding: 0;
         }
+
         #history li {
             margin-bottom: 10px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding-bottom: 10px;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -156,6 +279,7 @@
             background-color: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(2px);
         }
+
         .modal-content {
             background: rgba(255, 255, 255, 0.95);
             margin: 15% auto;
@@ -166,17 +290,20 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(8px);
         }
+
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .close:hover,
         .close:focus {
             color: #007aff;
             cursor: pointer;
         }
+
         #disclaimer {
             background: #fff8e1;
             border: 1px solid #ffe082;
@@ -188,16 +315,83 @@
             line-height: 1.5;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .main-menu {
+                display: none;
+            }
+
+            .main-menu.active {
+                display: block;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, #007aff, #00c6ff);
+                backdrop-filter: blur(8px);
+                padding: 10px 0;
+            }
+
+            .main-menu ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-menu ul li {
+                margin: 5px 0;
+            }
+
+            .main-menu ul li a {
+                font-size: 1.1rem; /* Medium text size for mobile */
+                padding: 8px 16px;
+            }
+
+            .menu-toggle {
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
     </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
     <h1>Tạo Dãy Số Xổ Số - Mini Game Giải Trí</h1>
-    
+
     <div id="tabs">
         <button class="tab-button active" onclick="showTab('inputTab')">Nhập Entropy</button>
         <button class="tab-button" onclick="showTab('historyTab')">Lịch Sử</button>
     </div>
-    
+
     <div id="inputTab" class="tab-content">
         <div id="disclaimer">
             Đây là chương trình lấy số ngẫu nhiên theo Entropy không theo truyền thống, được thiết kế như một mini game giải trí. Thuật toán này gợi ý người dùng lựa chọn vé số khi bạn phân vân không biết chọn số nào. Đây chỉ là gợi ý tham khảo nên không khẳng định người dùng chọn các số này sẽ trúng xổ số. Chúng tôi không đảm bảo tính chính xác, không chắc chắn về kết quả và không chịu bất kỳ trách nhiệm nào liên quan đến việc sử dụng các dãy số được tạo ra. Người dùng tự chịu trách nhiệm cho mọi quyết định của mình.
@@ -252,7 +446,7 @@
         </form>
         <div id="result"></div>
     </div>
-    
+
     <div id="historyTab" class="tab-content" style="display: none;">
         <div id="history">
             <h3>Lịch Sử Kết Quả</h3>
@@ -260,7 +454,7 @@
             <button onclick="clearHistory()">Xóa Lịch Sử</button>
         </div>
     </div>
-    
+
     <!-- Modal cho lỗi -->
     <div id="errorModal" class="modal">
         <div class="modal-content">
@@ -272,6 +466,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script>
+        // Toggle menu
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mainMenu = document.querySelector('.main-menu');
+        menuToggle.addEventListener('click', () => {
+            mainMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
         // Hàm hiển thị tab
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
