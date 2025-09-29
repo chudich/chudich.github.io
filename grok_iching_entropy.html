@@ -510,7 +510,9 @@
             const mucDich = document.getElementById('muc_dich').value || '';
             const daySo = document.getElementById('day_so').value || '';
             const mauSac = document.getElementById('mau_sac').value || '';
-            const currentTime = '04:00 PM +07, 29/9/2025'; // Cập nhật theo thời gian hiện tại
+            const currentTime = new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false }) + 
+                               ' ; ' + 
+                               new Date().toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
             let entropyInput = suViec + ' | HoTen: ' + hoTen + ' | TuoiCha: ' + tuoiCha + ' | TuoiMe: ' + tuoiMe + 
                                ' | NgaySinh: ' + ngaySinh + ' | GioSinh: ' + gioSinh + ' | GioiTinh: ' + gioiTinh + 
                                ' | TinhTrangGiaDinh: ' + tinhTrangGiaDinh + ' | TonGiao: ' + tonGiao + 
@@ -659,7 +661,10 @@
             const ketQua = document.getElementById('ket_qua');
             const tenQue = document.getElementById('ten_que').textContent;
             const changedHexagram = document.getElementById('changed-hexagram');
-            const currentTime = '04:00 PM +07, 29/9/2025';
+            
+            // Get current device time in format HH:mm ; DD.MM.YYYY
+            const now = new Date();
+            const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} ; ${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear()}`;
 
             const tmp = document.createElement("div");
             tmp.style.position = "fixed";
@@ -698,19 +703,31 @@
                 scale: window.devicePixelRatio || 2,
                 backgroundColor: "#ffffff"
             }).then(canvas => {
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "que_kinh_dich.png";
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(() => {
-                        URL.revokeObjectURL(url);
-                        if (a.parentNode) a.parentNode.removeChild(a);
-                        if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
-                    }, 150);
-                }, "image/png");
+                if (typeof canvas.toBlob === "function" && "download" in document.createElement("a")) {
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "que_kinh_dich.png";
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            URL.revokeObjectURL(url);
+                            if (a.parentNode) a.parentNode.removeChild(a);
+                            if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
+                        }, 150);
+                    }, "image/png");
+                } else {
+                    const dataUrl = canvas.toDataURL("image/png");
+                    const img = new Image();
+                    img.src = dataUrl;
+                    img.style.maxWidth = "100%";
+                    img.style.display = "block";
+                    img.style.margin = "12px auto";
+                    document.body.appendChild(img);
+                    alert("👉 Trình duyệt không hỗ trợ tải trực tiếp.\nNhấn giữ vào ảnh để lưu về máy.");
+                    if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
+                }
             }).catch(err => {
                 if (tmp.parentNode) tmp.parentNode.removeChild(tmp);
                 console.error("html2canvas error:", err);
