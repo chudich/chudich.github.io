@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhịp Sinh Học</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #chartContainer {
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+        #analysisTable {
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tính Nhịp Sinh Học</h1>
+    <form id="biorhythmForm">
+        <label for="birthday">Ngày sinh (dd/mm/yyyy):</label>
+        <input type="text" id="birthday" placeholder="dd/mm/yyyy" required>
+
+        <label for="birthtime">Giờ sinh (HH:mm):</label>
+        <input type="text" id="birthtime" placeholder="HH:mm" required>
+
+        <button type="submit">Tính toán và hiển thị biểu đồ</button>
+        <div id="error"></div>
+    </form>
+    <div id="chartContainer">
+        <canvas id="biorhythmChart" style="width: 100%; height: 600px;"></canvas> <!-- Tăng kích thước biểu đồ -->
+    </div>
+    <div id="analysisTable"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Ngày hiện tại (hardcode theo yêu cầu: September 29, 2025)
+        const currentDate = new Date(2025, 8, 29, 0, 0, 0); // Tháng bắt đầu từ 0 trong JS
+
+        // Xử lý form submit
+        document.getElementById('biorhythmForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const birthdayInput = document.getElementById('birthday').value.trim();
+            const birthtimeInput = document.getElementById('birthtime').value.trim();
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '';
+
+            // Kiểm tra định dạng ngày sinh dd/mm/yyyy
+            const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            const matchDate = birthdayInput.match(datePattern);
+            if (!matchDate) {
+                errorDiv.textContent = 'Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng dd/mm/yyyy.';
+                return;
+            }
+
+            const day = parseInt(matchDate[1]);
+            const month = parseInt(matchDate[2]);
+            const year = parseInt(matchDate[3]);
+
+            // Kiểm tra định dạng giờ sinh HH:mm
+            const timePattern = /^(\d{2}):(\d{2})$/;
+            const matchTime = birthtimeInput.match(timePattern);
+            if (!matchTime) {
+                errorDiv.textContent = 'Giờ sinh không hợp lệ. Vui lòng nhập theo định dạng HH:mm.';
+                return;
+            }
+
+            const hour = parseInt(matchTime[1]);
+            const minute = parseInt(matchTime[2]);
+            if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+                errorDiv.textContent = 'Giờ hoặc phút không hợp lệ.';
+                return;
+            }
+
+            // Kiểm tra ngày hợp lệ
+            const birthDate = new Date(year, month - 1, day, hour, minute, 0);
+            if (isNaN(birthDate.getTime()) || birthDate.getDate() !== day || birthDate.getMonth() !== month - 1) {
+                errorDiv.textContent = 'Ngày sinh không tồn tại. Vui lòng kiểm tra lại.';
+                return;
+            }
+
+            // Tạo mảng 15 ngày từ ngày hiện tại
+            const days = Array.from({length: 15}, (_, i) => i);
+            const dates = days.map(d => {
+                const date = new Date(currentDate);
+                date.setDate(date.getDate() + d);
+                return date;
+            });
+
+            // Tính số ngày sống cho từng ngày (chính xác đến milliseconds, chia cho 86400000 để lấy ngày)
+            const daysLived = dates.map(d => (d - birthDate) / (1000 * 60 * 60 * 24));
+
+            // Tính giá trị sin (nhân 100 để thành %)
+            const physical = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 23) * 100); // Năng lượng thể chất
+            const emotional = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 28) * 100); // Cảm xúc
+            const intellectual = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 33) * 100); // Trí tuệ
+            const love = daysLived.map(dl => Math.sin(2 * Math.PI * dl / 38) * 100); // Tình yêu
+
+            // Chuẩn bị labels cho biểu đồ (ngày/tháng/năm)
+            const labels = dates.map(d => d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }));
+
+            // Vẽ biểu đồ sử dụng Chart.js
+            const ctx = document.getElementById('biorhythmChart').getContext('2d');
+            if (window.myChart) window.myChart.destroy(); // Xóa biểu đồ cũ nếu có
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Năng lượng thể chất', data: physical, borderColor: 'red', fill: false, tension: 0.1 },
+                        { label: 'Cảm xúc', data: emotional, borderColor: 'blue', fill: false, tension: 0.1 },
+                        { label: 'Trí tuệ', data: intellectual, borderColor: 'green', fill: false, tension: 0.1 },
+                        { label: 'Tình yêu', data: love, borderColor: 'purple', fill: false, tension: 0.1 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Cho phép biểu đồ mở rộng theo height
+                    scales: {
+                        y: {
+                            min: -100,
+                            max: 100,
+                            title: { display: true, text: 'Mức độ (%)' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Ngày (0: Hôm nay)' },
+                            ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            // Phân tích Min, Max, Trung bình, và Giao điểm
+            const states = {
+                physical: { name: 'Năng lượng thể chất', data: physical },
+                emotional: { name: 'Cảm xúc', data: emotional },
+                intellectual: { name: 'Trí tuệ', data: intellectual },
+                love: { name: 'Tình yêu', data: love }
+            };
+
+            let tableHtml = '<h3>Phân Tích Trạng Thái</h3><table><tr><th>Trạng thái</th><th>Min (thấp nhất)</th><th>Trung bình (gần 0)</th><th>Max (cao nhất)</th></tr>';
+            for (const key in states) {
+                const state = states[key];
+                const minDays = [];
+                const avgDays = [];
+                const maxDays = [];
+                let minVal = Math.min(...state.data);
+                let maxVal = Math.max(...state.data);
+                state.data.forEach((val, idx) => {
+                    if (Math.abs(val - minVal) < 0.01) minDays.push(labels[idx]);
+                    if (Math.abs(val) < 10) avgDays.push(labels[idx]);
+                    if (Math.abs(val - maxVal) < 0.01) maxDays.push(labels[idx]);
+                });
+                tableHtml += `<tr><td>${state.name}</td><td>${minDays.join(', ') || 'Không có'}</td><td>${avgDays.join(', ') || 'Không có'}</td><td>${maxDays.join(', ') || 'Không có'}</td></tr>`;
+            }
+            tableHtml += '</table>';
+
+            // Tìm giao điểm (các ngày mà hai đường gần bằng nhau, ngưỡng < 1)
+            tableHtml += '<h3>Mốc Thời Gian Giao Điểm</h3><table><tr><th>Cặp trạng thái</th><th>Ngày giao điểm</th></tr>';
+            const pairs = [
+                { a: 'physical', b: 'emotional', name: 'Năng lượng thể chất & Cảm xúc' },
+                { a: 'physical', b: 'intellectual', name: 'Năng lượng thể chất & Trí tuệ' },
+                { a: 'physical', b: 'love', name: 'Năng lượng thể chất & Tình yêu' },
+                { a: 'emotional', b: 'intellectual', name: 'Cảm xúc & Trí tuệ' },
+                { a: 'emotional', b: 'love', name: 'Cảm xúc & Tình yêu' },
+                { a: 'intellectual', b: 'love', name: 'Trí tuệ & Tình yêu' }
+            ];
+            pairs.forEach(pair => {
+                const intersectDays = [];
+                days.forEach((_, idx) => {
+                    if (Math.abs(states[pair.a].data[idx] - states[pair.b].data[idx]) < 1) {
+                        intersectDays.push(labels[idx]);
+                    }
+                });
+                tableHtml += `<tr><td>${pair.name}</td><td>${intersectDays.join(', ') || 'Không có'}</td></tr>`;
+            });
+            tableHtml += '</table>';
+
+            document.getElementById('analysisTable').innerHTML = tableHtml;
+        });
+    </script>
+</body>
+</html>
