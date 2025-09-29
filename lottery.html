@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Dãy Số Xổ Số</title>
+    <title>Tạo Dãy Số Xổ Số - Phiên Bản Tối Ưu Hóa</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f4f4f4;
@@ -15,6 +15,22 @@
         h1 {
             text-align: center;
             color: #333;
+        }
+        #tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            border-bottom: 2px solid #28a745;
         }
         form {
             background: #fff;
@@ -34,17 +50,32 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        .error {
+            color: red;
+            font-size: 0.8em;
+            display: none;
+        }
         button {
-            width: 100%;
+            width: 48%;
             padding: 10px;
-            background-color: #28a745;
-            color: white;
+            margin: 1%;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-        button:hover {
+        #submitBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        #submitBtn:hover {
             background-color: #218838;
+        }
+        #resetBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #resetBtn:hover {
+            background-color: #c82333;
         }
         #result {
             margin-top: 20px;
@@ -53,103 +84,311 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        #history {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+        #history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #history li {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <h1>Tạo Dãy Số Xổ Số</h1>
-    <form id="entropyForm">
-        <label for="name">Tên của bạn:</label>
-        <input type="text" id="name" required>
+    <h1>Tạo Dãy Số Xổ Số - Phiên Bản Tối Ưu Hóa</h1>
+    
+    <div id="tabs">
+        <button class="tab-button active" onclick="showTab('inputTab')">Nhập Entropy</button>
+        <button class="tab-button" onclick="showTab('historyTab')">Lịch Sử</button>
+    </div>
+    
+    <div id="inputTab" class="tab-content">
+        <form id="entropyForm">
+            <label for="name">Tên của bạn (ít nhất 3 ký tự):</label>
+            <input type="text" id="name" minlength="3" required>
+            <span class="error" id="nameError">Tên phải có ít nhất 3 ký tự.</span>
 
-        <label for="birthday">Ngày sinh (dd/mm/yyyy):</label>
-        <input type="text" id="birthday" placeholder="dd/mm/yyyy" required>
+            <label for="birthday">Ngày sinh (dd/mm/yyyy, phải hợp lệ):</label>
+            <input type="text" id="birthday" placeholder="dd/mm/yyyy" required>
+            <span class="error" id="birthdayError">Ngày sinh không hợp lệ (ví dụ: 01/01/1990).</span>
 
-        <label for="favoriteNumber">Số yêu thích:</label>
-        <input type="text" id="favoriteNumber" required>
+            <label for="favoriteNumber">Số yêu thích (số nguyên từ 0-99):</label>
+            <input type="number" id="favoriteNumber" min="0" max="99" required>
+            <span class="error" id="favoriteNumberError">Số yêu thích phải từ 0 đến 99.</span>
 
-        <label for="luckyWord">Từ may mắn:</label>
-        <input type="text" id="luckyWord" required>
+            <label for="luckyWord">Từ may mắn (ít nhất 4 ký tự, không chứa số):</label>
+            <input type="text" id="luckyWord" pattern="[a-zA-Z]+" minlength="4" required>
+            <span class="error" id="luckyWordError">Từ may mắn phải có ít nhất 4 ký tự chữ cái, không chứa số.</span>
 
-        <label for="currentMood">Tâm trạng hiện tại:</label>
-        <input type="text" id="currentMood" required>
+            <label for="currentMood">Tâm trạng hiện tại (chọn từ danh sách):</label>
+            <select id="currentMood" required>
+                <option value="" disabled selected>Chọn tâm trạng</option>
+                <option value="happy">Vui vẻ</option>
+                <option value="sad">Buồn</option>
+                <option value="excited">Hào hứng</option>
+                <option value="relaxed">Thư giãn</option>
+                <option value="anxious">Lo lắng</option>
+            </select>
+            <span class="error" id="currentMoodError">Vui lòng chọn tâm trạng.</span>
 
-        <label for="lotteryType">Chọn đài xổ số:</label>
-        <select id="lotteryType" required>
-            <option value="" disabled selected>Chọn đài</option>
-            <option value="1">Miền Nam</option>
-            <option value="2">Miền Trung</option>
-            <option value="3">Miền Bắc</option>
-            <option value="4">Vietlott</option>
-        </select>
+            <label for="lotteryType">Chọn đài xổ số:</label>
+            <select id="lotteryType" required>
+                <option value="" disabled selected>Chọn đài</option>
+                <option value="1">Miền Nam</option>
+                <option value="2">Miền Trung</option>
+                <option value="3">Miền Bắc</option>
+                <option value="4">Vietlott</option>
+            </select>
+            <span class="error" id="lotteryTypeError">Vui lòng chọn đài xổ số.</span>
 
-        <button type="submit">Tạo dãy số</button>
-    </form>
-    <div id="result"></div>
+            <label for="uniqueNumbers">Tạo số không lặp lại (áp dụng cho Vietlott):</label>
+            <input type="checkbox" id="uniqueNumbers">
+
+            <div>
+                <button type="submit" id="submitBtn">Tạo dãy số</button>
+                <button type="button" id="resetBtn" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+        <div id="result"></div>
+    </div>
+    
+    <div id="historyTab" class="tab-content" style="display: none;">
+        <div id="history">
+            <h3>Lịch Sử Kết Quả</h3>
+            <ul id="historyList"></ul>
+            <button onclick="clearHistory()">Xóa Lịch Sử</button>
+        </div>
+    </div>
+    
+    <!-- Modal cho lỗi -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script>
-        // Hàm tạo seed từ chuỗi entropy
+        // Hàm hiển thị tab
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Hàm reset form
+        function resetForm() {
+            document.getElementById('entropyForm').reset();
+            document.getElementById('result').innerHTML = '';
+            hideAllErrors();
+        }
+
+        // Hàm ẩn tất cả lỗi
+        function hideAllErrors() {
+            document.querySelectorAll('.error').forEach(err => err.style.display = 'none');
+        }
+
+        // Hàm kiểm tra tính hợp lệ của ngày sinh
+        function isValidDate(day, month, year) {
+            const date = new Date(year, month - 1, day);
+            return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+        }
+
+        // Hàm tạo seed từ chuỗi entropy (tối ưu: sử dụng toàn bộ hash và kết hợp với browser entropy)
         function generateSeed(entropyStr) {
             const hash = sha256(entropyStr);
-            const seed = parseInt(hash.substring(0, 16), 16) % 0xFFFFFFFF;
-            return seed;
+            // Tối ưu: Sử dụng toàn bộ hash để tạo seed lớn hơn, kết hợp với performance.now() cho entropy browser
+            const browserEntropy = performance.now();
+            const fullSeedStr = hash + browserEntropy.toString();
+            const fullHash = sha256(fullSeedStr);
+            return parseInt(fullHash.substring(0, 16), 16) % 0xFFFFFFFFFFFF; // Mở rộng modulus cho seed lớn hơn
         }
 
-        // Hàm tạo dãy số ngẫu nhiên với độ dài chỉ định
-        function generateNumberSequence(length, seed) {
-            // Tạo một PRNG với seed
+        // Hàm tạo dãy số ngẫu nhiên với độ dài chỉ định (tối ưu: hỗ trợ số không lặp)
+        function generateNumberSequence(length, seed, unique = false) {
             const rng = new Math.seedrandom(seed);
-            let sequence = '';
-            for (let i = 0; i < length; i++) {
-                sequence += Math.floor(rng() * 10);
+            let numbers = [];
+            if (unique) {
+                // Tạo số không lặp (cho Vietlott, giả sử phạm vi 0-99 cho đơn giản, điều chỉnh nếu cần)
+                let pool = Array.from({length: 100}, (_, i) => i); // 00 đến 99
+                for (let i = 0; i < length; i++) {
+                    const index = Math.floor(rng() * pool.length);
+                    numbers.push(pool.splice(index, 1)[0].toString().padStart(2, '0'));
+                }
+            } else {
+                for (let i = 0; i < length; i++) {
+                    numbers.push(Math.floor(rng() * 10));
+                }
             }
-            return sequence;
+            return numbers.join('');
         }
 
-        // Hàm xử lý khi submit form
+        // Hàm lưu lịch sử vào localStorage
+        function saveToHistory(resultHtml, lotteryType) {
+            let history = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
+            history.push({ date: new Date().toLocaleString(), type: lotteryType, result: resultHtml });
+            if (history.length > 10) history.shift(); // Giới hạn 10 lịch sử
+            localStorage.setItem('lotteryHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        // Hàm tải lịch sử
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
+            history.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${item.date} - ${item.type}</strong><br>${item.result}`;
+                historyList.appendChild(li);
+            });
+        }
+
+        // Hàm xóa lịch sử
+        function clearHistory() {
+            localStorage.removeItem('lotteryHistory');
+            loadHistory();
+        }
+
+        // Hàm hiển thị modal lỗi
+        function showModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('errorModal').style.display = 'block';
+        }
+
+        // Hàm đóng modal
+        function closeModal() {
+            document.getElementById('errorModal').style.display = 'none';
+        }
+
+        // Xử lý submit form
         document.getElementById('entropyForm').addEventListener('submit', function(event) {
             event.preventDefault();
+            hideAllErrors();
+            let valid = true;
 
-            // Lấy giá trị từ form
-            const name = document.getElementById('name').value;
-            const birthday = document.getElementById('birthday').value;
-            const favoriteNumber = document.getElementById('favoriteNumber').value;
-            const luckyWord = document.getElementById('luckyWord').value;
-            const currentMood = document.getElementById('currentMood').value;
-            const lotteryType = document.getElementById('lotteryType').value;
+            // Lấy giá trị
+            const name = document.getElementById('name').value.trim();
+            if (name.length < 3) {
+                document.getElementById('nameError').style.display = 'block';
+                valid = false;
+            }
 
-            // Kiểm tra định dạng ngày sinh
+            const birthday = document.getElementById('birthday').value.trim();
             const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            if (!datePattern.test(birthday)) {
-                alert('Ngày sinh không hợp lệ, vui lòng nhập theo định dạng dd/mm/yyyy');
+            const match = birthday.match(datePattern);
+            if (!match || !isValidDate(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]))) {
+                document.getElementById('birthdayError').style.display = 'block';
+                valid = false;
+            }
+
+            const favoriteNumber = parseInt(document.getElementById('favoriteNumber').value);
+            if (isNaN(favoriteNumber) || favoriteNumber < 0 || favoriteNumber > 99) {
+                document.getElementById('favoriteNumberError').style.display = 'block';
+                valid = false;
+            }
+
+            const luckyWord = document.getElementById('luckyWord').value.trim();
+            if (luckyWord.length < 4 || !/^[a-zA-Z]+$/.test(luckyWord)) {
+                document.getElementById('luckyWordError').style.display = 'block';
+                valid = false;
+            }
+
+            const currentMood = document.getElementById('currentMood').value;
+            if (!currentMood) {
+                document.getElementById('currentMoodError').style.display = 'block';
+                valid = false;
+            }
+
+            const lotteryType = document.getElementById('lotteryType').value;
+            if (!lotteryType) {
+                document.getElementById('lotteryTypeError').style.display = 'block';
+                valid = false;
+            }
+
+            if (!valid) {
+                showModal('Vui lòng kiểm tra và sửa các lỗi trong form.');
                 return;
             }
 
-            // Tạo chuỗi entropy
-            const now = new Date().toISOString();
-            const entropyStr = `${name}|${birthday}|${favoriteNumber}|${luckyWord}|${currentMood}|${now}`;
+            // Định dạng ngày sinh thành YYYY-MM-DD
+            const [day, month, year] = birthday.split('/');
+            const formattedBirthday = `${year}-${month}-${day}`;
 
-            // Tạo seed từ entropy
+            // Tạo chuỗi entropy (tối ưu: thêm user agent cho entropy browser)
+            const now = new Date().toISOString();
+            const userAgent = navigator.userAgent;
+            const entropyStr = `${name}|${formattedBirthday}|${favoriteNumber}|${luckyWord}|${currentMood}|${now}|${userAgent}`;
+
+            // Tạo seed
             const seed = generateSeed(entropyStr);
 
-            // Xác định độ dài dãy số dựa trên loại xổ số
-            let lengths;
+            // Xác định độ dài và loại
+            let lengths, typeName;
+            const unique = document.getElementById('uniqueNumbers').checked && lotteryType === '4';
             if (lotteryType === '4') {
-                lengths = [7, 8, 9, 10]; // Vietlott
+                lengths = [7, 8, 9, 10];
+                typeName = 'Vietlott';
             } else {
-                lengths = [2, 3, 4, 5, 6]; // Miền Nam, Miền Trung, Miền Bắc
+                lengths = [2, 3, 4, 5, 6];
+                typeName = lotteryType === '1' ? 'Miền Nam' : lotteryType === '2' ? 'Miền Trung' : 'Miền Bắc';
             }
 
-            // Tạo và hiển thị dãy số
-            let resultHtml = '<h3>Kết quả dãy số:</h3>';
+            // Tạo kết quả
+            let resultHtml = `<h3>Kết quả dãy số cho ${typeName}:</h3>`;
             lengths.forEach(length => {
-                const sequence = generateNumberSequence(length, seed + length); // Thêm length để tạo sự khác biệt
-                resultHtml += `<p>Dãy số ${length} chữ số: ${sequence}</p>`;
+                const sequence = generateNumberSequence(length, seed + length, unique);
+                resultHtml += `<p>Dãy số ${length} chữ số${unique ? ' (không lặp)' : ''}: ${sequence}</p>`;
             });
 
             document.getElementById('result').innerHTML = resultHtml;
+            saveToHistory(resultHtml, typeName);
         });
+
+        // Tải lịch sử khi load trang
+        loadHistory();
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
 </body>
 </html>
