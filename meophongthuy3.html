@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiến Thức Tử Vi & Phong Thủy</title>
+    <style>
+        /* CSS theo phong cách iOS, tông màu sáng, ấm áp */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5; /* Thay background-image bằng màu nền nếu không có hình */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Container chính */
+        .container {
+            background: rgba(255, 255, 255, 0.9); /* Nền trắng mờ kiểu iOS */
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* Hiệu ứng mờ kiểu iOS */
+            margin-bottom: 20px;
+        }
+
+        /* Menu Về Trang Chủ */
+        .home-menu {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .home-menu a {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffb347); /* Gradient vàng nhạt - cam sáng */
+            color: #fff; /* Chữ trắng nổi bật */
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .home-menu a:hover {
+            background: linear-gradient(135deg, #ffca28, #ff8f00); /* Gradient đậm hơn khi hover */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tiêu đề chính của trang */
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ff6f61; /* Màu cam đào nổi bật */
+            margin-bottom: 20px;
+        }
+
+        /* Khối kiến thức */
+        .knowledge-block {
+            background: linear-gradient(135deg, #ffb3a7, #ff8a80); /* Gradient hồng cam nhạt hơn */
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .knowledge-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tiêu đề của mỗi khối kiến thức */
+        .knowledge-block h2 {
+            font-size: 22px; /* Kích thước chữ giữ nguyên */
+            font-weight: 800; /* Độ đậm giữ nguyên */
+            color: #000000; /* Màu đen */
+            margin-bottom: 10px;
+        }
+
+        /* Diễn giải của mỗi khối kiến thức */
+        .knowledge-block p {
+            font-size: 20px; /* Kích thước chữ giữ nguyên */
+            font-weight: 600; /* Độ đậm giữ nguyên */
+            color: #000000; /* Màu đen */
+            line-height: 1.5;
+        }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .home-menu a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .knowledge-block h2 {
+                font-size: 20px; /* Kích thước chữ giữ nguyên */
+                font-weight: 800; /* Độ đậm giữ nguyên */
+                color: #000000; /* Màu đen */
+            }
+
+            .knowledge-block p {
+                font-size: 18px; /* Kích thước chữ giữ nguyên */
+                font-weight: 600; /* Độ đậm giữ nguyên */
+                color: #000000; /* Màu đen */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-menu">
+            <a href="https://chudich.github.io/tuvi_phongthuy.html">Về Trang Chủ</a>
+        </div>
+        <h1>Kiến Thức Tử Vi & Phong Thủy</h1>
+        <div id="knowledge-container">
+            <!-- Các khối kiến thức sẽ được thêm động qua JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu
+        const knowledgeData = [
+            {
+                title: "Hoá giải phiền muộn",
+                description: "Khi có người đến nhà bạn khóc lóc, than phiền kể khổ việc này sẽ ảnh hưởng tới năng lượng tích cực của căn nhà. Bạn hãy lấy vỏ 5 loại trái cây bỏ vào đó 1 ít muối rồi mang vứt đi ở nơi xa (càng xa càng tốt) như vậy sẽ tốt cho cả người đó và cho bạn. Lưu ý: Không vứt vào nhà hoặc phương tiện của người khác bạn sẽ tạo nghiệp xấu năng lượng xấu cho tương lai của bạn."
+            },
+            {
+                title: "Điềm báo",
+                description: "Nếu trong đầu có ý nghĩ khác lạ, cảm giác nóng lạnh thất thường sắc mặt thay đổi thậm chí đồ vật xung quanh mình đổ vỡ, hư hỏng, bị xê dịch..v..v.. Đây chính là điềm báo xấu ảnh hưởng tới gia đạo, công việc, tài lộc... ngoài việc khấn gia tiên phù hộ bạn hãy dùng chân dẫm nát 1 quả chuối (nam chân trái, nữ chân phải) như vậy sẽ tốt lên."
+            },
+            {
+                title: "Khi bị lợi dụng",
+                description: "Bị Lợi Dụng: phương vị Bạch Hổ của căn nhà bị khuyết hãm (đứng sau nhà nhìn ra bên phải của nhà là phương vị Bạch Hổ) mối quan hệ sẽ mất cân bằng: Bạn sẽ hay bị bắt nạt (ăn hiếp), bị lợi dụng, qua mặt, thị phi, gia đạo bất đồng bạn hãy để 1 quả cầu đá hoặc thuỷ tinh ở phía bên phải của căn nhà, như vậy sẽ tốt lên nhé chúc các bạn may mắn!"
+            },
+            {
+                title: "Người yếu bóng vía",
+                description: "Yếu Bóng Vía: người bị mất vía cơ thể yếu dễ bị vong tà xâm nhập, tai nạn, công việc không thuận, mất ngủ, gia đình lục đục. Bạn hãy lấy 7 lá bưởi (nếu là nam), 9 lá bưởi (nếu là nữ) để ở dưới đầu giường nằm gối đầu lên, cứ ba ngày thay lá 1 lần, làm như vậy liên tục trong 21 ngày là tránh được."
+            },
+            {
+                title: "Hoà hợp vợ chồng và tài chính",
+                description: "Chuyện Vợ Chồng: Rất nhiều người vợ không có cơ hội sử dụng hết đồng tiền do chồng kiếm ra vào đêm ngày rằm và ngày mùng một hàng tháng, bạn lấy ví tiền của chồng để vào ngăn tủ quần áo của mình như vậy sẽ tốt lên, vợ chồng cũng hòa hợp hơn."
+            },
+            {
+                title: "Chi tiêu quá đà hoặc bị lừa tiền",
+                description: "Khi bạn lỡ tiêu nhiều tiền hoặc bị lừa tiền. Vào tối thứ sáu hàng tuần bạn hãy lấy tờ tiền có mệnh giá lớn nhất mà bạn có, xoa lên đầu 5 lần. Mắt nhìn về hướng Đông Nam miệng đọc câu: Khai Tâm Phát Tài … như vậy tài lộc sẽ sớm đến với bạn chúc các bạn may mắn!"
+            },
+            {
+                title: "Tránh xô xát vợ chồng",
+                description: "Vấn Đề Vợ Chồng: trong cuộc sống vợ chồng sẽ có lúc cãi nhau, thậm chí tác động chân tay. Bạn hãy lấy 3 lá tre hoặc trúc treo hoặc dán ở phía đông của phòng ngủ, tình trạng này sẽ giảm đi. Lưu ý: sau mỗi lần vụ việc xảy ra thì nên thay 3 lá mới."
+            },
+            {
+                title: "May mắn khi xuất hành",
+                description: "Khi đi xa du lịch hoặc đi làm việc, để tránh xảy ra trục trặc (chen lấn, cãi lộn, lừa gạt, thị phi, tai nạn...) phải lưu ý: trước khi xuất hành bạn nên ăn một chút thực phẩm màu đỏ ví dụ: Xôi gấc, chè đậu đỏ, kẹo màu đỏ..v..v.. sau đó uống một cốc nước lọc như vậy chuyến đi sẽ thuận buồm xuôi gió."
+            },
+            {
+                title: "Để dòng tiền ổn định",
+                description: "Tạo ra dòng tiền ổn định là mong ước của nhiều người ngoài việc tư duy tích cực và nỗ lực trong công việc, bạn hãy để bốn tờ tiền có hai số cuối là: 55-66-88-99 vào trong ví thường xuyên mang theo người, như vậy sẽ sớm có thành tựu."
+            },
+            {
+                title: "Con cái thành đạt",
+                description: "Con cái mạnh khỏe thành đạt là ước mơ của hầu hết các bậc sinh thành. Để đạt được điều này, căn nhà bạn nên bố trí: hướng tây treo một ngọn đèn, phía đối diện bạn nên treo một tấm gương soi. Lưu ý: Nếu con cái ngỗ nghịch thì bạn hãy để một chiếc chìa khóa cũ vào đằng sau tấm gương."
+            },
+            {
+                title: "Tránh tiểu nhân phá rối",
+                description: "Khi bạn định làm một việc gì đó mà có nhiều người ngăn cản, chê bai hoặc bàn lùi. Việc này ít nhiều sẽ ảnh hưởng tới hiệu quả việc định làm bạn hãy viết những điều đó ra một tờ giấy, rồi để ở dưới tấm thảm chùi chân trong nhà, như vậy hiệu quả công việc sẽ tăng lên."
+            },
+            {
+                title: "Làm việc lớn",
+                description: "Việc đàm phán những thương vụ lớn ví dụ như: Mua bán nhà cửa, đất đai, xe cộ, ký kết hợp đồng, đàm phán công việc..v..v... vào tối hôm trước đó, bạn cắm 1 cành nguyệt quế vào lọ, rồi để ở hướng tây bắc căn nhà mình đang ở như vậy hôm sau công việc sẽ thuận lợi. Lưu ý: Nếu bạn là người môi giới thì nên cắm 3 cành chúc các bạn thành công!"
+            },
+            {
+                title: "Khi đi du lịch",
+                description: "Lưu ý Tâm Linh khi du Lịch: Khi bạn đến một nơi ở mới VD: Homestay, khách sạn, nhà nghỉ, nhà trọ..v..v.. Trước khi bước vào phòng: Tay trái nên cầm sẵn ba tờ tiền lẻ, tay phải gõ cửa ba tiếng rồi hãy bước vào phòng. Như vậy bạn sẽ vui vẻ và may mắn suốt thời gian lưu trú. Lưu ý: Khi bước vào phòng nếu thấy xây xẩm mặt mày thì tuyệt đối không nên ngủ lại chúc các bạn hạnh phúc!"
+            },
+            {
+                title: "Mất việc hay bị dừng hợp đồng",
+                description: "Hãy làm điều này khi bạn bị mất việc đột ngột hoặc đơn phương bị dừng hợp đồng. Ngoài việc trau dồi kiến thức tự tìm hướng đi mới, bạn hãy để một chậu cây phát lộc vào hướng tây bắc của căn nhà mình đang ở như vậy sẽ sớm có người giúp đỡ, công việc mới cũng sẽ suôn sẻ hơn."
+            },
+            {
+                title: "Ăn được ngủ được",
+                description: "Ăn được - Ngủ được là tiên: Khi mất cân bằng năng lượng cơ thể sẽ kém ăn mất ngủ bạn nên giặt giũ lại toàn bộ quần áo, chăn gối, ga, rèm..v..v.. sau đó xông bồ kết toàn bộ căn nhà (5 lần) như vậy sẽ tốt lên. Lưu ý: nếu muốn giảm cân thì thường xuyên để 1 nắm ngải cứu vào tủ lạnh."
+            },
+            {
+                title: "Mua may bán đắt",
+                description: "Trong cuộc sống sẽ có vô số lần bạn phải thực hiện các giao dịch mua bán, để tránh tình trạng mua thì bị đắt mà bán thì lại bị rẻ… buổi tối khi đi ngủ bạn nên để một cuộn băng keo đè lên trên ví của mình. Lưu ý: Nếu bạn là doanh nhân thì nên để ví và băng keo vào trong két sắt hoặc ngăn kéo."
+            },
+            {
+                title: "Sim phong thủy",
+                description: "Nên áp dụng khi chọn sim điện thoại: Mệnh kim (6,7,2,5,8), Mệnh mộc (3,4,0,1), Mệnh Thủy (0,1,6,7), Mệnh Hoả (9,3,4), Mệnh thổ (2,5,8,9). Lưu ý: Khi chưa tìm được sim như ý bạn lấy bút dạ quang ghi nhiều số đó lên mặt sau của điện thoại như vậy tài vận sẽ tốt lên chúc các bạn thành công."
+            },
+            {
+                title: "Những người hay thức đêm",
+                description: "Trong xã hội hiện đại có rất nhiều bạn phải thức khuya để làm việc, buổi tối hàn khí sẽ mạnh hơn ban ngày. Bạn hãy thắp một ngọn nến để trong nhà sát với cửa ra vào như vậy sức khỏe sẽ tốt lên thậm chí hiệu quả công việc cũng cao hơn. Chúc các bạn mạnh khỏe và thành công!"
+            },
+            {
+                title: "Hoá giải trường năng lượng xấu bản thân",
+                description: "Khi trường năng lượng của bản thân hao tổn, bạn dễ gặp phải rắc rối trong công việc, tình cảm và gia đạo cũng trắc trở, sức khỏe không được tốt thậm chí rất dễ bị tai nạn. Buổi tối trước khi đi ngủ bạn nên xịt vào khăn rửa mặt của bạn một chút nước muối, hôm sau mang ra sử dụng bình thường, làm như vậy liên tục trong 7 ngày sẽ tốt lên nhé. Chúc các bạn may mắn và hạnh phúc!"
+            },
+            {
+                title: "Thiên tai và phong thủy nhà cửa",
+                description: "Thiên tai (động đất, mưa bão, lũ lụt, mất mùa...v..v..) rất khó dự đoán hậu quả lại vô cùng nặng nề. Bạn nên thử để bốn viên bi đá hoặc thủy tinh ở bốn góc của căn nhà như vậy tình huống xấu nếu có xảy ra cũng không gây ra hậu quả nghiêm trọng. Chúc các bạn may mắn và hạnh phúc!"
+            }
+        ];
+
+        // Hàm hiển thị các khối kiến thức
+        function displayKnowledge() {
+            const container = document.getElementById('knowledge-container');
+            if (!container) {
+                console.error('Không tìm thấy phần tử knowledge-container');
+                return;
+            }
+            container.innerHTML = ''; // Xóa nội dung cũ
+
+            knowledgeData.forEach(item => {
+                const block = document.createElement('div');
+                block.classList.add('knowledge-block');
+
+                const title = document.createElement('h2');
+                title.textContent = item.title;
+
+                const description = document.createElement('p');
+                description.textContent = item.description;
+
+                block.appendChild(title);
+                block.appendChild(description);
+                container.appendChild(block);
+            });
+        }
+
+        // Gọi hàm hiển thị khi trang tải
+        window.addEventListener('load', displayKnowledge);
+    </script>
+</body>
+</html>
