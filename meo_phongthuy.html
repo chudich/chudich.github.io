@@ -73,7 +73,7 @@
 
         /* Khối kiến thức */
         .knowledge-block {
-            background: rgba(255, 255, 255, 0.95); /* Thay màu hồng cam bằng trắng mờ */
+            background: rgba(255, 255, 255, 0.95); /* Nền trắng mờ */
             border: 1px solid rgba(0, 0, 0, 0.1); /* Viền nhẹ */
             border-radius: 12px;
             padding: 15px;
@@ -89,8 +89,8 @@
         /* Button thay cho tiêu đề */
         .knowledge-button {
             display: inline-block;
-            padding: 12px 30px; /* Tăng kích thước button (to hơn) */
-            font-size: 18px; /* Tăng kích thước chữ cho button */
+            padding: 12px 30px; /* Kích thước button lớn */
+            font-size: 18px; /* Kích thước chữ lớn */
             font-weight: 600; /* Chữ đậm */
             background: linear-gradient(135deg, #ffd700, #ffb347); /* Màu sáng ấm kiểu iOS */
             color: #fff; /* Chữ trắng */
@@ -112,7 +112,7 @@
         .knowledge-link {
             font-size: 16px; /* Kích thước chữ trung bình */
             font-weight: 600; /* Chữ đậm */
-            color: #ff6f61; /* Màu hồng cam giống h1 */
+            color: #ff6f61; /* Màu hồng cam */
             text-decoration: none;
             line-height: 1.5;
         }
@@ -195,12 +195,12 @@
 
                 const button = document.createElement('a');
                 button.classList.add('knowledge-button');
-                button.href = "#"; // Có thể thay bằng link thực tế nếu cần
+                button.href = item.link; // Gán link tượng trưng cho button
                 button.textContent = item.title;
 
                 const link = document.createElement('a');
                 link.classList.add('knowledge-link');
-                link.href = item.link;
+                link.href = item.link; // Link giống với button
                 link.textContent = "Xem chi tiết";
 
                 block.appendChild(button);
