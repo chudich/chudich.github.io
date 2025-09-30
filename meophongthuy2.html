@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiến Thức Tử Vi & Phong Thủy</title>
+    <style>
+        /* CSS theo phong cách iOS, tông màu sáng, ấm áp */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5; /* Thay background-image bằng màu nền nếu không có hình */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Container chính */
+        .container {
+            background: rgba(255, 255, 255, 0.9); /* Nền trắng mờ kiểu iOS */
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* Hiệu ứng mờ kiểu iOS */
+            margin-bottom: 20px;
+        }
+
+        /* Menu Về Trang Chủ */
+        .home-menu {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .home-menu a {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffb347); /* Gradient vàng nhạt - cam sáng */
+            color: #fff; /* Chữ trắng nổi bật */
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .home-menu a:hover {
+            background: linear-gradient(135deg, #ffca28, #ff8f00); /* Gradient đậm hơn khi hover */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tiêu đề chính của trang */
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ff6f61; /* Màu cam đào nổi bật */
+            margin-bottom: 20px;
+        }
+
+        /* Khối kiến thức */
+        .knowledge-block {
+            background: linear-gradient(135deg, #ffb3a7, #ff8a80); /* Gradient hồng cam nhạt hơn */
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .knowledge-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tiêu đề của mỗi khối kiến thức */
+        .knowledge-block h2 {
+            font-size: 22px; /* Kích thước chữ giữ nguyên */
+            font-weight: 800; /* Độ đậm giữ nguyên */
+            color: #000000; /* Màu đen */
+            margin-bottom: 10px;
+        }
+
+        /* Diễn giải của mỗi khối kiến thức */
+        .knowledge-block p {
+            font-size: 20px; /* Kích thước chữ giữ nguyên */
+            font-weight: 600; /* Độ đậm giữ nguyên */
+            color: #000000; /* Màu đen */
+            line-height: 1.5;
+        }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .home-menu a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .knowledge-block h2 {
+                font-size: 20px; /* Kích thước chữ giữ nguyên */
+                font-weight: 800; /* Độ đậm giữ nguyên */
+                color: #000000; /* Màu đen */
+            }
+
+            .knowledge-block p {
+                font-size: 18px; /* Kích thước chữ giữ nguyên */
+                font-weight: 600; /* Độ đậm giữ nguyên */
+                color: #000000; /* Màu đen */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-menu">
+            <a href="https://chudich.github.io/tuvi_phongthuy.html">Về Trang Chủ</a>
+        </div>
+        <h1>Kiến Thức Tử Vi & Phong Thủy</h1>
+        <div id="knowledge-container">
+            <!-- Các khối kiến thức sẽ được thêm động qua JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu
+        const knowledgeData = [
+            {
+                title: "Tăng cường sức khoẻ cho người bị nhiễm âm",
+                description: "Sau khi đến những nơi nặng âm khí như: Nghĩa địa, nhà hoang, bệnh viện, đám ma... Khi về đến nhà nếu sức khỏe không tốt, ngoài việc tắm nước lá xông để giải cảm, bạn có thể tắm nước muối 3 lần."
+            },
+            {
+                title: "Bạn tốt - bạn xấu",
+                description: "Trong cuộc sống luôn có bạn tốt và bạn xấu bạn hãy lấy 1 cây vợt bắt muỗi để vào hướng tây bắc của căn nhà. Như vậy bạn tốt sẽ nhiều lên và giảm thiểu thiệt hại do bạn xấu gây ra."
+            },
+            {
+                title: "Gia tăng sự may mắn",
+                description: "Trong thời gian chờ kết quả (thi cử, ứng tuyển vị trí nhân sự, giải ngân..v..v..) Bạn nên đi phóng sinh, sau khi phóng sinh bạn hãy nhìn về hướng Nam - nghĩ về mong muốn của bản thân, miệng đọc câu: THIÊN PHÚC ĐÁO GIA (3 lần) như vậy sẽ may mắn hơn. Lưu ý: Bạn có thể làm việc này nhiều lần."
+            },
+            {
+                title: "Hoá giải khi bị mượn vận",
+                description: "Tác Hại Khi Bị Mượn Vận: Khi bạn bị mượn vận hoặc phong long, vận đen sẽ ập tới bất ngờ dẫn tới: Sức khoẻ, tiền bạc, gia đạo, công việc sẽ gặp rắc rối, thậm chí có thể gặp tai nạn... bạn hãy lấy 1 chút móng tay hoặc móng chân của mình gói vào 1 tờ tiền lẻ, rồi mang vứt ở ngã ba hoặc ngã tư ngoài đường như vậy sẽ hóa giải được."
+            },
+            {
+                title: "Khó ngủ khi đến nơi lạ",
+                description: "Mẹo Phong Thuỷ khi đến những nơi lạ: Rất nhiều người đến chỗ lạ trằn trọc không ngủ được trước khi đi ngủ, bạn hãy hít thật sâu rồi thổi mạnh vào gối (nam 7 lần nữ 9 lần) như vậy bạn sẽ có 1 giấc ngủ ngon không mộng mị."
+            },
+            {
+                title: "Giảm thiểu rủi ro kinh doanh",
+                description: "Những người có ngón tay út dài thường là người có cá tính mạnh dám kinh doanh mạo hiểm như chứng khoán, vàng bạc, tiền tệ, nhà đất chưa có sổ, thậm chí cờ bạc..v..v.. Bạn hãy lấy 1 sợi chỉ đỏ quấn đều vào 1 cái nhẫn kim loại đeo ở ngón tay út (nam đeo tay trái nữ tay phải) như vậy sẽ giảm thiểu bớt rủi ro chúc các bạn thành công!"
+            },
+            {
+                title: "Phong thủy đồ gia dụng",
+                description: "Khi đồ đạc trong căn nhà của bạn hay bị đổ vỡ, hỏng hóc việc này do 'trường khí' trong căn nhà của bạn bị đứt đoạn. Bạn hãy lấy 1 đoạn dây xích kim loại nhỏ để vào vị trí cao nhất của căn nhà như vậy sẽ tốt lên nhé."
+            },
+            {
+                title: "Hoá giải rắc rối với sếp",
+                description: "Khi bạn gặp rắc rối với sếp hoặc cơ quan chức năng (thuế, quản lý thị trường, giao thông..v..v..). Để hóa giải việc này, bạn hãy nhìn về hướng đông nhắm 1 mắt lại (nam mắt trái, nữ mắt phải) miệng đọc câu: Tẩu Vi Bất Đồng (3 lần)."
+            },
+            {
+                title: "Phong thủy con cái",
+                description: "Phong Thuỷ Với Con Cái: Trường năng lượng sinh học cơ thể của trẻ em vào mùa hè (vượng hoả) sẽ kém ổn định dễ gây ra hành động bất thường: la hét, cãi nhau, đánh lộn, phá đồ, tai nạn..v..v.. Bạn hãy lấy 1 quyển sách có bìa cứng để vào ngăn tủ quần áo của bé sẽ giải quyết được tình trạng này."
+            },
+            {
+                title: "Vong hồn theo phá",
+                description: "Vong hồn theo phá (duyên âm, tà khí, cô hồn...) sẽ làm công việc và tình cảm của bạn kém đi thậm chí còn dễ gặp tai nạn. Ngoài việc hạn chế đến nghĩa trang, bệnh viện, miếu hoang..v..v.. bạn nên đeo ở cổ tay 1 vòng dâu tằm, phía trước cửa nhà treo 1 củ gừng và 5 củ sả."
+            },
+            {
+                title: "Chổi quét nhà & máy hút bụi",
+                description: "Vị trí để chổi hoặc máy hút bụi trong nhà rất quan trọng. 1. Không để chổi dựng đứng. 2. Không để ở trước cửa nhà. 3. Không để trong nhà bếp. 4. Không để chổi trong phòng thờ. Tốt nhất nên để vào góc kín hoặc gầm cầu thang. Không để ở hướng đông nam của căn nhà vì sẽ khó giữ được tiền. Chúc các bạn sáng suốt!"
+            },
+            {
+                title: "Người âm theo phù hộ",
+                description: "Người Âm đi theo phù hộ? Điều này khiến cho trong công việc sẽ hay có người giúp đỡ, suy nghĩ sáng suốt, gặp nạn sẽ vượt qua. Vào tối ngày rằm và mùng 1 âm lịch hàng tháng, bạn nên thắp 1 nén hương và 1 đĩa trái cây ở trước cửa nhà để được phù hộ nhiều hơn nhé."
+            },
+            {
+                title: "Khai thông tài vận",
+                description: "Mẹo thu hút tài lộc: khi bạn gặp nhiều rắc rối không xử lý được, tài lộc công danh trắc trở. Bạn hãy lấy 1 vài vật dụng của mình đã lâu không sử dụng mang cho người khác. Lưu ý: Khi cho nhớ nhắc người đó đưa lại cho mình 1 vài tờ tiền lẻ như vậy tài vận của bạn sẽ hanh thông trở lại."
+            },
+            {
+                title: "Cải thiện tài vận",
+                description: "Phong thuỷ tiền bạc: Khi tiền bạc của bạn hay bị thiếu trước hụt sau hoặc kiếm tiền mà không giữ được bạn hãy lấy 1 tờ tiền có mệnh giá lớn để ở dưới đáy của thùng gạo nhé như vậy tài lộc sẽ tốt dần lên."
+            },
+            {
+                title: "Đòi nợ",
+                description: "Trước khi đi đòi nợ hoặc gọi điện nhắc chuyện công nợ bạn hãy lấy 2 tờ tiền cùng mệnh giá để ở trước cửa nhà một tờ để mặt sấp 1 tờ để mặt ngửa miệng đọc câu: Kim Ngân Tài Đáo (3 lần) như vậy cơ hội thu hồi sẽ tăng lên. Lưu ý: Nên làm việc này vào ngày hoàng đạo chúc các bạn may mắn!"
+            },
+            {
+                title: "Hoá giải khủng hoảng tâm lý và tăng vận may",
+                description: "Hoá giải vận xấu khi bị khủng hoảng tâm lý (stress lâu ngày, trầm cảm, cảm thấy thất bại...). Bạn hãy đốt 1 chùm bồ kết xông toàn bộ căn nhà một tuần làm 1 lần, hãy lặp lại liên tục như vậy 7 lần. Lưu ý: Để gia tăng vận may cho bản thân cũng nên làm cách này chúc các bạn thành công!"
+            },
+            {
+                title: "Tránh tình trạng gánh vận hạn cho người khác",
+                description: "Hoá Giải Điềm Xấu: khi bạn đang soi gương hoặc đang nhìn vào điện thoại mà cảm thấy có người đứng sau lưng nhìn vào gáy bạn đây là điềm rất xấu (phải gánh chịu vận hạn của người đó). Bạn có thể dùng nước muối loãng rửa tay để hóa giải việc này chúc các bạn may mắn!"
+            },
+            {
+                title: "Vết nám và tài vận",
+                description: "Khi đột nhiên da mặt có vết nám hoặc quầng mắt việc này ảnh hưởng tới sức khỏe, thẩm mỹ, tài vận cũng dễ có vấn đề. Ngoài việc chữa trị thông thường bạn nên thường xuyên mặc y phục sáng màu (trắng, xanh nhạt..v..v..) như vậy tài lộc sẽ tốt lên chúc các bạn thành công!"
+            },
+            {
+                title: "Thanh lọc luân xa cho cơ thể",
+                description: "Thanh Lọc Luân Xa: ai mà hay ốm vặt, đầu óc trì trệ, công việc gặp rắc rối, tài lộc thất thường bạn nên thanh lọc luân xa cho cơ thể. Bạn lấy 7 loại hoa (trừ màu trắng) để vào chậu nước tắm, khi tắm xong vớt hoa bỏ vào túi giấy rồi vứt bỏ. Lưu ý: Làm việc này liên tục trong 7 ngày chúc các bạn may mắn!"
+            },
+            {
+                title: "Tăng cường sức khoẻ cho người bị nhiễm âm",
+                description: "Sau khi đến những nơi nặng âm khí như: Nghĩa địa, nhà hoang, bệnh viện, đám ma... Khi về đến nhà nếu sức khỏe không tốt, ngoài việc tắm nước lá xông để giải cảm, bạn có thể tắm nước muối 3 lần."
+            }
+        ];
+
+        // Hàm hiển thị các khối kiến thức
+        function displayKnowledge() {
+            const container = document.getElementById('knowledge-container');
+            if (!container) {
+                console.error('Không tìm thấy phần tử knowledge-container');
+                return;
+            }
+            container.innerHTML = ''; // Xóa nội dung cũ
+
+            knowledgeData.forEach(item => {
+                const block = document.createElement('div');
+                block.classList.add('knowledge-block');
+
+                const title = document.createElement('h2');
+                title.textContent = item.title;
+
+                const description = document.createElement('p');
+                description.textContent = item.description;
+
+                block.appendChild(title);
+                block.appendChild(description);
+                container.appendChild(block);
+            });
+        }
+
+        // Gọi hàm hiển thị khi trang tải
+        window.addEventListener('load', displayKnowledge);
+    </script>
+</body>
+</html>
