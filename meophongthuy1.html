@@ -14,10 +14,7 @@
         }
 
         body {
-            background-image: url('https://example.com/background.jpg'); /* Link ảnh nền tượng trưng */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: #f5f5f5; /* Thay background-image bằng màu nền nếu không có hình */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -139,28 +136,27 @@
     </div>
 
     <script>
-        // Dữ liệu mẫu (bạn có thể thay bằng dữ liệu thực tế)
+        // Dữ liệu mẫu
         const knowledgeData = [
             {
                 title: "Thăng tiến trong công việc",
-                description: "Để thăng tiến trong công việc hiện tại hoặc startup (công việc mới) được thuận lợi,bạn hãy mua một quả địa cầu để vào vị trí đối diện với cửa sổ, hoặc cửa ra vào căn nhà bạn đang ở."
+                description: "Để thăng tiến trong công việc hiện tại hoặc startup (công việc mới) được thuận lợi, bạn hãy mua một quả địa cầu để vào vị trí đối diện với cửa sổ, hoặc cửa ra vào căn nhà bạn đang ở."
             },
             {
                 title: "Hao tiền khi tụ tập đông người",
-                description: "Khi tụ tập nơi đông người dương khí có thể tăng lên,tuy nhiên tài khí rất dễ bị hao tán (chi tiêu vô lý, mất cắp, lừa gạt..v..v..) trước khi đi bạn đặt ví lên đầu đọc: Phong Vật Tụ Tài 3 lần như vậy sẽ hóa giải được."
+                description: "Khi tụ tập nơi đông người dương khí có thể tăng lên, tuy nhiên tài khí rất dễ bị hao tán (chi tiêu vô lý, mất cắp, lừa gạt..v..v..) trước khi đi bạn đặt ví lên đầu đọc: Phong Vật Tụ Tài 3 lần như vậy sẽ hóa giải được."
             },
             {
                 title: "Để ăn nói có duyên",
-                description: "Cách để ăn nói có duyên : Ăn nói kém duyên hay bị lỡ lời hoặc có những phát ngôn không đúng thời điểm.Việc này làm ảnh hưởng tới mối quan hệ của mình với những người xung quanh. Bạn lấy một lọ tăm để ở đầu giường sẽ hóa giải được."
+                description: "Cách để ăn nói có duyên: Ăn nói kém duyên hay bị lỡ lời hoặc có những phát ngôn không đúng thời điểm. Việc này làm ảnh hưởng tới mối quan hệ của mình với những người xung quanh. Bạn lấy một lọ tăm để ở đầu giường sẽ hóa giải được."
             },
             {
                 title: "Vượt qua đối thủ",
-                description: "Vượt qua kẻ thù hãm hại !
-Trong cuộc sống khi gặp phải đối thủ hoặc kẻ thù hãm hại.Bạn hãy khắc tên hoặc biểu tượng của đối thủ lên một quả chuối,sau đó lấy một cái lược cũ cắm vào quả chuối rồi ném xuống sông (không vì cạnh tranh mà đi hại người nếu không chính bạn sẽ đón lãnh hậu quả ) "
+                description: "Vượt qua kẻ thù hãm hại! Trong cuộc sống khi gặp phải đối thủ hoặc kẻ thù hãm hại. Bạn hãy khắc tên hoặc biểu tượng của đối thủ lên một quả chuối, sau đó lấy một cái lược cũ cắm vào quả chuối rồi ném xuống sông (không vì cạnh tranh mà đi hại người nếu không chính bạn sẽ đón lãnh hậu quả)."
             },
             {
                 title: "Giữ vía tránh gặp kẻ ác",
-                description: "Giữ vía tránh gặp kẻ ác,để tránh cơ thể bị va đập hoặc bị người khác (tác động vật lý) bạn nên gói căn cước công dân của mình vào một tờ giấy bạc rồi hãy để vào trong ví, túi xách mang theo bên mình."
+                description: "Giữ vía tránh gặp kẻ ác, để tránh cơ thể bị va đập hoặc bị người khác (tác động vật lý) bạn nên gói căn cước công dân của mình vào một tờ giấy bạc rồi hãy để vào trong ví, túi xách mang theo bên mình."
             },
             {
                 title: "Quỹ đen của chồng",
@@ -172,23 +168,23 @@ Trong cuộc sống khi gặp phải đối thủ hoặc kẻ thù hãm hại.B�
             },
             {
                 title: "Khắng khít vợ chồng",
-                description: "Chuyện vợ chồng, chuyện tình cảm vợ chồng khi không được nồng thắm bạn nên kê lại giường hoặc xoay sang hướng khác. Nếu có điều kiện thì nên thay chăn, chiếu, ga,đệm mới."
+                description: "Chuyện vợ chồng, chuyện tình cảm vợ chồng khi không được nồng thắm bạn nên kê lại giường hoặc xoay sang hướng khác. Nếu có điều kiện thì nên thay chăn, chiếu, ga, đệm mới."
             },
             {
                 title: "Tránh bị phản bội",
-                description: "Để tránh bị hiểu lầm : Để tránh bị hiểu lầm hoặc bị người thân quen làm phản, bạn nên lộn trái quần áo trước khi phơi. Lưu ý : không nên phơi quần áo ngoài trời vào buổi đêm."
+                description: "Để tránh bị hiểu lầm: Để tránh bị hiểu lầm hoặc bị người thân quen làm phản, bạn nên lộn trái quần áo trước khi phơi. Lưu ý: không nên phơi quần áo ngoài trời vào buổi đêm."
             },
             {
                 title: "Hoá giải việc bị chê trách, chỉ trích",
-                description: "Nắng mưa bất thường, thời gian này thủy hỏa bất tương,nắng mưa thất thường, bạn sẽ rất dễ bị người khác chỉ trích. Bạn hãy treo năm quả ớt ở khu vực mình hay phơi quần áo như vậy sẽ hóa giải được việc này."
+                description: "Nắng mưa bất thường, thời gian này thủy hỏa bất tương, nắng mưa thất thường, bạn sẽ rất dễ bị người khác chỉ trích. Bạn hãy treo năm quả ớt ở khu vực mình hay phơi quần áo như vậy sẽ hóa giải được việc này."
             },
             {
                 title: "Xử lý quần áo cũ đúng cách",
-                description: "Lưu ý quần áo cũ ! Để hạn chế tai nạn, bất đồng quan điểm (thị phi) của mình với những người xung quanh. Bạn tuyệt đối không nên sử dụng quần áo cũ ( bỏ đi ) của mình làm giẻ lau bếp nhé."
+                description: "Lưu ý quần áo cũ! Để hạn chế tai nạn, bất đồng quan điểm (thị phi) của mình với những người xung quanh. Bạn tuyệt đối không nên sử dụng quần áo cũ (bỏ đi) của mình làm giẻ lau bếp nhé."
             },
             {
                 title: "Cân bằng mối quan hệ",
-                description: "Khi 1 mối quan hệ ( vợ chồng, bạn bè, đối tác, đồng nghiệp, anh em..v..v..) rạn nứt hoặc có nguy cơ tan vỡ. Việc này ảnh hưởng mạnh mẽ tới sự nghiệp cũng như cuộc sống, bạn nên để vào khu vực bếp 1 cây xanh hoặc thường xuyên cắm 1 lọ hoa tươi, như vậy sẽ không gây ra hậu quả nghiêm trọng."
+                description: "Khi 1 mối quan hệ (vợ chồng, bạn bè, đối tác, đồng nghiệp, anh em..v..v..) rạn nứt hoặc có nguy cơ tan vỡ. Việc này ảnh hưởng mạnh mẽ tới sự nghiệp cũng như cuộc sống, bạn nên để vào khu vực bếp 1 cây xanh hoặc thường xuyên cắm 1 lọ hoa tươi, như vậy sẽ không gây ra hậu quả nghiêm trọng."
             },
             {
                 title: "Tránh lừa đảo qua mạng",
@@ -196,17 +192,15 @@ Trong cuộc sống khi gặp phải đối thủ hoặc kẻ thù hãm hại.B�
             },
             {
                 title: "Bảo vệ người thân trước bạn xấu",
-                description: Bảo vệ người thân ki người thân của bạn chơi bời hay giao du với người xấu : Bạn hãy lấy một củ tỏi để vào đôi giày hoặc đôi dép mà người đó đang sử dụng.
-Lưu ý : làm việc này vào buổi đêm, liên tục trong 30 ngày như vậy sẽ hoá giải được."
+                description: "Bảo vệ người thân: Khi người thân của bạn chơi bời hay giao du với người xấu, bạn hãy lấy một củ tỏi để vào đôi giày hoặc đôi dép mà người đó đang sử dụng. Lưu ý: làm việc này vào buổi đêm, liên tục trong 30 ngày như vậy sẽ hoá giải được."
             },
             {
                 title: "Hoá giải kiếp nạn và đoàn tụ gia đình",
-                description: "Nhiều người bước chân ra khỏi nhà không có cơ hội quay về (tai nạn, bắt cóc, phạm pháp..v..v..) Nồi nấu cơm khi không sử dụng, bạn nên để vào trong đó 2 cái bát (chén) ăn cơm và 2 chiếc thìa như vậy sẽ hạn chế được kiếp nạn này.
-Lưu ý : điều này rất tốt cho việc đoàn tụ gia đình. Chúc các bạn may mắn."
+                description: "Nhiều người bước chân ra khỏi nhà không có cơ hội quay về (tai nạn, bắt cóc, phạm pháp..v..v..) Nồi nấu cơm khi không sử dụng, bạn nên để vào trong đó 2 cái bát (chén) ăn cơm và 2 chiếc thìa như vậy sẽ hạn chế được kiếp nạn này. Lưu ý: điều này rất tốt cho việc đoàn tụ gia đình. Chúc các bạn may mắn."
             },
             {
                 title: "Bị phong long",
-                description: "Biểu hiệu bị phong long người bị phong long, bùa ngải hoặc vong theo sẽ có những biểu hiện : Chán ăn, ốm đau, mất ngủ, làm việc không hiệu quả, hay gặp ác mộng..v..v..Bạn hãy lấy chín hạt đỗ xanh cho vào miệng nhai nát rồi nhổ đi. Sau đó uống một ngụm nước lạnh. Nếu thấy có vị tanh trong miệng hoặc lợm giọng như vậy là đang bị "
+                description: "Biểu hiệu bị phong long: Người bị phong long, bùa ngải hoặc vong theo sẽ có những biểu hiện: Chán ăn, ốm đau, mất ngủ, làm việc không hiệu quả, hay gặp ác mộng..v..v.. Bạn hãy lấy chín hạt đỗ xanh cho vào miệng nhai nát rồi nhổ đi. Sau đó uống một ngụm nước lạnh. Nếu thấy có vị tanh trong miệng hoặc lợm giọng như vậy là đang bị."
             },
             {
                 title: "Tránh bị rủa xả bùa ngãi",
@@ -214,23 +208,19 @@ Lưu ý : điều này rất tốt cho việc đoàn tụ gia đình. Chúc các
             },
             {
                 title: "Gia tăng cơ hội du lịch",
-                description: "Gia tăng cơ hội đi du lịch nếu đã lâu chưa đi du lịch thì bạn nên thay một đôi dép mới, nếu bạn thường xuyên đi giày thì nên thay dây giày mới như vậy cơ hội du lịch sẽ tìm đến với bạn. Chúc các bạn vui vẻ và may mắn !"
+                description: "Gia tăng cơ hội đi du lịch: Nếu đã lâu chưa đi du lịch thì bạn nên thay một đôi dép mới, nếu bạn thường xuyên đi giày thì nên thay dây giày mới như vậy cơ hội du lịch sẽ tìm đến với bạn. Chúc các bạn vui vẻ và may mắn!"
             },
             {
                 title: "Tránh va chạm khi giao thông",
-                description: "Khi tham gia giao thông để tránh tình trạng bị người khác đâm vào mình, bạn hãy để vào trong cốp xe một con lật đật và một gói muối. Chúc các bạn đi xe an toàn ."
+                description: "Khi tham gia giao thông để tránh tình trạng bị người khác đâm vào mình, bạn hãy để vào trong cốp xe một con lật đật và một gói muối. Chúc các bạn đi xe an toàn."
             },
             {
                 title: "Người nóng tính hoả vượng",
-                description: "Lưu Ý Về Hoả Vượng: người thẳng tính, nóng tính, gia trưởng, việc này do hỏa vượng gây ra. Để hóa giải điều này, bạn nên treo trong nhà một bức tranh có hình sông, suối, biển. Lưu ý : Không nên kê giường ngủ ở hướng nam của căn nhà. Chúc các bạn an lành"
+                description: "Lưu ý về hoả vượng: Người thẳng tính, nóng tính, gia trưởng, việc này do hỏa vượng gây ra. Để hóa giải điều này, bạn nên treo trong nhà một bức tranh có hình sông, suối, biển. Lưu ý: Không nên kê giường ngủ ở hướng nam của căn nhà. Chúc các bạn an lành."
             },
             {
                 title: "Phong thủy cho sức khỏe",
-                description: "Khi mắc bệnh, ngoài việc điều trị theo y học, bạn nên thường xuyên để một đĩa trái cây trong nhà theo hướng :
-1. Bệnh mãn tính : hướng Đông
-2. Bệnh nội tạng, tim mạch huyết áp : hướng Đông Nam
-3. Bệnh mất ngủ, rối loạn về thần kinh :  hướng Bắc
-4. Bệnh người già : hướng Tây Nam"
+                description: "Khi mắc bệnh, ngoài việc điều trị theo y học, bạn nên thường xuyên để một đĩa trái cây trong nhà theo hướng: 1. Bệnh mãn tính: hướng Đông; 2. Bệnh nội tạng, tim mạch huyết áp: hướng Đông Nam; 3. Bệnh mất ngủ, rối loạn về thần kinh: hướng Bắc; 4. Bệnh người già: hướng Tây Nam."
             },
             {
                 title: "Chuyện con cái",
@@ -238,21 +228,25 @@ Lưu ý : điều này rất tốt cho việc đoàn tụ gia đình. Chúc các
             },
             {
                 title: "Vị trí gương",
-                description: "Hướng đặt gương Tâm Linh : Cuộc sống trầy trật gặp nhiều vận xui bạn nên thay đổi vị trígương trong căn nhà. Lưu ý : Tuyệt đối không nên đặt gương chiếu thẳng vào giường ngủ, bếp và bàn thờ."
+                description: "Hướng đặt gương tâm linh: Cuộc sống trầy trật gặp nhiều vận xui bạn nên thay đổi vị trí gương trong căn nhà. Lưu ý: Tuyệt đối không nên đặt gương chiếu thẳng vào giường ngủ, bếp và bàn thờ."
             },
             {
                 title: "Tránh người thứ 3",
-                description: "Phòng tránh người thứ 3 : người thứ 3 chính là bóng ma đe dọa hôn nhân. Hãy nhớ: đồ lót của 2 vợ chồng khi không còn sử dụng được,nên bỏ chung vào 1 túi rồi hãy đem chôn sâu dưới đất ngoài vườn như vậy người thứ 3 sẽ không có cơ hội."
+                description: "Phòng tránh người thứ 3: Người thứ 3 chính là bóng ma đe dọa hôn nhân. Hãy nhớ: đồ lót của 2 vợ chồng khi không còn sử dụng được, nên bỏ chung vào 1 túi rồi hãy đem chôn sâu dưới đất ngoài vườn như vậy người thứ 3 sẽ không có cơ hội."
             },
             {
                 title: "Tăng cường sức khoẻ cho người bị nhiễm âm",
-                description: "Sau khi đến những nơi nặng âm khí như : Nghĩa địa, nhà hoang, bệnh viện, đám ma...Khi về đến nhà nếu sức khỏe không tốt, ngoài việc tắm nước lá xông để giải cảm, bạn có thể tắm nước muối 3 lần."
-            },
+                description: "Sau khi đến những nơi nặng âm khí như: Nghĩa địa, nhà hoang, bệnh viện, đám ma... Khi về đến nhà nếu sức khỏe không tốt, ngoài việc tắm nước lá xông để giải cảm, bạn có thể tắm nước muối 3 lần."
+            }
         ];
 
         // Hàm hiển thị các khối kiến thức
         function displayKnowledge() {
             const container = document.getElementById('knowledge-container');
+            if (!container) {
+                console.error('Không tìm thấy phần tử knowledge-container');
+                return;
+            }
             container.innerHTML = ''; // Xóa nội dung cũ
 
             knowledgeData.forEach(item => {
