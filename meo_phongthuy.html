@@ -85,20 +85,39 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Tiêu đề của mỗi khối kiến thức */
-        .knowledge-block h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff; /* Chữ trắng nổi bật */
+        /* Button thay cho tiêu đề */
+        .knowledge-button {
+            display: inline-block;
+            padding: 10px 20px; /* Kích thước button trung bình */
+            font-size: 16px; /* Kích thước chữ trung bình */
+            font-weight: 600; /* Chữ đậm */
+            background: linear-gradient(135deg, #ffd700, #ffb347); /* Màu sáng ấm kiểu iOS */
+            color: #fff; /* Chữ trắng */
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
             margin-bottom: 10px;
+            transition: background 0.2s, transform 0.2s;
         }
 
-        /* Diễn giải của mỗi khối kiến thức */
-        .knowledge-block p {
+        .knowledge-button:hover {
+            background: linear-gradient(135deg, #ffca28, #ff8f00); /* Gradient đậm hơn khi hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Link thay cho mô tả */
+        .knowledge-link {
             font-size: 16px;
             font-weight: 400;
-            color: #f5f5f5; /* Chữ trắng nhạt để dễ đọc */
+            color: #007aff; /* Màu xanh link kiểu iOS */
+            text-decoration: none;
             line-height: 1.5;
+        }
+
+        .knowledge-link:hover {
+            text-decoration: underline;
         }
 
         /* Responsive cho điện thoại */
@@ -117,11 +136,12 @@
                 font-size: 24px;
             }
 
-            .knowledge-block h2 {
-                font-size: 16px;
+            .knowledge-button {
+                font-size: 14px;
+                padding: 8px 15px;
             }
 
-            .knowledge-block p {
+            .knowledge-link {
                 font-size: 14px;
             }
         }
@@ -141,86 +161,26 @@
     <script>
         // Dữ liệu mẫu (bạn có thể thay bằng dữ liệu thực tế)
         const knowledgeData = [
-            {
-                title: "Mẹo Phong Thủy 1",
-                description: "Tử vi 12 con giáp cung cấp thông tin chi tiết về vận mệnh, tính cách và sự nghiệp của từng con giáp trong năm. Năm nay, người tuổi Tý sẽ gặp nhiều cơ hội trong công việc, nhưng cần cẩn trọng về sức khỏe."
-            },
-            {
-                title: "Mẹo Phong Thủy 2",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 3",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 4",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 5",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            },
-            {
-                title: "Mẹo Phong Thủy 6",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 7",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 8",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            },
-            {
-                title: "Mẹo Phong Thủy 9",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 10",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 11",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            },
-            {
-                title: "Mẹo Phong Thủy 12",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 13",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 14",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            },
-            {
-                title: "Mẹo Phong Thủy 15",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 16",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 17",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            },
-            {
-                title: "Mẹo Phong Thủy 18",
-                description: "Vận khí năm nay cho thấy các con giáp như Mão, Thìn sẽ có nhiều thay đổi tích cực trong tình cảm và tài chính. Hãy tận dụng cơ hội để phát triển bản thân."
-            },
-            {
-                title: "Mẹo Phong Thủy 19",
-                description: "Danh sách các ngày tốt trong tháng này bao gồm các ngày hoàng đạo, phù hợp để khởi sự, cưới hỏi hoặc ký kết hợp đồng. Ví dụ: Ngày 5 và 15 là ngày tốt cho công việc lớn."
-            },
-            {
-                title: "Mẹo Phong Thủy 20",
-                description: "Cúng giải hạn là nghi thức quan trọng để hóa giải vận xui. Bạn cần chuẩn bị lễ vật như hoa, nhang, và trái cây, đồng thời chọn ngày giờ phù hợp để thực hiện."
-            }  
+            { title: "Mẹo Phong Thủy 1", link: "https://example.com/phongthuy1" },
+            { title: "Mẹo Phong Thủy 2", link: "https://example.com/phongthuy2" },
+            { title: "Mẹo Phong Thủy 3", link: "https://example.com/phongthuy3" },
+            { title: "Mẹo Phong Thủy 4", link: "https://example.com/phongthuy4" },
+            { title: "Mẹo Phong Thủy 5", link: "https://example.com/phongthuy5" },
+            { title: "Mẹo Phong Thủy 6", link: "https://example.com/phongthuy6" },
+            { title: "Mẹo Phong Thủy 7", link: "https://example.com/phongthuy7" },
+            { title: "Mẹo Phong Thủy 8", link: "https://example.com/phongthuy8" },
+            { title: "Mẹo Phong Thủy 9", link: "https://example.com/phongthuy9" },
+            { title: "Mẹo Phong Thủy 10", link: "https://example.com/phongthuy10" },
+            { title: "Mẹo Phong Thủy 11", link: "https://example.com/phongthuy11" },
+            { title: "Mẹo Phong Thủy 12", link: "https://example.com/phongthuy12" },
+            { title: "Mẹo Phong Thủy 13", link: "https://example.com/phongthuy13" },
+            { title: "Mẹo Phong Thủy 14", link: "https://example.com/phongthuy14" },
+            { title: "Mẹo Phong Thủy 15", link: "https://example.com/phongthuy15" },
+            { title: "Mẹo Phong Thủy 16", link: "https://example.com/phongthuy16" },
+            { title: "Mẹo Phong Thủy 17", link: "https://example.com/phongthuy17" },
+            { title: "Mẹo Phong Thủy 18", link: "https://example.com/phongthuy18" },
+            { title: "Mẹo Phong Thủy 19", link: "https://example.com/phongthuy19" },
+            { title: "Mẹo Phong Thủy 20", link: "https://example.com/phongthuy20" }
         ];
 
         // Hàm hiển thị các khối kiến thức
@@ -232,14 +192,18 @@
                 const block = document.createElement('div');
                 block.classList.add('knowledge-block');
 
-                const title = document.createElement('h2');
-                title.textContent = item.title;
+                const button = document.createElement('a');
+                button.classList.add('knowledge-button');
+                button.href = "#"; // Có thể thay bằng link thực tế nếu cần
+                button.textContent = item.title;
 
-                const description = document.createElement('p');
-                description.textContent = item.description;
+                const link = document.createElement('a');
+                link.classList.add('knowledge-link');
+                link.href = item.link;
+                link.textContent = "Xem chi tiết";
 
-                block.appendChild(title);
-                block.appendChild(description);
+                block.appendChild(button);
+                block.appendChild(link);
                 container.appendChild(block);
             });
         }
