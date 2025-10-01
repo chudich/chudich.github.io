@@ -1,7 +1,104 @@
-Ví dụ 1: Tình sinh cung của tuổi Đinh Sửu: Khởi nghịch Giáp từ cung Sửu, Ất ở Tý, Bình ở Hợi, Đinh ở Tuất. (tức gặp con giáp đầu tiên) Từ Tuất đếm thuận 6, 7, 8 được 9 tại cung Sửu. Tuổi Đình sửu có sinh cung là 9 Ly.
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trận Bát Quái Dược Liệu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .bagua-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 150px);
+            grid-template-rows: repeat(3, 150px);
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .cell {
+            border: 2px solid #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            font-size: 14px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .center {
+            background-color: #e0f7fa;
+            font-weight: bold;
+        }
+        .guide {
+            text-align: left;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        h2 {
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trận Bát Quái Dược Liệu</h1>
+        <div class="bagua-grid" id="baguaGrid"></div>
+        <div class="guide">
+            <h2>Hướng Dẫn: Phụ Trận Trừ Âm Linh</h2>
+            <p>Đây là nền tảng của trận pháp bằng dược liệu, mọi người nhất định phải ghi nhớ kỹ trận pháp Bát Quái bằng dược liệu này, tám cung vị, mỗi cung vị đặt loại thuốc gì, dưới đây sẽ liệt kê đầy đủ và chi tiết.</p>
+            <p>Tác dụng của việc này, trước tiên là để ngăn chặn khi lập trận, ví dụ như bạn thiếu tài lộc, hoặc là thôi thúc hôn nhân mà bên ngoài có âm linh đến gây trở ngại. Khi lập trận làm những việc trên nhất định sẽ có sự gây trở ngại như vậy, cho nên trận bát quái dược liệu này có tác dụng bảo vệ, các bạn có thể coi nó như một kết giới bằng dược liệu. Ngoài ra, nó còn có thể tăng cường năng lượng cho nội cục. Đây chính là trận pháp Bát Quái cơ bản nhất, mỗi trận pháp của chúng ta đều phải dùng đến nó. Hễ lập trận thì không thể tách rời trận pháp Bát Quái bằng dược liệu.</p>
+            <p><strong>Tên thuốc và phương vị:</strong></p>
+            <ul>
+                <li>Cung Khảm (Bắc): Thiên đông (天冬)</li>
+                <li>Cung Cấn (Đông Bắc): Hoàng kỳ (黄芪)</li>
+                <li>Cung Chấn (Đông): Độc hoạt (独活)</li>
+                <li>Cung Tốn (Đông Nam): Phòng phong (防风)</li>
+                <li>Cung Ly (Nam): Can khương (干姜)</li>
+                <li>Cung Khôn (Tây Nam): Đương quy (当归)</li>
+                <li>Cung Đoài (Tây): Xích thược (赤芍)</li>
+                <li>Cung Càn (Tây Bắc): Đan sâm (丹参)</li>
+            </ul>
+            <p><strong>Đặt thuốc:</strong> Phải có thứ tự, bắt đầu từ cung Càn, theo chiều kim đồng hồ mà đặt. Trước tiên là cung Càn đặt Đan sâm, sau đó cung Khảm đặt Thiên đông, cung Cấn đặt Hoàng kỳ, theo chiều kim đồng hồ cho đến cung Đoài đặt Xích thược thì dừng.</p>
+            <p><strong>Thu dọn trận:</strong> Khi thu dọn, mỗi trận pháp có điểm bắt đầu khác nhau, ví dụ từ cung Khôn, thu dọn ngược chiều kim đồng hồ. Trước tiên lấy thuốc ở cung Khôn ra, sau đó lấy thuốc ở cung Ly ra, cung Tốn, cung Chấn, theo chiều ngược kim đồng hồ mà thu dọn, đừng nhầm lẫn.</p>
+            <p><strong>Lưu ý về khuyết góc:</strong> Tám cung được đặt theo đại thái cực của căn nhà bạn. Nếu căn nhà bị khuyết góc, ví dụ thiếu cung Chấn, phải đặt gấp đôi lượng thuốc (bình thường mỗi cung 9g, khuyết góc thì 18g). Nếu có hai vị trí bị khuyết góc, cả hai vị trí đều phải đặt gấp đôi.</p>
+        </div>
+    </div>
 
-Ví dụ 2: Tính Sinh cung của tháng Nhâm Ngọ: Từ cung Ngọ kể là Giáp đếm nghịch: Ất, Bỉnh, Đinh, Mậu, Kỷ, Canh, Tân, Nhâm đến cung Tuất là. Nhâm Ngọ thuộc tuần
+    <script>
+        const baguaData = [
+            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" },
+            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" },
+            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" },
+            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" },
+            { direction: "Trung Tâm Nhà", medicine: "" },
+            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" },
+            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" },
+            { direction: "Ly - Nam", medicine: "Can khương (干姜)" },
+            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" }
+        ];
 
-Giáp Tuất có mã số là 6. Từ đó đếm thuận 6, 7, 8, 9, 1, 2, 3, 4 được 5 tại cung Ngọ. Mã số 5 ở trung cung nên trường hợp này ta lấy mã số ở cung bắt đầu khởi là ngọ tức sinh cung của tuổi Nhâm Ngọ là 9 ly.
-
-Ví dụ 3: Tình sinh cung của ngày Giáp Thìn: Tại Thìn ta được Giáp, đó là mã số 4. Vậy sinh cung của ngày Giáp Thìn là 4 Tốn.
+        const grid = document.getElementById('baguaGrid');
+        baguaData.forEach((item, index) => {
+            const cell = document.createElement('div');
+            cell.className = 'cell' + (item.direction === "Trung Tâm Nhà" ? ' center' : '');
+            cell.innerHTML = `<strong>${item.direction}</strong><br>${item.medicine}`;
+            grid.appendChild(cell);
+        });
+    </script>
+</body>
+</html>
