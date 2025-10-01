@@ -1,1 +1,599 @@
-ghg
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuổi Hoa Giáp - Xung Khắc</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FFF8F0; /* Warm light background */
+            color: #333; /* Dark text for readability */
+            margin: 0;
+            padding: 20px;
+            font-size: 16px; /* Medium text size */
+            line-height: 1.5;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .home-link {
+            text-decoration: none;
+            color: #FF9500; /* Warm orange */
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 16px;
+            background-color: #FFFFFF;
+            border-radius: 8px; /* iOS style rounded */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-right: 20px;
+        }
+        .home-link:hover {
+            background-color: #FFEFD5; /* Light warm hover */
+        }
+        .select-container {
+            position: relative;
+        }
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: #FF5722; /* Bright warm orange text */
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        select:focus {
+            outline: none;
+            border-color: #FF9500;
+        }
+        #result {
+            margin-top: 20px;
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 16px;
+            color: #333;
+        }
+        #result p {
+            margin: 10px 0;
+            color: #FF5722; /* Attractive bright color for text */
+        }
+        #result .user-age {
+            color: #D84315; /* Bolder, vibrant orange */
+            font-size: 20px; /* Larger size */
+            font-weight: 700; /* Bolder */
+        }
+        #result .hoa-giap {
+            color: #D84315; /* Bolder, vibrant orange */
+            font-size: 18px; /* Slightly larger size */
+            font-weight: 600; /* Bold */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="https://chudich.github.io/tuvi_phongthuy.html" class="home-link">Về Trang Chủ</a>
+    </div>
+    <div class="select-container">
+        <select id="hoaGiapSelect">
+            <option value="">Chọn tuổi của bạn</option>
+            <option value="Giáp Tý ( Hải Trung Kim )">Giáp Tý ( Hải Trung Kim )</option>
+            <option value="Ất Sửu ( Hải Trung Kim )">Ất Sửu ( Hải Trung Kim )</option>
+            <option value="Bính Dần ( Lư Trung Hoả )">Bính Dần ( Lư Trung Hoả )</option>
+            <option value="Đinh Mão ( Lư Trung Hoả )">Đinh Mão ( Lư Trung Hoả )</option>
+            <option value="Mậu Thìn ( Đại Lâm Mộc )">Mậu Thìn ( Đại Lâm Mộc )</option>
+            <option value="Kỷ Tỵ ( Đại Lâm Mộc )">Kỷ Tỵ ( Đại Lâm Mộc )</option>
+            <option value="Canh Ngọ ( Lộ Bàng Thổ )">Canh Ngọ ( Lộ Bàng Thổ )</option>
+            <option value="Tân Mùi ( Lộ Bàng Thổ )">Tân Mùi ( Lộ Bàng Thổ )</option>
+            <option value="Nhâm Thân ( Kiếm Phong Kim )">Nhâm Thân ( Kiếm Phong Kim )</option>
+            <option value="Quý Dậu ( Kiếm Phong Kim )">Quý Dậu ( Kiếm Phong Kim )</option>
+            <option value="Giáp Tuất ( Sơn Đầu Hoả )">Giáp Tuất ( Sơn Đầu Hoả )</option>
+            <option value="Ất Hợi ( Sơn Đầu Hoả )">Ất Hợi ( Sơn Đầu Hoả )</option>
+            <option value="Bính Tý ( Giản Hạ Thuỷ )">Bính Tý ( Giản Hạ Thuỷ )</option>
+            <option value="Đinh Sửu ( Giản Hạ Thuỷ )">Đinh Sửu ( Giản Hạ Thuỷ )</option>
+            <option value="Mậu Dần ( Thành Đầu Thổ )">Mậu Dần ( Thành Đầu Thổ )</option>
+            <option value="Kỷ Mão ( Thành Đầu Thổ )">Kỷ Mão ( Thành Đầu Thổ )</option>
+            <option value="Canh Thìn ( Bạch Lạp Kim )">Canh Thìn ( Bạch Lạp Kim )</option>
+            <option value="Tân Tỵ ( Bạch Lạp Kim )">Tân Tỵ ( Bạch Lạp Kim )</option>
+            <option value="Nhâm Ngọ ( Dương Liễu Mộc )">Nhâm Ngọ ( Dương Liễu Mộc )</option>
+            <option value="Quý Mùi ( Dương Liễu Mộc )">Quý Mùi ( Dương Liễu Mộc )</option>
+            <option value="Giáp Thân ( Tuyền Trung Thuỷ )">Giáp Thân ( Tuyền Trung Thuỷ )</option>
+            <option value="Ất Dậu ( Tuyền Trung Thuỷ )">Ất Dậu ( Tuyền Trung Thuỷ )</option>
+            <option value="Bính Tuất ( Ốc Thượng Thổ )">Bính Tuất ( Ốc Thượng Thổ )</option>
+            <option value="Đinh Hợi ( Ốc Thượng Thổ )">Đinh Hợi ( Ốc Thượng Thổ )</option>
+            <option value="Mậu Tý ( Tích Lịch Hoả )">Mậu Tý ( Tích Lịch Hoả )</option>
+            <option value="Kỷ Sửu ( Tích Lịch Hoả )">Kỷ Sửu ( Tích Lịch Hoả )</option>
+            <option value="Canh Dần ( Tùng Bách Mộc )">Canh Dần ( Tùng Bách Mộc )</option>
+            <option value="Tân Mão ( Tùng Bách Mộc )">Tân Mão ( Tùng Bách Mộc )</option>
+            <option value="Nhâm Thìn ( Trường Lưu Thuỷ )">Nhâm Thìn ( Trường Lưu Thuỷ )</option>
+            <option value="Quý Tỵ ( Trường Lưu Thuỷ )">Quý Tỵ ( Trường Lưu Thuỷ )</option>
+            <option value="Giáp Ngọ ( Sa Trung Kim )">Giáp Ngọ ( Sa Trung Kim )</option>
+            <option value="Ất Mùi ( Sa Trung Kim )">Ất Mùi ( Sa Trung Kim )</option>
+            <option value="Bính Thân ( Sơn Hạ Hoả )">Bính Thân ( Sơn Hạ Hoả )</option>
+            <option value="Đinh Dậu ( Sơn Hạ Hoả )">Đinh Dậu ( Sơn Hạ Hoả )</option>
+            <option value="Mậu Tuất ( Bình Địa Mộc )">Mậu Tuất ( Bình Địa Mộc )</option>
+            <option value="Kỷ Hợi ( Bình Địa Mộc )">Kỷ Hợi ( Bình Địa Mộc )</option>
+            <option value="Canh Tý ( Bích Thượng Thổ )">Canh Tý ( Bích Thượng Thổ )</option>
+            <option value="Tân Sửu ( Bích Thượng Thổ )">Tân Sửu ( Bích Thượng Thổ )</option>
+            <option value="Nhâm Dần ( Kim Bạch Kim )">Nhâm Dần ( Kim Bạch Kim )</option>
+            <option value="Quý Mão ( Kim Bạch Kim )">Quý Mão ( Kim Bạch Kim )</option>
+            <option value="Giáp Thìn ( Phú Đăng Hoả )">Giáp Thìn ( Phú Đăng Hoả )</option>
+            <option value="Ất Tỵ ( Phú Đăng Hoả )">Ất Tỵ ( Phú Đăng Hoả )</option>
+            <option value="Bính Ngọ ( Thiên Hà Thuỷ )">Bính Ngọ ( Thiên Hà Thuỷ )</option>
+            <option value="Đinh Mùi ( Thiên Hà Thuỷ )">Đinh Mùi ( Thiên Hà Thuỷ )</option>
+            <option value="Mậu Thân ( Đại Trạch Thổ )">Mậu Thân ( Đại Trạch Thổ )</option>
+            <option value="Kỷ Dậu ( Đại Trạch Thổ )">Kỷ Dậu ( Đại Trạch Thổ )</option>
+            <option value="Canh Tuất ( Thoa Xuyến Kim )">Canh Tuất ( Thoa Xuyến Kim )</option>
+            <option value="Tân Hợi ( Thoa Xuyến Kim )">Tân Hợi ( Thoa Xuyến Kim )</option>
+            <option value="Nhâm Tý ( Tang Đố Mộc )">Nhâm Tý ( Tang Đố Mộc )</option>
+            <option value="Quý Sửu ( Tang Đố Mộc )">Quý Sửu ( Tang Đố Mộc )</option>
+            <option value="Giáp Dần ( Đại Khê Thuỷ )">Giáp Dần ( Đại Khê Thuỷ )</option>
+            <option value="Ất Mão ( Đại Khê Thuỷ )">Ất Mão ( Đại Khê Thuỷ )</option>
+            <option value="Bính Thìn ( Sa Trung Thổ )">Bính Thìn ( Sa Trung Thổ )</option>
+            <option value="Đinh Tỵ ( Sa Trung Thổ )">Đinh Tỵ ( Sa Trung Thổ )</option>
+            <option value="Mậu Ngọ ( Thiên Thượng Hoả )">Mậu Ngọ ( Thiên Thượng Hoả )</option>
+            <option value="Kỷ Mùi ( Thiên Thượng Hoả )">Kỷ Mùi ( Thiên Thượng Hoả )</option>
+            <option value="Canh Thân ( Thạch Lựu Mộc )">Canh Thân ( Thạch Lựu Mộc )</option>
+            <option value="Tân Dậu ( Thạch Lựu Mộc )">Tân Dậu ( Thạch Lựu Mộc )</option>
+            <option value="Nhâm Tuất ( Đại Hải Thuỷ )">Nhâm Tuất ( Đại Hải Thuỷ )</option>
+            <option value="Quý Hợi ( Đại Hải Thuỷ )">Quý Hợi ( Đại Hải Thuỷ )</option>
+        </select>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        const data = [
+            {
+                age: "Giáp Tý ( Hải Trung Kim )",
+                khacNapAm: "Mậu Tuất ( Bình Địa Mộc )",
+                thienKhacDiaXung: "Canh Ngọ",
+                cungThienDiaXung: "Giáp Ngọ",
+                cungDiaThienKhac: "Canh Tý"
+            },
+            {
+                age: "Ất Sửu ( Hải Trung Kim )",
+                khacNapAm: "Kỷ Hợi ( Bình Địa Mộc )",
+                thienKhacDiaXung: "Tân Mùi",
+                cungThienDiaXung: "Ất Mùi",
+                cungDiaThienKhac: "Tân Sửu"
+            },
+            {
+                age: "Bính Dần ( Lư Trung Hoả )",
+                khacNapAm: "Nhâm Thân ( Kiếm Phong Kim )",
+                thienKhacDiaXung: "Nhâm Thân",
+                cungThienDiaXung: "Bính Thân",
+                cungDiaThienKhac: "Nhâm Dần"
+            },
+            {
+                age: "Đinh Mão ( Lư Trung Hoả )",
+                khacNapAm: "Quý Dậu ( Kiếm Phong Kim )",
+                thienKhacDiaXung: "Quý Dậu",
+                cungThienDiaXung: "Đinh Dậu",
+                cungDiaThienKhac: "Quý Mão"
+            },
+            {
+                age: "Mậu Thìn ( Đại Lâm Mộc )",
+                khacNapAm: "Mậu Thân ( Đại Trạch Thổ )",
+                thienKhacDiaXung: "Giáp Tuất",
+                cungThienDiaXung: "Mậu Tuất",
+                cungDiaThienKhac: "Giáp Thìn"
+            },
+            {
+                age: "Kỷ Tỵ ( Đại Lâm Mộc )",
+                khacNapAm: "Kỷ Dậu ( Đại Trạch Thổ )",
+                thienKhacDiaXung: "Ất Hợi",
+                cungThienDiaXung: "Kỷ Hợi",
+                cungDiaThienKhac: "Ất Tỵ"
+            },
+            {
+                age: "Canh Ngọ ( Lộ Bàng Thổ )",
+                khacNapAm: "Giáp Thân ( Tuyền Trung Thuỷ )",
+                thienKhacDiaXung: "Bính Tý",
+                cungThienDiaXung: "Canh Tý",
+                cungDiaThienKhac: "Bính Ngọ"
+            },
+            {
+                age: "Tân Mùi ( Lộ Bàng Thổ )",
+                khacNapAm: "Ất Dậu ( Tuyền Trung Thuỷ )",
+                thienKhacDiaXung: "Đinh Sửu",
+                cungThienDiaXung: "Tân Sửu",
+                cungDiaThienKhac: "Đinh Mùi"
+            },
+            {
+                age: "Nhâm Thân ( Kiếm Phong Kim )",
+                khacNapAm: "Mậu Thìn ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Mậu Dần",
+                cungThienDiaXung: "Nhâm Dần",
+                cungDiaThienKhac: "Mậu Thân"
+            },
+            {
+                age: "Quý Dậu ( Kiếm Phong Kim )",
+                khacNapAm: "Kỷ Tỵ ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Kỷ Mão",
+                cungThienDiaXung: "Quý Mão",
+                cungDiaThienKhac: "Kỷ Dậu"
+            },
+            {
+                age: "Giáp Tuất ( Sơn Đầu Hoả )",
+                khacNapAm: "Giáp Ngọ ( Sa Trung Kim )",
+                thienKhacDiaXung: "Canh Thìn",
+                cungThienDiaXung: "Giáp Thìn",
+                cungDiaThienKhac: "Canh Tuất"
+            },
+            {
+                age: "Ất Hợi ( Sơn Đầu Hoả )",
+                khacNapAm: "Ất Mùi ( Sa Trung Kim )",
+                thienKhacDiaXung: "Tân Tỵ",
+                cungThienDiaXung: "Ất Tỵ",
+                cungDiaThienKhac: "Tân Hợi"
+            },
+            {
+                age: "Bính Tý ( Giản Hạ Thuỷ )",
+                khacNapAm: "Bính Dần ( Lư Trung Hoả )",
+                thienKhacDiaXung: "Nhâm Ngọ",
+                cungThienDiaXung: "Bính Ngọ",
+                cungDiaThienKhac: "Nhâm Tý"
+            },
+            {
+                age: "Đinh Sửu ( Giản Hạ Thuỷ )",
+                khacNapAm: "Đinh Mão ( Lư Trung Hoả )",
+                thienKhacDiaXung: "Quý Mùi",
+                cungThienDiaXung: "Đinh Mùi",
+                cungDiaThienKhac: "Quý Sửu"
+            },
+            {
+                age: "Mậu Dần ( Thành Đầu Thổ )",
+                khacNapAm: "Bính Tý ( Giản Hạ Thuỷ )",
+                thienKhacDiaXung: "Giáp Thân",
+                cungThienDiaXung: "Mậu Thân",
+                cungDiaThienKhac: "Giáp Dần"
+            },
+            {
+                age: "Kỷ Mão ( Thành Đầu Thổ )",
+                khacNapAm: "Đinh Sửu ( Giản Hạ Thuỷ )",
+                thienKhacDiaXung: "Ất Dậu",
+                cungThienDiaXung: "Kỷ Dậu",
+                cungDiaThienKhac: "Ất Mão"
+            },
+            {
+                age: "Canh Thìn ( Bạch Lạp Kim )",
+                khacNapAm: "Nhâm Tý ( Tang Đố Mộc )",
+                thienKhacDiaXung: "Bính Tuất",
+                cungThienDiaXung: "Canh Tuất",
+                cungDiaThienKhac: "Bính Thìn"
+            },
+            {
+                age: "Tân Tỵ ( Bạch Lạp Kim )",
+                khacNapAm: "Quý Sửu ( Tang Đố Mộc )",
+                thienKhacDiaXung: "Đinh Hợi",
+                cungThienDiaXung: "Tân Hợi",
+                cungDiaThienKhac: "Đinh Tỵ"
+            },
+            {
+                age: "Nhâm Ngọ ( Dương Liễu Mộc )",
+                khacNapAm: "Canh Ngọ ( Lộ Bàng Thổ )",
+                thienKhacDiaXung: "Mậu Tý",
+                cungThienDiaXung: "Nhâm Tý",
+                cungDiaThienKhac: "Mậu Ngọ"
+            },
+            {
+                age: "Quý Mùi ( Dương Liễu Mộc )",
+                khacNapAm: "Tân Mùi ( Lộ Bàng Thổ )",
+                thienKhacDiaXung: "Kỷ Sửu",
+                cungThienDiaXung: "Quý Sửu",
+                cungDiaThienKhac: "Kỷ Mùi"
+            },
+            {
+                age: "Giáp Thân ( Tuyền Trung Thuỷ )",
+                khacNapAm: "Bính Thân ( Sơn Hạ Hoả )",
+                thienKhacDiaXung: "Canh Dần",
+                cungThienDiaXung: "Giáp Dần",
+                cungDiaThienKhac: "Canh Thân"
+            },
+            {
+                age: "Ất Dậu ( Tuyền Trung Thuỷ )",
+                khacNapAm: "Đinh Dậu ( Sơn Hạ Hoả )",
+                thienKhacDiaXung: "Tân Mão",
+                cungThienDiaXung: "Ất Mão",
+                cungDiaThienKhac: "Tân Dậu"
+            },
+            {
+                age: "Bính Tuất ( Ốc Thượng Thổ )",
+                khacNapAm: "Bính Ngọ ( Thiên Hà Thuỷ )",
+                thienKhacDiaXung: "Nhâm Thìn",
+                cungThienDiaXung: "Bính Thìn",
+                cungDiaThienKhac: "Nhâm Tuất"
+            },
+            {
+                age: "Đinh Hợi ( Ốc Thượng Thổ )",
+                khacNapAm: "Đinh Mùi ( Thiên Hà Thuỷ )",
+                thienKhacDiaXung: "Quý Tỵ",
+                cungThienDiaXung: "Đinh Tỵ",
+                cungDiaThienKhac: "Quý Hợi"
+            },
+            {
+                age: "Mậu Tý ( Tích Lịch Hoả )",
+                khacNapAm: "Giáp Tý ( Hải Trung Kim )",
+                thienKhacDiaXung: "Giáp Ngọ",
+                cungThienDiaXung: "Mậu Ngọ",
+                cungDiaThienKhac: "Giáp Tý"
+            },
+            {
+                age: "Kỷ Sửu ( Tích Lịch Hoả )",
+                khacNapAm: "Ất Sửu ( Hải Trung Kim )",
+                thienKhacDiaXung: "Ất Mùi",
+                cungThienDiaXung: "Kỷ Mùi",
+                cungDiaThienKhac: "Ất Sửu"
+            },
+            {
+                age: "Canh Dần ( Tùng Bách Mộc )",
+                khacNapAm: "Mậu Dần ( Thành Đầu Thổ )",
+                thienKhacDiaXung: "Bính Thân",
+                cungThienDiaXung: "Canh Thân",
+                cungDiaThienKhac: "Bính Dần"
+            },
+            {
+                age: "Tân Mão ( Tùng Bách Mộc )",
+                khacNapAm: "Kỷ Mão ( Thành Đầu Thổ )",
+                thienKhacDiaXung: "Đinh Dậu",
+                cungThienDiaXung: "Tân Dậu",
+                cungDiaThienKhac: "Đinh Mão"
+            },
+            {
+                age: "Nhâm Thìn ( Trường Lưu Thuỷ )",
+                khacNapAm: "Mậu Ngọ ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Mậu Tuất",
+                cungThienDiaXung: "Nhâm Tuất",
+                cungDiaThienKhac: "Mậu Thìn"
+            },
+            {
+                age: "Quý Tỵ ( Trường Lưu Thuỷ )",
+                khacNapAm: "Kỷ Mùi ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Kỷ Hợi",
+                cungThienDiaXung: "Quý Hợi",
+                cungDiaThienKhac: "Kỷ Tỵ"
+            },
+            {
+                age: "Giáp Ngọ ( Sa Trung Kim )",
+                khacNapAm: "Canh Dần ( Tùng Bách Mộc )",
+                thienKhacDiaXung: "Canh Tý",
+                cungThienDiaXung: "Giáp Tý",
+                cungDiaThienKhac: "Canh Ngọ"
+            },
+            {
+                age: "Ất Mùi ( Sa Trung Kim )",
+                khacNapAm: "Tân Mão ( Tùng Bách Mộc )",
+                thienKhacDiaXung: "Tân Sửu",
+                cungThienDiaXung: "Ất Sửu",
+                cungDiaThienKhac: "Tân Mùi"
+            },
+            {
+                age: "Bính Thân ( Sơn Hạ Hoả )",
+                khacNapAm: "Nhâm Dần ( Kim Bạch Kim )",
+                thienKhacDiaXung: "Nhâm Dần",
+                cungThienDiaXung: "Bính Dần",
+                cungDiaThienKhac: "Nhâm Thân"
+            },
+            {
+                age: "Đinh Dậu ( Sơn Hạ Hoả )",
+                khacNapAm: "Quý Mão ( Kim Bạch Kim )",
+                thienKhacDiaXung: "Quý Mão",
+                cungThienDiaXung: "Đinh Mão",
+                cungDiaThienKhac: "Quý Dậu"
+            },
+            {
+                age: "Mậu Tuất ( Bình Địa Mộc )",
+                khacNapAm: "Bính Thìn ( Sa Trung Thổ )",
+                thienKhacDiaXung: "Giáp Thìn",
+                cungThienDiaXung: "Mậu Thìn",
+                cungDiaThienKhac: "Giáp Tuất"
+            },
+            {
+                age: "Kỷ Hợi ( Bình Địa Mộc )",
+                khacNapAm: "Đinh Tỵ ( Sa Trung Thổ )",
+                thienKhacDiaXung: "Ất Tỵ",
+                cungThienDiaXung: "Kỷ Tỵ",
+                cungDiaThienKhac: "Ất Hợi"
+            },
+            {
+                age: "Canh Tý ( Bích Thượng Thổ )",
+                khacNapAm: "Bính Ngọ ( Thiên Hà Thuỷ )",
+                thienKhacDiaXung: "Bính Ngọ",
+                cungThienDiaXung: "Canh Ngọ",
+                cungDiaThienKhac: "Bính Tý"
+            },
+            {
+                age: "Tân Sửu ( Bích Thượng Thổ )",
+                khacNapAm: "Đinh Mùi ( Thiên Hà Thuỷ )",
+                thienKhacDiaXung: "Đinh Mùi",
+                cungThienDiaXung: "Tân Mùi",
+                cungDiaThienKhac: "Đinh Sửu"
+            },
+            {
+                age: "Nhâm Dần ( Kim Bạch Kim )",
+                khacNapAm: "Mậu Thìn ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Mậu Thìn",
+                cungThienDiaXung: "Nhâm Thìn",
+                cungDiaThienKhac: "Mậu Dần"
+            },
+            {
+                age: "Quý Mão ( Kim Bạch Kim )",
+                khacNapAm: "Kỷ Tỵ ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Kỷ Tỵ",
+                cungThienDiaXung: "Quý Tỵ",
+                cungDiaThienKhac: "Kỷ Mão"
+            },
+            {
+                age: "Giáp Thìn ( Phú Đăng Hoả )",
+                khacNapAm: "Canh Tuất ( Thoa Xuyến Kim )",
+                thienKhacDiaXung: "Canh Tuất",
+                cungThienDiaXung: "Giáp Tuất",
+                cungDiaThienKhac: "Canh Thìn"
+            },
+            {
+                age: "Ất Tỵ ( Phú Đăng Hoả )",
+                khacNapAm: "Tân Hợi ( Thoa Xuyến Kim )",
+                thienKhacDiaXung: "Tân Hợi",
+                cungThienDiaXung: "Ất Hợi",
+                cungDiaThienKhac: "Tân Tỵ"
+            },
+            {
+                age: "Bính Ngọ ( Thiên Hà Thuỷ )",
+                khacNapAm: "Mậu Ngọ ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Nhâm Tý",
+                cungThienDiaXung: "Bính Tý",
+                cungDiaThienKhac: "Nhâm Ngọ"
+            },
+            {
+                age: "Đinh Mùi ( Thiên Hà Thuỷ )",
+                khacNapAm: "Kỷ Mùi ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Quý Sửu",
+                cungThienDiaXung: "Đinh Sửu",
+                cungDiaThienKhac: "Quý Mùi"
+            },
+            {
+                age: "Mậu Thân ( Đại Trạch Thổ )",
+                khacNapAm: "Nhâm Thìn ( Trường Lưu Thuỷ )",
+                thienKhacDiaXung: "Giáp Dần",
+                cungThienDiaXung: "Mậu Dần",
+                cungDiaThienKhac: "Giáp Thân"
+            },
+            {
+                age: "Kỷ Dậu ( Đại Trạch Thổ )",
+                khacNapAm: "Quý Tỵ ( Trường Lưu Thuỷ )",
+                thienKhacDiaXung: "Ất Mão",
+                cungThienDiaXung: "Kỷ Mão",
+                cungDiaThienKhac: "Ất Dậu"
+            },
+            {
+                age: "Canh Tuất ( Thoa Xuyến Kim )",
+                khacNapAm: "Mậu Thìn ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Bính Thìn",
+                cungThienDiaXung: "Canh Thìn",
+                cungDiaThienKhac: "Bính Tuất"
+            },
+            {
+                age: "Tân Hợi ( Thoa Xuyến Kim )",
+                khacNapAm: "Kỷ Tỵ ( Đại Lâm Mộc )",
+                thienKhacDiaXung: "Đinh Tỵ",
+                cungThienDiaXung: "Tân Tỵ",
+                cungDiaThienKhac: "Đinh Hợi"
+            },
+            {
+                age: "Nhâm Tý ( Tang Đố Mộc )",
+                khacNapAm: "Bính Tuất ( Ốc Thượng Thổ )",
+                thienKhacDiaXung: "Mậu Ngọ",
+                cungThienDiaXung: "Nhâm Ngọ",
+                cungDiaThienKhac: "Mậu Tý"
+            },
+            {
+                age: "Quý Sửu ( Tang Đố Mộc )",
+                khacNapAm: "Đinh Hợi ( Ốc Thượng Thổ )",
+                thienKhacDiaXung: "Kỷ Mùi",
+                cungThienDiaXung: "Quý Mùi",
+                cungDiaThienKhac: "Kỷ Sửu"
+            },
+            {
+                age: "Giáp Dần ( Đại Khê Thuỷ )",
+                khacNapAm: "Bính Thân ( Sơn Hạ Hoả )",
+                thienKhacDiaXung: "Canh Thân",
+                cungThienDiaXung: "Giáp Thân",
+                cungDiaThienKhac: "Canh Dần"
+            },
+            {
+                age: "Ất Mão ( Đại Khê Thuỷ )",
+                khacNapAm: "Đinh Dậu ( Sơn Hạ Hoả )",
+                thienKhacDiaXung: "Tân Dậu",
+                cungThienDiaXung: "Ất Dậu",
+                cungDiaThienKhac: "Tân Mão"
+            },
+            {
+                age: "Bính Thìn ( Sa Trung Thổ )",
+                khacNapAm: "Nhâm Ngọ ( Dương Liễu Mộc )",
+                thienKhacDiaXung: "Nhâm Tuất",
+                cungThienDiaXung: "Bính Tuất",
+                cungDiaThienKhac: "Nhâm Thìn"
+            },
+            {
+                age: "Đinh Tỵ ( Sa Trung Thổ )",
+                khacNapAm: "Quý Mùi ( Dương Liễu Mộc )",
+                thienKhacDiaXung: "Quý Hợi",
+                cungThienDiaXung: "Đinh Hợi",
+                cungDiaThienKhac: "Quý Tỵ"
+            },
+            {
+                age: "Mậu Ngọ ( Thiên Thượng Hoả )",
+                khacNapAm: "Giáp Ngọ ( Sa Trung Kim )",
+                thienKhacDiaXung: "Giáp Tý",
+                cungThienDiaXung: "Mậu Tý",
+                cungDiaThienKhac: "Giáp Ngọ"
+            },
+            {
+                age: "Kỷ Mùi ( Thiên Thượng Hoả )",
+                khacNapAm: "Ất Mùi ( Sa Trung Kim )",
+                thienKhacDiaXung: "Ất Sửu",
+                cungThienDiaXung: "Kỷ Sửu",
+                cungDiaThienKhac: "Ất Mùi"
+            },
+            {
+                age: "Canh Thân ( Thạch Lựu Mộc )",
+                khacNapAm: "Canh Tý ( Bích Thượng Thổ )",
+                thienKhacDiaXung: "Bính Dần",
+                cungThienDiaXung: "Canh Dần",
+                cungDiaThienKhac: "Bính Thân"
+            },
+            {
+                age: "Tân Dậu ( Thạch Lựu Mộc )",
+                khacNapAm: "Tân Sửu ( Bích Thượng Thổ )",
+                thienKhacDiaXung: "Đinh Mão",
+                cungThienDiaXung: "Tân Mão",
+                cungDiaThienKhac: "Đinh Dậu"
+            },
+            {
+                age: "Nhâm Tuất ( Đại Hải Thuỷ )",
+                khacNapAm: "Mậu Ngọ ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Mậu Thìn",
+                cungThienDiaXung: "Nhâm Thìn",
+                cungDiaThienKhac: "Mậu Tuất"
+            },
+            {
+                age: "Quý Hợi ( Đại Hải Thuỷ )",
+                khacNapAm: "Kỷ Mùi ( Thiên Thượng Hoả )",
+                thienKhacDiaXung: "Kỷ Tỵ",
+                cungThienDiaXung: "Quý Tỵ",
+                cungDiaThienKhac: "Kỷ Hợi"
+            }
+        ];
+
+        const select = document.getElementById('hoaGiapSelect');
+        const resultDiv = document.getElementById('result');
+
+        select.addEventListener('change', function() {
+            const selectedAge = this.value;
+            if (!selectedAge) {
+                resultDiv.innerHTML = '';
+                return;
+            }
+
+            const item = data.find(d => d.age === selectedAge);
+            if (item) {
+                resultDiv.innerHTML = `
+                    <p><span class="user-age">Tuổi của bạn (${item.age})</span> khắc với tuổi <span class="hoa-giap">tuổi ${item.khacNapAm}</span> về ngũ hành nạp âm</p>
+                    <p><span class="user-age">Tuổi của bạn</span> Thiên Khắc - Địa Xung với <span class="hoa-giap">tuổi ${item.thienKhacDiaXung}</span> ở Thiên Can & Địa Chi</p>
+                    <p><span class="user-age">Tuổi của bạn</span> cùng Thiên Can nhưng Địa Chi xung khắc với <span class="hoa-giap">tuổi ${item.cungThienDiaXung}</span></p>
+                    <p><span class="user-age">Tuổi của bạn</span> cùng Địa Chi nhưng xung khắc về Thiên Can với <span class="hoa-giap">tuổi ${item.cungDiaThienKhac}</span></p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
