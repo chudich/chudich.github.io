@@ -68,25 +68,6 @@
         .cell[data-direction="Đoài - Tây"] .medicine {
             color: black;
         }
-        .cell-img {
-            max-width: 100px;
-            max-height: 100px;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-        .download-btn {
-            font-size: 16px; /* Kích thước trung bình */
-            font-weight: bold;
-            padding: 5px 10px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .download-btn:hover {
-            background-color: #34495e;
-        }
         .guide {
             text-align: left;
             background-color: #fff;
@@ -101,6 +82,28 @@
         h2 {
             color: #34495e;
         }
+        .image-section {
+            margin-top: 20px;
+        }
+        .page-image {
+            max-width: 300px;
+            max-height: 300px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .download-btn {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #34495e;
+        }
         @media (max-width: 400px) {
             .bagua-grid {
                 grid-template-columns: repeat(3, 100px);
@@ -113,9 +116,9 @@
             .medicine {
                 font-size: 14px;
             }
-            .cell-img {
-                max-width: 80px;
-                max-height: 80px;
+            .page-image {
+                max-width: 200px;
+                max-height: 200px;
             }
             .download-btn {
                 font-size: 14px;
@@ -150,19 +153,23 @@
             <p><strong>Thu dọn trận:</strong> Khi thu dọn, mỗi trận pháp có điểm bắt đầu khác nhau, ví dụ từ cung Khôn, thu dọn ngược chiều kim đồng hồ. Trước tiên lấy thuốc ở cung Khôn ra, sau đó lấy thuốc ở cung Ly ra, cung Tốn, cung Chấn, theo chiều ngược kim đồng hồ mà thu dọn, đừng nhầm lẫn.</p>
             <p><strong>Lưu ý về khuyết góc:</strong> Tám cung được đặt theo đại thái cực của căn nhà bạn. Nếu căn nhà bị khuyết góc, ví dụ thiếu cung Chấn, phải đặt gấp đôi lượng thuốc (bình thường mỗi cung 9g, khuyết góc thì 18g). Nếu có hai vị trí bị khuyết góc, cả hai vị trí đều phải đặt gấp đôi.</p>
         </div>
+        <div class="image-section">
+            <img src="https://chudich.github.io/batquaitranduoclieu.jpg" alt="Bát Quái Dược Liệu" class="page-image" onclick="downloadImage()">
+            <button class="download-btn" oncontextmenu="downloadImage(event)">Tải Ảnh về điện thoại</button>
+        </div>
     </div>
 
     <script>
         const baguaData = [
-            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)", image: "https://via.placeholder.com/100" },  // Placeholder ảnh
-            { direction: "Ly - Nam", medicine: "Can khương (干姜)", image: "https://via.placeholder.com/100" },         // Placeholder ảnh
-            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)", image: "https://via.placeholder.com/100" },    // Placeholder ảnh
-            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)", image: "https://via.placeholder.com/100" },        // Placeholder ảnh
-            { direction: "Trung Tâm Nhà", medicine: "", image: "https://via.placeholder.com/100" },                    // Placeholder ảnh
-            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)", image: "https://via.placeholder.com/100" },       // Placeholder ảnh
-            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)", image: "https://via.placeholder.com/100" },     // Placeholder ảnh
-            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)", image: "https://via.placeholder.com/100" },       // Placeholder ảnh
-            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)", image: "https://via.placeholder.com/100" }        // Placeholder ảnh
+            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" },  // 4
+            { direction: "Ly - Nam", medicine: "Can khương (干姜)" },         // 9
+            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" },    // 2
+            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" },        // 3
+            { direction: "Trung Tâm Nhà", medicine: "" },                    // 5
+            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" },       // 7
+            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" },     // 8
+            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" },       // 1
+            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" }        // 6
         ];
 
         const grid = document.getElementById('baguaGrid');
@@ -170,33 +177,15 @@
             const cell = document.createElement('div');
             cell.className = 'cell' + (item.direction === "Trung Tâm Nhà" ? ' center' : '');
             cell.setAttribute('data-direction', item.direction);
-
-            // Thêm ảnh
-            const img = document.createElement('img');
-            img.src = https://chudich.github.io/batquaitranduoclieu.jpg; // Thay bằng đường dẫn ảnh thực tế
-            img.className = 'cell-img';
-            img.addEventListener('click', () => downloadImage(item.image, item.direction));
-
-            // Thêm nút tải ảnh
-            const btn = document.createElement('button');
-            btn.className = 'download-btn';
-            btn.textContent = 'Tải Ảnh về điện thoại';
-            btn.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                downloadImage(item.image, item.direction);
-            });
-
-            // Thêm nội dung
             cell.innerHTML = `<strong>${item.direction}</strong><br><span class="medicine">${item.medicine}</span>`;
-            cell.appendChild(img);
-            cell.appendChild(btn);
             grid.appendChild(cell);
         });
 
-        function downloadImage(imageUrl, direction) {
+        function downloadImage(event) {
+            event.preventDefault(); // Ngăn menu chuột phải mặc định
             const link = document.createElement('a');
-            link.download = `${direction}.png`; // Tên file tải về
-            link.href = imageUrl;
+            link.download = 'BatQuaiDuocLieu.jpg'; // Tên file tải về
+            link.href = 'https://chudich.github.io/batquaitranduoclieu.jpg';
             link.click();
         }
     </script>
