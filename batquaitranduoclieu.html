@@ -43,7 +43,7 @@
             align-items: center;
             background-color: #fff;
             font-size: 12px;
-            padding: 10px;
+            padding: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             position: relative;
@@ -53,10 +53,9 @@
             font-weight: bold;
         }
         .medicine {
-            font-size: 16px; /* Kích thước trung bình */
+            font-size: 16px;
             font-weight: bold;
         }
-        /* Định dạng màu cho tên thuốc */
         .cell[data-direction="Càn - Tây Bắc"] .medicine,
         .cell[data-direction="Khảm - Bắc"] .medicine,
         .cell[data-direction="Cấn - Đông Bắc"] .medicine,
@@ -68,6 +67,25 @@
         .cell[data-direction="Khôn - Tây Nam"] .medicine,
         .cell[data-direction="Đoài - Tây"] .medicine {
             color: black;
+        }
+        .cell-img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .download-btn {
+            font-size: 16px; /* Kích thước trung bình */
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #34495e;
         }
         .guide {
             text-align: left;
@@ -90,10 +108,18 @@
             }
             .cell {
                 font-size: 10px;
-                padding: 5px;
+                padding: 3px;
             }
             .medicine {
-                font-size: 14px; /* Giảm kích thước trên màn hình nhỏ */
+                font-size: 14px;
+            }
+            .cell-img {
+                max-width: 80px;
+                max-height: 80px;
+            }
+            .download-btn {
+                font-size: 14px;
+                padding: 3px 8px;
             }
         }
     </style>
@@ -128,39 +154,51 @@
 
     <script>
         const baguaData = [
-            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" },  // 4
-            { direction: "Ly - Nam", medicine: "Can khương (干姜)" },         // 9
-            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" },    // 2
-            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" },        // 3
-            { direction: "Trung Tâm Nhà", medicine: "" },                    // 5
-            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" },       // 7
-            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" },     // 8
-            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" },       // 1
-            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" }        // 6
+            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)", image: "https://via.placeholder.com/100" },  // Placeholder ảnh
+            { direction: "Ly - Nam", medicine: "Can khương (干姜)", image: "https://via.placeholder.com/100" },         // Placeholder ảnh
+            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)", image: "https://via.placeholder.com/100" },    // Placeholder ảnh
+            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)", image: "https://via.placeholder.com/100" },        // Placeholder ảnh
+            { direction: "Trung Tâm Nhà", medicine: "", image: "https://via.placeholder.com/100" },                    // Placeholder ảnh
+            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)", image: "https://via.placeholder.com/100" },       // Placeholder ảnh
+            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)", image: "https://via.placeholder.com/100" },     // Placeholder ảnh
+            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)", image: "https://via.placeholder.com/100" },       // Placeholder ảnh
+            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)", image: "https://via.placeholder.com/100" }        // Placeholder ảnh
         ];
 
         const grid = document.getElementById('baguaGrid');
         baguaData.forEach((item, index) => {
             const cell = document.createElement('div');
             cell.className = 'cell' + (item.direction === "Trung Tâm Nhà" ? ' center' : '');
-            cell.setAttribute('data-direction', item.direction); // Thêm thuộc tính data để định dạng
-            cell.innerHTML = `<strong>${item.direction}</strong><br><span class="medicine">${item.medicine}</span>`;
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault(); // Ngăn menu chuột phải mặc định
-                downloadCellImage(cell);
+            cell.setAttribute('data-direction', item.direction);
+
+            // Thêm ảnh
+            const img = document.createElement('img');
+            img.src = item.image; // Thay bằng đường dẫn ảnh thực tế
+            img.className = 'cell-img';
+            img.addEventListener('click', () => downloadImage(item.image, item.direction));
+
+            // Thêm nút tải ảnh
+            const btn = document.createElement('button');
+            btn.className = 'download-btn';
+            btn.textContent = 'Tải Ảnh về điện thoại';
+            btn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                downloadImage(item.image, item.direction);
             });
+
+            // Thêm nội dung
+            cell.innerHTML = `<strong>${item.direction}</strong><br><span class="medicine">${item.medicine}</span>`;
+            cell.appendChild(img);
+            cell.appendChild(btn);
             grid.appendChild(cell);
         });
 
-        function downloadCellImage(cell) {
-            html2canvas(cell).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `${cell.getAttribute('data-direction')}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
+        function downloadImage(imageUrl, direction) {
+            const link = document.createElement('a');
+            link.download = `${direction}.png`; // Tên file tải về
+            link.href = imageUrl;
+            link.click();
         }
     </script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
