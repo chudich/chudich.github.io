@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiến Thức Tử Vi & Phong Thủy</title>
+    <title>Bát Quái Dược Liệu - Kiến Thức Phong Thủy</title>
     <style>
         /* CSS theo phong cách iOS, tông màu sáng, ấm áp */
         * {
@@ -14,10 +14,7 @@
         }
 
         body {
-            background-image: url('https://example.com/background.jpg'); /* Link ảnh nền tượng trưng */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Thay ảnh nền bằng gradient nhẹ */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -28,13 +25,12 @@
 
         /* Container chính */
         .container {
-            background: rgba(255, 255, 255, 0.9); /* Nền trắng mờ kiểu iOS */
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             padding: 20px;
             width: 90%;
             max-width: 800px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px); /* Hiệu ứng mờ kiểu iOS */
             margin-bottom: 20px;
         }
 
@@ -46,8 +42,8 @@
 
         .home-menu a {
             display: inline-block;
-            background: linear-gradient(135deg, #ffd700, #ffb347); /* Gradient vàng nhạt - cam sáng */
-            color: #fff; /* Chữ trắng nổi bật */
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            color: #fff;
             padding: 10px 20px;
             border-radius: 10px;
             text-decoration: none;
@@ -57,7 +53,7 @@
         }
 
         .home-menu a:hover {
-            background: linear-gradient(135deg, #ffca28, #ff8f00); /* Gradient đậm hơn khi hover */
+            background: linear-gradient(135deg, #ffca28, #ff8f00);
             transform: translateY(-3px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
@@ -67,58 +63,23 @@
             text-align: center;
             font-size: 28px;
             font-weight: 600;
-            color: #ff6f61; /* Màu cam đào nổi bật */
+            color: #ff6f61;
             margin-bottom: 20px;
         }
 
-        /* Khối kiến thức */
-        .knowledge-block {
-            background: rgba(255, 255, 255, 0.95); /* Nền trắng mờ */
-            border: 1px solid rgba(0, 0, 0, 0.1); /* Viền nhẹ */
+        /* Khối nội dung chính */
+        .content-block {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            line-height: 1.6;
         }
 
-        .knowledge-block:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Button thay cho tiêu đề */
-        .knowledge-button {
-            display: inline-block;
-            padding: 12px 30px; /* Kích thước button lớn */
-            font-size: 18px; /* Kích thước chữ lớn */
-            font-weight: 600; /* Chữ đậm */
-            background: linear-gradient(135deg, #ffd700, #ffb347); /* Màu sáng ấm kiểu iOS */
-            color: #fff; /* Chữ trắng */
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            text-align: center;
-            margin-bottom: 10px;
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .knowledge-button:hover {
-            background: linear-gradient(135deg, #ffca28, #ff8f00); /* Gradient đậm hơn khi hover */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Link thay cho mô tả */
-        .knowledge-link {
-            font-size: 16px; /* Kích thước chữ trung bình */
-            font-weight: 600; /* Chữ đậm */
-            color: #ff6f61; /* Màu hồng cam */
-            text-decoration: none;
-            line-height: 1.5;
-        }
-
-        .knowledge-link:hover {
-            text-decoration: underline;
+        .content-block p {
+            font-size: 16px;
+            color: #333;
         }
 
         /* Responsive cho điện thoại */
@@ -137,13 +98,8 @@
                 font-size: 24px;
             }
 
-            .knowledge-button {
-                font-size: 16px; /* Giảm nhẹ trên mobile */
-                padding: 10px 25px; /* Giảm padding trên mobile */
-            }
-
-            .knowledge-link {
-                font-size: 14px; /* Giảm nhẹ trên mobile */
+            .content-block p {
+                font-size: 14px;
             }
         }
     </style>
@@ -153,64 +109,12 @@
         <div class="home-menu">
             <a href="https://chudich.github.io/tuvi_phongthuy.html">Về Trang Trước</a>
         </div>
-        <h1>Kiến Thức Tử Vi & Phong Thủy</h1>
-        <div id="knowledge-container">
-            <!-- Các khối kiến thức sẽ được thêm động qua JavaScript -->
+        <h1>Bát Quái Dược Liệu</h1>
+        <div class="content-block">
+            <p>
+                Trận bát quái dược liệu được sử dụng để bảo vệ khi thực hiện các nghi thức phong thủy, như cầu tài lộc hoặc thúc đẩy hôn nhân. Mục đích chính là ngăn chặn sự quấy nhiễu từ âm linh hoặc năng lượng tiêu cực bên ngoài, vốn thường xuất hiện khi lập trận. Trận này hoạt động như một "kết giới" được tạo từ dược liệu, giúp bảo vệ không gian và đảm bảo nghi thức diễn ra thuận lợi.
+            </p>
         </div>
     </div>
-
-    <script>
-        // Dữ liệu mẫu
-        const knowledgeData = [
-            { title: "Mẹo Phong Thủy 1", link: "https://chudich.github.io/meophongthuy1.html" },
-            { title: "Mẹo Phong Thủy 2", link: "https://chudich.github.io/meophongthuy2.html" },
-            { title: "Mẹo Phong Thủy 3", link: "https://chudich.github.io/meophongthuy3.html" },
-            { title: "Mẹo Phong Thủy 4", link: "https://example.com/phongthuy4" },
-            { title: "Mẹo Phong Thủy 5", link: "https://example.com/phongthuy5" },
-            { title: "Mẹo Phong Thủy 6", link: "https://example.com/phongthuy6" },
-            { title: "Mẹo Phong Thủy 7", link: "https://example.com/phongthuy7" },
-            { title: "Mẹo Phong Thủy 8", link: "https://example.com/phongthuy8" },
-            { title: "Mẹo Phong Thủy 9", link: "https://example.com/phongthuy9" },
-            { title: "Mẹo Phong Thủy 10", link: "https://example.com/phongthuy10" },
-            { title: "Mẹo Phong Thủy 11", link: "https://example.com/phongthuy11" },
-            { title: "Mẹo Phong Thủy 12", link: "https://example.com/phongthuy12" },
-            { title: "Mẹo Phong Thủy 13", link: "https://example.com/phongthuy13" },
-            { title: "Mẹo Phong Thủy 14", link: "https://example.com/phongthuy14" },
-            { title: "Mẹo Phong Thủy 15", link: "https://example.com/phongthuy15" },
-            { title: "Mẹo Phong Thủy 16", link: "https://example.com/phongthuy16" },
-            { title: "Mẹo Phong Thủy 17", link: "https://example.com/phongthuy17" },
-            { title: "Mẹo Phong Thủy 18", link: "https://example.com/phongthuy18" },
-            { title: "Bát Quái Dược Liệu", link: "https//:chudich.github.io/batquaitranduoclieu.html" },
-            { title: "Mẹo Phong Thủy 20", link: "https://example.com/phongthuy20" }
-        ];
-
-        // Hàm hiển thị các khối kiến thức
-        function displayKnowledge() {
-            const container = document.getElementById('knowledge-container');
-            container.innerHTML = ''; // Xóa nội dung cũ
-
-            knowledgeData.forEach(item => {
-                const block = document.createElement('div');
-                block.classList.add('knowledge-block');
-
-                const button = document.createElement('a');
-                button.classList.add('knowledge-button');
-                button.href = item.link; // Gán link tượng trưng cho button
-                button.textContent = item.title;
-
-                const link = document.createElement('a');
-                link.classList.add('knowledge-link');
-                link.href = item.link; // Link giống với button
-                link.textContent = "Xem chi tiết";
-
-                block.appendChild(button);
-                block.appendChild(link);
-                container.appendChild(block);
-            });
-        }
-
-        // Gọi hàm hiển thị khi trang tải
-        window.addEventListener('load', displayKnowledge);
-    </script>
 </body>
 </html>
