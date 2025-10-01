@@ -16,6 +16,17 @@
             margin: 0 auto;
             overflow-x: auto;
         }
+        .menu {
+            margin-bottom: 20px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 5px;
+        }
         .bagua-grid {
             display: grid;
             grid-template-columns: repeat(3, 120px);
@@ -35,10 +46,28 @@
             padding: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
+            position: relative;
         }
         .center {
             background-color: #e0f7fa;
             font-weight: bold;
+        }
+        .medicine {
+            font-size: 16px; /* Kích thước trung bình */
+            font-weight: bold;
+        }
+        /* Định dạng màu cho tên thuốc */
+        .cell[data-direction="Càn - Tây Bắc"] .medicine,
+        .cell[data-direction="Khảm - Bắc"] .medicine,
+        .cell[data-direction="Cấn - Đông Bắc"] .medicine,
+        .cell[data-direction="Chấn - Đông"] .medicine {
+            color: red;
+        }
+        .cell[data-direction="Tốn - Đông Nam"] .medicine,
+        .cell[data-direction="Ly - Nam"] .medicine,
+        .cell[data-direction="Khôn - Tây Nam"] .medicine,
+        .cell[data-direction="Đoài - Tây"] .medicine {
+            color: black;
         }
         .guide {
             text-align: left;
@@ -63,11 +92,17 @@
                 font-size: 10px;
                 padding: 5px;
             }
+            .medicine {
+                font-size: 14px; /* Giảm kích thước trên màn hình nhỏ */
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="menu">
+            <a href="#">Về Trang Trước</a>
+        </div>
         <h1>Trận Bát Quái Dược Liệu</h1>
         <div class="bagua-grid" id="baguaGrid"></div>
         <div class="guide">
@@ -93,24 +128,39 @@
 
     <script>
         const baguaData = [
-            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" }, // Số 6
-            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" }, // Số 1
-            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" }, // Số 8
-            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" }, // Số 3
-            { direction: "Trung Tâm Nhà", medicine: "" }, // Số 5
-            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" }, // Số 4
-            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" }, // Số 2
-            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" }, // Số 7
-            { direction: "Ly - Nam", medicine: "Can khương (干姜)" } // Số 9
+            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" },  // 4
+            { direction: "Ly - Nam", medicine: "Can khương (干姜)" },         // 9
+            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" },    // 2
+            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" },        // 3
+            { direction: "Trung Tâm Nhà", medicine: "" },                    // 5
+            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" },       // 7
+            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" },     // 8
+            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" },       // 1
+            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" }        // 6
         ];
 
         const grid = document.getElementById('baguaGrid');
         baguaData.forEach((item, index) => {
             const cell = document.createElement('div');
             cell.className = 'cell' + (item.direction === "Trung Tâm Nhà" ? ' center' : '');
-            cell.innerHTML = `<strong>${item.direction}</strong><br>${item.medicine}`;
+            cell.setAttribute('data-direction', item.direction); // Thêm thuộc tính data để định dạng
+            cell.innerHTML = `<strong>${item.direction}</strong><br><span class="medicine">${item.medicine}</span>`;
+            cell.addEventListener('contextmenu', (e) => {
+                e.preventDefault(); // Ngăn menu chuột phải mặc định
+                downloadCellImage(cell);
+            });
             grid.appendChild(cell);
         });
+
+        function downloadCellImage(cell) {
+            html2canvas(cell).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${cell.getAttribute('data-direction')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
     </script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
