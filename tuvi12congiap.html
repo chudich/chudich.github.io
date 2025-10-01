@@ -150,427 +150,77 @@
     <div id="result"></div>
 
     <script>
+        // Dữ liệu tương khắc chuẩn, kết hợp với dữ liệu Can Chi từ code 2
         const data = [
-            {
-                age: "Giáp Tý : Hải Trung Kim",
-                khacNapAm: "Mậu Tuất : Bình Địa Mộc",
-                thienKhacDiaXung: "Canh Ngọ : Lộ Bàng Thổ",
-                cungThienDiaXung: "Giáp Ngọ : Sa Trung Kim",
-                cungDiaThienKhac: "Canh Tý : Bích Thượng Thổ"
-            },
-            {
-                age: "Ất Sửu : Hải Trung Kim",
-                khacNapAm: "Kỷ Hợi : Bình Địa Mộc",
-                thienKhacDiaXung: "Tân Mùi : Lộ Bàng Thổ",
-                cungThienDiaXung: "Ất Mùi : Sa Trung Kim",
-                cungDiaThienKhac: "Tân Sửu : Bích Thượng Thổ"
-            },
-            {
-                age: "Bính Dần : Lư Trung Hoả",
-                khacNapAm: "Nhâm Thân : Kiếm Phong Kim",
-                thienKhacDiaXung: "Nhâm Thân : Kiếm Phong Kim",
-                cungThienDiaXung: "Bính Thân : Sơn Hạ Hoả",
-                cungDiaThienKhac: "Nhâm Dần : Kim Bạch Kim"
-            },
-            {
-                age: "Đinh Mão : Lư Trung Hoả",
-                khacNapAm: "Quý Dậu : Kiếm Phong Kim",
-                thienKhacDiaXung: "Quý Dậu : Kiếm Phong Kim",
-                cungThienDiaXung: "Đinh Dậu : Sơn Hạ Hoả",
-                cungDiaThienKhac: "Quý Mão : Kim Bạch Kim"
-            },
-            {
-                age: "Mậu Thìn : Đại Lâm Mộc",
-                khacNapAm: "Mậu Thân : Đại Trạch Thổ",
-                thienKhacDiaXung: "Giáp Tuất : Sơn Đầu Hoả",
-                cungThienDiaXung: "Mậu Tuất : Bình Địa Mộc",
-                cungDiaThienKhac: "Giáp Thìn : Phú Đăng Hoả"
-            },
-            {
-                age: "Kỷ Tỵ : Đại Lâm Mộc",
-                khacNapAm: "Kỷ Dậu : Đại Trạch Thổ",
-                thienKhacDiaXung: "Ất Hợi : Sơn Đầu Hoả",
-                cungThienDiaXung: "Kỷ Hợi : Bình Địa Mộc",
-                cungDiaThienKhac: "Ất Tỵ : Phú Đăng Hoả"
-            },
-            {
-                age: "Canh Ngọ : Lộ Bàng Thổ",
-                khacNapAm: "Giáp Thân : Tuyền Trung Thuỷ",
-                thienKhacDiaXung: "Bính Tý : Giản Hạ Thuỷ",
-                cungThienDiaXung: "Canh Tý : Bích Thượng Thổ",
-                cungDiaThienKhac: "Bính Ngọ : Thiên Hà Thuỷ"
-            },
-            {
-                age: "Tân Mùi : Lộ Bàng Thổ",
-                khacNapAm: "Ất Dậu : Tuyền Trung Thuỷ",
-                thienKhacDiaXung: "Đinh Sửu : Giản Hạ Thuỷ",
-                cungThienDiaXung: "Tân Sửu : Bích Thượng Thổ",
-                cungDiaThienKhac: "Đinh Mùi : Thiên Hà Thuỷ"
-            },
-            {
-                age: "Nhâm Thân : Kiếm Phong Kim",
-                khacNapAm: "Mậu Thìn : Đại Lâm Mộc",
-                thienKhacDiaXung: "Mậu Dần : Thành Đầu Thổ",
-                cungThienDiaXung: "Nhâm Dần : Kim Bạch Kim",
-                cungDiaThienKhac: "Mậu Thân : Đại Trạch Thổ"
-            },
-            {
-                age: "Quý Dậu : Kiếm Phong Kim",
-                khacNapAm: "Kỷ Tỵ : Đại Lâm Mộc",
-                thienKhacDiaXung: "Kỷ Mão : Thành Đầu Thổ",
-                cungThienDiaXung: "Quý Mão : Kim Bạch Kim",
-                cungDiaThienKhac: "Kỷ Dậu : Đại Trạch Thổ"
-            },
-            {
-                age: "Giáp Tuất : Sơn Đầu Hoả",
-                khacNapAm: "Giáp Ngọ : Sa Trung Kim",
-                thienKhacDiaXung: "Canh Thìn : Bạch Lạp Kim",
-                cungThienDiaXung: "Giáp Thìn : Phú Đăng Hoả",
-                cungDiaThienKhac: "Canh Tuất : Thoa Xuyến Kim"
-            },
-            {
-                age: "Ất Hợi : Sơn Đầu Hoả",
-                khacNapAm: "Ất Mùi : Sa Trung Kim",
-                thienKhacDiaXung: "Tân Tỵ : Bạch Lạp Kim",
-                cungThienDiaXung: "Ất Tỵ : Phú Đăng Hoả",
-                cungDiaThienKhac: "Tân Hợi : Thoa Xuyến Kim"
-            },
-            {
-                age: "Bính Tý : Giản Hạ Thuỷ",
-                khacNapAm: "Bính Dần : Lư Trung Hoả",
-                thienKhacDiaXung: "Nhâm Ngọ : Dương Liễu Mộc",
-                cungThienDiaXung: "Bính Ngọ : Thiên Hà Thuỷ",
-                cungDiaThienKhac: "Nhâm Tý : Tang Đố Mộc"
-            },
-            {
-                age: "Đinh Sửu : Giản Hạ Thuỷ",
-                khacNapAm: "Đinh Mão : Lư Trung Hoả",
-                thienKhacDiaXung: "Quý Mùi : Dương Liễu Mộc",
-                cungThienDiaXung: "Đinh Mùi : Thiên Hà Thuỷ",
-                cungDiaThienKhac: "Quý Sửu : Tang Đố Mộc"
-            },
-            {
-                age: "Mậu Dần : Thành Đầu Thổ",
-                khacNapAm: "Bính Tý : Giản Hạ Thuỷ",
-                thienKhacDiaXung: "Giáp Thân : Tuyền Trung Thuỷ",
-                cungThienDiaXung: "Mậu Thân : Đại Trạch Thổ",
-                cungDiaThienKhac: "Giáp Dần : Đại Khê Thuỷ"
-            },
-            {
-                age: "Kỷ Mão : Thành Đầu Thổ",
-                khacNapAm: "Đinh Sửu : Giản Hạ Thuỷ",
-                thienKhacDiaXung: "Ất Dậu : Tuyền Trung Thuỷ",
-                cungThienDiaXung: "Kỷ Dậu : Đại Trạch Thổ",
-                cungDiaThienKhac: "Ất Mão : Đại Khê Thuỷ"
-            },
-            {
-                age: "Canh Thìn : Bạch Lạp Kim",
-                khacNapAm: "Nhâm Tý : Tang Đố Mộc",
-                thienKhacDiaXung: "Bính Tuất : Ốc Thượng Thổ",
-                cungThienDiaXung: "Canh Tuất : Thoa Xuyến Kim",
-                cungDiaThienKhac: "Bính Thìn : Sa Trung Thổ"
-            },
-            {
-                age: "Tân Tỵ : Bạch Lạp Kim",
-                khacNapAm: "Quý Sửu : Tang Đố Mộc",
-                thienKhacDiaXung: "Đinh Hợi : Ốc Thượng Thổ",
-                cungThienDiaXung: "Tân Hợi : Thoa Xuyến Kim",
-                cungDiaThienKhac: "Đinh Tỵ : Sa Trung Thổ"
-            },
-            {
-                age: "Nhâm Ngọ : Dương Liễu Mộc",
-                khacNapAm: "Canh Ngọ : Lộ Bàng Thổ",
-                thienKhacDiaXung: "Mậu Tý : Tích Lịch Hoả",
-                cungThienDiaXung: "Nhâm Tý : Tang Đố Mộc",
-                cungDiaThienKhac: "Mậu Ngọ : Thiên Thượng Hoả"
-            },
-            {
-                age: "Quý Mùi : Dương Liễu Mộc",
-                khacNapAm: "Tân Mùi : Lộ Bàng Thổ",
-                thienKhacDiaXung: "Kỷ Sửu : Tích Lịch Hoả",
-                cungThienDiaXung: "Quý Sửu : Tang Đố Mộc",
-                cungDiaThienKhac: "Kỷ Mùi : Thiên Thượng Hoả"
-            },
-            {
-                age: "Giáp Thân : Tuyền Trung Thuỷ",
-                khacNapAm: "Bính Thân : Sơn Hạ Hoả",
-                thienKhacDiaXung: "Canh Dần : Tùng Bách Mộc",
-                cungThienDiaXung: "Giáp Dần : Đại Khê Thuỷ",
-                cungDiaThienKhac: "Canh Thân : Thạch Lựu Mộc"
-            },
-            {
-                age: "Ất Dậu : Tuyền Trung Thuỷ",
-                khacNapAm: "Đinh Dậu : Sơn Hạ Hoả",
-                thienKhacDiaXung: "Tân Mão : Tùng Bách Mộc",
-                cungThienDiaXung: "Ất Mão : Đại Khê Thuỷ",
-                cungDiaThienKhac: "Tân Dậu : Thạch Lựu Mộc"
-            },
-            {
-                age: "Bính Tuất : Ốc Thượng Thổ",
-                khacNapAm: "Bính Ngọ : Thiên Hà Thuỷ",
-                thienKhacDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ",
-                cungThienDiaXung: "Bính Thìn : Sa Trung Thổ",
-                cungDiaThienKhac: "Nhâm Tuất : Đại Hải Thuỷ"
-            },
-            {
-                age: "Đinh Hợi : Ốc Thượng Thổ",
-                khacNapAm: "Đinh Mùi : Thiên Hà Thuỷ",
-                thienKhacDiaXung: "Quý Tỵ : Trường Lưu Thuỷ",
-                cungThienDiaXung: "Đinh Tỵ : Sa Trung Thổ",
-                cungDiaThienKhac: "Quý Hợi : Đại Hải Thuỷ"
-            },
-            {
-                age: "Mậu Tý : Tích Lịch Hoả",
-                khacNapAm: "Giáp Tý : Hải Trung Kim",
-                thienKhacDiaXung: "Giáp Ngọ : Sa Trung Kim",
-                cungThienDiaXung: "Mậu Ngọ : Thiên Thượng Hoả",
-                cungDiaThienKhac: "Giáp Tý : Hải Trung Kim"
-            },
-            {
-                age: "Kỷ Sửu : Tích Lịch Hoả",
-                khacNapAm: "Ất Sửu : Hải Trung Kim",
-                thienKhacDiaXung: "Ất Mùi : Sa Trung Kim",
-                cungThienDiaXung: "Kỷ Mùi : Thiên Thượng Hoả",
-                cungDiaThienKhac: "Ất Sửu : Hải Trung Kim"
-            },
-            {
-                age: "Canh Dần : Tùng Bách Mộc",
-                khacNapAm: "Mậu Dần : Thành Đầu Thổ",
-                thienKhacDiaXung: "Bính Thân : Sơn Hạ Hoả",
-                cungThienDiaXung: "Canh Thân : Thạch Lựu Mộc",
-                cungDiaThienKhac: "Bính Dần : Lư Trung Hoả"
-            },
-            {
-                age: "Tân Mão : Tùng Bách Mộc",
-                khacNapAm: "Kỷ Mão : Thành Đầu Thổ",
-                thienKhacDiaXung: "Đinh Dậu : Sơn Hạ Hoả",
-                cungThienDiaXung: "Tân Dậu : Thạch Lựu Mộc",
-                cungDiaThienKhac: "Đinh Mão : Lư Trung Hoả"
-            },
-            {
-                age: "Nhâm Thìn : Trường Lưu Thuỷ",
-                khacNapAm: "Mậu Ngọ : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Mậu Tuất : Bình Địa Mộc",
-                cungThienDiaXung: "Nhâm Tuất : Đại Hải Thuỷ",
-                cungDiaThienKhac: "Mậu Thìn : Đại Lâm Mộc"
-            },
-            {
-                age: "Quý Tỵ : Trường Lưu Thuỷ",
-                khacNapAm: "Kỷ Mùi : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Kỷ Hợi : Bình Địa Mộc",
-                cungThienDiaXung: "Quý Hợi : Đại Hải Thuỷ",
-                cungDiaThienKhac: "Kỷ Tỵ : Đại Lâm Mộc"
-            },
-            {
-                age: "Giáp Ngọ : Sa Trung Kim",
-                khacNapAm: "Canh Dần : Tùng Bách Mộc",
-                thienKhacDiaXung: "Canh Tý : Bích Thượng Thổ",
-                cungThienDiaXung: "Giáp Tý : Hải Trung Kim",
-                cungDiaThienKhac: "Canh Ngọ : Lộ Bàng Thổ"
-            },
-            {
-                age: "Ất Mùi : Sa Trung Kim",
-                khacNapAm: "Tân Mão : Tùng Bách Mộc",
-                thienKhacDiaXung: "Tân Sửu : Bích Thượng Thổ",
-                cungThienDiaXung: "Ất Sửu : Hải Trung Kim",
-                cungDiaThienKhac: "Tân Mùi : Lộ Bàng Thổ"
-            },
-            {
-                age: "Bính Thân : Sơn Hạ Hoả",
-                khacNapAm: "Nhâm Dần : Kim Bạch Kim",
-                thienKhacDiaXung: "Nhâm Dần : Kim Bạch Kim",
-                cungThienDiaXung: "Bính Dần : Lư Trung Hoả",
-                cungDiaThienKhac: "Nhâm Thân : Kiếm Phong Kim"
-            },
-            {
-                age: "Đinh Dậu : Sơn Hạ Hoả",
-                khacNapAm: "Quý Mão : Kim Bạch Kim",
-                thienKhacDiaXung: "Quý Mão : Kim Bạch Kim",
-                cungThienDiaXung: "Đinh Mão : Lư Trung Hoả",
-                cungDiaThienKhac: "Quý Dậu : Kiếm Phong Kim"
-            },
-            {
-                age: "Mậu Tuất : Bình Địa Mộc",
-                khacNapAm: "Bính Thìn : Sa Trung Thổ",
-                thienKhacDiaXung: "Giáp Thìn : Phú Đăng Hoả",
-                cungThienDiaXung: "Mậu Thìn : Đại Lâm Mộc",
-                cungDiaThienKhac: "Giáp Tuất : Sơn Đầu Hoả"
-            },
-            {
-                age: "Kỷ Hợi : Bình Địa Mộc",
-                khacNapAm: "Đinh Tỵ : Sa Trung Thổ",
-                thienKhacDiaXung: "Ất Tỵ : Phú Đăng Hoả",
-                cungThienDiaXung: "Kỷ Tỵ : Đại Lâm Mộc",
-                cungDiaThienKhac: "Ất Hợi : Sơn Đầu Hoả"
-            },
-            {
-                age: "Canh Tý : Bích Thượng Thổ",
-                khacNapAm: "Bính Ngọ : Thiên Hà Thuỷ",
-                thienKhacDiaXung: "Bính Ngọ : Thiên Hà Thuỷ",
-                cungThienDiaXung: "Canh Ngọ : Lộ Bàng Thổ",
-                cungDiaThienKhac: "Bính Tý : Giản Hạ Thuỷ"
-            },
-            {
-                age: "Tân Sửu : Bích Thượng Thổ",
-                khacNapAm: "Đinh Mùi : Thiên Hà Thuỷ",
-                thienKhacDiaXung: "Đinh Mùi : Thiên Hà Thuỷ",
-                cungThienDiaXung: "Tân Mùi : Lộ Bàng Thổ",
-                cungDiaThienKhac: "Đinh Sửu : Giản Hạ Thuỷ"
-            },
-            {
-                age: "Nhâm Dần : Kim Bạch Kim",
-                khacNapAm: "Mậu Thìn : Đại Lâm Mộc",
-                thienKhacDiaXung: "Mậu Thìn : Đại Lâm Mộc",
-                cungThienDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ",
-                cungDiaThienKhac: "Mậu Dần : Thành Đầu Thổ"
-            },
-            {
-                age: "Quý Mão : Kim Bạch Kim",
-                khacNapAm: "Kỷ Tỵ : Đại Lâm Mộc",
-                thienKhacDiaXung: "Kỷ Tỵ : Đại Lâm Mộc",
-                cungThienDiaXung: "Quý Tỵ : Trường Lưu Thuỷ",
-                cungDiaThienKhac: "Kỷ Mão : Thành Đầu Thổ"
-            },
-            {
-                age: "Giáp Thìn : Phú Đăng Hoả",
-                khacNapAm: "Canh Tuất : Thoa Xuyến Kim",
-                thienKhacDiaXung: "Canh Tuất : Thoa Xuyến Kim",
-                cungThienDiaXung: "Giáp Tuất : Sơn Đầu Hoả",
-                cungDiaThienKhac: "Canh Thìn : Bạch Lạp Kim"
-            },
-            {
-                age: "Ất Tỵ : Phú Đăng Hoả",
-                khacNapAm: "Tân Hợi : Thoa Xuyến Kim",
-                thienKhacDiaXung: "Tân Hợi : Thoa Xuyến Kim",
-                cungThienDiaXung: "Ất Hợi : Sơn Đầu Hoả",
-                cungDiaThienKhac: "Tân Tỵ : Bạch Lạp Kim"
-            },
-            {
-                age: "Bính Ngọ : Thiên Hà Thuỷ",
-                khacNapAm: "Mậu Ngọ : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Nhâm Tý : Tang Đố Mộc",
-                cungThienDiaXung: "Bính Tý : Giản Hạ Thuỷ",
-                cungDiaThienKhac: "Nhâm Ngọ : Dương Liễu Mộc"
-            },
-            {
-                age: "Đinh Mùi : Thiên Hà Thuỷ",
-                khacNapAm: "Kỷ Mùi : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Quý Sửu : Tang Đố Mộc",
-                cungThienDiaXung: "Đinh Sửu : Giản Hạ Thuỷ",
-                cungDiaThienKhac: "Quý Mùi : Dương Liễu Mộc"
-            },
-            {
-                age: "Mậu Thân : Đại Trạch Thổ",
-                khacNapAm: "Nhâm Thìn : Trường Lưu Thuỷ",
-                thienKhacDiaXung: "Giáp Dần : Đại Khê Thuỷ",
-                cungThienDiaXung: "Mậu Dần : Thành Đầu Thổ",
-                cungDiaThienKhac: "Giáp Thân : Tuyền Trung Thuỷ"
-            },
-            {
-                age: "Kỷ Dậu : Đại Trạch Thổ",
-                khacNapAm: "Quý Tỵ : Trường Lưu Thuỷ",
-                thienKhacDiaXung: "Ất Mão : Đại Khê Thuỷ",
-                cungThienDiaXung: "Kỷ Mão : Thành Đầu Thổ",
-                cungDiaThienKhac: "Ất Dậu : Tuyền Trung Thuỷ"
-            },
-            {
-                age: "Canh Tuất : Thoa Xuyến Kim",
-                khacNapAm: "Mậu Thìn : Đại Lâm Mộc",
-                thienKhacDiaXung: "Bính Thìn : Sa Trung Thổ",
-                cungThienDiaXung: "Canh Thìn : Bạch Lạp Kim",
-                cungDiaThienKhac: "Bính Tuất : Ốc Thượng Thổ"
-            },
-            {
-                age: "Tân Hợi : Thoa Xuyến Kim",
-                khacNapAm: "Kỷ Tỵ : Đại Lâm Mộc",
-                thienKhacDiaXung: "Đinh Tỵ : Sa Trung Thổ",
-                cungThienDiaXung: "Tân Tỵ : Bạch Lạp Kim",
-                cungDiaThienKhac: "Đinh Hợi : Ốc Thượng Thổ"
-            },
-            {
-                age: "Nhâm Tý : Tang Đố Mộc",
-                khacNapAm: "Bính Tuất : Ốc Thượng Thổ",
-                thienKhacDiaXung: "Mậu Ngọ : Thiên Thượng Hoả",
-                cungThienDiaXung: "Nhâm Ngọ : Dương Liễu Mộc",
-                cungDiaThienKhac: "Mậu Tý : Tích Lịch Hoả"
-            },
-            {
-                age: "Quý Sửu : Tang Đố Mộc",
-                khacNapAm: "Đinh Hợi : Ốc Thượng Thổ",
-                thienKhacDiaXung: "Kỷ Mùi : Thiên Thượng Hoả",
-                cungThienDiaXung: "Quý Mùi : Dương Liễu Mộc",
-                cungDiaThienKhac: "Kỷ Sửu : Tích Lịch Hoả"
-            },
-            {
-                age: "Giáp Dần : Đại Khê Thuỷ",
-                khacNapAm: "Bính Thân : Sơn Hạ Hoả",
-                thienKhacDiaXung: "Canh Thân : Thạch Lựu Mộc",
-                cungThienDiaXung: "Giáp Thân : Tuyền Trung Thuỷ",
-                cungDiaThienKhac: "Canh Dần : Tùng Bách Mộc"
-            },
-            {
-                age: "Ất Mão : Đại Khê Thuỷ",
-                khacNapAm: "Đinh Dậu : Sơn Hạ Hoả",
-                thienKhacDiaXung: "Tân Dậu : Thạch Lựu Mộc",
-                cungThienDiaXung: "Ất Dậu : Tuyền Trung Thuỷ",
-                cungDiaThienKhac: "Tân Mão : Tùng Bách Mộc"
-            },
-            {
-                age: "Bính Thìn : Sa Trung Thổ",
-                khacNapAm: "Nhâm Ngọ : Dương Liễu Mộc",
-                thienKhacDiaXung: "Nhâm Tuất : Đại Hải Thuỷ",
-                cungThienDiaXung: "Bính Tuất : Ốc Thượng Thổ",
-                cungDiaThienKhac: "Nhâm Thìn : Trường Lưu Thuỷ"
-            },
-            {
-                age: "Đinh Tỵ : Sa Trung Thổ",
-                khacNapAm: "Quý Mùi : Dương Liễu Mộc",
-                thienKhacDiaXung: "Quý Hợi : Đại Hải Thuỷ",
-                cungThienDiaXung: "Đinh Hợi : Ốc Thượng Thổ",
-                cungDiaThienKhac: "Quý Tỵ : Trường Lưu Thuỷ"
-            },
-            {
-                age: "Mậu Ngọ : Thiên Thượng Hoả",
-                khacNapAm: "Giáp Ngọ : Sa Trung Kim",
-                thienKhacDiaXung: "Giáp Tý : Hải Trung Kim",
-                cungThienDiaXung: "Mậu Tý : Tích Lịch Hoả",
-                cungDiaThienKhac: "Giáp Ngọ : Sa Trung Kim"
-            },
-            {
-                age: "Kỷ Mùi : Thiên Thượng Hoả",
-                khacNapAm: "Ất Mùi : Sa Trung Kim",
-                thienKhacDiaXung: "Ất Sửu : Hải Trung Kim",
-                cungThienDiaXung: "Kỷ Sửu : Tích Lịch Hoả",
-                cungDiaThienKhac: "Ất Mùi : Sa Trung Kim"
-            },
-            {
-                age: "Canh Thân : Thạch Lựu Mộc",
-                khacNapAm: "Canh Tý : Bích Thượng Thổ",
-                thienKhacDiaXung: "Bính Dần : Lư Trung Hoả",
-                cungThienDiaXung: "Canh Dần : Tùng Bách Mộc",
-                cungDiaThienKhac: "Bính Thân : Sơn Hạ Hoả"
-            },
-            {
-                age: "Tân Dậu : Thạch Lựu Mộc",
-                khacNapAm: "Tân Sửu : Bích Thượng Thổ",
-                thienKhacDiaXung: "Đinh Mão : Lư Trung Hoả",
-                cungThienDiaXung: "Tân Mão : Tùng Bách Mộc",
-                cungDiaThienKhac: "Đinh Dậu : Sơn Hạ Hoả"
-            },
-            {
-                age: "Nhâm Tuất : Đại Hải Thuỷ",
-                khacNapAm: "Mậu Ngọ : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Mậu Thìn : Đại Lâm Mộc",
-                cungThienDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ",
-                cungDiaThienKhac: "Mậu Tuất : Bình Địa Mộc"
-            },
-            {
-                age: "Quý Hợi : Đại Hải Thuỷ",
-                khacNapAm: "Kỷ Mùi : Thiên Thượng Hoả",
-                thienKhacDiaXung: "Kỷ Tỵ : Đại Lâm Mộc",
-                cungThienDiaXung: "Quý Tỵ : Trường Lưu Thuỷ",
-                cungDiaThienKhac: "Kỷ Hợi : Bình Địa Mộc"
-            }
+            // Kim khắc Mộc
+            { age: "Giáp Tý : Hải Trung Kim", khacNapAm: "Mậu Tuất : Bình Địa Mộc", thienKhacDiaXung: "Canh Ngọ : Lộ Bàng Thổ", cungThienDiaXung: "Giáp Ngọ : Sa Trung Kim", cungDiaThienKhac: "Canh Tý : Bích Thượng Thổ" },
+            { age: "Ất Sửu : Hải Trung Kim", khacNapAm: "Kỷ Hợi : Bình Địa Mộc", thienKhacDiaXung: "Tân Mùi : Lộ Bàng Thổ", cungThienDiaXung: "Ất Mùi : Sa Trung Kim", cungDiaThienKhac: "Tân Sửu : Bích Thượng Thổ" },
+            { age: "Nhâm Thân : Kiếm Phong Kim", khacNapAm: "Canh Dần : Tùng Bách Mộc", thienKhacDiaXung: "Mậu Dần : Thành Đầu Thổ", cungThienDiaXung: "Nhâm Dần : Kim Bạch Kim", cungDiaThienKhac: "Mậu Thân : Đại Trạch Thổ" },
+            { age: "Quý Dậu : Kiếm Phong Kim", khacNapAm: "Tân Mão : Tùng Bách Mộc", thienKhacDiaXung: "Kỷ Mão : Thành Đầu Thổ", cungThienDiaXung: "Quý Mão : Kim Bạch Kim", cungDiaThienKhac: "Kỷ Dậu : Đại Trạch Thổ" },
+            { age: "Canh Thìn : Bạch Lạp Kim", khacNapAm: "Nhâm Tý : Tang Đố Mộc", thienKhacDiaXung: "Bính Tuất : Ốc Thượng Thổ", cungThienDiaXung: "Canh Tuất : Thoa Xuyến Kim", cungDiaThienKhac: "Bính Thìn : Sa Trung Thổ" },
+            { age: "Tân Tỵ : Bạch Lạp Kim", khacNapAm: "Quý Sửu : Tang Đố Mộc", thienKhacDiaXung: "Đinh Hợi : Ốc Thượng Thổ", cungThienDiaXung: "Tân Hợi : Thoa Xuyến Kim", cungDiaThienKhac: "Đinh Tỵ : Sa Trung Thổ" },
+            { age: "Giáp Ngọ : Sa Trung Kim", khacNapAm: "Mậu Thìn : Đại Lâm Mộc", thienKhacDiaXung: "Canh Tý : Bích Thượng Thổ", cungThienDiaXung: "Giáp Tý : Hải Trung Kim", cungDiaThienKhac: "Canh Ngọ : Lộ Bàng Thổ" },
+            { age: "Ất Mùi : Sa Trung Kim", khacNapAm: "Kỷ Tỵ : Đại Lâm Mộc", thienKhacDiaXung: "Tân Sửu : Bích Thượng Thổ", cungThienDiaXung: "Ất Sửu : Hải Trung Kim", cungDiaThienKhac: "Tân Mùi : Lộ Bàng Thổ" },
+            { age: "Nhâm Dần : Kim Bạch Kim", khacNapAm: "Nhâm Ngọ : Dương Liễu Mộc", thienKhacDiaXung: "Mậu Thìn : Đại Lâm Mộc", cungThienDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ", cungDiaThienKhac: "Mậu Dần : Thành Đầu Thổ" },
+            { age: "Quý Mão : Kim Bạch Kim", khacNapAm: "Quý Mùi : Dương Liễu Mộc", thienKhacDiaXung: "Kỷ Tỵ : Đại Lâm Mộc", cungThienDiaXung: "Quý Tỵ : Trường Lưu Thuỷ", cungDiaThienKhac: "Kỷ Mão : Thành Đầu Thổ" },
+            { age: "Canh Tuất : Thoa Xuyến Kim", khacNapAm: "Canh Thân : Thạch Lựu Mộc", thienKhacDiaXung: "Bính Thìn : Sa Trung Thổ", cungThienDiaXung: "Canh Thìn : Bạch Lạp Kim", cungDiaThienKhac: "Bính Tuất : Ốc Thượng Thổ" },
+            { age: "Tân Hợi : Thoa Xuyến Kim", khacNapAm: "Tân Dậu : Thạch Lựu Mộc", thienKhacDiaXung: "Đinh Tỵ : Sa Trung Thổ", cungThienDiaXung: "Tân Tỵ : Bạch Lạp Kim", cungDiaThienKhac: "Đinh Hợi : Ốc Thượng Thổ" },
+
+            // Mộc khắc Thổ
+            { age: "Mậu Thìn : Đại Lâm Mộc", khacNapAm: "Canh Ngọ : Lộ Bàng Thổ", thienKhacDiaXung: "Giáp Tuất : Sơn Đầu Hoả", cungThienDiaXung: "Mậu Tuất : Bình Địa Mộc", cungDiaThienKhac: "Giáp Thìn : Phú Đăng Hoả" },
+            { age: "Kỷ Tỵ : Đại Lâm Mộc", khacNapAm: "Tân Mùi : Lộ Bàng Thổ", thienKhacDiaXung: "Ất Hợi : Sơn Đầu Hoả", cungThienDiaXung: "Kỷ Hợi : Bình Địa Mộc", cungDiaThienKhac: "Ất Tỵ : Phú Đăng Hoả" },
+            { age: "Nhâm Ngọ : Dương Liễu Mộc", khacNapAm: "Mậu Dần : Thành Đầu Thổ", thienKhacDiaXung: "Mậu Tý : Tích Lịch Hoả", cungThienDiaXung: "Nhâm Tý : Tang Đố Mộc", cungDiaThienKhac: "Mậu Ngọ : Thiên Thượng Hoả" },
+            { age: "Quý Mùi : Dương Liễu Mộc", khacNapAm: "Kỷ Mão : Thành Đầu Thổ", thienKhacDiaXung: "Kỷ Sửu : Tích Lịch Hoả", cungThienDiaXung: "Quý Sửu : Tang Đố Mộc", cungDiaThienKhac: "Kỷ Mùi : Thiên Thượng Hoả" },
+            { age: "Canh Dần : Tùng Bách Mộc", khacNapAm: "Canh Tý : Bích Thượng Thổ", thienKhacDiaXung: "Bính Thân : Sơn Hạ Hoả", cungThienDiaXung: "Canh Thân : Thạch Lựu Mộc", cungDiaThienKhac: "Bính Dần : Lư Trung Hoả" },
+            { age: "Tân Mão : Tùng Bách Mộc", khacNapAm: "Tân Sửu : Bích Thượng Thổ", thienKhacDiaXung: "Đinh Dậu : Sơn Hạ Hoả", cungThienDiaXung: "Tân Dậu : Thạch Lựu Mộc", cungDiaThienKhac: "Đinh Mão : Lư Trung Hoả" },
+            { age: "Mậu Tuất : Bình Địa Mộc", khacNapAm: "Bính Thìn : Sa Trung Thổ", thienKhacDiaXung: "Giáp Thìn : Phú Đăng Hoả", cungThienDiaXung: "Mậu Thìn : Đại Lâm Mộc", cungDiaThienKhac: "Giáp Tuất : Sơn Đầu Hoả" },
+            { age: "Kỷ Hợi : Bình Địa Mộc", khacNapAm: "Đinh Tỵ : Sa Trung Thổ", thienKhacDiaXung: "Ất Tỵ : Phú Đăng Hoả", cungThienDiaXung: "Kỷ Tỵ : Đại Lâm Mộc", cungDiaThienKhac: "Ất Hợi : Sơn Đầu Hoả" },
+            { age: "Nhâm Tý : Tang Đố Mộc", khacNapAm: "Mậu Thân : Đại Trạch Thổ", thienKhacDiaXung: "Mậu Ngọ : Thiên Thượng Hoả", cungThienDiaXung: "Nhâm Ngọ : Dương Liễu Mộc", cungDiaThienKhac: "Mậu Tý : Tích Lịch Hoả" },
+            { age: "Quý Sửu : Tang Đố Mộc", khacNapAm: "Kỷ Dậu : Đại Trạch Thổ", thienKhacDiaXung: "Kỷ Mùi : Thiên Thượng Hoả", cungThienDiaXung: "Quý Mùi : Dương Liễu Mộc", cungDiaThienKhac: "Kỷ Sửu : Tích Lịch Hoả" },
+            { age: "Canh Thân : Thạch Lựu Mộc", khacNapAm: "Bính Tuất : Ốc Thượng Thổ", thienKhacDiaXung: "Bính Dần : Lư Trung Hoả", cungThienDiaXung: "Canh Dần : Tùng Bách Mộc", cungDiaThienKhac: "Bính Thân : Sơn Hạ Hoả" },
+            { age: "Tân Dậu : Thạch Lựu Mộc", khacNapAm: "Đinh Hợi : Ốc Thượng Thổ", thienKhacDiaXung: "Đinh Mão : Lư Trung Hoả", cungThienDiaXung: "Tân Mão : Tùng Bách Mộc", cungDiaThienKhac: "Đinh Dậu : Sơn Hạ Hoả" },
+
+            // Thổ khắc Thủy
+            { age: "Canh Ngọ : Lộ Bàng Thổ", khacNapAm: "Bính Tý : Giản Hạ Thuỷ", thienKhacDiaXung: "Bính Tý : Giản Hạ Thuỷ", cungThienDiaXung: "Canh Tý : Bích Thượng Thổ", cungDiaThienKhac: "Bính Ngọ : Thiên Hà Thuỷ" },
+            { age: "Tân Mùi : Lộ Bàng Thổ", khacNapAm: "Đinh Sửu : Giản Hạ Thuỷ", thienKhacDiaXung: "Đinh Sửu : Giản Hạ Thuỷ", cungThienDiaXung: "Tân Sửu : Bích Thượng Thổ", cungDiaThienKhac: "Đinh Mùi : Thiên Hà Thuỷ" },
+            { age: "Mậu Dần : Thành Đầu Thổ", khacNapAm: "Giáp Thân : Tuyền Trung Thuỷ", thienKhacDiaXung: "Giáp Thân : Tuyền Trung Thuỷ", cungThienDiaXung: "Mậu Thân : Đại Trạch Thổ", cungDiaThienKhac: "Giáp Dần : Đại Khê Thuỷ" },
+            { age: "Kỷ Mão : Thành Đầu Thổ", khacNapAm: "Ất Dậu : Tuyền Trung Thuỷ", thienKhacDiaXung: "Ất Dậu : Tuyền Trung Thuỷ", cungThienDiaXung: "Kỷ Dậu : Đại Trạch Thổ", cungDiaThienKhac: "Ất Mão : Đại Khê Thuỷ" },
+            { age: "Canh Tý : Bích Thượng Thổ", khacNapAm: "Nhâm Thìn : Trường Lưu Thuỷ", thienKhacDiaXung: "Bính Ngọ : Thiên Hà Thuỷ", cungThienDiaXung: "Canh Ngọ : Lộ Bàng Thổ", cungDiaThienKhac: "Bính Tý : Giản Hạ Thuỷ" },
+            { age: "Tân Sửu : Bích Thượng Thổ", khacNapAm: "Quý Tỵ : Trường Lưu Thuỷ", thienKhacDiaXung: "Đinh Mùi : Thiên Hà Thuỷ", cungThienDiaXung: "Tân Mùi : Lộ Bàng Thổ", cungDiaThienKhac: "Đinh Sửu : Giản Hạ Thuỷ" },
+            { age: "Mậu Thân : Đại Trạch Thổ", khacNapAm: "Giáp Dần : Đại Khê Thuỷ", thienKhacDiaXung: "Giáp Dần : Đại Khê Thuỷ", cungThienDiaXung: "Mậu Dần : Thành Đầu Thổ", cungDiaThienKhac: "Giáp Thân : Tuyền Trung Thuỷ" },
+            { age: "Kỷ Dậu : Đại Trạch Thổ", khacNapAm: "Ất Mão : Đại Khê Thuỷ", thienKhacDiaXung: "Ất Mão : Đại Khê Thuỷ", cungThienDiaXung: "Kỷ Mão : Thành Đầu Thổ", cungDiaThienKhac: "Ất Dậu : Tuyền Trung Thuỷ" },
+            { age: "Bính Thìn : Sa Trung Thổ", khacNapAm: "Bính Ngọ : Thiên Hà Thuỷ", thienKhacDiaXung: "Nhâm Tuất : Đại Hải Thuỷ", cungThienDiaXung: "Bính Tuất : Ốc Thượng Thổ", cungDiaThienKhac: "Nhâm Thìn : Trường Lưu Thuỷ" },
+            { age: "Đinh Tỵ : Sa Trung Thổ", khacNapAm: "Đinh Mùi : Thiên Hà Thuỷ", thienKhacDiaXung: "Quý Hợi : Đại Hải Thuỷ", cungThienDiaXung: "Đinh Hợi : Ốc Thượng Thổ", cungDiaThienKhac: "Quý Tỵ : Trường Lưu Thuỷ" },
+            { age: "Bính Tuất : Ốc Thượng Thổ", khacNapAm: "Nhâm Tuất : Đại Hải Thuỷ", thienKhacDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ", cungThienDiaXung: "Bính Thìn : Sa Trung Thổ", cungDiaThienKhac: "Nhâm Tuất : Đại Hải Thuỷ" },
+            { age: "Đinh Hợi : Ốc Thượng Thổ", khacNapAm: "Quý Hợi : Đại Hải Thuỷ", thienKhacDiaXung: "Quý Tỵ : Trường Lưu Thuỷ", cungThienDiaXung: "Đinh Tỵ : Sa Trung Thổ", cungDiaThienKhac: "Quý Hợi : Đại Hải Thuỷ" },
+
+            // Thủy khắc Hỏa
+            { age: "Bính Tý : Giản Hạ Thuỷ", khacNapAm: "Bính Dần : Lư Trung Hoả", thienKhacDiaXung: "Nhâm Ngọ : Dương Liễu Mộc", cungThienDiaXung: "Bính Ngọ : Thiên Hà Thuỷ", cungDiaThienKhac: "Nhâm Tý : Tang Đố Mộc" },
+            { age: "Đinh Sửu : Giản Hạ Thuỷ", khacNapAm: "Đinh Mão : Lư Trung Hoả", thienKhacDiaXung: "Quý Mùi : Dương Liễu Mộc", cungThienDiaXung: "Đinh Mùi : Thiên Hà Thuỷ", cungDiaThienKhac: "Quý Sửu : Tang Đố Mộc" },
+            { age: "Giáp Thân : Tuyền Trung Thuỷ", khacNapAm: "Giáp Tuất : Sơn Đầu Hoả", thienKhacDiaXung: "Canh Dần : Tùng Bách Mộc", cungThienDiaXung: "Giáp Dần : Đại Khê Thuỷ", cungDiaThienKhac: "Canh Thân : Thạch Lựu Mộc" },
+            { age: "Ất Dậu : Tuyền Trung Thuỷ", khacNapAm: "Ất Hợi : Sơn Đầu Hoả", thienKhacDiaXung: "Tân Mão : Tùng Bách Mộc", cungThienDiaXung: "Ất Mão : Đại Khê Thuỷ", cungDiaThienKhac: "Tân Dậu : Thạch Lựu Mộc" },
+            { age: "Nhâm Thìn : Trường Lưu Thuỷ", khacNapAm: "Mậu Tý : Tích Lịch Hoả", thienKhacDiaXung: "Mậu Tuất : Bình Địa Mộc", cungThienDiaXung: "Nhâm Tuất : Đại Hải Thuỷ", cungDiaThienKhac: "Mậu Thìn : Đại Lâm Mộc" },
+            { age: "Quý Tỵ : Trường Lưu Thuỷ", khacNapAm: "Kỷ Sửu : Tích Lịch Hoả", thienKhacDiaXung: "Kỷ Hợi : Bình Địa Mộc", cungThienDiaXung: "Quý Hợi : Đại Hải Thuỷ", cungDiaThienKhac: "Kỷ Tỵ : Đại Lâm Mộc" },
+            { age: "Bính Ngọ : Thiên Hà Thuỷ", khacNapAm: "Bính Thân : Sơn Hạ Hoả", thienKhacDiaXung: "Nhâm Tý : Tang Đố Mộc", cungThienDiaXung: "Bính Tý : Giản Hạ Thuỷ", cungDiaThienKhac: "Nhâm Ngọ : Dương Liễu Mộc" },
+            { age: "Đinh Mùi : Thiên Hà Thuỷ", khacNapAm: "Đinh Dậu : Sơn Hạ Hoả", thienKhacDiaXung: "Quý Sửu : Tang Đố Mộc", cungThienDiaXung: "Đinh Sửu : Giản Hạ Thuỷ", cungDiaThienKhac: "Quý Mùi : Dương Liễu Mộc" },
+            { age: "Giáp Dần : Đại Khê Thuỷ", khacNapAm: "Giáp Thìn : Phú Đăng Hoả", thienKhacDiaXung: "Canh Thân : Thạch Lựu Mộc", cungThienDiaXung: "Giáp Thân : Tuyền Trung Thuỷ", cungDiaThienKhac: "Canh Dần : Tùng Bách Mộc" },
+            { age: "Ất Mão : Đại Khê Thuỷ", khacNapAm: "Ất Tỵ : Phú Đăng Hoả", thienKhacDiaXung: "Tân Dậu : Thạch Lựu Mộc", cungThienDiaXung: "Ất Dậu : Tuyền Trung Thuỷ", cungDiaThienKhac: "Tân Mão : Tùng Bách Mộc" },
+            { age: "Nhâm Tuất : Đại Hải Thuỷ", khacNapAm: "Mậu Ngọ : Thiên Thượng Hoả", thienKhacDiaXung: "Mậu Thìn : Đại Lâm Mộc", cungThienDiaXung: "Nhâm Thìn : Trường Lưu Thuỷ", cungDiaThienKhac: "Mậu Tuất : Bình Địa Mộc" },
+            { age: "Quý Hợi : Đại Hải Thuỷ", khacNapAm: "Kỷ Mùi : Thiên Thượng Hoả", thienKhacDiaXung: "Kỷ Tỵ : Đại Lâm Mộc", cungThienDiaXung: "Quý TỴ : Trường Lưu Thuỷ", cungDiaThienKhac: "Kỷ Hợi : Bình Địa Mộc" },
+
+            // Hỏa khắc Kim
+            { age: "Bính Dần : Lư Trung Hoả", khacNapAm: "Giáp Tý : Hải Trung Kim", thienKhacDiaXung: "Nhâm Thân : Kiếm Phong Kim", cungThienDiaXung: "Bính Thân : Sơn Hạ Hoả", cungDiaThienKhac: "Nhâm Dần : Kim Bạch Kim" },
+            { age: "Đinh Mão : Lư Trung Hoả", khacNapAm: "Ất Sửu : Hải Trung Kim", thienKhacDiaXung: "Quý Dậu : Kiếm Phong Kim", cungThienDiaXung: "Đinh Dậu : Sơn Hạ Hoả", cungDiaThienKhac: "Quý Mão : Kim Bạch Kim" },
+            { age: "Giáp Tuất : Sơn Đầu Hoả", khacNapAm: "Nhâm Thân : Kiếm Phong Kim", thienKhacDiaXung: "Canh Thìn : Bạch Lạp Kim", cungThienDiaXung: "Giáp Thìn : Phú Đăng Hoả", cungDiaThienKhac: "Canh Tuất : Thoa Xuyến Kim" },
+            { age: "Ất Hợi : Sơn Đầu Hoả", khacNapAm: "Quý Dậu : Kiếm Phong Kim", thienKhacDiaXung: "Tân Tỵ : Bạch Lạp Kim", cungThienDiaXung: "Ất Tỵ : Phú Đăng Hoả", cungDiaThienKhac: "Tân Hợi : Thoa Xuyến Kim" },
+            { age: "Mậu Tý : Tích Lịch Hoả", khacNapAm: "Canh Thìn : Bạch Lạp Kim", thienKhacDiaXung: "Giáp Ngọ : Sa Trung Kim", cungThienDiaXung: "Mậu Ngọ : Thiên Thượng Hoả", cungDiaThienKhac: "Giáp Tý : Hải Trung Kim" },
+            { age: "Kỷ Sửu : Tích Lịch Hoả", khacNapAm: "Tân Tỵ : Bạch Lạp Kim", thienKhacDiaXung: "Ất Mùi : Sa Trung Kim", cungThienDiaXung: "Kỷ Mùi : Thiên Thượng Hoả", cungDiaThienKhac: "Ất Sửu : Hải Trung Kim" },
+            { age: "Bính Thân : Sơn Hạ Hoả", khacNapAm: "Giáp Ngọ : Sa Trung Kim", thienKhacDiaXung: "Nhâm Dần : Kim Bạch Kim", cungThienDiaXung: "Bính Dần : Lư Trung Hoả", cungDiaThienKhac: "Nhâm Thân : Kiếm Phong Kim" },
+            { age: "Đinh Dậu : Sơn Hạ Hoả", khacNapAm: "Ất Mùi : Sa Trung Kim", thienKhacDiaXung: "Quý Mão : Kim Bạch Kim", cungThienDiaXung: "Đinh Mão : Lư Trung Hoả", cungDiaThienKhac: "Quý Dậu : Kiếm Phong Kim" },
+            { age: "Giáp Thìn : Phú Đăng Hoả", khacNapAm: "Nhâm Dần : Kim Bạch Kim", thienKhacDiaXung: "Canh Tuất : Thoa Xuyến Kim", cungThienDiaXung: "Giáp Tuất : Sơn Đầu Hoả", cungDiaThienKhac: "Canh Thìn : Bạch Lạp Kim" },
+            { age: "Ất Tỵ : Phú Đăng Hoả", khacNapAm: "Quý Mão : Kim Bạch Kim", thienKhacDiaXung: "Tân Hợi : Thoa Xuyến Kim", cungThienDiaXung: "Ất Hợi : Sơn Đầu Hoả", cungDiaThienKhac: "Tân TỴ : Bạch Lạp Kim" },
+            { age: "Mậu Ngọ : Thiên Thượng Hoả", khacNapAm: "Canh Tuất : Thoa Xuyến Kim", thienKhacDiaXung: "Giáp Tý : Hải Trung Kim", cungThienDiaXung: "Mậu Tý : Tích Lịch Hoả", cungDiaThienKhac: "Giáp Ngọ : Sa Trung Kim" },
+            { age: "Kỷ Mùi : Thiên Thượng Hoả", khacNapAm: "Tân Hợi : Thoa Xuyến Kim", thienKhacDiaXung: "Ất Sửu : Hải Trung Kim", cungThienDiaXung: "Kỷ Sửu : Tích Lịch Hoả", cungDiaThienKhac: "Ất Mùi : Sa Trung Kim" }
         ];
 
         const select = document.getElementById('hoaGiapSelect');
