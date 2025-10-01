@@ -12,13 +12,14 @@
             background-color: #f4f4f9;
         }
         .container {
-            max-width: 800px;
+            max-width: 600px; /* Giảm max-width để phù hợp hơn */
             margin: 0 auto;
+            overflow-x: auto; /* Thêm thanh cuộn ngang nếu lưới quá rộng */
         }
         .bagua-grid {
             display: grid;
-            grid-template-columns: repeat(3, 150px);
-            grid-template-rows: repeat(3, 150px);
+            grid-template-columns: repeat(3, 120px); /* Giảm kích thước ô */
+            grid-template-rows: repeat(3, 120px);
             gap: 5px;
             justify-content: center;
             margin-bottom: 30px;
@@ -30,9 +31,10 @@
             justify-content: center;
             align-items: center;
             background-color: #fff;
-            font-size: 14px;
+            font-size: 12px; /* Giảm font-size để vừa ô */
             padding: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
         }
         .center {
             background-color: #e0f7fa;
@@ -51,6 +53,17 @@
         }
         h2 {
             color: #34495e;
+        }
+        /* Responsive design cho màn hình nhỏ */
+        @media (max-width: 400px) {
+            .bagua-grid {
+                grid-template-columns: repeat(3, 100px);
+                grid-template-rows: repeat(3, 100px);
+            }
+            .cell {
+                font-size: 10px;
+                padding: 5px;
+            }
         }
     </style>
 </head>
