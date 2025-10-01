@@ -12,13 +12,13 @@
             background-color: #f4f4f9;
         }
         .container {
-            max-width: 600px; /* Giảm max-width để phù hợp hơn */
+            max-width: 600px;
             margin: 0 auto;
-            overflow-x: auto; /* Thêm thanh cuộn ngang nếu lưới quá rộng */
+            overflow-x: auto;
         }
         .bagua-grid {
             display: grid;
-            grid-template-columns: repeat(3, 120px); /* Giảm kích thước ô */
+            grid-template-columns: repeat(3, 120px);
             grid-template-rows: repeat(3, 120px);
             gap: 5px;
             justify-content: center;
@@ -31,10 +31,10 @@
             justify-content: center;
             align-items: center;
             background-color: #fff;
-            font-size: 12px; /* Giảm font-size để vừa ô */
+            font-size: 12px;
             padding: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+            box-sizing: border-box;
         }
         .center {
             background-color: #e0f7fa;
@@ -54,7 +54,6 @@
         h2 {
             color: #34495e;
         }
-        /* Responsive design cho màn hình nhỏ */
         @media (max-width: 400px) {
             .bagua-grid {
                 grid-template-columns: repeat(3, 100px);
@@ -94,15 +93,15 @@
 
     <script>
         const baguaData = [
-            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" },
-            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" },
-            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" },
-            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" },
-            { direction: "Trung Tâm Nhà", medicine: "" },
-            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" },
-            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" },
-            { direction: "Ly - Nam", medicine: "Can khương (干姜)" },
-            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" }
+            { direction: "Càn - Tây Bắc", medicine: "Đan sâm (丹参)" }, // Số 6
+            { direction: "Khảm - Bắc", medicine: "Thiên đông (天冬)" }, // Số 1
+            { direction: "Cấn - Đông Bắc", medicine: "Hoàng kỳ (黄芪)" }, // Số 8
+            { direction: "Chấn - Đông", medicine: "Độc hoạt (独活)" }, // Số 3
+            { direction: "Trung Tâm Nhà", medicine: "" }, // Số 5
+            { direction: "Tốn - Đông Nam", medicine: "Phòng phong (防风)" }, // Số 4
+            { direction: "Khôn - Tây Nam", medicine: "Đương quy (当归)" }, // Số 2
+            { direction: "Đoài - Tây", medicine: "Xích thược (赤芍)" }, // Số 7
+            { direction: "Ly - Nam", medicine: "Can khương (干姜)" } // Số 9
         ];
 
         const grid = document.getElementById('baguaGrid');
