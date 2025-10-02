@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Phi Cung Ngày & Tháng</title>
+    <title>Tính Phi Cung Năm, Tháng, Ngày</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -63,38 +63,22 @@
 <body>
     <a href="https://example.com" class="back-link">Về Trang Trước</a>
 
-    <button class="menu-button" id="selectNam">Chọn Năm (Địa Chi Âm Lịch)</button>
+    <button class="menu-button" id="selectNam">Chọn Năm (Âm Lịch)</button>
     <select id="namSelect" style="display: none;">
-        <option value="">Chọn Địa Chi Năm</option>
-        <option value="ty">Tý</option>
-        <option value="suu">Sửu</option>
-        <option value="dan">Dần</option>
-        <option value="mao">Mão</option>
-        <option value="thin">Thìn</option>
-        <option value="ti">Tị</option>
-        <option value="ngo">Ngọ</option>
-        <option value="mui">Mùi</option>
-        <option value="than">Thân</option>
-        <option value="dau">Dậu</option>
-        <option value="tuat">Tuất</option>
-        <option value="hoi">Hợi</option>
+        <option value="">Chọn Năm</option>
+        <option value="2024_Giáp_Thìn">2024 - Giáp Thìn</option>
+        <option value="2025_Ất_Tỵ">2025 - Ất Tỵ</option>
+        <option value="2026_Bính_Ngọ">2026 - Bính Ngọ</option>
+        <!-- Thêm các năm khác nếu cần -->
     </select>
 
     <button class="menu-button" id="selectThang">Chọn Tháng (Âm Lịch)</button>
     <select id="thangSelect" style="display: none;">
         <option value="">Chọn Tháng</option>
-        <option value="1">Tháng 1</option>
-        <option value="2">Tháng 2</option>
-        <option value="3">Tháng 3</option>
-        <option value="4">Tháng 4</option>
-        <option value="5">Tháng 5</option>
-        <option value="6">Tháng 6</option>
-        <option value="7">Tháng 7</option>
-        <option value="8">Tháng 8</option>
-        <option value="9">Tháng 9</option>
-        <option value="10">Tháng 10</option>
-        <option value="11">Tháng 11</option>
-        <option value="12">Tháng 12</option>
+        <option value="1_Ất_Dậu">Tháng 8 - Ất Dậu</option>
+        <option value="1_Giáp_Tý">Tháng 1 - Giáp Tý</option>
+        <option value="2_Ất_Sửu">Tháng 2 - Ất Sửu</option>
+        <!-- Thêm các tháng khác nếu cần -->
     </select>
 
     <button class="menu-button" id="selectTiet">Chọn Tiết</button>
@@ -229,17 +213,37 @@
         const diaChiDuong = ['Tý', 'Dần', 'Thìn', 'Ngọ', 'Thân', 'Tuất'];
         const diaChiAm = ['Sửu', 'Mão', 'Tị', 'Mùi', 'Dậu', 'Hợi'];
 
+        // Hàm tính Phi Cung năm
+        function tinhPhiCungNam(nam) {
+            const vanMap = {
+                '2004-2023': 9, // Vận 9: Cửu Tử
+                '2024-2043': 1, // Vận 1: Nhất Bạch
+                '2044-2063': 2  // Vận 2: Nhị Hắc
+                // Thêm các vận khác nếu cần
+            };
+            const [year, can, chi] = nam.split('_');
+            let maSo;
+            for (let van in vanMap) {
+                const [start, end] = van.split('-').map(Number);
+                if (year >= start && year <= end) {
+                    maSo = vanMap[van];
+                    break;
+                }
+            }
+            return { maSo, can, chi };
+        }
+
         // Hàm tính Phi Cung tháng
         function tinhPhiCungThang(diaChiNam, thang) {
             let startMa;
-            if (['ty', 'ngo', 'mao', 'dau'].includes(diaChiNam)) startMa = 8; // Nhóm 1: Tý, Ngọ, Mão, Dậu
-            else if (['thin', 'tuat', 'suu', 'mui'].includes(diaChiNam)) startMa = 5; // Nhóm 2: Thìn, Tuất, Sửu, Mùi
-            else if (['dan', 'than', 'ti', 'hoi'].includes(diaChiNam)) startMa = 2; // Nhóm 3: Dần, Thân, Tị, Hợi
+            if (['ty', 'ngo', 'mao', 'dau'].includes(diaChiNam)) startMa = 8; // Nhóm 1
+            else if (['thin', 'tuat', 'suu', 'mui'].includes(diaChiNam)) startMa = 5; // Nhóm 2
+            else if (['dan', 'than', 'ti', 'hoi'].includes(diaChiNam)) startMa = 2; // Nhóm 3
             else return null;
 
             let maSo = startMa - (thang - 1);
             while (maSo <= 0) maSo += 9;
-            maSo = ((maSo - 1) % 9) + 1; // Đảm bảo mã số trong khoảng 1-9, nghịch hành
+            maSo = ((maSo - 1) % 9) + 1; // Chu kỳ 1-9, nghịch hành
             return maSo;
         }
 
@@ -262,34 +266,49 @@
 
         // Sự kiện tính Phi Cung
         document.getElementById('calculate').addEventListener('click', () => {
-            const diaChiNam = document.getElementById('namSelect').value;
-            const thang = parseInt(document.getElementById('thangSelect').value);
+            const nam = document.getElementById('namSelect').value;
+            const thangInput = document.getElementById('thangSelect').value;
             const tiet = document.getElementById('tietSelect').value;
             const ngay = document.getElementById('ngaySelect').value;
 
             let resultText = '';
 
-            // Tính Phi Cung tháng nếu có chọn năm và tháng
-            if (diaChiNam && thang) {
-                const maSoThang = tinhPhiCungThang(diaChiNam, thang);
+            // Tính Phi Cung năm
+            if (nam) {
+                const { maSo, can, chi } = tinhPhiCungNam(nam);
+                let phiCungNam = cungMap[maSo] || '';
+                let isNamDuong = thienCanDuong.includes(can) || diaChiDuong.includes(chi);
+
+                if (maSo === 5) {
+                    const namType = isNamDuong ? 'Khôn' : 'Cấn';
+                    resultText += `Năm ${nam.split('_')[0]} (${can} ${chi}) có Phi Cung là ${namType}. Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn.\n\n`;
+                } else if (phiCungNam) {
+                    resultText += `Năm ${nam.split('_')[0]} (${can} ${chi}) có Phi Cung là ${phiCungNam}.\n\n`;
+                } else {
+                    resultText += `Mã số năm ${maSo} không hợp lệ.\n\n`;
+                }
+            }
+
+            // Tính Phi Cung tháng
+            if (nam && thangInput) {
+                const [thang, canThang, chiThang] = thangInput.split('_');
+                const diaChiNam = nam.split('_')[2];
+                const maSoThang = tinhPhiCungThang(diaChiNam, parseInt(thang));
                 let phiCungThang = cungMap[maSoThang] || '';
-                // Giả sử tháng có thiên can/địa chi để xử lý mã 5 (cần thêm input thực tế)
-                const thangCanChi = ['Ất', 'Dậu']; // Ví dụ tháng Ất Dậu, cần cải tiến giao diện
-                let isThangDuong = thienCanDuong.includes(thangCanChi[0]) || diaChiDuong.includes(thangCanChi[1]);
+                let isThangDuong = thienCanDuong.includes(canThang) || diaChiDuong.includes(chiThang);
 
                 if (maSoThang === 5) {
                     const thangType = isThangDuong ? 'Khôn' : 'Cấn';
-                    resultText += `Tháng ${thang} (Âm lịch) có Phi Cung là ${thangType}. Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn.\n\n`;
+                    resultText += `Tháng ${thang} (${canThang} ${chiThang}) có Phi Cung là ${thangType}. Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn.\n\n`;
                 } else if (phiCungThang) {
-                    resultText += `Tháng ${thang} (Âm lịch) có Phi Cung là ${phiCungThang}.\n\n`;
+                    resultText += `Tháng ${thang} (${canThang} ${chiThang}) có Phi Cung là ${phiCungThang}.\n\n`;
                 } else {
                     resultText += `Mã số tháng ${maSoThang} không hợp lệ.\n\n`;
                 }
             }
 
-            // Tính Phi Cung ngày nếu có chọn tiết và ngày
+            // Tính Phi Cung ngày
             if (tiet && ngay) {
-                // Tìm tuần và vị trí
                 let selectedWeek = null;
                 let index = -1;
                 for (let week of weeks) {
@@ -306,10 +325,7 @@
                     return;
                 }
 
-                // Lấy mã khởi đầu
                 const startMa = tiet === 'duong' ? selectedWeek.yang : selectedWeek.yin;
-
-                // Tính mã số
                 let maSo;
                 if (tiet === 'am') {
                     maSo = startMa - index;
@@ -320,10 +336,7 @@
                     maSo = ((maSo - 1) % 9) + 1; // Chu kỳ 1-9, thuận
                 }
 
-                // Xử lý mã số
                 let phiCung = cungMap[maSo] || '';
-
-                // Xử lý mã 5
                 let isNgayDuong = false;
                 const [can, chi] = ngay.split(' ');
                 if (thienCanDuong.includes(can) || diaChiDuong.includes(chi)) {
