@@ -61,7 +61,7 @@
     </style>
 </head>
 <body>
-    <a href="#" class="back-link">Về Trang Trước</a>
+    <a href="https://example.com" class="back-link">Về Trang Trước</a>
 
     <button class="menu-button" id="selectTiet">Chọn Tiết</button>
     <select id="tietSelect" style="display: none;">
@@ -238,7 +238,7 @@
                 maSo = startMa + index;
             }
 
-            // Xử lý mã số (nếu vượt giới hạn, nhưng theo quy tắc không xảy ra, vẫn giữ nguyên)
+            // Xử lý mã số
             let phiCung = cungMap[maSo] || '';
 
             // Xử lý mã 5
@@ -248,12 +248,14 @@
                 isNgayDuong = true;
             }
 
-            let resultText = `Ngày ${ngay} có Phi Cung là ${phiCung}.`;
+            let resultText;
 
             if (maSo === 5) {
                 const ngayType = isNgayDuong ? 'Khôn' : 'Cấn';
-                resultText = `Ngày bạn muốn xem (${ngay}) có Phi Cung là... (ngày dương là Khôn - ngày âm là Cấn: Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn). Dựa trên ngày, Phi Cung mặc định là ${ngayType}.`;
-            } else if (!phiCung) {
+                resultText = `Ngày bạn muốn xem (${ngay}) có Phi Cung là ${ngayType}. Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn.`;
+            } else if (phiCung) {
+                resultText = `Ngày bạn muốn xem (${ngay}) có Phi Cung là ${phiCung}.`;
+            } else {
                 resultText = `Mã số ${maSo} không hợp lệ hoặc chưa được định nghĩa.`;
             }
 
