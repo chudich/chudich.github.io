@@ -240,7 +240,6 @@
             let maSo = startMa - (thang - 1);
             while (maSo <= 0) maSo += 9;
             maSo = ((maSo - 1) % 9) + 1; // Đảm bảo mã số trong khoảng 1-9, nghịch hành
-
             return maSo;
         }
 
@@ -274,8 +273,9 @@
             if (diaChiNam && thang) {
                 const maSoThang = tinhPhiCungThang(diaChiNam, thang);
                 let phiCungThang = cungMap[maSoThang] || '';
-                const [canThang, chiThang] = ['Ất', 'Dậu']; // Giả sử tháng Ất Dậu, cần nhập liệu thực tế
-                let isThangDuong = thienCanDuong.includes(canThang) || diaChiDuong.includes(chiThang);
+                // Giả sử tháng có thiên can/địa chi để xử lý mã 5 (cần thêm input thực tế)
+                const thangCanChi = ['Ất', 'Dậu']; // Ví dụ tháng Ất Dậu, cần cải tiến giao diện
+                let isThangDuong = thienCanDuong.includes(thangCanChi[0]) || diaChiDuong.includes(thangCanChi[1]);
 
                 if (maSoThang === 5) {
                     const thangType = isThangDuong ? 'Khôn' : 'Cấn';
