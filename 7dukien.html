@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Phi Cung Ngày</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f2f2f7;
+            color: #000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .menu-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #007aff;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .menu-button:hover {
+            background-color: #0056b3;
+        }
+        select {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #c7c7cc;
+            background-color: #fff;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007aff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="back-link">Về Trang Trước</a>
+
+    <button class="menu-button" id="selectTiet">Chọn Tiết</button>
+    <select id="tietSelect" style="display: none;">
+        <option value="">Chọn Tiết</option>
+        <option value="duong">Đông Chí (Dương Cực)</option>
+        <option value="am">Hạ Chí (Âm Cực)</option>
+    </select>
+
+    <button class="menu-button" id="selectNgay">Chọn Ngày</button>
+    <select id="ngaySelect" style="display: none;">
+        <option value="">Chọn Ngày (Hoa Giáp)</option>
+        <option value="Giáp Tý">Giáp Tý</option>
+        <option value="Ất Sửu">Ất Sửu</option>
+        <option value="Bính Dần">Bính Dần</option>
+        <option value="Đinh Mão">Đinh Mão</option>
+        <option value="Mậu Thìn">Mậu Thìn</option>
+        <option value="Kỷ Tị">Kỷ Tị</option>
+        <option value="Canh Ngọ">Canh Ngọ</option>
+        <option value="Tân Mùi">Tân Mùi</option>
+        <option value="Nhâm Thân">Nhâm Thân</option>
+        <option value="Quý Dậu">Quý Dậu</option>
+        <option value="Giáp Tuất">Giáp Tuất</option>
+        <option value="Ất Hợi">Ất Hợi</option>
+        <option value="Bính Tý">Bính Tý</option>
+        <option value="Đinh Sửu">Đinh Sửu</option>
+        <option value="Mậu Dần">Mậu Dần</option>
+        <option value="Kỷ Mão">Kỷ Mão</option>
+        <option value="Canh Thìn">Canh Thìn</option>
+        <option value="Tân Tị">Tân Tị</option>
+        <option value="Nhâm Ngọ">Nhâm Ngọ</option>
+        <option value="Quý Mùi">Quý Mùi</option>
+        <option value="Giáp Thân">Giáp Thân</option>
+        <option value="Ất Dậu">Ất Dậu</option>
+        <option value="Bính Tuất">Bính Tuất</option>
+        <option value="Đinh Hợi">Đinh Hợi</option>
+        <option value="Mậu Tý">Mậu Tý</option>
+        <option value="Kỷ Sửu">Kỷ Sửu</option>
+        <option value="Canh Dần">Canh Dần</option>
+        <option value="Tân Mão">Tân Mão</option>
+        <option value="Nhâm Thìn">Nhâm Thìn</option>
+        <option value="Quý Tị">Quý Tị</option>
+        <option value="Giáp Ngọ">Giáp Ngọ</option>
+        <option value="Ất Mùi">Ất Mùi</option>
+        <option value="Bính Thân">Bính Thân</option>
+        <option value="Đinh Dậu">Đinh Dậu</option>
+        <option value="Mậu Tuất">Mậu Tuất</option>
+        <option value="Kỷ Hợi">Kỷ Hợi</option>
+        <option value="Canh Tý">Canh Tý</option>
+        <option value="Tân Sửu">Tân Sửu</option>
+        <option value="Nhâm Dần">Nhâm Dần</option>
+        <option value="Quý Mão">Quý Mão</option>
+        <option value="Giáp Thìn">Giáp Thìn</option>
+        <option value="Ất Tị">Ất Tị</option>
+        <option value="Bính Ngọ">Bính Ngọ</option>
+        <option value="Đinh Mùi">Đinh Mùi</option>
+        <option value="Mậu Thân">Mậu Thân</option>
+        <option value="Kỷ Dậu">Kỷ Dậu</option>
+        <option value="Canh Tuất">Canh Tuất</option>
+        <option value="Tân Hợi">Tân Hợi</option>
+        <option value="Nhâm Tý">Nhâm Tý</option>
+        <option value="Quý Sửu">Quý Sửu</option>
+        <option value="Giáp Dần">Giáp Dần</option>
+        <option value="Ất Mão">Ất Mão</option>
+        <option value="Bính Thìn">Bính Thìn</option>
+        <option value="Đinh Tị">Đinh Tị</option>
+        <option value="Mậu Ngọ">Mậu Ngọ</option>
+        <option value="Kỷ Mùi">Kỷ Mùi</option>
+        <option value="Canh Thân">Canh Thân</option>
+        <option value="Tân Dậu">Tân Dậu</option>
+        <option value="Nhâm Tuất">Nhâm Tuất</option>
+        <option value="Quý Hợi">Quý Hợi</option>
+    </select>
+
+    <button class="menu-button" id="calculate">Tính Phi Cung</button>
+
+    <div id="result"></div>
+
+    <script>
+        const weeks = [
+            {
+                name: 'Giáp Tý',
+                days: ['Giáp Tý', 'Ất Sửu', 'Bính Dần', 'Đinh Mão', 'Mậu Thìn', 'Kỷ Tị', 'Canh Ngọ', 'Tân Mùi', 'Nhâm Thân', 'Quý Dậu'],
+                yang: 1,
+                yin: 9
+            },
+            {
+                name: 'Giáp Tuất',
+                days: ['Giáp Tuất', 'Ất Hợi', 'Bính Tý', 'Đinh Sửu', 'Mậu Dần', 'Kỷ Mão', 'Canh Thìn', 'Tân Tị', 'Nhâm Ngọ', 'Quý Mùi'],
+                yang: 2,
+                yin: 8
+            },
+            {
+                name: 'Giáp Thân',
+                days: ['Giáp Thân', 'Ất Dậu', 'Bính Tuất', 'Đinh Hợi', 'Mậu Tý', 'Kỷ Sửu', 'Canh Dần', 'Tân Mão', 'Nhâm Thìn', 'Quý Tị'],
+                yang: 3,
+                yin: 7
+            },
+            {
+                name: 'Giáp Ngọ',
+                days: ['Giáp Ngọ', 'Ất Mùi', 'Bính Thân', 'Đinh Dậu', 'Mậu Tuất', 'Kỷ Hợi', 'Canh Tý', 'Tân Sửu', 'Nhâm Dần', 'Quý Mão'],
+                yang: 4,
+                yin: 6
+            },
+            {
+                name: 'Giáp Thìn',
+                days: ['Giáp Thìn', 'Ất Tị', 'Bính Ngọ', 'Đinh Mùi', 'Mậu Thân', 'Kỷ Dậu', 'Canh Tuất', 'Tân Hợi', 'Nhâm Tý', 'Quý Sửu'],
+                yang: 5,
+                yin: 5
+            },
+            {
+                name: 'Giáp Dần',
+                days: ['Giáp Dần', 'Ất Mão', 'Bính Thìn', 'Đinh Tị', 'Mậu Ngọ', 'Kỷ Mùi', 'Canh Thân', 'Tân Dậu', 'Nhâm Tuất', 'Quý Hợi'],
+                yang: 6,
+                yin: 4
+            }
+        ];
+
+        const cungMap = {
+            1: 'Khảm',
+            2: 'Khôn',
+            3: 'Chấn',
+            4: 'Tốn',
+            6: 'Càn',
+            7: 'Đoài',
+            9: 'Ly'
+        };
+
+        const thienCanDuong = ['Giáp', 'Bính', 'Mậu', 'Canh', 'Nhâm'];
+        const thienCanAm = ['Ất', 'Đinh', 'Kỷ', 'Tân', 'Quý'];
+        const diaChiDuong = ['Tý', 'Dần', 'Thìn', 'Ngọ', 'Thân', 'Tuất'];
+        const diaChiAm = ['Sửu', 'Mão', 'Tị', 'Mùi', 'Dậu', 'Hợi'];
+
+        document.getElementById('selectTiet').addEventListener('click', () => {
+            document.getElementById('tietSelect').style.display = 'block';
+        });
+
+        document.getElementById('selectNgay').addEventListener('click', () => {
+            document.getElementById('ngaySelect').style.display = 'block';
+        });
+
+        document.getElementById('calculate').addEventListener('click', () => {
+            const tiet = document.getElementById('tietSelect').value;
+            const ngay = document.getElementById('ngaySelect').value;
+
+            if (!tiet || !ngay) {
+                document.getElementById('result').innerHTML = 'Vui lòng chọn Tiết và Ngày.';
+                return;
+            }
+
+            // Tìm tuần và vị trí
+            let selectedWeek = null;
+            let index = -1;
+            for (let week of weeks) {
+                index = week.days.indexOf(ngay);
+                if (index !== -1) {
+                    selectedWeek = week;
+                    break;
+                }
+            }
+
+            if (!selectedWeek) {
+                document.getElementById('result').innerHTML = 'Không tìm thấy ngày.';
+                return;
+            }
+
+            // Lấy mã khởi đầu
+            const startMa = tiet === 'duong' ? selectedWeek.yang : selectedWeek.yin;
+
+            // Tính mã số
+            let maSo;
+            if (tiet === 'am') {
+                maSo = startMa - index;
+            } else {
+                maSo = startMa + index;
+            }
+
+            // Xử lý mã số (nếu vượt giới hạn, nhưng theo quy tắc không xảy ra, vẫn giữ nguyên)
+            let phiCung = cungMap[maSo] || '';
+
+            // Xử lý mã 5
+            let isNgayDuong = false;
+            const [can, chi] = ngay.split(' ');
+            if (thienCanDuong.includes(can) || diaChiDuong.includes(chi)) {
+                isNgayDuong = true;
+            }
+
+            let resultText = `Ngày ${ngay} có Phi Cung là ${phiCung}.`;
+
+            if (maSo === 5) {
+                const ngayType = isNgayDuong ? 'Khôn' : 'Cấn';
+                resultText = `Ngày bạn muốn xem (${ngay}) có Phi Cung là... (ngày dương là Khôn - ngày âm là Cấn: Nếu bạn là Nam thì Phi Cung là Khôn; nếu bạn là Nữ thì Phi Cung là Cấn). Dựa trên ngày, Phi Cung mặc định là ${ngayType}.`;
+            } else if (!phiCung) {
+                resultText = `Mã số ${maSo} không hợp lệ hoặc chưa được định nghĩa.`;
+            }
+
+            document.getElementById('result').innerHTML = resultText;
+        });
+    </script>
+</body>
+</html>
