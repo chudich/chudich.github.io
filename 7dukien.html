@@ -233,9 +233,16 @@
             // Tính mã số
             let maSo;
             if (tiet === 'am') {
+                // Đếm nghịch: từ startMa giảm dần, nếu về 1 thì quay lại 9
                 maSo = startMa - index;
+                while (maSo <= 0) {
+                    maSo += 9; // Quay về 9 nếu mã số âm
+                }
+                maSo = ((maSo - 1) % 9) + 1; // Đảm bảo mã số trong khoảng 1-9
             } else {
+                // Đếm thuận: từ startMa tăng dần, nếu vượt 9 thì quay về 1
                 maSo = startMa + index;
+                maSo = ((maSo - 1) % 9) + 1; // Đảm bảo mã số trong khoảng 1-9
             }
 
             // Xử lý mã số
