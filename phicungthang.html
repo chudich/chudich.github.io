@@ -204,18 +204,7 @@
     <button class="menu-button" id="selectThang">Chọn Tháng (Âm Lịch)</button>
     <select id="thangSelect" style="display: none;">
         <option value="">Chọn Tháng</option>
-        <option value="1_Giáp_Tý">Tháng 1 - Giáp Tý</option>
-        <option value="2_Ất_Sửu">Tháng 2 - Ất Sửu</option>
-        <option value="3_Bính_Dần">Tháng 3 - Bính Dần</option>
-        <option value="4_Đinh_Mão">Tháng 4 - Đinh Mão</option>
-        <option value="5_Mậu_Thìn">Tháng 5 - Mậu Thìn</option>
-        <option value="6_Kỷ_Tị">Tháng 6 - Kỷ Tị</option>
-        <option value="7_Canh_Ngọ">Tháng 7 - Canh Ngọ</option>
-        <option value="8_Ất_Dậu">Tháng 8 - Ất Dậu</option>
-        <option value="9_Nhâm_Thân">Tháng 9 - Nhâm Thân</option>
-        <option value="10_Quý_Dậu">Tháng 10 - Quý Dậu</option>
-        <option value="11_Giáp_Tuất">Tháng 11 - Giáp Tuất</option>
-        <option value="12_Ất_Hợi">Tháng 12 - Ất Hợi</option>
+        <!-- Danh sách tháng sẽ được tạo động dựa trên năm -->
     </select>
 
     <button class="menu-button" id="selectTiet">Chọn Tiết</button>
@@ -350,6 +339,45 @@
         const diaChiDuong = ['Tý', 'Dần', 'Thìn', 'Ngọ', 'Thân', 'Tuất'];
         const diaChiAm = ['Sửu', 'Mão', 'Tị', 'Mùi', 'Dậu', 'Hợi'];
 
+        const thienCan = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+        const diaChi = ['Dần', 'Mão', 'Thìn', 'Tị', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi', 'Tý', 'Sửu'];
+
+        // Hàm tạo danh sách tháng theo Ngũ Hổ Độn
+        function generateThangList(thienCanNam) {
+            const thangList = [];
+            let startCan;
+            if (['Giáp', 'Kỷ'].includes(thienCanNam)) startCan = 'Bính';
+            else if (['Ất', 'Canh'].includes(thienCanNam)) startCan = 'Mậu';
+            else if (['Bính', 'Tân'].includes(thienCanNam)) startCan = 'Canh';
+            else if (['Đinh', 'Nhâm'].includes(thienCanNam)) startCan = 'Nhâm';
+            else if (['Mậu', 'Quý'].includes(thienCanNam)) startCan = 'Giáp';
+
+            let canIndex = thienCan.indexOf(startCan);
+            for (let i = 0; i < 12; i++) {
+                const can = thienCan[(canIndex + i) % 10];
+                const chi = diaChi[i];
+                thangList.push(`${i + 1}_${can}_${chi}`);
+            }
+            return thangList;
+        }
+
+        // Hàm cập nhật dropdown tháng
+        function updateThangSelect(nam) {
+            const thangSelect = document.getElementById('thangSelect');
+            thangSelect.innerHTML = '<option value="">Chọn Tháng</option>';
+            if (nam) {
+                const thienCanNam = nam.split('_')[1];
+                const thangList = generateThangList(thienCanNam);
+                thangList.forEach(thang => {
+                    const [month, can, chi] = thang.split('_');
+                    const option = document.createElement('option');
+                    option.value = thang;
+                    option.text = `Tháng ${month} - ${can} ${chi}`;
+                    thangSelect.appendChild(option);
+                });
+            }
+        }
+
         // Hàm tính Phi Cung năm
         function tinhPhiCungNam(nam) {
             const vanMap = {
@@ -406,6 +434,11 @@
 
         document.getElementById('selectNgay').addEventListener('click', () => {
             document.getElementById('ngaySelect').style.display = 'block';
+        });
+
+        // Sự kiện cập nhật danh sách tháng khi chọn năm
+        document.getElementById('namSelect').addEventListener('change', (e) => {
+            updateThangSelect(e.target.value);
         });
 
         // Sự kiện tính Phi Cung
