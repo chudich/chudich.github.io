@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Phi Cung Ngày & Tháng</title>
+    <!-- Style giữ nguyên như trước -->
+</head>
+<body>
+    <!-- Giao diện giữ nguyên, thêm menu cho tháng -->
+    <button class="menu-button" id="selectNam">Chọn Năm (Âm lịch)</button>
+    <select id="namSelect" style="display: none;">
+        <option value="">Chọn Địa Chi Năm</option>
+        <option value="ty">Tý</option>
+        <option value="ngo">Ngọ</option>
+        <!-- Thêm các địa chi khác -->
+    </select>
+
+    <button class="menu-button" id="selectThang">Chọn Tháng (Âm lịch)</button>
+    <select id="thangSelect" style="display: none;">
+        <option value="">Chọn Tháng</option>
+        <option value="1">Tháng 1</option>
+        <!-- Đến 12 -->
+    </select>
+
+    <!-- Nút tính và result giữ nguyên -->
+
+    <script>
+        // Data tuần ngày giữ nguyên
+
+        // Thêm hàm tính Phi Cung tháng
+        function tinhPhiCungThang(diaChiNam, thang) {
+            let startMa; // Sao khởi tháng 1
+            if (['ty', 'ngo', 'mao', 'dau'].includes(diaChiNam)) startMa = 8;
+            else if (['thin', 'tuat', 'suu', 'mui'].includes(diaChiNam)) startMa = 5;
+            else if (['dan', 'than', 'ti', 'hoi'].includes(diaChiNam)) startMa = 2;
+            else return null;
+
+            let maSo = startMa - (thang - 1);
+            while (maSo <= 0) maSo += 9;
+            maSo = ((maSo - 1) % 9) + 1; // Chu kỳ 1-9 nghịch
+
+            return maSo;
+        }
+
+        // Trong calculate, thêm logic cho tháng nếu chọn
+        // ...
+    </script>
+</body>
+</html>
