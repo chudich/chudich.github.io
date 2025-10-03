@@ -118,6 +118,27 @@
             background: linear-gradient(135deg, #ff7e70, #ff4d40);
         }
 
+        /* CSS cho bộ đếm truy cập */
+        #visitorCount {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #ffcc80, #ffab40); /* Gradient vàng-cam nổi bật */
+            color: #333; /* Chữ tối cho độ tương phản */
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 12px; /* Bo góc mượt như iOS */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Bóng nhẹ */
+            backdrop-filter: blur(10px); /* Hiệu ứng mờ nền kiểu iOS */
+            z-index: 1000; /* Đảm bảo nổi trên nội dung khác */
+            transition: all 0.3s ease; /* Hiệu ứng mượt */
+        }
+
+        #visitorCount:hover {
+            transform: scale(1.05); /* Phóng to nhẹ khi hover */
+        }
+
         /* Responsive cho điện thoại */
         @media (max-width: 600px) {
             .container {
@@ -142,6 +163,11 @@
                 padding: 10px 15px;
                 letter-spacing: 0.3px;
             }
+
+            #visitorCount {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
@@ -162,6 +188,8 @@
             <button onclick="toggleAudio()">Phát/Tạm dừng nhạc</button>
         </div>
     </div>
+    <!-- Bộ đếm truy cập -->
+    <span id="visitorCount">0</span>
 
     <audio id="backgroundMusic" loop>
         <source src="https://chudich.github.io/nen_tuvi_phongthuy.mp3" type="audio/mpeg">
@@ -169,6 +197,16 @@
     </audio>
 
     <script>
+        // Bộ đếm truy cập
+        let visitorCount = localStorage.getItem('visitorCount');
+        if (!visitorCount) {
+            visitorCount = 0;
+        }
+        visitorCount = parseInt(visitorCount) + 1;
+        localStorage.setItem('visitorCount', visitorCount);
+        document.getElementById('visitorCount').innerText = visitorCount;
+
+        // Xử lý âm thanh
         const audio = document.getElementById('backgroundMusic');
         let isPlaying = false;
 
