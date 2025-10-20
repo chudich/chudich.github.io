@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đông Tây Vibes | Khám Phá Tri Thức</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Source+Han+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* BASE & TYPOGRAPHY */
+        :root {
+            --color-primary-dark: #371B58; /* Tím đậm - Sâu sắc */
+            --color-primary-light: #4C337D; /* Tím nhạt hơn */
+            --color-accent-gold: #FEE7B1; /* Vàng ngọc - Hiện đại, sang trọng */
+            --color-text-light: #E0D8ED;
+            --color-glass-bg: rgba(76, 51, 125, 0.4); /* Màu nền glass */
+            --color-glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Thay đổi font: Inter hiện đại & Source Han Serif tinh tế */
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--color-text-light);
+            background: linear-gradient(135deg, #1A1A2E 0%, #0F0F1A 100%); /* Nền tối hiện đại */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* GLASSMORHPISM MIXIN */
+        .glass-effect {
+            background: var(--color-glass-bg);
+            box-shadow: var(--shadow-light);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--color-glass-border);
+            border-radius: 16px;
+        }
+
+        a.btn {
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(15, 15, 26, 0.8); /* Nền header tối mờ */
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--color-accent-gold);
+            font-family: 'Source Han Serif SC', serif; /* Font chữ ấn tượng hơn */
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* MENU (MAIN NAVIGATION) */
+        .main-menu ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        .main-menu ul li a {
+            color: var(--color-text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .main-menu ul li a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700, #FEE7B1);
+            transition: width 0.3s ease;
+        }
+
+        .main-menu ul li a:hover::after,
+        .main-menu ul li a.active::after {
+            width: 80%;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            background: url('https://chudich.github.io/background.jpeg') no-repeat center center/cover;
+            padding: 180px 20px 100px;
+            margin-top: 60px; /* Bằng chiều cao header */
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            /* Tạo ánh sáng mờ ảo */
+            box-shadow: inset 0 -50px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: brightness(0.8) blur(1px); /* Tăng độ sâu cho background */
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--color-accent-gold);
+            font-family: 'Source Han Serif SC', serif;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            position: relative;
+            animation: textGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); }
+            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 30px rgba(255, 165, 0, 0.5); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: var(--color-text-light);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            position: relative;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .btn {
+            /* Nút Enter The Path - Hiệu ứng Glassmorphism */
+            background: rgba(254, 231, 177, 0.15); /* Nền vàng nhạt mờ */
+            border: 2px solid var(--color-accent-gold);
+            padding: 16px 50px;
+            font-size: 1.5rem;
+            color: var(--color-accent-gold);
+            border-radius: 50px;
+            box-shadow: 0 0 20px rgba(254, 231, 177, 0.5);
+            text-transform: uppercase;
+        }
+
+        .hero .btn:hover {
+            background: rgba(254, 231, 177, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(254, 231, 177, 0.8);
+        }
+
+        /* BUTTONS SECTION */
+        .buttons {
+            background: url("https://chudich.github.io/bg_menu_iching.jpeg") no-repeat center center/cover;
+            background-attachment: fixed; /* Hiệu ứng parallax nhẹ */
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .buttons::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(1px);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            position: relative;
+            padding: 20px;
+            /* Bao bọc grid bằng glass effect */
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .button-grid .btn {
+            /* Nút chính - Neumorphism/Glassmorphism */
+            @extend .glass-effect;
+            color: var(--color-text-light);
+            padding: 20px 30px;
+            font-size: 1.25rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(76, 51, 125, 0.5), rgba(55, 27, 88, 0.5));
+            border: none;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .button-grid .btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary-dark));
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), inset 3px 3px 8px rgba(0, 0, 0, 0.8), inset -3px -3px 8px rgba(255, 255, 255, 0.2);
+            color: var(--color-accent-gold);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--color-primary-dark);
+            color: var(--color-text-light);
+            text-align: center;
+            padding: 30px 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--color-accent-gold);
+            margin: 4px 0;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .main-menu {
+                display: none;
+            }
+
+            .main-menu.active {
+                display: block;
+                position: absolute;
+                top: 70px; /* Dưới header */
+                left: 0;
+                width: 100%;
+                background: rgba(15, 15, 26, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+                padding: 20px 0;
+            }
+
+            .main-menu ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .main-menu ul li a {
+                padding: 12px 20px;
+                font-size: 1.1rem;
+                display: block;
+                width: 250px;
+                text-align: center;
+                background: var(--color-primary-dark);
+                border-radius: 10px;
+            }
+
+            .main-menu ul li a:hover {
+                background: var(--color-primary-light);
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero .btn {
+                font-size: 1.3rem;
+            }
+
+            .button-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            .hero {
+                padding: 150px 15px 80px;
+            }
+            .hero h2 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+            .hero .btn {
+                font-size: 1.1rem;
+                padding: 12px 30px;
+            }
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Đông Tây Vibes</h1>
+            </div>
+            <nav class="main-menu">
+                <ul>
+                    <li><a href="https://chudich.github.io/luchao.html"><i class="fas fa-scroll"></i> Kinh Dịch</a></li>
+                    <li><a href="#phong-thuy"><i class="fas fa-home"></i> Phong Thủy</a></li>
+                    <li><a href="https://chudich.github.io/lienhoadich.html"><i class="fas fa-dice"></i> Liên Hoa Độn</a></li>
+                    <li><a href="https://chudich.github.io/tuvi_phongthuy.html"><i class="fas fa-star"></i> Tử Vi</a></li>
+                    <li><a href="https://chudich.github.io/calendar.html"><i class="fas fa-calendar-alt"></i> Xem Ngày</a></li>
+                    <li><a href="#xin-keo"><i class="fas fa-yin-yang"></i> Xin Keo</a></li>
+                    <li><a href="https://chudich.github.io/xamQuanAm.html"><i class="fas fa-hand-holding-heart"></i> Xin Xăm</a></li>
+                    <li><a href="#bai-tarot"><i class="fas fa-magic"></i> Bài Tarot</a></li>
+                    <li><a href="#thu-vien-audio"><i class="fas fa-headphones"></i> Audio</a></li>
+                    <li><a href="#thu-vien-video"><i class="fas fa-video"></i> Video</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Khám Phá Đông Tây Vibes</h2>
+            <p>Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.</p>
+            <a href="https://chudich.github.io/EnterThePath.html" class="btn primary-btn"><i class="fas fa-arrow-circle-right"></i> Enter The Path</a>
+        </div>
+    </section>
+
+    <section class="buttons">
+        <div class="container">
+            <div class="button-grid">
+                <a href="https://chudich.github.io/luchao.html" class="btn"><i class="fas fa-book-reader"></i> Kinh Dịch</a>
+                <a href="https://chudich.github.io/lienhoadich.html" class="btn"><i class="fas fa-link"></i> Liên Hoa Độn</a>
+                <a href="https://chudich.github.io/tuvi_phongthuy.html" class="btn"><i class="fas fa-solar-system"></i> Tử Vi Phong Thủy</a>
+                <a href="#tu-tru" class="btn"><i class="fas fa-tree"></i> Tứ Trụ</a>
+                <a href="https://chudich.github.io/xamQuanAm.html" class="btn"><i class="fas fa-fort-awesome"></i> Xin Xăm</a>
+                <a href="#gieo-que-am-duong" class="btn"><i class="fas fa-balance-scale"></i> Gieo Quẻ Âm Dương</a>
+                <a href="https://chudich.github.io/calendar.html" class="btn"><i class="fas fa-clock"></i> Xem Ngày</a>
+                <a href="#ebook" class="btn"><i class="fas fa-feather-alt"></i> Ebook</a>
+                <a href="#fanpage" class="btn"><i class="fab fa-facebook"></i> Fanpage</a>
+                <a href="#youtube" class="btn"><i class="fab fa-youtube"></i> Kênh Youtube</a>
+                <a href="#dien-dan" class="btn"><i class="fas fa-users"></i> Diễn Đàn Thảo Luận</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Đông Tây Vibes. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mainMenu = document.querySelector('.main-menu');
+        menuToggle.addEventListener('click', () => {
+            mainMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked (for mobile)
+        const menuLinks = document.querySelectorAll('.main-menu ul li a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainMenu.classList.contains('active')) {
+                    mainMenu.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                }
+            });
+        });
+        
+        // Dynamic Hero Text Animation (Optional, but adds a cool touch)
+        const heroText = "Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.";
+        const heroP = document.querySelector('.hero p');
+        heroP.textContent = ''; // Clear text
+        
+        // Typing effect
+        let i = 0;
+        function typeWriter() {
+            if (i < heroText.length) {
+                heroP.textContent += heroText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 30); // Speed of typing
+            }
+        }
+        
+        // Run typing effect after a short delay
+        setTimeout(typeWriter, 500);
+
+    </script>
+</body>
+</html>
