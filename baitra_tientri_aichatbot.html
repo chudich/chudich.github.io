@@ -581,12 +581,12 @@ function updateAISelection(aiKey) {
     
     if (aiKey === 'gemini') {
         geminiBtn.classList.add('selected-gemini');
-        display.innerHTML = `Giải nghĩa bằng **Gemini** (Tự động điền)`;
+        display.innerHTML = `**Gemini**`;
         testBtn.style.backgroundColor = AI_CONFIG['gemini'].color;
         testBtn.style.color = '#fff';
     } else {
         chatgptBtn.classList.add('selected-chatgpt');
-        display.innerHTML = `Giải nghĩa bằng **ChatGPT** (Cần Dán)`;
+        display.innerHTML = `**ChatGPT**`;
         testBtn.style.backgroundColor = AI_CONFIG['chatgpt'].color;
         testBtn.style.color = '#fff';
     }
