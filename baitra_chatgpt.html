@@ -70,7 +70,7 @@
 <script>
 /*
   Phiên bản bổ sung:
-  - Thêm tính năng "AI Giải Bài" (sao chép + mở Gemini).
+  - Đã sửa lỗi tên và gọi hàm "AI Giải Bài" (function openAIChat).
 */
 
 /* ---------- DỮ LIỆU: đầy đủ 200+ tên (theo danh sách bạn đã cung cấp) ---------- */
@@ -188,34 +188,39 @@ function showToast(message) {
     }, 3000);
 }
 
-function open chatGPT(copyText) {
+// **Đã sửa lỗi tên hàm và nội dung hướng dẫn**
+function openAIChat(copyText) {
     // 1. Sao chép nội dung
     copyToClipboard(copyText).then(() => {
-        showToast("Đã sao chép! Đang mở chatGPT...");
+        showToast("Đã sao chép! Vui lòng dán vào AI của bạn (ví dụ: Gemini, ChatGPT).");
 
-        // 2. Định nghĩa URL (Sử dụng liên kết web thông thường vì app link khá phức tạp và không ổn định)
-        const chatGPTUrl = "https://play.google.com/store/apps/details?id=com.openai.chatgpt"; 
+        // 2. Định nghĩa URL gợi ý (Sử dụng Gemini làm ví dụ)
+        const aiUrl = "https://gemini.google.com/"; 
 
         // Tạo hướng dẫn chi tiết cho người dùng
         const guideHTML = `
             <div class="ai-guide">
                 <p><strong>🚨 HƯỚNG DẪN QUAN TRỌNG:</strong></p>
-                <p>1. Nếu app/web chatGPT không tự động mở, hãy bấm vào <a href="${chatGPTUrl}" target="_blank">ĐÂY</a>.</p>
-                <p>2. Nội dung trải bài đã được tự động sao chép (copy). Sau khi chatGPT mở, vui lòng <strong>DÁN (paste)</strong> nội dung trải bài vào khung chat.</p>
-                <p>3. Yêu cầu chatGPT giải nghĩa: "Hãy giải bài tiên tri này cho tôi và đưa ra lời khuyên."</p>
-                <p>4. Nếu chưa có app chatGPT trên điện thoại, bạn có thể tìm kiếm và tải về trên <a href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" target="_blank">CH Play</a> hoặc <a href="https://chatgpt.com" target="_blank">App Store</a>.</p>
+                <p>1. Nội dung trải bài đã được tự động sao chép (copy).</p>
+                <p>2. Vui lòng bấm vào <a href="${aiUrl}" target="_blank">ĐÂY</a> để mở **Gemini** (hoặc mở ứng dụng/trang web AI yêu thích của bạn).</p>
+                <p>3. Sau khi AI mở, vui lòng <strong>DÁN (paste)</strong> nội dung trải bài vào khung chat.</p>
+                <p>4. Yêu cầu AI giải nghĩa: <strong>"Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết."</strong></p>
             </div>
         `;
+        
         // Hiển thị hướng dẫn
-        document.getElementById('result').insertAdjacentHTML('beforeend', guideHTML);
+        const resultEl = document.getElementById('result');
+        const existingGuide = resultEl.querySelector('.ai-guide');
+        if (existingGuide) existingGuide.remove(); // Xóa hướng dẫn cũ nếu có
+        resultEl.insertAdjacentHTML('beforeend', guideHTML);
 
 
-        // 3. Mở cửa sổ mới/chuyển hướng đến chatGPT
+        // 3. Mở cửa sổ mới/chuyển hướng đến AI
         setTimeout(() => {
-            window.open(chatGPTUrl, '_blank');
+            window.open(aiUrl, '_blank');
         }, 500); // Chờ 0.5s để người dùng đọc thông báo copy
     }).catch(err => {
-        showError("Không thể sao chép để mở chatGPT. Vui lòng thử lại.");
+        showError("Không thể sao chép để mở AI. Vui lòng thử lại.");
     });
 }
 /* ----------------------------------------------------------- */
@@ -254,7 +259,9 @@ function displaySpread(title, cards){
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openGeminiChat(copyText));
+        
+        // **Đã sửa lỗi gọi hàm**
+        document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
     } catch (err){
         showError(err.message || err);
         console.error(err);
@@ -332,7 +339,9 @@ document.getElementById('btn-7').addEventListener('click', ()=> startCountdown(7
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => chatGPT(copyText));
+        
+        // **Đã sửa lỗi gọi hàm**
+        document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
@@ -356,7 +365,9 @@ document.getElementById('btn-4').addEventListener('click', ()=> startCountdown(4
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openchatGPT(copyText));
+        
+        // **Đã sửa lỗi gọi hàm**
+        document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
@@ -380,7 +391,9 @@ document.getElementById('btn-12').addEventListener('click', ()=> startCountdown(
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openchatGPT(copyText));
+        
+        // **Đã sửa lỗi gọi hàm**
+        document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
@@ -398,4 +411,4 @@ window.addEventListener('error', function(evt){
 });
 </script>
 </body>
-</html> 
+</html>
