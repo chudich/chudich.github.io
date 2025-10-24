@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bài Trà Tiên Tri</title>
+<title>Bài Trà Tiên Tri Nâng Cao</title>
 <style>
     body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;margin:0;background:#f0f0f5;color:#111;padding-bottom:60px}
     .container{max-width:900px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 12px rgba(0,0,0,0.06)}
@@ -318,9 +318,9 @@ const CARDS_DATA = [
 ];
 const ALL_CARDS = CARDS_DATA.map(c => c.name); 
 
-/* Khai báo cấu hình AI và Thời gian Loading (ĐÃ CẬP NHẬT) */
+/* Khai báo cấu hình AI và Thời gian Loading */
 const BASE_PROMPT = "Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết.\n\nNội dung trải bài:";
-const LOADING_TIME_MS = 9000; // 9 giây
+const LOADING_TIME_MS = 9000; // Đã cập nhật thành 9 giây
 
 const AI_CONFIG = {
     'gemini': {
@@ -342,7 +342,7 @@ const AI_CONFIG = {
 
 let selectedAI = localStorage.getItem('selectedAI') || 'gemini'; 
 
-/* ---------- Chức năng Random an toàn (Không đổi) ---------- */
+/* ---------- Chức năng Random an toàn ---------- */
 function secureRandom(max){
     try {
         if (window.crypto && window.crypto.getRandomValues) {
@@ -368,7 +368,7 @@ function drawUnique(count, deck){
     return drawn;
 }
 
-/* ---------- Chức năng Hỗ trợ (Toast, Error, Copy) (Không đổi) ---------- */
+/* ---------- Chức năng Hỗ trợ (Toast, Error, Copy) ---------- */
 function copyToClipboard(text){
     return new Promise((resolve, reject) => {
         if (navigator.clipboard) {
@@ -422,7 +422,7 @@ function showHtml(html){
     resultEl.innerHTML = html;
 }
 
-/* ---------- Logic Mở AI Chat (Không đổi) ---------- */
+/* ---------- Logic Mở AI Chat ---------- */
 function openAIChat(copyText) {
     const config = AI_CONFIG[selectedAI];
     const fullPrompt = BASE_PROMPT + '\n' + copyText;
@@ -455,7 +455,7 @@ function openAIChat(copyText) {
     });
 }
 
-/* ---------- Logic Mở AI Test Link (MỚI) ---------- */
+/* ---------- Logic Mở AI Test Link ---------- */
 function openAITestLink() {
     const config = AI_CONFIG[selectedAI];
     // Dùng URL trống/mặc định (không truyền prompt)
@@ -466,7 +466,7 @@ function openAITestLink() {
 }
 
 
-/* ---------- Logic Rút Bài và Hiển thị (Không đổi) ---------- */
+/* ---------- Logic Rút Bài và Hiển thị (ĐÃ CẬP NHẬT COPY TEXT) ---------- */
 function getCardData(name) {
     return CARDS_DATA.find(c => c.name === name);
 }
@@ -481,7 +481,10 @@ function displaySpread(title, drawnCards, customLabels = null){
         
         const config = AI_CONFIG[selectedAI];
         
-        let copyText = `--- ${title} ---\n`;
+        // --- ĐÃ CẬP NHẬT: Thêm ngữ cảnh "Bài Trà Tea Leaf Reading" ---
+        let copyText = `--- Trải Bài Tea Leaf Reading: ${title} ---\n`;
+        // -----------------------------------------------------------
+        
         let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
         
         drawnCards.forEach((cardName,i)=>{
@@ -538,10 +541,10 @@ function showFullDeck(){
     }
 }
 
-/* ---------- Hiệu ứng Loading (ĐÃ CẬP NHẬT THỜI GIAN) ---------- */
+/* ---------- Hiệu ứng Loading (9 giây) ---------- */
 function startDrawing(count,title,fn){
     try {
-        const loadingTime = LOADING_TIME_MS; // Sử dụng hằng số 9000ms
+        const loadingTime = LOADING_TIME_MS; // 9000ms
         const btns = document.querySelectorAll('.controls button, .ai-option, #btn-test-link');
         btns.forEach(b=>b.disabled=true);
         showHtml(`<div class="loading-display">
@@ -563,7 +566,7 @@ function startDrawing(count,title,fn){
     }
 }
 
-/* ---------- XỬ LÝ SỰ KIỆN & AI TOGGLE (ĐÃ CẬP NHẬT) ---------- */
+/* ---------- XỬ LÝ SỰ KIỆN & AI TOGGLE ---------- */
 
 function updateAISelection(aiKey) {
     selectedAI = aiKey;
@@ -612,10 +615,10 @@ document.addEventListener('DOMContentLoaded', () => {
         notifyAISelected('chatgpt');
     });
     
-    // 3. Gắn event cho nút Test Link (MỚI)
+    // 3. Gắn event cho nút Test Link 
     document.getElementById('btn-test-link').addEventListener('click', openAITestLink);
 
-    // 4. Gắn event cho các nút trải bài (dùng startDrawing mới)
+    // 4. Gắn event cho các nút trải bài 
     document.getElementById('btn-3').addEventListener('click', ()=> startDrawing(3,'Trải Bài 3 Lá', ()=> spreadN(3,'Trải Bài 3 Lá')));
     document.getElementById('btn-5').addEventListener('click', ()=> startDrawing(5,'Trải Bài 5 Lá', ()=> spreadN(5,'Trải Bài 5 Lá')));
 
