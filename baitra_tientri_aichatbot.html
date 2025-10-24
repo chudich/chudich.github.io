@@ -54,6 +54,7 @@
     .guide-gemini{background:#fffde7;border-color:#f9e16c;}
     .guide-chatgpt{background:#e8f5e9;border-color:#c8e6c9;}
     .ai-guide p{margin:0;}
+    .important-note{color:#a33;font-weight:700;}
 </style>
 </head>
 <body>
@@ -85,7 +86,7 @@
         </div>
 
         <div id="result">
-            <p style="text-align:center;color:#666">Chọn kiểu trải bài, tập trung trong 10 giây rồi nhận thông điệp.</p>
+            <p style="text-align:center;color:#666">Chọn kiểu trải bài, tập trung trong 3 giây rồi nhận thông điệp.</p>
         </div>
     </div>
 </div>
@@ -297,25 +298,31 @@ const CARDS_DATA = [
     { name: "Success - Thành công", keywords: "Vinh quang, Kết quả tốt, Được công nhận", image_url: "images/success.png" },
     { name: "Wealth - Tài chính", keywords: "Giàu có, Tiền bạc, Tài sản", image_url: "images/wealth.png" }
 ];
-const ALL_CARDS = CARDS_DATA.map(c => c.name); // Mảng tên lá bài cũ để tương thích với logic cũ
+const ALL_CARDS = CARDS_DATA.map(c => c.name); 
 
 /* Khai báo cấu hình AI */
+const BASE_PROMPT = "Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết.\n\nNội dung trải bài:";
+
 const AI_CONFIG = {
     'gemini': {
         name: 'Gemini',
-        url: 'https://gemini.google.com/',
+        // Cấu hình mới: Sử dụng URL để tự động điền prompt
+        get_url: (fullPrompt) => `https://gemini.google.com/?prompt=${encodeURIComponent(fullPrompt)}`,
         color: '#007aff',
-        guide_class: 'guide-gemini'
+        guide_class: 'guide-gemini',
+        note: '🤖 Gemini sẽ TỰ ĐỘNG điền câu hỏi vào khung chat. Bạn chỉ cần bấm Enter!'
     },
     'chatgpt': {
         name: 'ChatGPT',
-        url: 'https://chatgpt.com',
+        // Cấu hình cũ: Chỉ mở trang web (không thể tự động điền prompt)
+        get_url: () => 'https://chatgpt.com',
         color: '#28a745',
-        guide_class: 'guide-chatgpt'
+        guide_class: 'guide-chatgpt',
+        note: '💬 Bạn cần TỰ DÁN (Paste) nội dung trải bài vào khung chat.'
     }
 };
 
-let selectedAI = localStorage.getItem('selectedAI') || 'gemini'; // Lấy từ Local Storage
+let selectedAI = localStorage.getItem('selectedAI') || 'gemini'; 
 
 /* fallback random, drawUnique... (giữ nguyên) */
 function secureRandom(max){
@@ -344,7 +351,6 @@ function drawUnique(count, deck){
 }
 
 /* -------------------- CHỨC NĂNG COPY & AI -------------------- */
-// ... (copyToClipboard, fallbackCopy, showToast, showError giữ nguyên) ...
 function copyToClipboard(text){
     return new Promise((resolve, reject) => {
         if (navigator.clipboard) {
@@ -398,20 +404,24 @@ function showHtml(html){
     resultEl.innerHTML = html;
 }
 
-// Hàm khởi tạo và xử lý việc mở AI Chat
+// Hàm khởi tạo và xử lý việc mở AI Chat (Đã được cập nhật)
 function openAIChat(copyText) {
     const config = AI_CONFIG[selectedAI];
-
+    const fullPrompt = BASE_PROMPT + '\n' + copyText;
+    let url = config.get_url(fullPrompt);
+    let copyMessage = config.note;
+    
+    // Luôn copy văn bản vào clipboard, đề phòng Deep Linking thất bại (cho Gemini) hoặc là cần thiết (cho ChatGPT)
     copyToClipboard(copyText).then(() => {
         showToast(`Đã sao chép! Đang mở ${config.name}...`);
 
         const guideHTML = `
             <div class="ai-guide ${config.guide_class}">
                 <p><strong>🚨 HƯỚNG DẪN ${config.name.toUpperCase()}:</strong></p>
-                <p>1. Nội dung trải bài đã được tự động sao chép (copy).</p>
-                <p>2. Vui lòng bấm vào <a href="${config.url}" target="_blank">ĐÂY</a> để mở **${config.name}**.</p>
-                <p>3. Sau khi ${config.name} mở, vui lòng <strong>DÁN (paste)</strong> nội dung trải bài vào khung chat.</p>
-                <p>4. Yêu cầu AI giải nghĩa: <strong>"Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết."</strong></p>
+                <p class="important-note">${copyMessage}</p>
+                <p>1. Nội dung trải bài đã được sao chép vào clipboard.</p>
+                <p>2. Vui lòng bấm vào <a href="${url}" target="_blank">ĐÂY</a> để mở **${config.name}**.</p>
+                <p>3. (Chỉ áp dụng cho ChatGPT) Bạn cần <strong>DÁN (Paste)</strong> thủ công nội dung đã sao chép vào khung chat.</p>
             </div>
         `;
         
@@ -420,7 +430,7 @@ function openAIChat(copyText) {
         resultEl.insertAdjacentHTML('beforeend', guideHTML);
 
         setTimeout(() => {
-            window.open(config.url, '_blank');
+            window.open(url, '_blank');
         }, 500); 
     }).catch(err => {
         showError("Không thể sao chép để mở AI. Vui lòng thử lại.");
@@ -435,6 +445,7 @@ function getCardData(name) {
 }
 
 function displaySpread(title, drawnCards){
+    // ... (logic hiển thị giữ nguyên) ...
     try {
         const positions = {
             3: ["Lá 1: Quá khứ / Gốc rễ","Lá 2: Hiện tại / Tình hình","Lá 3: Tương lai / Tiềm năng"],
@@ -442,7 +453,7 @@ function displaySpread(title, drawnCards){
         };
         const config = AI_CONFIG[selectedAI];
         
-        let copyText = `YÊU CẦU: Hãy giải nghĩa chi tiết và đưa ra lời khuyên dựa trên trải bài tiên tri này:\n--- ${title} ---\n`;
+        let copyText = `--- ${title} ---\n`;
         let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
         
         drawnCards.forEach((cardName,i)=>{
@@ -482,12 +493,13 @@ function displaySpread(title, drawnCards){
 }
 
 function spreadN(count,title, customLabels = null){
+    // ... (logic spreadN giữ nguyên) ...
     try {
         const drawnCardNames = drawUnique(count, ALL_CARDS);
 
         if (customLabels) {
             const config = AI_CONFIG[selectedAI];
-            let copyText = `YÊU CẦU: Hãy giải nghĩa chi tiết và đưa ra lời khuyên dựa trên trải bài tiên tri này:\n--- ${title} ---\n`;
+            let copyText = `--- ${title} ---\n`;
             let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
             
             drawnCardNames.forEach((cardName,i)=> {
@@ -581,10 +593,10 @@ function updateAISelection(aiKey) {
     
     if (aiKey === 'gemini') {
         geminiBtn.classList.add('selected-gemini');
-        display.innerHTML = `Giải nghĩa bằng **Gemini**`;
+        display.innerHTML = `Giải nghĩa bằng **Gemini** (Tự động điền)`;
     } else {
         chatgptBtn.classList.add('selected-chatgpt');
-        display.innerHTML = `Giải nghĩa bằng **ChatGPT**`;
+        display.innerHTML = `Giải nghĩa bằng **ChatGPT** (Cần Dán)`;
     }
 }
 
