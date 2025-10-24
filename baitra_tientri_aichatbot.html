@@ -93,7 +93,7 @@
 <div id="toast" class="toast-message"></div>
 
 <script>
-/* ---------- DỮ LIỆU: Cấu trúc mới với Image URL và Keywords ---------- */
+/* ---------- DỮ LIỆU: Cấu trúc 200 lá bài với Image URL và Keywords ---------- */
 const CARDS_DATA = [
     { name: "Angel - Tiên nữ", keywords: "Bảo vệ, May mắn, Lời khuyên", image_url: "images/angel.png" },
     { name: "Ant - Con kiến", keywords: "Chăm chỉ, Kiên trì, Cần cù", image_url: "images/ant.png" },
@@ -306,7 +306,6 @@ const BASE_PROMPT = "Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và
 const AI_CONFIG = {
     'gemini': {
         name: 'Gemini',
-        // Cấu hình mới: Sử dụng URL để tự động điền prompt
         get_url: (fullPrompt) => `https://gemini.google.com/?prompt=${encodeURIComponent(fullPrompt)}`,
         color: '#007aff',
         guide_class: 'guide-gemini',
@@ -314,7 +313,6 @@ const AI_CONFIG = {
     },
     'chatgpt': {
         name: 'ChatGPT',
-        // Cấu hình cũ: Chỉ mở trang web (không thể tự động điền prompt)
         get_url: () => 'https://chatgpt.com',
         color: '#28a745',
         guide_class: 'guide-chatgpt',
@@ -324,7 +322,7 @@ const AI_CONFIG = {
 
 let selectedAI = localStorage.getItem('selectedAI') || 'gemini'; 
 
-/* fallback random, drawUnique... (giữ nguyên) */
+/* ---------- Chức năng Random an toàn ---------- */
 function secureRandom(max){
     try {
         if (window.crypto && window.crypto.getRandomValues) {
@@ -350,7 +348,7 @@ function drawUnique(count, deck){
     return drawn;
 }
 
-/* -------------------- CHỨC NĂNG COPY & AI -------------------- */
+/* ---------- Chức năng Hỗ trợ (Toast, Error, Copy) ---------- */
 function copyToClipboard(text){
     return new Promise((resolve, reject) => {
         if (navigator.clipboard) {
@@ -385,7 +383,7 @@ function fallbackCopy(text) {
 
 function showToast(message) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
+    toast.innerHTML = message;
     toast.classList.add('show');
     setTimeout(() => {
         toast.classList.remove('show');
@@ -404,16 +402,16 @@ function showHtml(html){
     resultEl.innerHTML = html;
 }
 
-// Hàm khởi tạo và xử lý việc mở AI Chat (Đã được cập nhật)
+/* ---------- Logic Mở AI Chat ---------- */
 function openAIChat(copyText) {
     const config = AI_CONFIG[selectedAI];
     const fullPrompt = BASE_PROMPT + '\n' + copyText;
     let url = config.get_url(fullPrompt);
     let copyMessage = config.note;
     
-    // Luôn copy văn bản vào clipboard, đề phòng Deep Linking thất bại (cho Gemini) hoặc là cần thiết (cho ChatGPT)
+    // Luôn copy văn bản vào clipboard
     copyToClipboard(copyText).then(() => {
-        showToast(`Đã sao chép! Đang mở ${config.name}...`);
+        showToast(`Đã sao chép trải bài! Đang mở **${config.name}**...`);
 
         const guideHTML = `
             <div class="ai-guide ${config.guide_class}">
@@ -421,7 +419,7 @@ function openAIChat(copyText) {
                 <p class="important-note">${copyMessage}</p>
                 <p>1. Nội dung trải bài đã được sao chép vào clipboard.</p>
                 <p>2. Vui lòng bấm vào <a href="${url}" target="_blank">ĐÂY</a> để mở **${config.name}**.</p>
-                <p>3. (Chỉ áp dụng cho ChatGPT) Bạn cần <strong>DÁN (Paste)</strong> thủ công nội dung đã sao chép vào khung chat.</p>
+                <p>3. (Chỉ áp dụng cho ChatGPT) Bạn cần **DÁN (Paste)** thủ công nội dung đã sao chép vào khung chat.</p>
             </div>
         `;
         
@@ -437,20 +435,20 @@ function openAIChat(copyText) {
     });
 }
 
-/* -------------------- LOGIC RÚT BÀI & HIỂN THỊ -------------------- */
+/* ---------- Logic Rút Bài và Hiển thị ---------- */
 
-// Tìm dữ liệu đầy đủ của một lá bài
 function getCardData(name) {
     return CARDS_DATA.find(c => c.name === name);
 }
 
-function displaySpread(title, drawnCards){
-    // ... (logic hiển thị giữ nguyên) ...
+function displaySpread(title, drawnCards, customLabels = null){
     try {
-        const positions = {
+        const defaultPositions = {
             3: ["Lá 1: Quá khứ / Gốc rễ","Lá 2: Hiện tại / Tình hình","Lá 3: Tương lai / Tiềm năng"],
             5: ["Lá 1: Tình huống cốt lõi","Lá 2: Thách thức","Lá 3: Lời khuyên","Lá 4: Ảnh hưởng từ bên ngoài","Lá 5: Kết quả cuối cùng"]
         };
+        const positions = customLabels || defaultPositions[drawnCards.length];
+        
         const config = AI_CONFIG[selectedAI];
         
         let copyText = `--- ${title} ---\n`;
@@ -458,7 +456,7 @@ function displaySpread(title, drawnCards){
         
         drawnCards.forEach((cardName,i)=>{
             const card = getCardData(cardName);
-            const label = positions[drawnCards.length] ? positions[drawnCards.length][i] : `Lá ${i+1}`;
+            const label = positions ? positions[i] : `Lá ${i+1}`;
             
             html += `<li>
                         <div class="card-title">${label}:</div>
@@ -492,52 +490,9 @@ function displaySpread(title, drawnCards){
     }
 }
 
-function spreadN(count,title, customLabels = null){
-    // ... (logic spreadN giữ nguyên) ...
-    try {
-        const drawnCardNames = drawUnique(count, ALL_CARDS);
-
-        if (customLabels) {
-            const config = AI_CONFIG[selectedAI];
-            let copyText = `--- ${title} ---\n`;
-            let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
-            
-            drawnCardNames.forEach((cardName,i)=> {
-                const card = getCardData(cardName);
-                const label = customLabels[i];
-
-                html += `<li>
-                            <div class="card-title">${label}:</div>
-                            <div class="card-info">
-                                <img src="${card.image_url}" alt="${card.name}" class="card-img" onerror="this.style.display='none'">
-                                <div>
-                                    <strong>${card.name}</strong>
-                                    <div class="card-keywords">${card.keywords}</div>
-                                </div>
-                            </div>
-                        </li>`;
-                copyText += `${label}: ${card.name} (${card.keywords})\n`;
-            });
-
-            html += `</ul>
-                     <div class="actions">
-                         <button id="btn-redo">🔁 Rút lại</button>
-                         <button id="btn-show-deck">📚 Xem bộ bài</button>
-                         <button id="btn-copy" class="btn-copy">💾 Chỉ Copy Text</button>
-                         <button id="btn-ai" class="btn-ai" style="background:${config.color}">🤖 Hỏi ${config.name}</button>
-                     </div>`;
-            showHtml(html);
-            document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
-            document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
-            document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-            document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
-        } else {
-            displaySpread(title, drawnCardNames);
-        }
-    } catch(err){
-        showError(err.message || err);
-        console.error(err);
-    }
+function spreadN(count, title, customLabels = null){
+    const drawnCardNames = drawUnique(count, ALL_CARDS);
+    displaySpread(title, drawnCardNames, customLabels);
 }
 
 function showFullDeck(){
@@ -553,7 +508,7 @@ function showFullDeck(){
     }
 }
 
-/* Countdown thay bằng Loading State 3 giây */
+/* ---------- Hiệu ứng Loading ---------- */
 function startDrawing(count,title,fn){
     try {
         const loadingTime = 3000;
@@ -578,9 +533,8 @@ function startDrawing(count,title,fn){
     }
 }
 
-/* -------------------- XỬ LÝ SỰ KIỆN & AI TOGGLE -------------------- */
+/* ---------- XỬ LÝ SỰ KIỆN & AI TOGGLE ---------- */
 
-// Cập nhật giao diện nút AI và màn hình nhỏ
 function updateAISelection(aiKey) {
     selectedAI = aiKey;
     localStorage.setItem('selectedAI', aiKey);
@@ -600,13 +554,25 @@ function updateAISelection(aiKey) {
     }
 }
 
+function notifyAISelected(aiKey) {
+    const config = AI_CONFIG[aiKey];
+    showToast(`Đã chọn **${config.name}** làm công cụ giải nghĩa. Vui lòng bấm vào một nút **"Trải Bài"** ở trên.`);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Khởi tạo trạng thái AI ban đầu
     updateAISelection(selectedAI);
 
-    // 2. Gắn event cho AI selector
-    document.getElementById('select-gemini').addEventListener('click', () => updateAISelection('gemini'));
-    document.getElementById('select-chatgpt').addEventListener('click', () => updateAISelection('chatgpt'));
+    // 2. Gắn event cho AI selector (THÔNG BÁO)
+    document.getElementById('select-gemini').addEventListener('click', () => {
+        updateAISelection('gemini');
+        notifyAISelected('gemini');
+    });
+    document.getElementById('select-chatgpt').addEventListener('click', () => {
+        updateAISelection('chatgpt');
+        notifyAISelected('chatgpt');
+    });
 
     // 3. Gắn event cho các nút trải bài (dùng startDrawing mới)
     document.getElementById('btn-3').addEventListener('click', ()=> startDrawing(3,'Trải Bài 3 Lá', ()=> spreadN(3,'Trải Bài 3 Lá')));
