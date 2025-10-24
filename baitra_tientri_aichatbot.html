@@ -15,15 +15,15 @@
         font-size: 1.15rem; /* TĂNG KÍCH THƯỚC CHỮ CƠ BẢN */
     }
     .container{max-width:900px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 12px rgba(0,0,0,0.06)}
-    
+
     /* Điều chỉnh: Tăng kích thước tiêu đề header */
     .header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid #e9e9ef;position:sticky;top:0;background:#fff;z-index:10}
     .back-link{font-size:1.1rem;font-weight:700;color:#007aff;text-decoration:none;display:flex;align-items:center;gap:4px}
     .title{font-weight:700;flex-grow:1;text-align:center;font-size:1.5rem} /* Tăng title */
-    
+
     .content{padding:20px} /* Tăng padding */
     .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin-bottom:20px} /* Tăng gap và minmax cho grid */
-    
+
     /* Điều chỉnh: Tăng kích thước nút hành động chính */
     button{
         padding: 18px 12px; /* TĂNG PADDING CHO NÚT */
@@ -40,7 +40,7 @@
     }
     button:hover{background:#005bb5}
     button:disabled{background:#9aa3ad;cursor:not-allowed}
-    
+
     /* Style cho các nút hành động nhỏ hơn (copy, ai) */
     .actions button{
         font-size: 1.1rem; /* Giữ các nút phụ nhỏ hơn một chút so với nút chính */
@@ -54,7 +54,7 @@
 
     #result{margin-top:15px;padding:18px;background:#f7f7f9;border-radius:12px;min-height:180px;box-shadow:inset 0 1px 4px rgba(0,0,0,0.05);transition:opacity .35s;opacity:1}
     .spread-title{font-size:1.3rem;font-weight:700;color:#2e7d32;text-align:center;margin-bottom:12px} /* Tăng title trải bài */
-    
+
     /* Điều chỉnh: Kích thước danh sách lá bài */
     .card-list{list-style:none;padding:0;margin:0}
     .card-list li{background:#fff;margin:12px 0;padding:14px;border-radius:10px;border-left:6px solid #38761d;display:flex;gap:15px;align-items:center} /* Tăng padding, margin, border-left */
@@ -132,7 +132,7 @@
         <div class="controls">
             <button id="btn-3">Trải Bài 3 Lá</button>
             <button id="btn-5">Trải Bài 5 Lá</button>
-            <button id="btn-7">Trải 7 Ngày</button>
+            <button id="btn-10-pyramid">Trải Kim Tự Tháp (10)</button> <button id="btn-7">Trải 7 Ngày</button>
             <button id="btn-4">Trải Theo Tháng (4)</button>
             <button id="btn-12">Trải Theo Năm (12)</button>
             <button id="btn-deck">Xem toàn bộ bộ bài (200 lá)</button>
@@ -353,6 +353,27 @@ const CARDS_DATA = [
 ];
 const ALL_CARDS = CARDS_DATA.map(c => c.name); 
 
+/* ---------- ĐỊNH NGHĨA SƠ ĐỒ MỚI: KIM TỰ THÁP ASTRAL HOUSE (10 LÁ) ---------- */
+const ASTRAL_HOUSE_PYRAMID_SPREAD = {
+    name: "Kim Tự Tháp Astral House (10 Lá)",
+    description: "Tập trung vào sự nghiệp (Career) và các vấn đề chi phối năng lượng tổng thể, cung cấp lời khuyên và kết quả chi tiết.",
+    cardCount: 10,
+    positions: [
+        "Lá 1: Astral House (Chủ đề/Bối cảnh tổng thể)",
+        "Lá 2: Tầng 1 - Sức mạnh tiềm ẩn (Trái)",
+        "Lá 3: Tầng 1 - Thách thức hiện tại (Phải)",
+        "Lá 4: Tầng 2 - Nền tảng/Quá khứ (Trái)",
+        "Lá 5: Tầng 2 - Hành động cốt lõi (Giữa)",
+        "Lá 6: Tầng 2 - Ảnh hưởng bên ngoài (Phải)",
+        "Lá 7: Tầng 3 - Xu hướng tương lai (Trái)",
+        "Lá 8: Tầng 3 - Lời khuyên sâu sắc (Giữa-Trái)",
+        "Lá 9: Tầng 3 - Khả năng tốt nhất (Giữa-Phải)",
+        "Lá 10: Tầng 3 - Thời điểm/Cột mốc (Phải)"
+    ]
+};
+/* ----------------------------------------------------------------------------- */
+
+
 /* Khai báo cấu hình AI và Thời gian Loading */
 const BASE_PROMPT = "Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết.\n\nNội dung trải bài:";
 const LOADING_TIME_MS = 9000; // Đã cập nhật thành 9 giây
@@ -391,6 +412,7 @@ function secureRandom(max){
     return Math.floor(Math.random()*max);
 }
 
+// Chức năng rút bài DUY NHẤT và NGẪU NHIÊN
 function drawUnique(count, deck){
     const drawn = [];
     const idxs = Array.from(deck.keys());
@@ -510,9 +532,10 @@ function displaySpread(title, drawnCards, customLabels = null){
     try {
         const defaultPositions = {
             3: ["Lá 1: Quá khứ / Gốc rễ","Lá 2: Hiện tại / Tình hình","Lá 3: Tương lai / Tiềm năng"],
-            5: ["Lá 1: Tình huống cốt lõi","Lá 2: Thách thức","Lá 3: Lời khuyên","Lá 4: Ảnh hưởng từ bên ngoài","Lá 5: Kết quả cuối cùng"]
+            5: ["Lá 1: Tình huống cốt lõi","Lá 2: Thách thức","Lá 3: Lời khuyên","Lá 4: Ảnh hưởng từ bên ngoài","Lá 5: Kết quả cuối cùng"],
+            // Thêm định nghĩa default cho 10 lá nếu cần, nhưng đã dùng customLabels cho spread 10 lá
         };
-        const positions = customLabels || defaultPositions[drawnCards.length];
+        const positions = customLabels || defaultPositions[drawnCards.length] || drawnCards.map((_, i) => `Lá ${i+1}`);
 
         const config = AI_CONFIG[selectedAI];
 
@@ -562,6 +585,21 @@ function spreadN(count, title, customLabels = null){
     const drawnCardNames = drawUnique(count, ALL_CARDS);
     displaySpread(title, drawnCardNames, customLabels);
 }
+
+/* ---------- HÀM MỚI: TRIỂN KHAI KIM TỰ THÁP ASTRAL HOUSE ---------- */
+function spreadAstralHousePyramid() {
+    const { cardCount, name, positions } = ASTRAL_HOUSE_PYRAMID_SPREAD;
+
+    if (cardCount > ALL_CARDS.length) {
+        showError("Lỗi: Số lượng lá bài cần rút vượt quá tổng số lá trong bộ bài.");
+        return;
+    }
+
+    const drawnCardNames = drawUnique(cardCount, ALL_CARDS);
+    displaySpread(name, drawnCardNames, positions);
+}
+/* ------------------------------------------------------------------ */
+
 
 function showFullDeck(){
     try {
@@ -656,6 +694,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Gắn event cho các nút trải bài 
     document.getElementById('btn-3').addEventListener('click', ()=> startDrawing(3,'Trải Bài 3 Lá', ()=> spreadN(3,'Trải Bài 3 Lá')));
     document.getElementById('btn-5').addEventListener('click', ()=> startDrawing(5,'Trải Bài 5 Lá', ()=> spreadN(5,'Trải Bài 5 Lá')));
+    
+    // NÚT MỚI: Trải Kim Tự Tháp 10 Lá
+    document.getElementById('btn-10-pyramid').addEventListener('click', ()=> startDrawing(10,'Trải Kim Tự Tháp Astral House', spreadAstralHousePyramid));
+
 
     // Trải 7 Ngày
     document.getElementById('btn-7').addEventListener('click', ()=> startDrawing(7,'Trải Bài 7 Ngày', ()=> {
