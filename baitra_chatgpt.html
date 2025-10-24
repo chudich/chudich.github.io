@@ -332,7 +332,7 @@ document.getElementById('btn-7').addEventListener('click', ()=> startCountdown(7
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openGeminiChat(copyText));
+        document.getElementById('btn-ai').addEventListener('click', () => chatGPT(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
@@ -356,7 +356,7 @@ document.getElementById('btn-4').addEventListener('click', ()=> startCountdown(4
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openGeminiChat(copyText));
+        document.getElementById('btn-ai').addEventListener('click', () => openchatGPT(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
@@ -380,7 +380,7 @@ document.getElementById('btn-12').addEventListener('click', ()=> startCountdown(
         document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
         document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
         document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
-        document.getElementById('btn-ai').addEventListener('click', () => openGeminiChat(copyText));
+        document.getElementById('btn-ai').addEventListener('click', () => openchatGPT(copyText));
     } catch(err){
         showError(err.message || err);
         console.error(err);
