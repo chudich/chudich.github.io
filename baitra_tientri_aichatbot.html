@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bài Trà Tiên Tri Nâng Cao</title>
+<style>
+    body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;margin:0;background:#f0f0f5;color:#111;padding-bottom:60px}
+    .container{max-width:900px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 12px rgba(0,0,0,0.06)}
+    .header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #e9e9ef;position:sticky;top:0;background:#fff;z-index:10}
+    .back-link{font-size:1rem;font-weight:700;color:#007aff;text-decoration:none;display:flex;align-items:center;gap:4px}
+    .title{font-weight:700;flex-grow:1;text-align:center;font-size:1.25rem}
+    .content{padding:18px}
+    .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+    button{padding:12px;border:none;border-radius:10px;background:#007aff;color:#fff;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,122,255,0.2);transition:background .2s}
+    button:hover{background:#005bb5}
+    button:disabled{background:#9aa3ad;cursor:not-allowed}
+    /* Style cho các nút hành động */
+    .btn-copy{background:#2e7d32;}
+    .btn-copy:hover{background:#1b5e20}
+    .btn-ai{font-weight:900;transition:background .2s;} /* Màu sẽ được JS gán */
+
+    #result{margin-top:12px;padding:14px;background:#f7f7f9;border-radius:10px;min-height:160px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.04);transition:opacity .35s;opacity:1}
+    .spread-title{font-size:1.15rem;font-weight:700;color:#2e7d32;text-align:center;margin-bottom:8px}
+    .card-list{list-style:none;padding:0;margin:0}
+    .card-list li{background:#fff;margin:8px 0;padding:10px;border-radius:8px;border-left:4px solid #38761d;display:flex;gap:10px;align-items:center}
+    .card-title{min-width:150px;font-weight:700;color:#007aff;flex-shrink:0}
+    .card-info{flex-grow:1;display:flex;align-items:center;gap:12px;}
+    .card-keywords{font-size:.92rem;color:#666;}
+    .card-img{width:40px;height:auto;border-radius:4px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+    .deck-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+    .deck-item{background:#fff;padding:8px;border-radius:6px;border-left:3px solid #ccc}
+    .actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .small{font-size:.92rem;color:#666}
+    .error{color:#a33;background:#ffecec;padding:8px;border-radius:6px;margin-top:10px}
+    
+    /* Loading state */
+    .loading-display{text-align:center;padding:40px 0}
+    .loading-instruction{color:#555;margin:0;font-size:1.1rem}
+    .loading-spinner{border: 4px solid #f3f3f3; border-top: 4px solid #007aff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 15px auto;}
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* AI Toggle */
+    .ai-selector{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:10px;padding:8px;background:#e9e9ef;border-radius:8px;}
+    .ai-selector label{font-weight:700;color:#333;font-size:.95rem;}
+    .ai-toggle{display:flex;background:#fff;border-radius:6px;padding:3px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);}
+    .ai-option{padding:6px 10px;border-radius:4px;cursor:pointer;font-weight:600;transition:background .2s, color .2s;}
+    .ai-option.selected-gemini{background:#007aff;color:#fff;}
+    .ai-option.selected-chatgpt{background:#28a745;color:#fff;}
+    
+    .toast-message{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 15px;border-radius:5px;opacity:0;transition:opacity 0.3s;z-index:1000;text-wrap:nowrap;}
+    .toast-message.show{opacity:1}
+    .ai-guide{margin-top:10px;padding:12px;border-radius:8px;border:1px solid;color:#555;}
+    .guide-gemini{background:#fffde7;border-color:#f9e16c;}
+    .guide-chatgpt{background:#e8f5e9;border-color:#c8e6c9;}
+    .ai-guide p{margin:0;}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="link-trang-truoc-cua-ban" class="back-link">
+            &larr; Về trang trước
+        </a>
+        <div class="title">Bài Trà Tiên Tri</div>
+        <div><small id="selected-ai-display" class="small"></small></div>
+    </div>
+
+    <div class="content">
+        <div class="ai-selector">
+            <label>Chọn AI Giải Bài:</label>
+            <div class="ai-toggle">
+                <div id="select-gemini" class="ai-option">🤖 Gemini</div>
+                <div id="select-chatgpt" class="ai-option">💬 ChatGPT</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="btn-3">Trải Bài 3 Lá</button>
+            <button id="btn-5">Trải Bài 5 Lá</button>
+            <button id="btn-7">Trải 7 Ngày</button>
+            <button id="btn-4">Trải Theo Tháng (4)</button>
+            <button id="btn-12">Trải Theo Năm (12)</button>
+            <button id="btn-deck">Xem toàn bộ bộ bài (200 lá)</button>
+        </div>
+
+        <div id="result">
+            <p style="text-align:center;color:#666">Chọn kiểu trải bài, tập trung trong 10 giây rồi nhận thông điệp.</p>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast-message"></div>
+
+<script>
+/* ---------- DỮ LIỆU: Cấu trúc mới với Image URL và Keywords ---------- */
+const CARDS_DATA = [
+    { name: "Angel - Tiên nữ", keywords: "Bảo vệ, May mắn, Lời khuyên", image_url: "images/angel.png" },
+    { name: "Ant - Con kiến", keywords: "Chăm chỉ, Kiên trì, Cần cù", image_url: "images/ant.png" },
+    { name: "Apple - Quả táo", keywords: "Kiến thức, Sức khỏe, Cơ hội", image_url: "images/apple.png" },
+    { name: "Archway - Cổng vòm", keywords: "Khởi đầu mới, Vượt qua, Cột mốc", image_url: "images/archway.png" },
+    { name: "Arrow - Mũi tên", keywords: "Mục tiêu, Hướng đi, Tốc độ", image_url: "images/arrow.png" },
+    { name: "Axe - Cây rìu", keywords: "Chấm dứt, Cắt đứt, Giải quyết", image_url: "images/axe.png" },
+    { name: "Bag - Túi", keywords: "Tài sản, Thu hoạch, Tiềm năng", image_url: "images/bag.png" },
+    { name: "Barrel - Thùng Rỗng", keywords: "Thiếu thốn, Cần bổ sung, Trống rỗng", image_url: "images/barrel.png" },
+    { name: "Basket - Giỏ rơm", keywords: "Phần thưởng, Sinh sôi, Sự phong phú", image_url: "images/basket.png" },
+    { name: "Bat - Con dơi", keywords: "Nguy hiểm, Cái chết, Thay đổi lớn", image_url: "images/bat.png" },
+    { name: "Bear - Con gấu", keywords: "Sức mạnh, Sự bảo vệ, Quyền lực", image_url: "images/bear.png" },
+    { name: "Beetle - Bọ cánh cứng", keywords: "Bền bỉ, Chuyển hóa, Hồi phục", image_url: "images/beetle.png" },
+    { name: "Bell - Cái chuông", keywords: "Tin tức, Thông báo, Cảnh báo", image_url: "images/bell.png" },
+    { name: "Bird Flying - Chim bay", keywords: "Tự do, Du lịch, Tầm nhìn", image_url: "images/bird_flying.png" },
+    { name: "Bird Perched - Chim đậu", keywords: "Ổn định, Đợi chờ, Suy ngẫm", image_url: "images/bird_perched.png" },
+    { name: "Boat - Con thuyền", keywords: "Hành trình, Tiến lên, Vượt qua", image_url: "images/boat.png" },
+    { name: "Boot - Chiếc ủng", keywords: "Bước đi, Lập trường, Hành động", image_url: "images/boot.png" },
+    { name: "Bouquet - Bó hoa", keywords: "Lãng mạn, Niềm vui, Đón nhận", image_url: "images/bouquet.png" },
+    { name: "Bow - Cái nơ", keywords: "Quà tặng, Kết nối, Hài lòng", image_url: "images/bow.png" },
+    { name: "Bowl - Cái chậu", keywords: "Hạnh phúc gia đình, Nhu cầu, Đầy đủ", image_url: "images/bowl.png" },
+    { name: "Box - Cái hộp", keywords: "Bí mật, Tiềm ẩn, Cần khám phá", image_url: "images/box.png" },
+    { name: "Bread - Bánh mì", keywords: "Nuôi dưỡng, Cần thiết, Đủ đầy", image_url: "images/bread.png" },
+    { name: "Bridge - Cây cầu", keywords: "Kết nối, Chuyển đổi, Lối thoát", image_url: "images/bridge.png" },
+    { name: "Broken Bridge - Cầu gãy", keywords: "Thất bại, Tắc nghẽn, Cần sửa chữa", image_url: "images/broken_bridge.png" },
+    { name: "Broken Ring - Chia ly, chấm dứt", keywords: "Kết thúc, Tan vỡ, Đau khổ", image_url: "images/broken_ring.png" },
+    { name: "Broken Wishbone - Xương đòn bị gãy", keywords: "Mất niềm tin, Thất vọng, Ước mơ tan vỡ", image_url: "images/broken_wishbone.png" },
+    { name: "Broom - Cây chổi", keywords: "Dọn dẹp, Thay đổi, Loại bỏ", image_url: "images/broom.png" },
+    { name: "Bull - Bò đực", keywords: "Cứng đầu, Sức mạnh ý chí, Kiên định", image_url: "images/bull.png" },
+    { name: "Butterfly - Con bướm", keywords: "Chuyển hóa, Vẻ đẹp, Tự do", image_url: "images/butterfly.png" },
+    { name: "Camel - Con lạc đà", keywords: "Kiên nhẫn, Bền bỉ, Vượt khó", image_url: "images/camel.png" },
+    { name: "Candle - Ngọn nến", keywords: "Ánh sáng, Chỉ dẫn, Trí tuệ", image_url: "images/candle.png" },
+    { name: "Cane - Gậy chống, batoong", keywords: "Hỗ trợ, Lời khuyên người lớn, Bệnh tật", image_url: "images/cane.png" },
+    { name: "Carriage - Cỗ xe thùng", keywords: "Tiến triển, Du lịch, Phương tiện", image_url: "images/carriage.png" },
+    { name: "Carrot - Củ cà rốt", keywords: "Phần thưởng, Thích thú, Sức sống", image_url: "images/carrot.png" },
+    { name: "Casket - Quan tài", keywords: "Kết thúc, Tang tóc, Sự tái sinh", image_url: "images/casket.png" },
+    { name: "Cat - Con mèo", keywords: "Độc lập, Xảo quyệt, Bí ẩn", image_url: "images/cat.png" },
+    { name: "Caterpillar - Con sâu", keywords: "Phát triển, Giai đoạn đầu, Chuyển đổi", image_url: "images/caterpillar.png" },
+    { name: "Chain - Sợi dây xích", keywords: "Ràng buộc, Hôn nhân, Trách nhiệm", image_url: "images/chain.png" },
+    { name: "Chair Empty - Chiếc ghế trống", keywords: "Mất mát, Cơ hội bị bỏ lỡ, Cô đơn", image_url: "images/chair_empty.png" },
+    { name: "Chair Filled - Người ngồi ghế", keywords: "Thành công, Vị thế, Lãnh đạo", image_url: "images/chair_filled.png" },
+    { name: "Claw - Móng vuốt", keywords: "Nắm giữ, Tham lam, Chiến đấu", image_url: "images/claw.png" },
+    { name: "Clouds - Đám mây", keywords: "Mơ hồ, Lo lắng, Không chắc chắn", image_url: "images/clouds.png" },
+    { name: "Club - Cây chùy", keywords: "Bạo lực, Xung đột, Sức mạnh vật chất", image_url: "images/club.png" },
+    { name: "Cobweb - Mạng nhện", keywords: "Bẫy, Sự cũ kỹ, Cảm giác bị mắc kẹt", image_url: "images/cobweb.png" },
+    { name: "Coins - Tiền xu", keywords: "Tài chính, Tiền bạc, Vận may", image_url: "images/coins.png" },
+    { name: "Cracked Cup - Cốc vỡ", keywords: "Rạn nứt tình cảm, Tổn thương, Mất mát nhỏ", image_url: "images/cracked_cup.png" },
+    { name: "Crib - Cái nôi", keywords: "Gia đình, Sinh nở, Khởi đầu mới", image_url: "images/crib.png" },
+    { name: "Crown - Vương miện", keywords: "Thành công, Danh vọng, Vinh quang", image_url: "images/crown.png" },
+    { name: "Cup - Cái tách", keywords: "Sự kiện xã hội, May mắn, Đón nhận", image_url: "images/cup.png" },
+    { name: "Dagger - Dao găm", keywords: "Phản bội, Nguy hiểm, Cảnh báo", image_url: "images/dagger.png" },
+    { name: "Dark Man - Người đàn ông màu đen", keywords: "Người đàn ông bí ẩn, Người không đáng tin, Thử thách", image_url: "images/dark_man.png" },
+    { name: "Dark Woman - Người phụ nữ màu đen", keywords: "Người phụ nữ quyền lực, Người kiểm soát, Trở ngại", image_url: "images/dark_woman.png" },
+    { name: "Desk - Cái bàn", keywords: "Công việc, Học tập, Giao dịch", image_url: "images/desk.png" },
+    { name: "Diamond - Kim cương", keywords: "Giá trị, Độ bền, Hôn nhân vĩnh cửu", image_url: "images/diamond.png" },
+    { name: "Dog - 1 chú chó", keywords: "Lòng trung thành, Tình bạn, Sự tin cậy", image_url: "images/dog_1.png" },
+    { name: "Dogs - 2 chú chó", keywords: "Đối tác, Công ty, Cạnh tranh lành mạnh", image_url: "images/dog_2.png" },
+    { name: "Dog Barking - Chó sủa", keywords: "Tranh cãi, Cảnh báo, Tin đồn", image_url: "images/dog_barking.png" },
+    { name: "Dog Close Up - Chó vui vẻ", keywords: "Hạnh phúc, Đồng hành, Niềm vui", image_url: "images/dog_close_up.png" },
+    { name: "Dog Far Away - Chú chó buồn bã", keywords: "Xa cách, Lòng trung thành bị thử thách, Thiếu bạn bè", image_url: "images/dog_far_away.png" },
+    { name: "Dolphin - Cá heo", keywords: "Trí tuệ, Niềm vui, Hỗ trợ bất ngờ", image_url: "images/dolphin.png" },
+    { name: "Door - Cánh cửa", keywords: "Cơ hội, Lối đi mới, Chuyển đổi", image_url: "images/door.png" },
+    { name: "Dragon - Con rồng", keywords: "Sức mạnh phi thường, Giàu có, Nguy hiểm lớn", image_url: "images/dragon.png" },
+    { name: "Eagle - Con chim ưng", keywords: "Tầm nhìn xa, Vinh quang, Quyền lực tối cao", image_url: "images/eagle.png" },
+    { name: "Ear - Cái tai", keywords: "Lắng nghe, Tin tức, Bí mật", image_url: "images/ear.png" },
+    { name: "Egg - Quả trứng", keywords: "Tiềm năng, Sinh sôi, Dự án mới", image_url: "images/egg.png" },
+    { name: "Elephant - Con voi", keywords: "Ký ức, Trí tuệ, Sức mạnh bền bỉ", image_url: "images/elephant.png" },
+    { name: "Eye - Con mắt", keywords: "Quan sát, Cảnh báo, Ghen tị", image_url: "images/eye.png" },
+    { name: "Fair Man - Người đàn ông sáng màu", keywords: "Người đàn ông tốt, Hỗ trợ, Năng lượng tích cực", image_url: "images/fair_man.png" },
+    { name: "Fair Woman - Người phụ nữ sáng màu", keywords: "Người phụ nữ tốt, Lời khuyên, Hạnh phúc", image_url: "images/fair_woman.png" },
+    { name: "Fan - Quạt", keywords: "Tiết lộ, Xã hội, Hài lòng", image_url: "images/fan.png" },
+    { name: "Feather - Lông vũ", keywords: "Nhẹ nhàng, Du lịch, Mất mát nhỏ", image_url: "images/feather.png" },
+    { name: "Finger - Ngón tay", keywords: "Chỉ dẫn, Trách nhiệm, Điểm yếu", image_url: "images/finger.png" },
+    { name: "Fire - Ngọn lửa", keywords: "Đam mê, Cơn thịnh nộ, Sự hủy diệt", image_url: "images/fire.png" },
+    { name: "Firecracker - Pháo hoa nổ", keywords: "Ăn mừng, Kích động, Bùng nổ cảm xúc", image_url: "images/firecracker.png" },
+    { name: "Flag - Lá cờ", keywords: "Quốc gia, Quyền lực, Biểu tượng", image_url: "images/flag.png" },
+    { name: "Flowers - Hoa nở", keywords: "Vui vẻ, Tình yêu, Phát triển", image_url: "images/flowers.png" },
+    { name: "Flute - Ông sáo", keywords: "Hòa bình, Nghệ thuật, Thư giãn", image_url: "images/flute.png" },
+    { name: "Fly - Con ruồi", keywords: "Phiền toái, Vấn đề nhỏ, Cảm thấy khó chịu", image_url: "images/fly.png" },
+    { name: "Forest - Khu rừng", keywords: "Mơ hồ, Lạc lối, Cần tìm đường", image_url: "images/forest.png" },
+    { name: "Four Leaf Clover - Cỏ 4 lá", keywords: "May mắn tuyệt đối, Cơ hội, Hạnh phúc", image_url: "images/four_leaf_clover.png" },
+    { name: "Fox - Con cáo", keywords: "Xảo quyệt, Lừa dối, Khôn ngoan", image_url: "images/fox.png" },
+    { name: "Frying Pan - Cái chảo", keywords: "Mâu thuẫn gia đình, Cảm xúc mạnh, Nóng nảy", image_url: "images/frying_pan.png" },
+    { name: "Funnel - Cái phễu", keywords: "Tập trung, Kiểm soát dòng chảy, Chi tiết", image_url: "images/funnel.png" },
+    { name: "Gavel - Cái búa", keywords: "Phán quyết, Pháp luật, Quyền lực chính thức", image_url: "images/gavel.png" },
+    { name: "Gong - Cái chiêng", keywords: "Thông báo quan trọng, Sự kiện lớn, Lời kêu gọi", image_url: "images/gong.png" },
+    { name: "Goldfish - Cá vàng", keywords: "Phù phiếm, Vui vẻ, Lãng mạn", image_url: "images/goldfish.png" },
+    { name: "Grapes - Chùm nho", keywords: "Lễ hội, Thịnh vượng, Hài lòng", image_url: "images/grapes.png" },
+    { name: "Grasshopper - Con cào cào", keywords: "Bất cẩn, Nhảy vọt, Cần hành động", image_url: "images/grasshopper.png" },
+    { name: "Hammock - Cái võng", keywords: "Nghỉ ngơi, Lười biếng, Thư giãn", image_url: "images/hammock.png" },
+    { name: "Hand - Bàn tay", keywords: "Hành động, Sức lao động, Hợp tác", image_url: "images/hand.png" },
+    { name: "Handshake - Bắt tay", keywords: "Thỏa thuận, Hợp tác, Hòa giải", image_url: "images/handshake.png" },
+    { name: "Harp - Đàn hạc", keywords: "Nghệ thuật, Hòa bình, Tình yêu", image_url: "images/harp.png" },
+    { name: "Hat - Cái mũ", keywords: "Che giấu, Vai trò mới, Danh tính", image_url: "images/hat.png" },
+    { name: "Haystack - Rơm cỏ khô", keywords: "Khó khăn, Cần tìm kiếm chi tiết, Vất vả", image_url: "images/haystack.png" },
+    { name: "Heart - Trái tim", keywords: "Tình yêu, Cảm xúc, Đam mê", image_url: "images/heart.png" },
+    { name: "Hills - Ngọn đồi", keywords: "Thử thách nhỏ, Tiến bộ chậm, Kiên nhẫn", image_url: "images/hills.png" },
+    { name: "Horse - Con ngựa", keywords: "Sức mạnh, Năng lượng, Tốc độ", image_url: "images/horse.png" },
+    { name: "Horseshoe - Móng ngựa", keywords: "May mắn, Bảo vệ, Vận may lớn", image_url: "images/horseshoe.png" },
+    { name: "Inkpot - Bình mực", keywords: "Tài liệu, Viết lách, Pháp lý", image_url: "images/inkpot.png" },
+    { name: "Jug - Cái bình", keywords: "Sự hào phóng, Đầy đủ, Nước mắt", image_url: "images/jug.png" },
+    { name: "Kangaroo - Chuột túi", keywords: "Bảo vệ gia đình, Nhanh nhẹn, Di chuyển nhanh", image_url: "images/kangaroo.png" },
+    { name: "Key - Chìa khóa", keywords: "Giải pháp, Mở cửa, Bí mật được tiết lộ", image_url: "images/key.png" },
+    { name: "Kite - Con diều", keywords: "Ước mơ, Bay cao, Tầm nhìn", image_url: "images/kite.png" },
+    { name: "Knot - Nút thắt", keywords: "Vấn đề, Khó khăn, Ràng buộc", image_url: "images/knot.png" },
+    { name: "Ladder - Bậc thang", keywords: "Tiến bộ, Thăng tiến, Vượt qua", image_url: "images/ladder.png" },
+    { name: "Leg - Chân", keywords: "Tiến lên, Hướng đi, Tính độc lập", image_url: "images/leg.png" },
+    { name: "Lightning - Tia chớp", keywords: "Thay đổi đột ngột, Khai sáng, Nguy hiểm", image_url: "images/lightning.png" },
+    { name: "Lily - Hoa lily", keywords: "Sự tinh khiết, Hạnh phúc, Hòa bình", image_url: "images/lily.png" },
+    { name: "Lion - Sư tử", keywords: "Quyền lực, Dũng cảm, Lãnh đạo", image_url: "images/lion.png" },
+    { name: "Lobster - Con tôm", keywords: "Nhạy cảm, Cần bảo vệ, Ký ức cũ", image_url: "images/lobster.png" },
+    { name: "Man - Người đàn ông", keywords: "Năng lượng nam tính, Hành động, Người đàn ông quan trọng", image_url: "images/man.png" },
+    { name: "Mice - Con chuột", keywords: "Mất mát, Phiền phức nhỏ, Lén lút", image_url: "images/mice.png" },
+    { name: "Money Path - Con đường tiền", keywords: "Cơ hội tài chính, Con đường sự nghiệp, Thu nhập", image_url: "images/money_path.png" },
+    { name: "Moon - Mặt trăng", keywords: "Bí ẩn, Cảm xúc, Trực giác", image_url: "images/moon.png" },
+    { name: "Mountain - Ngọn núi", keywords: "Thách thức lớn, Khó khăn, Mục tiêu", image_url: "images/mountain.png" },
+    { name: "Mountain Road - Đường lên núi", keywords: "Khó khăn nhưng đáng giá, Tiến lên, Vất vả", image_url: "images/mountain_road.png" },
+    { name: "Mule - Con lừa", keywords: "Cứng đầu, Gánh nặng, Công việc cực nhọc", image_url: "images/mule.png" },
+    { name: "Needle & Thread - Kim chỉ", keywords: "Sửa chữa, Khắc phục, Chi tiết nhỏ", image_url: "images/needle_thread.png" },
+    { name: "Nest - Tổ chim", keywords: "Gia đình, Ngôi nhà, Sinh nở", image_url: "images/nest.png" },
+    { name: "Older Man - Người đàn ông lớn tuổi", keywords: "Lời khuyên, Kinh nghiệm, Quyền lực gia đình", image_url: "images/older_man.png" },
+    { name: "Older Woman - Người phụ nữ lớn tuổi", keywords: "Sự thông thái, Hỗ trợ, Bí mật gia đình", image_url: "images/older_woman.png" },
+    { name: "Owl - Con cú", keywords: "Trí tuệ, Học vấn, Quan sát", image_url: "images/owl.png" },
+    { name: "Pail - Thùng nước", keywords: "Cảm xúc chứa đựng, Nguồn thu, Sự đổ vỡ", image_url: "images/pail.png" },
+    { name: "Parrot - Con vẹt", keywords: "Tin đồn, Lời nói dối, Lặp lại", image_url: "images/parrot.png" },
+    { name: "Peacock - Con công", keywords: "Phù phiếm, Vẻ đẹp, Tự hào", image_url: "images/peacock.png" },
+    { name: "Pig - Con lợn", keywords: "Tham lam, Vận may, Thừa thãi", image_url: "images/pig.png" },
+    { name: "Pin - Đinh ghim", keywords: "Vấn đề nhỏ, Cần chú ý, Tổn thương", image_url: "images/pin.png" },
+    { name: "Pineapple - Quả dứa", keywords: "Chào đón, Thịnh vượng, Lễ hội", image_url: "images/pineapple.png" },
+    { name: "Purse - Túi tiền", keywords: "Tiền bạc, Chi tiêu, Khả năng", image_url: "images/purse.png" },
+    { name: "Quill - Bút lông ngỗng", keywords: "Thư từ, Hợp đồng, Giao tiếp", image_url: "images/quill.png" },
+    { name: "Rabbit - Con thỏ", keywords: "Sinh sôi, Nhanh nhẹn, Sợ hãi", image_url: "images/rabbit.png" },
+    { name: "Rainbow - Cầu vồng", keywords: "Hy vọng, Hạnh phúc, Phần thưởng", image_url: "images/rainbow.png" },
+    { name: "Ram - Cừu đực", keywords: "Sức mạnh, Khởi đầu mới, Quyết tâm", image_url: "images/ram.png" },
+    { name: "Rat - Chuột đồng", keywords: "Lừa dối, Kẻ trộm, Mất mát", image_url: "images/rat.png" },
+    { name: "Ring - Chiếc nhẫn", keywords: "Hôn nhân, Cam kết, Vòng lặp", image_url: "images/ring.png" },
+    { name: "Rooster - Gà trống", keywords: "Thức tỉnh, Tin tức, Sự tự tin", image_url: "images/rooster.png" },
+    { name: "Rose - Hoa hồng", keywords: "Tình yêu, Vẻ đẹp, Đau khổ", image_url: "images/rose.png" },
+    { name: "Scales - Cán cân", keywords: "Công bằng, Pháp luật, Quyết định", image_url: "images/scales.png" },
+    { name: "Scissors - Cắt đứt mối quan hệ", keywords: "Chia tay, Chấm dứt, Quyết định nhanh", image_url: "images/scissors.png" },
+    { name: "Sea Horse - Cá ngựa", keywords: "Tình yêu chung thủy, Sáng tạo, Kiên nhẫn", image_url: "images/sea_horse.png" },
+    { name: "Shark - Cá mập", keywords: "Nguy hiểm lớn, Kẻ thù mạnh, Thách thức", image_url: "images/shark.png" },
+    { name: "Shield - Cái khiên", keywords: "Bảo vệ, Phòng thủ, Cẩn thận", image_url: "images/shield.png" },
+    { name: "Skull - Đầu lâu", keywords: "Cái chết, Sự kết thúc, Tái sinh", image_url: "images/skull.png" },
+    { name: "Spear - Ngọn giáo", keywords: "Chiến đấu, Tập trung, Mục tiêu rõ ràng", image_url: "images/spear.png" },
+    { name: "Staff - Hỗ trợ, chỉ dẫn", keywords: "Quyền lực, Giúp đỡ, Lời khuyên", image_url: "images/staff.png" },
+    { name: "Star - Ngôi sao", keywords: "Hy vọng, Ước nguyện, May mắn", image_url: "images/star.png" },
+    { name: "Stork - Con cò", keywords: "Di chuyển, Sinh nở, Thay đổi nhà cửa", image_url: "images/stork.png" },
+    { name: "Sun - Mặt trời", keywords: "Hạnh phúc, Thành công, Sức sống", image_url: "images/sun.png" },
+    { name: "Sunrise - Bình minh", keywords: "Khởi đầu mới, Hy vọng, Sự rõ ràng", image_url: "images/sunrise.png" },
+    { name: "Table - Cái bàn", keywords: "Giao tiếp, Hội họp, Thảo luận", image_url: "images/table.png" },
+    { name: "Tankard - Cốc vại", keywords: "Lễ hội, Uống rượu, Vui vẻ", image_url: "images/tankard.png" },
+    { name: "Target - Bia bắn", keywords: "Mục tiêu, Sự chính xác, Kết quả", image_url: "images/target.png" },
+    { name: "Teapot - Bình trà", keywords: "Bạn bè, Giao tiếp, Cuộc hẹn", image_url: "images/teapot.png" },
+    { name: "Teardrops - Giọt nước mắt", keywords: "Buồn bã, Nỗi đau, Thanh lọc cảm xúc", image_url: "images/teardrops.png" },
+    { name: "Tent - Cái lều", keywords: "Du lịch, Tạm thời, Cần thay đổi", image_url: "images/tent.png" },
+    { name: "Throne - Ngai vàng", keywords: "Quyền lực, Vị thế, Tự cao", image_url: "images/throne.png" },
+    { name: "Tiger - Con hổ", keywords: "Sức mạnh hoang dã, Đam mê, Nguy hiểm", image_url: "images/tiger.png" },
+    { name: "Torch - Ngọn đuốc", keywords: "Khai sáng, Sự thật, Hướng dẫn", image_url: "images/torch.png" },
+    { name: "Tortoise - Con rùa", keywords: "Chậm nhưng chắc, Kiên nhẫn, Tuổi thọ", image_url: "images/tortoise.png" },
+    { name: "Tower - Toà tháp", keywords: "Cô đơn, Tự bảo vệ, Mục tiêu cao", image_url: "images/tower.png" },
+    { name: "Tree - Cây", keywords: "Sức sống, Ổn định, Phát triển", image_url: "images/tree.png" },
+    { name: "Tulip - Hoa tulip", keywords: "Tình yêu đích thực, Vẻ đẹp, Sự mong muốn", image_url: "images/tulip.png" },
+    { name: "Turkey - Gà tây", keywords: "Lễ hội, Tự hào, Hạnh phúc", image_url: "images/turkey.png" },
+    { name: "Unicorn - Kỳ lân", keywords: "May mắn hiếm có, Kỳ diệu, Sự thuần khiết", image_url: "images/unicorn.png" },
+    { name: "V - Chữ V", keywords: "Chiến thắng, Lựa chọn, Chia cắt", image_url: "images/v.png" },
+    { name: "Valley - Thung lũng", keywords: "Thư giãn, Nơi ẩn náu, Dễ chịu", image_url: "images/valley.png" },
+    { name: "Vase - Lọ hoa", keywords: "Vẻ đẹp, Tình yêu, Cảm xúc", image_url: "images/vase.png" },
+    { name: "Vine - Cành nho xanh", keywords: "Phát triển, Kết nối, Thịnh vượng", image_url: "images/vine.png" },
+    { name: "Vulture - Con kền kền", keywords: "Mất mát, Kẻ săn mồi, Thanh lọc", image_url: "images/vulture.png" },
+    { name: "Wall - Bức tường", keywords: "Rào cản, Bảo vệ, Cần phá vỡ", image_url: "images/wall.png" },
+    { name: "Wedge - Cái nêm", keywords: "Chia rẽ, Can thiệp, Áp lực", image_url: "images/wedge.png" },
+    { name: "Weeping Willow - Cây dương liễu", keywords: "Buồn bã, Mất mát, Sự nhạy cảm", image_url: "images/weeping_willow.png" },
+    { name: "Well - Cái giếng", keywords: "Ước nguyện, Nguồn lực, Khám phá", image_url: "images/well.png" },
+    { name: "Whale - Cá voi", keywords: "Sức mạnh cảm xúc, Sự sâu sắc, Bí ẩn", image_url: "images/whale.png" },
+    { name: "Wheel - Bánh xe", keywords: "Thay đổi, Vòng quay, Vận may", image_url: "images/wheel.png" },
+    { name: "Windchimes - Chuông gió", keywords: "Hài hòa, Âm nhạc, Thay đổi nhỏ", image_url: "images/windchimes.png" },
+    { name: "Wishbone - Xương đòn", keywords: "Ước mơ, Hy vọng, Sự lựa chọn", image_url: "images/wishbone.png" },
+    { name: "Woman - Người phụ nữ", keywords: "Năng lượng nữ tính, Sáng tạo, Người phụ nữ quan trọng", image_url: "images/woman.png" },
+    { name: "Wreath - Vòng hoa", keywords: "Vinh quang, Chiến thắng, Sự kết thúc", image_url: "images/wreath.png" },
+    { name: "Yoke - Sự ràng buộc", keywords: "Trách nhiệm, Sự ép buộc, Lao động", image_url: "images/yoke.png" },
+    { name: "Younger Man - Người đàn ông trẻ tuổi", keywords: "Năng lượng mới, Nhanh nhẹn, Cơ hội mới", image_url: "images/younger_man.png" },
+    { name: "Younger Woman - Người phụ nữ trẻ tuổi", keywords: "Tình yêu mới, Sự ngây thơ, Cảm xúc mới", image_url: "images/younger_woman.png" },
+    
+    // Các lá bài liên quan đến thời gian và khái niệm
+    { name: "January - Tháng 1", keywords: "Khởi đầu, Kế hoạch, Lạnh lẽo", image_url: "images/january.png" },
+    { name: "February - Tháng 2", keywords: "Tình yêu, Sự mong đợi, Cần kiên nhẫn", image_url: "images/february.png" },
+    { name: "March - Tháng 3", keywords: "Hành động, Sức sống, Thay đổi đột ngột", image_url: "images/march.png" },
+    { name: "April - Tháng 4", keywords: "Phát triển, Tình yêu, Lãng mạn", image_url: "images/april.png" },
+    { name: "May - Tháng 5", keywords: "Thành công, Hạnh phúc, Thu hoạch", image_url: "images/may.png" },
+    { name: "June - Tháng 6", keywords: "Hôn nhân, Sáng tạo, Đam mê", image_url: "images/june.png" },
+    { name: "July - Tháng 7", keywords: "Nhiệt huyết, Du lịch, Tự do", image_url: "images/july.png" },
+    { name: "August - Tháng 8", keywords: "Thu hoạch, Tiền bạc, Lễ hội", image_url: "images/august.png" },
+    { name: "September - Tháng 9", keywords: "Học tập, Sắp xếp, Bắt đầu công việc", image_url: "images/september.png" },
+    { name: "October - Tháng 10", keywords: "Thay đổi, Phong phú, Cân bằng", image_url: "images/october.png" },
+    { name: "November - Tháng 11", keywords: "Bí ẩn, Suy ngẫm, Hồi tưởng", image_url: "images/november.png" },
+    { name: "December - Tháng 12", keywords: "Kết thúc, Kỷ niệm, Gia đình", image_url: "images/december.png" },
+    { name: "Career - Sự nghiệp", keywords: "Thành tựu công việc, Vị thế, Mục tiêu", image_url: "images/career.png" },
+    { name: "Marriage - Hôn nhân", keywords: "Cam kết, Đối tác, Quan hệ lâu dài", image_url: "images/marriage.png" },
+    { name: "Happiness - Hạnh Phúc", keywords: "Niềm vui, Hài lòng, Cảm xúc tích cực", image_url: "images/happiness.png" },
+    { name: "Love - Tình yêu", keywords: "Lãng mạn, Đam mê, Sự kết nối", image_url: "images/love.png" },
+    { name: "Success - Thành công", keywords: "Vinh quang, Kết quả tốt, Được công nhận", image_url: "images/success.png" },
+    { name: "Wealth - Tài chính", keywords: "Giàu có, Tiền bạc, Tài sản", image_url: "images/wealth.png" }
+];
+const ALL_CARDS = CARDS_DATA.map(c => c.name); // Mảng tên lá bài cũ để tương thích với logic cũ
+
+/* Khai báo cấu hình AI */
+const AI_CONFIG = {
+    'gemini': {
+        name: 'Gemini',
+        url: 'https://gemini.google.com/',
+        color: '#007aff',
+        guide_class: 'guide-gemini'
+    },
+    'chatgpt': {
+        name: 'ChatGPT',
+        url: 'https://chatgpt.com',
+        color: '#28a745',
+        guide_class: 'guide-chatgpt'
+    }
+};
+
+let selectedAI = localStorage.getItem('selectedAI') || 'gemini'; // Lấy từ Local Storage
+
+/* fallback random, drawUnique... (giữ nguyên) */
+function secureRandom(max){
+    try {
+        if (window.crypto && window.crypto.getRandomValues) {
+            const arr = new Uint32Array(1);
+            window.crypto.getRandomValues(arr);
+            return arr[0] % max;
+        }
+    } catch(e){
+        return Math.floor(Math.random()*max);
+    }
+    return Math.floor(Math.random()*max);
+}
+
+function drawUnique(count, deck){
+    const drawn = [];
+    const idxs = Array.from(deck.keys());
+    for (let i=0;i<count;i++){
+        if (idxs.length===0) break;
+        const r = secureRandom(idxs.length);
+        const ix = idxs.splice(r,1)[0];
+        drawn.push(deck[ix]);
+    }
+    return drawn;
+}
+
+/* -------------------- CHỨC NĂNG COPY & AI -------------------- */
+// ... (copyToClipboard, fallbackCopy, showToast, showError giữ nguyên) ...
+function copyToClipboard(text){
+    return new Promise((resolve, reject) => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                resolve();
+            }).catch(err => {
+                fallbackCopy(text);
+                resolve(); 
+            });
+        } else {
+            fallbackCopy(text);
+            resolve(); 
+        }
+    });
+}
+
+function fallbackCopy(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+    } catch (err) {
+        console.error('Fallback copy failed', err);
+    }
+    document.body.removeChild(textArea);
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+const resultEl = document.getElementById('result');
+
+function showError(msg){
+    resultEl.innerHTML = `<div class="error"><strong>Lỗi:</strong> ${msg}</div>`;
+}
+
+function showHtml(html){
+    const guide = document.querySelector('.ai-guide');
+    if (guide) guide.remove();
+    resultEl.innerHTML = html;
+}
+
+// Hàm khởi tạo và xử lý việc mở AI Chat
+function openAIChat(copyText) {
+    const config = AI_CONFIG[selectedAI];
+
+    copyToClipboard(copyText).then(() => {
+        showToast(`Đã sao chép! Đang mở ${config.name}...`);
+
+        const guideHTML = `
+            <div class="ai-guide ${config.guide_class}">
+                <p><strong>🚨 HƯỚNG DẪN ${config.name.toUpperCase()}:</strong></p>
+                <p>1. Nội dung trải bài đã được tự động sao chép (copy).</p>
+                <p>2. Vui lòng bấm vào <a href="${config.url}" target="_blank">ĐÂY</a> để mở **${config.name}**.</p>
+                <p>3. Sau khi ${config.name} mở, vui lòng <strong>DÁN (paste)</strong> nội dung trải bài vào khung chat.</p>
+                <p>4. Yêu cầu AI giải nghĩa: <strong>"Hãy giải bài tiên tri Trà Tiên Tri này cho tôi và đưa ra lời khuyên chi tiết."</strong></p>
+            </div>
+        `;
+        
+        const existingGuide = resultEl.querySelector('.ai-guide');
+        if (existingGuide) existingGuide.remove();
+        resultEl.insertAdjacentHTML('beforeend', guideHTML);
+
+        setTimeout(() => {
+            window.open(config.url, '_blank');
+        }, 500); 
+    }).catch(err => {
+        showError("Không thể sao chép để mở AI. Vui lòng thử lại.");
+    });
+}
+
+/* -------------------- LOGIC RÚT BÀI & HIỂN THỊ -------------------- */
+
+// Tìm dữ liệu đầy đủ của một lá bài
+function getCardData(name) {
+    return CARDS_DATA.find(c => c.name === name);
+}
+
+function displaySpread(title, drawnCards){
+    try {
+        const positions = {
+            3: ["Lá 1: Quá khứ / Gốc rễ","Lá 2: Hiện tại / Tình hình","Lá 3: Tương lai / Tiềm năng"],
+            5: ["Lá 1: Tình huống cốt lõi","Lá 2: Thách thức","Lá 3: Lời khuyên","Lá 4: Ảnh hưởng từ bên ngoài","Lá 5: Kết quả cuối cùng"]
+        };
+        const config = AI_CONFIG[selectedAI];
+        
+        let copyText = `YÊU CẦU: Hãy giải nghĩa chi tiết và đưa ra lời khuyên dựa trên trải bài tiên tri này:\n--- ${title} ---\n`;
+        let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
+        
+        drawnCards.forEach((cardName,i)=>{
+            const card = getCardData(cardName);
+            const label = positions[drawnCards.length] ? positions[drawnCards.length][i] : `Lá ${i+1}`;
+            
+            html += `<li>
+                        <div class="card-title">${label}:</div>
+                        <div class="card-info">
+                            <img src="${card.image_url}" alt="${card.name}" class="card-img" onerror="this.style.display='none'">
+                            <div>
+                                <strong>${card.name}</strong>
+                                <div class="card-keywords">${card.keywords}</div>
+                            </div>
+                        </div>
+                    </li>`;
+            copyText += `${label}: ${card.name} (${card.keywords})\n`; 
+        });
+        
+        html += `</ul>
+                 <div class="actions">
+                     <button id="btn-redo">🔁 Rút lại</button>
+                     <button id="btn-show-deck">📚 Xem bộ bài</button>
+                     <button id="btn-copy" class="btn-copy">💾 Chỉ Copy Text</button>
+                     <button id="btn-ai" class="btn-ai" style="background:${config.color}">🤖 Hỏi ${config.name}</button>
+                 </div>`;
+        showHtml(html);
+        
+        document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
+        document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
+        document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
+        document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
+    } catch (err){
+        showError(err.message || err);
+        console.error(err);
+    }
+}
+
+function spreadN(count,title, customLabels = null){
+    try {
+        const drawnCardNames = drawUnique(count, ALL_CARDS);
+
+        if (customLabels) {
+            const config = AI_CONFIG[selectedAI];
+            let copyText = `YÊU CẦU: Hãy giải nghĩa chi tiết và đưa ra lời khuyên dựa trên trải bài tiên tri này:\n--- ${title} ---\n`;
+            let html = `<div class="spread-title">${title}</div><ul class="card-list">`;
+            
+            drawnCardNames.forEach((cardName,i)=> {
+                const card = getCardData(cardName);
+                const label = customLabels[i];
+
+                html += `<li>
+                            <div class="card-title">${label}:</div>
+                            <div class="card-info">
+                                <img src="${card.image_url}" alt="${card.name}" class="card-img" onerror="this.style.display='none'">
+                                <div>
+                                    <strong>${card.name}</strong>
+                                    <div class="card-keywords">${card.keywords}</div>
+                                </div>
+                            </div>
+                        </li>`;
+                copyText += `${label}: ${card.name} (${card.keywords})\n`;
+            });
+
+            html += `</ul>
+                     <div class="actions">
+                         <button id="btn-redo">🔁 Rút lại</button>
+                         <button id="btn-show-deck">📚 Xem bộ bài</button>
+                         <button id="btn-copy" class="btn-copy">💾 Chỉ Copy Text</button>
+                         <button id="btn-ai" class="btn-ai" style="background:${config.color}">🤖 Hỏi ${config.name}</button>
+                     </div>`;
+            showHtml(html);
+            document.getElementById('btn-redo').addEventListener('click', ()=>{ location.reload(); });
+            document.getElementById('btn-show-deck').addEventListener('click', showFullDeck);
+            document.getElementById('btn-copy').addEventListener('click', () => copyToClipboard(copyText).then(() => showToast("Đã sao chép!")));
+            document.getElementById('btn-ai').addEventListener('click', () => openAIChat(copyText));
+        } else {
+            displaySpread(title, drawnCardNames);
+        }
+    } catch(err){
+        showError(err.message || err);
+        console.error(err);
+    }
+}
+
+function showFullDeck(){
+    try {
+        let html = `<div class="spread-title">Toàn bộ bộ bài (${CARDS_DATA.length} lá)</div><div class="deck-grid">`;
+        CARDS_DATA.forEach((c,i)=> html += `<div class="deck-item"><strong>${i+1}.</strong> ${c.name} (${c.keywords})</div>`);
+        html += `</div><div class="actions"><button id="btn-close-deck">Đóng</button></div>`;
+        showHtml(html);
+        document.getElementById('btn-close-deck').addEventListener('click', ()=>{ location.reload(); });
+    } catch(err){
+        showError(err.message || err);
+        console.error(err);
+    }
+}
+
+/* Countdown thay bằng Loading State 3 giây */
+function startDrawing(count,title,fn){
+    try {
+        const loadingTime = 3000;
+        const btns = document.querySelectorAll('.controls button, .ai-option');
+        btns.forEach(b=>b.disabled=true);
+        showHtml(`<div class="loading-display">
+                      <p class="loading-instruction">Tập trung và nghĩ về vấn đề của bạn...</p>
+                      <div class="loading-spinner"></div>
+                      <p class="loading-instruction">Đang rút bài tiên tri...</p>
+                  </div>`);
+        
+        setTimeout(()=>{
+            try {
+                fn();
+            } finally {
+                btns.forEach(b=>b.disabled=false);
+            }
+        }, loadingTime);
+    } catch(err){
+        showError(err.message || err);
+        console.error(err);
+    }
+}
+
+/* -------------------- XỬ LÝ SỰ KIỆN & AI TOGGLE -------------------- */
+
+// Cập nhật giao diện nút AI và màn hình nhỏ
+function updateAISelection(aiKey) {
+    selectedAI = aiKey;
+    localStorage.setItem('selectedAI', aiKey);
+    const geminiBtn = document.getElementById('select-gemini');
+    const chatgptBtn = document.getElementById('select-chatgpt');
+    const display = document.getElementById('selected-ai-display');
+    
+    geminiBtn.classList.remove('selected-gemini', 'selected-chatgpt');
+    chatgptBtn.classList.remove('selected-gemini', 'selected-chatgpt');
+    
+    if (aiKey === 'gemini') {
+        geminiBtn.classList.add('selected-gemini');
+        display.innerHTML = `Giải nghĩa bằng **Gemini**`;
+    } else {
+        chatgptBtn.classList.add('selected-chatgpt');
+        display.innerHTML = `Giải nghĩa bằng **ChatGPT**`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Khởi tạo trạng thái AI ban đầu
+    updateAISelection(selectedAI);
+
+    // 2. Gắn event cho AI selector
+    document.getElementById('select-gemini').addEventListener('click', () => updateAISelection('gemini'));
+    document.getElementById('select-chatgpt').addEventListener('click', () => updateAISelection('chatgpt'));
+
+    // 3. Gắn event cho các nút trải bài (dùng startDrawing mới)
+    document.getElementById('btn-3').addEventListener('click', ()=> startDrawing(3,'Trải Bài 3 Lá', ()=> spreadN(3,'Trải Bài 3 Lá')));
+    document.getElementById('btn-5').addEventListener('click', ()=> startDrawing(5,'Trải Bài 5 Lá', ()=> spreadN(5,'Trải Bài 5 Lá')));
+
+    // Trải 7 Ngày
+    document.getElementById('btn-7').addEventListener('click', ()=> startDrawing(7,'Trải Bài 7 Ngày', ()=> {
+        const days=["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chủ Nhật"];
+        spreadN(7,'Trải Bài Theo Tuần (7 ngày)', days);
+    }));
+
+    // Trải Theo Tháng
+    document.getElementById('btn-4').addEventListener('click', ()=> startDrawing(4,'Trải Bài Theo Tháng', ()=> {
+        const weeks=["Tuần 1","Tuần 2","Tuần 3","Tuần 4"];
+        spreadN(4,'Trải Bài Theo Tháng (4 tuần)', weeks);
+    }));
+
+    // Trải Theo Năm
+    document.getElementById('btn-12').addEventListener('click', ()=> startDrawing(12,'Trải Bài Theo Năm', ()=> {
+        const months=["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
+        spreadN(12,'Trải Bài Theo Năm (12 tháng)', months);
+    }));
+
+    document.getElementById('btn-deck').addEventListener('click', showFullDeck);
+});
+
+/* bảo vệ: nếu có lỗi JS lúc load, hiển thị lỗi */
+window.addEventListener('error', function(evt){
+    try {
+        showError('Có lỗi trên trang: ' + (evt && evt.message ? evt.message : 'unknown'));
+        console.error(evt);
+    } catch(e){}
+});
+</script>
+</body>
+</html>
