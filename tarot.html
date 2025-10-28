@@ -1,4 +1,4 @@
-<!DOCTYPE 2145281025 html>
+<!DOCTYPE 2150d281025 html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -372,6 +372,8 @@
                 <button onclick="openAI('ChatGPT')">Giải bằng ChatGPT</button>
                 <div id="copy-message" style="display: none;">Đã sao chép!</div>
             </div>
+            
+            <div id="card-info" class="card-info" style="font-style: italic; color: #666; margin-bottom: 20px; text-align: center;"></div>
         </div>
         
         <div class="notes">
@@ -443,37 +445,29 @@
             return MONTH_NAMES[targetMonthIndex];
         }
 
-        // Hàm tạo giá trị Seed từ input của người dùng (Entropy)
         function generateSeed(input) {
             let hash = 0;
             if (input.length === 0) {
-                // Nếu không nhập gì, lấy thời gian hiện tại
                 return new Date().getTime(); 
             }
             for (let i = 0; i < input.length; i++) {
                 const char = input.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
-                hash |= 0; // Chuyển thành 32bit integer
+                hash |= 0; 
             }
-            // Trả về giá trị tuyệt đối để dùng làm seed
             return Math.abs(hash); 
         }
 
-        // PRNG (Pseudo-Random Number Generator) dựa trên Seed
         let seed = 1;
         function seededRandom() {
-            // LCG (Linear Congruential Generator)
             seed = (seed * 9301 + 49297) % 233280;
             return seed / 233280;
         }
 
-
-        // 1. Hiển thị form nhập Entropy
         function showEntropyForm(numCards, spreadName) {
             currentNumCards = numCards;
             currentSpreadName = spreadName;
             
-            // Vô hiệu hóa nút chính
             allButtons.forEach(button => button.disabled = true);
             
             document.getElementById('entropy-title').textContent = `Kết nối năng lượng cho ${spreadName}`;
@@ -482,19 +476,15 @@
             entropyInput.focus();
         }
 
-        // 2. Xử lý khi nhấn nút Rút Bài trong form Entropy
         submitEntropyButton.onclick = function() {
             const entropyValue = entropyInput.value.trim();
             entropyFormContainer.style.display = 'none';
             
-            // Thiết lập Seed
             seed = generateSeed(entropyValue);
             
             drawCards(currentNumCards, currentSpreadName);
         };
         
-        
-        // Hàm chính rút bài (Sử dụng seededRandom)
         function drawCards(numCards, spreadName) {
             
             resultArea.style.display = 'block';
@@ -503,30 +493,21 @@
             drawingStatus.style.display = 'block';
             document.getElementById('spread-title').textContent = spreadName.toUpperCase();
             
-            if (!document.getElementById('card-info')) {
-                const infoDiv = document.createElement('div');
-                infoDiv.id = 'card-info';
-                infoDiv.className = 'card-info';
-                document.getElementById('result-area').insertBefore(infoDiv, cardsContainer);
-            }
-            document.getElementById('card-info').innerHTML = '';
-
+            const infoElement = document.getElementById('card-info');
+            infoElement.innerHTML = '';
 
             const deck = [...FULL_DECK];
             currentDrawnCards = [];
             currentSpreadName = spreadName;
 
-            // Xáo bài (Fisher-Yates shuffle algorithm) - SỬ DỤNG SEEDED RANDOM
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(seededRandom() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
 
-            // Rút bài và thêm Placeholder
             for (let i = 0; i < numCards; i++) {
-                // Rút bài không cần random nữa vì đã xáo bài
                 const card = deck[i]; 
-                const orientation = seededRandom() < 0.5 ? 'U' : 'R'; // Vẫn dùng seeded random cho hướng
+                const orientation = seededRandom() < 0.5 ? 'U' : 'R'; 
                 const positionName = getPositionName(spreadName, i);
                 
                 currentDrawnCards.push({
@@ -535,7 +516,6 @@
                     position: positionName
                 });
                 
-                // Thêm phần tử lá bài (Card Item)
                 const cardItem = document.createElement('div');
                 cardItem.className = 'card-item';
                 cardItem.id = `card-idx-${i}`;
@@ -546,13 +526,12 @@
                             <span>${positionName}</span>
                         </div>
                         <div class="card-content">
-                            </div>
+                        </div>
                     </div>
                 `;
                 cardsContainer.appendChild(cardItem);
             }
             
-            // Bắt đầu hiển thị từng lá bài với độ trễ
             for (let i = 0; i < numCards; i++) {
                 const delay = (i + 1) * DRAW_DELAY; 
                 
@@ -562,7 +541,6 @@
             }
         }
 
-        // Hàm hiển thị từng lá bài (Cập nhật nội dung và lật bài)
         function revealCard(index, totalCards) {
             const cardData = currentDrawnCards[index];
             const cardItem = document.getElementById(`card-idx-${index}`);
@@ -601,7 +579,6 @@
              aiSelection.style.display = 'block';
         }
 
-        // Hàm đặt tên vị trí cho các kiểu trải bài
         function getPositionName(spreadName, index) {
             switch (spreadName) {
                 case 'Trải Bài Năng Lượng Sự Việc Cụ Thể':
@@ -633,7 +610,6 @@
             }
         }
 
-        // Hàm sao chép kết quả vào bộ nhớ tạm
         function copyToClipboard() {
             if (currentDrawnCards.length === 0) return;
 
@@ -656,19 +632,29 @@
             });
         }
 
-        // Sửa lỗi link Gemini và ChatGPT
+        /**
+         * Sửa lỗi mở link: Sử dụng window.open() với link tuyệt đối để tránh bị chặn.
+         */
         function openAI(aiName) {
             let url = '';
             
             if (aiName === 'Gemini') {
-                // Link mới nhất và chính xác cho Gemini
                 url = 'https://gemini.google.com/app';
             } else if (aiName === 'ChatGPT') {
-                // Link chính xác cho ChatGPT
                 url = 'https://chat.openai.com/';
             }
             
-            window.open(url, '_blank');
+            // Mở cửa sổ mới. Trình duyệt có thể yêu cầu bạn cho phép popup nếu bạn chạy code này cục bộ (local).
+            try {
+                const newWindow = window.open(url, '_blank');
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                    // Cảnh báo nếu trình chặn popup ngăn cản
+                    alert(`Trình duyệt của bạn có thể đang chặn cửa sổ bật lên. Vui lòng cho phép popup để mở ${aiName}.`);
+                }
+            } catch (e) {
+                 // Trường hợp lỗi khác (ví dụ: lỗi bảo mật)
+                 alert(`Không thể mở ${aiName}. Vui lòng truy cập trực tiếp tại: ${url}`);
+            }
         }
     </script>
 </body>
