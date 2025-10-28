@@ -1,4 +1,4 @@
-<!DOCTYPE 2120 281025 html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -148,19 +148,36 @@
             min-height: 250px; 
         }
         
-        /* Cấu trúc chung của lá bài */
+        /* --- Cấu trúc Lật Bài 3D --- */
         .card-item {
             width: 160px; 
-            min-height: 220px; 
+            height: 220px; /* Cố định chiều cao */
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s;
             cursor: default;
-            overflow: hidden;
             position: relative;
+            perspective: 1000px; /* Thêm phối cảnh cho hiệu ứng 3D */
         }
 
-        /* Phần Úp (Back) */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s; /* Tốc độ lật */
+            transform-style: preserve-3d; /* Giữ các mặt trong không gian 3D */
+        }
+        
+        /* Mặt úp và mặt ngửa */
+        .card-back, .card-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Ẩn mặt sau khi xoay */
+            border-radius: 12px;
+        }
+
+        /* Mặt Úp (Back) - Mặc định */
         .card-back {
             background-color: var(--color-primary); 
             border: 3px solid #ccc; 
@@ -169,11 +186,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            width: 100%;
             padding: 10px;
-            opacity: 1;
-            transition: opacity 0.5s;
+            z-index: 2;
         }
         
         .card-back i {
@@ -181,31 +195,21 @@
             margin-bottom: 10px;
         }
 
-        /* Phần Ngửa (Content) */
+        /* Mặt Ngửa (Content) */
         .card-content {
             background-color: #fff;
             border: 3px solid var(--color-accent); 
             padding: 12px;
-            height: 100%;
-            width: 100%;
-            font-size: var(--base-font-size);
-            opacity: 0;
-            transition: opacity 0.5s;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
+            transform: rotateY(180deg); /* Mặt ngửa xoay 180 độ so với mặt úp */
+            z-index: 1;
         }
         
-        /* Trạng thái khi lá bài được tiết lộ */
-        .card-item.revealed .card-back {
-            opacity: 0;
+        /* Trạng thái khi lá bài được tiết lộ (Card Item đã được lật) */
+        .card-item.revealed .card-inner {
+            transform: rotateY(180deg);
         }
-        
-        .card-item.revealed .card-content {
-            opacity: 1;
-            z-index: 20;
-        }
+        /* --- Kết thúc Cấu trúc Lật Bài 3D --- */
+
 
         /* Định dạng nội dung bài */
         .card-content strong {
@@ -255,7 +259,7 @@
             .card-item {
                 width: 100%;
                 max-width: 140px;
-                min-height: 180px;
+                height: 180px;
             }
         }
     </style>
@@ -323,7 +327,7 @@
         const resultArea = document.getElementById('result-area');
         const drawingStatus = document.getElementById('drawing-status');
         const aiSelection = document.getElementById('ai-selection');
-        const infoElement = document.getElementById('card-info');
+        const infoElement = document.getElementById('card-info'); // Cần thêm thẻ này vào HTML nếu bạn muốn hiển thị thông tin vị trí
 
         function createDeck() {
             let deck = [...MAJOR_ARCANA];
@@ -358,8 +362,17 @@
             cardsContainer.innerHTML = ''; 
             drawingStatus.style.display = 'block';
             document.getElementById('spread-title').textContent = spreadName.toUpperCase();
-            infoElement.innerHTML = '';
             
+            // Đảm bảo thẻ card-info được tạo nếu chưa có (Để tránh lỗi nếu bạn chưa thêm lại thẻ này)
+            if (!document.getElementById('card-info')) {
+                const infoDiv = document.createElement('div');
+                infoDiv.id = 'card-info';
+                infoDiv.className = 'card-info';
+                document.getElementById('result-area').insertBefore(infoDiv, cardsContainer);
+            }
+            document.getElementById('card-info').innerHTML = '';
+
+
             const deck = [...FULL_DECK];
             currentDrawnCards = [];
             currentSpreadName = spreadName;
@@ -388,12 +401,14 @@
                 cardItem.className = 'card-item';
                 cardItem.id = `card-idx-${i}`;
                 cardItem.innerHTML = `
-                    <div class="card-back">
-                        <i class="fas fa-hand-sparkles"></i>
-                        <span>${positionName}</span>
-                    </div>
-                    <div class="card-content">
+                    <div class="card-inner">
+                        <div class="card-back">
+                            <i class="fas fa-hand-sparkles"></i>
+                            <span>${positionName}</span>
                         </div>
+                        <div class="card-content">
+                            </div>
+                    </div>
                 `;
                 cardsContainer.appendChild(cardItem);
             }
@@ -408,7 +423,7 @@
             }
         }
 
-        // Hàm hiển thị từng lá bài (Cập nhật nội dung)
+        // Hàm hiển thị từng lá bài (Cập nhật nội dung và lật bài)
         function revealCard(index, totalCards) {
             const cardData = currentDrawnCards[index];
             const cardItem = document.getElementById(`card-idx-${index}`);
@@ -427,24 +442,28 @@
                 <span>(${orientationText})</span>
             `;
 
-            // 2. Kích hoạt hiệu ứng tiết lộ (lật bài)
+            // 2. Kích hoạt hiệu ứng lật (thêm class revealed)
             cardItem.classList.add('revealed');
 
             // Kiểm tra nếu đây là lá bài cuối cùng
             if (index === totalCards - 1) {
+                // Đợi một chút để hiệu ứng lật hoàn thành trước khi hiển thị kết quả cuối
                 setTimeout(() => {
                     drawingStatus.style.display = 'none';
                     displayFinalResults();
-                    allButtons.forEach(button => button.disabled = false); // Kích hoạt lại nút
+                    allButtons.forEach(button => button.disabled = false); 
                     copyToClipboard();
-                }, 800); // Đợi 0.8s để hiệu ứng CSS transition hoàn tất
+                }, 1000); 
             }
         }
         
         // Hàm hiển thị kết quả cuối cùng (thông tin vị trí)
         function displayFinalResults() {
              const cardInfos = currentDrawnCards.map(card => card.position);
-             infoElement.innerHTML = `**Các vị trí đã rút:** ${cardInfos.join(', ')}`;
+             const finalInfoElement = document.getElementById('card-info');
+             if (finalInfoElement) {
+                 finalInfoElement.innerHTML = `**Các vị trí đã rút:** ${cardInfos.join(', ')}`;
+             }
              aiSelection.style.display = 'block';
         }
 
