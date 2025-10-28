@@ -1,4 +1,4 @@
-<!DOCTYPE 21.10 28.10.25 html>
+<!DOCTYPE 2110 281025 html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -117,10 +117,6 @@
             transform: translateY(-2px);
         }
 
-        .card-buttons button:active:not(:disabled) {
-            transform: scale(0.98);
-        }
-
         .result-area {
             margin-top: 30px;
             border-top: 2px dashed var(--color-primary);
@@ -160,12 +156,13 @@
             border-radius: 12px;
             padding: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s, opacity 0.5s;
+            transition: transform 0.3s, background-color 0.5s;
             font-size: var(--base-font-size);
-            opacity: 0; 
+            position: relative; /* Quan trọng cho animation */
+            overflow: hidden;
         }
         
-        /* Đảm bảo lá bài Placeholder có kích thước tương đương */
+        /* Lá bài Úp (Placeholder) */
         .card-placeholder {
             width: 160px; 
             min-height: 220px;
@@ -180,17 +177,28 @@
             font-size: 1.2rem;
             font-weight: 600;
             padding: 10px;
+            cursor: default;
+            position: relative;
+        }
+        
+        .card-placeholder .card-back-content {
             transition: opacity 0.5s;
         }
         
-        .card-placeholder i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+        /* Nội dung lá bài đã được tiết lộ */
+        .card-content {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .card-display.revealed .card-back-content {
+            opacity: 0;
+        }
+        
+        .card-display.revealed .card-content {
+            opacity: 1;
         }
 
-        .card-display.revealed {
-            opacity: 1; 
-        }
 
         .card-display strong {
             display: block;
@@ -225,25 +233,6 @@
             display: none; 
         }
 
-        .ai-selection p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .ai-selection button {
-            background-color: var(--color-accent);
-            color: var(--color-primary);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: var(--font-weight-bold);
-            margin: 0 10px;
-            transition: background-color 0.2s;
-            font-size: 1.0rem;
-        }
-        
         .notes {
             margin-top: 40px;
             padding: 25px;
@@ -253,23 +242,13 @@
             border-radius: 8px;
         }
         
+        /* Responsive adjustments */
         @media (max-width: 600px) {
-            :root {
-                --base-font-size: 1rem;
-                --heading-font-size: 1.5rem;
-                --menu-font-size: 1rem;
-            }
-            .container {
-                padding: 15px;
-            }
             .card-display, .card-placeholder {
                 width: 100%;
                 max-width: 140px;
                 padding: 10px;
                 min-height: 180px;
-            }
-            .card-placeholder i {
-                 font-size: 1.5rem;
             }
         }
     </style>
@@ -353,12 +332,16 @@
         let currentSpreadName = '';
         let currentDrawnCards = [];
         const DRAW_DELAY = 3000; // 3 giây (3000ms)
+        const MONTH_NAMES = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
+                             'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
 
-        // Lấy tên tháng bằng tiếng Việt
+        // Lấy tên tháng bằng tiếng Việt (đã sửa lỗi logic)
         function getMonthName(offset = 0) {
             const date = new Date();
-            date.setMonth(date.getMonth() + offset);
-            return date.toLocaleString('vi-VN', { month: 'long' });
+            // Lấy chỉ số tháng hiện tại (0-11) + offset, sau đó lấy modulo 12
+            const currentMonthIndex = date.getMonth();
+            const targetMonthIndex = (currentMonthIndex + offset) % 12; 
+            return MONTH_NAMES[targetMonthIndex];
         }
 
         // Hàm chính rút bài và bắt đầu hiển thị
@@ -396,12 +379,19 @@
                     position: positionName
                 });
                 
-                // Thêm Placeholder ngay lập tức
-                const placeholderDiv = document.createElement('div');
-                placeholderDiv.className = 'card-placeholder';
-                placeholderDiv.innerHTML = `<i class="fas fa-hand-sparkles"></i><span>${positionName}</span>`;
-                placeholderDiv.id = `card-idx-${i}`;
-                cardsContainer.appendChild(placeholderDiv);
+                // Thêm Placeholder (là div chung cho cả úp và ngửa)
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card-display card-placeholder';
+                cardDiv.id = `card-idx-${i}`;
+                cardDiv.innerHTML = `
+                    <div class="card-back-content">
+                        <i class="fas fa-hand-sparkles"></i>
+                        <span>${positionName}</span>
+                    </div>
+                    <div class="card-content">
+                        </div>
+                `;
+                cardsContainer.appendChild(cardDiv);
             }
             
             // 2. Bắt đầu hiển thị từng lá bài với độ trễ
@@ -417,27 +407,28 @@
             }
         }
 
-        // Hàm hiển thị từng lá bài
+        // Hàm hiển thị từng lá bài (Cập nhật nội dung)
         function revealCard(index, totalCards) {
             const cardData = currentDrawnCards[index];
-            const placeholder = document.getElementById(`card-idx-${index}`);
+            const cardElement = document.getElementById(`card-idx-${index}`);
             
-            if (!cardData || !placeholder) return;
+            if (!cardData || !cardElement) return;
 
             drawingStatus.textContent = `Đang rút lá bài thứ ${index + 1} / ${totalCards}...`;
 
             const orientationText = cardData.orientation === 'U' ? 'Xuôi' : 'Ngược';
             
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'card-display revealed';
-            cardDiv.innerHTML = `
+            // Điền nội dung vào div card-content
+            const contentDiv = cardElement.querySelector('.card-content');
+            contentDiv.innerHTML = `
                 <strong>${cardData.position}</strong>
                 <span>${cardData.name}</span>
                 <span>(${orientationText})</span>
             `;
-            
-            // Thay thế Placeholder bằng lá bài đã rút
-            cardsContainer.replaceChild(cardDiv, placeholder);
+
+            // Thay đổi class để kích hoạt CSS transition (hiệu ứng lật/hiện bài)
+            cardElement.classList.remove('card-placeholder');
+            cardElement.classList.add('revealed');
 
             // Kiểm tra nếu đây là lá bài cuối cùng
             if (index === totalCards - 1) {
@@ -483,9 +474,8 @@
                     ];
                     return positions6[index] || `Vị trí ${index + 1}`;
                 case 'Trải Bài Tarot 1 Năm':
-                    const months12 = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
-                                      'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-                    return months12[index];
+                    // Đảm bảo lấy đúng tên tháng từ Tháng 1 đến Tháng 12
+                    return MONTH_NAMES[index];
                 default:
                     return `Vị trí ${index + 1}`;
             }
