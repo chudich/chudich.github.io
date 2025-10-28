@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE 21h 28.10.25 html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -107,13 +107,20 @@
             transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+        
+        /* Hiệu ứng khi đang rút bài */
+        .card-buttons button:disabled {
+            background-color: #A083C5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-        .card-buttons button:hover {
+        .card-buttons button:hover:not(:disabled) {
             background-color: #7B3EAB;
             transform: translateY(-2px);
         }
 
-        .card-buttons button:active {
+        .card-buttons button:active:not(:disabled) {
             transform: scale(0.98);
         }
 
@@ -131,6 +138,13 @@
             font-weight: var(--font-weight-bold);
             text-align: center;
         }
+        
+        #drawing-status {
+            color: var(--color-primary);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
 
         #cards-container {
             display: flex;
@@ -138,6 +152,7 @@
             justify-content: center;
             gap: 30px; /* Tăng khoảng cách giữa các lá bài */
             margin-bottom: 20px;
+            min-height: 250px; /* Giữ chỗ để tránh layout bị nhảy */
         }
 
         .card-display {
@@ -148,8 +163,28 @@
             border-radius: 12px;
             padding: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s;
+            transition: transform 0.3s, opacity 0.5s;
             font-size: var(--base-font-size);
+            opacity: 0; /* Mặc định ẩn để tạo hiệu ứng */
+        }
+        
+        .card-placeholder {
+             /* Lá bài úp - Vẫn hiển thị để giữ vị trí */
+            width: 160px; 
+            min-height: 220px;
+            background-color: var(--color-primary); 
+            border: 3px solid #ccc; 
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            opacity: 1; 
+        }
+
+        .card-display.revealed {
+            opacity: 1; /* Hiển thị khi được rút */
         }
 
         .card-display strong {
@@ -187,6 +222,7 @@
             border-radius: 12px;
             background-color: #f8f0ff;
             text-align: center;
+            display: none; /* Mặc định ẩn cho đến khi rút bài xong */
         }
 
         .ai-selection p {
@@ -223,7 +259,7 @@
             margin-top: 40px;
             padding: 25px;
             background-color: #e6f7ff;
-            border-left: 5px solid var(--ios-blue);
+            border-left: 5px solid var(--color-primary);
             text-align: left;
             border-radius: 8px;
         }
@@ -235,7 +271,7 @@
         }
         
         .notes strong {
-            color: var(--ios-blue);
+            color: var(--color-primary);
             font-weight: var(--font-weight-bold);
         }
         
@@ -248,7 +284,7 @@
             .container {
                 padding: 15px;
             }
-            .card-display {
+            .card-display, .card-placeholder {
                 width: 100%;
                 max-width: 140px;
                 padding: 10px;
@@ -277,26 +313,27 @@
             <a href="https://chudich.github.io/IChing2.html"><i class="fas fa-home"></i> Trang Chủ</a>
             <a href="#controls"><i class="fas fa-magic"></i> Rút Bài Tarot</a>
         </div>
+
         <h1>🔮 Trải Bài Tarot</h1>
         
         <div class="controls" id="controls">
             <h3>Chọn Phương Pháp Trải Bài:</h3>
             <div class="card-buttons">
-                <button onclick="drawCards(1, 'Trải Bài Năng Lượng Sự Việc Cụ Thể')">1 Lá: Sự Việc</button>
-                <button onclick="drawCards(7, 'Trải Bài Tarot 1 Tuần')">7 Lá: 1 Tuần</button>
-                <button onclick="drawCards(4, 'Trải Bài Tarot 1 Tháng')">4 Lá: 1 Tháng</button>
-                <button onclick="drawCards(6, 'Trải Bài Tarot 3 Tháng')">6 Lá: 3 Tháng</button>
-                <button onclick="drawCards(10, 'Trải Bài Tarot 6 Tháng')">10 Lá: 6 Tháng</button>
-                <button onclick="drawCards(12, 'Trải Bài Tarot 1 Năm')">12 Lá: 1 Năm</button>
+                <button id="btn-1" onclick="drawCards(1, 'Trải Bài Năng Lượng Sự Việc Cụ Thể')">1 Lá: Sự Việc</button>
+                <button id="btn-7" onclick="drawCards(7, 'Trải Bài Tarot 1 Tuần')">7 Lá: 1 Tuần</button>
+                <button id="btn-4" onclick="drawCards(4, 'Trải Bài Tarot 1 Tháng')">4 Lá: 1 Tháng</button>
+                <button id="btn-6-3" onclick="drawCards(6, 'Trải Bài Tarot 3 Tháng')">6 Lá: 3 Tháng</button>
+                <button id="btn-10" onclick="drawCards(10, 'Trải Bài Tarot 6 Tháng')">10 Lá: 6 Tháng</button>
+                <button id="btn-12" onclick="drawCards(12, 'Trải Bài Tarot 1 Năm')">12 Lá: 1 Năm</button>
             </div>
         </div>
 
         <div id="result-area" class="result-area" style="display: none;">
             <div id="spread-title"></div>
-            <div class="card-info" id="card-info"></div>
+            <div id="drawing-status" style="display: none;">Đang rút lá bài...</div>
             <div id="cards-container"></div>
             
-            <div class="ai-selection">
+            <div class="ai-selection" id="ai-selection">
                 <p>Kết quả đã được sao chép vào bộ nhớ tạm. Hãy chọn AI để giải bài:</p>
                 <button onclick="openAI('Gemini')">Giải bằng Gemini</button>
                 <button onclick="openAI('ChatGPT')">Giải bằng ChatGPT</button>
@@ -327,6 +364,13 @@
         const MINOR_ARCANA_SUITS = ['Wands', 'Cups', 'Swords', 'Pentacles'];
         const CARD_RANKS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Page', 'Knight', 'Queen', 'King'];
 
+        // Lấy tất cả nút button rút bài
+        const allButtons = document.querySelectorAll('.card-buttons button');
+        const cardsContainer = document.getElementById('cards-container');
+        const resultArea = document.getElementById('result-area');
+        const drawingStatus = document.getElementById('drawing-status');
+        const aiSelection = document.getElementById('ai-selection');
+
         // Tạo bộ bài đầy đủ 78 lá
         function createDeck() {
             let deck = [...MAJOR_ARCANA];
@@ -341,9 +385,20 @@
         const FULL_DECK = createDeck();
         let currentSpreadName = '';
         let currentDrawnCards = [];
+        const DRAW_DELAY = 3000; // 3 giây (3000ms)
 
-        // Hàm rút bài
+        // Hàm chính rút bài và bắt đầu hiển thị
         function drawCards(numCards, spreadName) {
+            
+            // 1. Vô hiệu hóa nút bấm và thiết lập trạng thái
+            allButtons.forEach(button => button.disabled = true);
+            resultArea.style.display = 'block';
+            aiSelection.style.display = 'none';
+            cardsContainer.innerHTML = ''; // Xóa kết quả cũ
+            drawingStatus.style.display = 'block';
+            document.getElementById('spread-title').textContent = spreadName.toUpperCase();
+            document.getElementById('card-info').innerHTML = '';
+
             const deck = [...FULL_DECK];
             currentDrawnCards = [];
             currentSpreadName = spreadName;
@@ -354,64 +409,78 @@
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
 
-            // Rút bài
+            // Rút bài và tạo mảng kết quả
             for (let i = 0; i < numCards; i++) {
                 const cardIndex = Math.floor(Math.random() * deck.length);
                 const card = deck.splice(cardIndex, 1)[0];
-                
-                // Quyết định bài xuôi (Upright - U) hay ngược (Reversed - R)
                 const orientation = Math.random() < 0.5 ? 'U' : 'R';
                 currentDrawnCards.push({
                     name: card,
-                    orientation: orientation
+                    orientation: orientation,
+                    position: getPositionName(spreadName, i) // Lưu vị trí
                 });
+                
+                // Thêm Placeholder ngay lập tức để giữ chỗ
+                const placeholderDiv = document.createElement('div');
+                placeholderDiv.className = 'card-placeholder';
+                placeholderDiv.innerHTML = `<i class="fas fa-hand-sparkles"></i>`;
+                placeholderDiv.id = `card-idx-${i}`;
+                cardsContainer.appendChild(placeholderDiv);
             }
-
-            displayResults(currentDrawnCards);
-            copyToClipboard();
+            
+            // 2. Bắt đầu hiển thị từng lá bài với độ trễ
+            for (let i = 0; i < numCards; i++) {
+                // Độ trễ lũy tiến: i=0 -> 3s, i=1 -> 6s, i=2 -> 9s, ...
+                const delay = (i + 1) * DRAW_DELAY; 
+                
+                setTimeout(() => {
+                    revealCard(i, numCards);
+                }, delay);
+            }
         }
 
-        // Hàm hiển thị kết quả
-        function displayResults(cards) {
-            const container = document.getElementById('cards-container');
-            const title = document.getElementById('spread-title');
-            const info = document.getElementById('card-info');
-            const resultArea = document.getElementById('result-area');
+        // Hàm hiển thị từng lá bài
+        function revealCard(index, totalCards) {
+            const cardData = currentDrawnCards[index];
+            const placeholder = document.getElementById(`card-idx-${index}`);
             
-            title.textContent = currentSpreadName.toUpperCase();
+            if (!cardData || !placeholder) return;
+
+            drawingStatus.textContent = `Đang rút lá bài thứ ${index + 1} / ${totalCards}...`;
+
+            const orientationText = cardData.orientation === 'U' ? 'Xuôi' : 'Ngược';
             
-            let cardNames = [];
-            let cardInfos = [];
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card-display revealed';
+            cardDiv.innerHTML = `
+                <strong>${cardData.position}</strong>
+                <span>${cardData.name}</span>
+                <span>(${orientationText})</span>
+            `;
             
-            container.innerHTML = '';
-            
-            cards.forEach((card, index) => {
-                const position = getPositionName(currentSpreadName, index);
-                
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card-display';
-                
-                const orientationText = card.orientation === 'U' ? 'Xuôi' : 'Ngược';
-                
-                cardDiv.innerHTML = `
-                    <strong>${position}</strong>
-                    <span>${card.name}</span>
-                    <span>(${orientationText})</span>
-                `;
-                container.appendChild(cardDiv);
-                
-                cardNames.push(`${position}: ${card.name} (${orientationText})`);
-                cardInfos.push(position);
-            });
-            
-            // Cập nhật thẻ thông tin với các vị trí đã rút
-            info.innerHTML = `**Các vị trí đã rút:** ${cardInfos.join(', ')}`;
-            
-            resultArea.style.display = 'block';
+            // Thay thế Placeholder bằng lá bài đã rút
+            cardsContainer.replaceChild(cardDiv, placeholder);
+
+            // Kiểm tra nếu đây là lá bài cuối cùng
+            if (index === totalCards - 1) {
+                drawingStatus.style.display = 'none';
+                displayFinalResults();
+                copyToClipboard();
+                allButtons.forEach(button => button.disabled = false); // Kích hoạt lại nút
+            }
+        }
+        
+        // Hàm hiển thị kết quả cuối cùng (thông tin vị trí)
+        function displayFinalResults() {
+             const info = document.getElementById('card-info');
+             const cardInfos = currentDrawnCards.map(card => card.position);
+             info.innerHTML = `**Các vị trí đã rút:** ${cardInfos.join(', ')}`;
+             aiSelection.style.display = 'block';
         }
 
         // Hàm đặt tên vị trí cho các kiểu trải bài
         function getPositionName(spreadName, index) {
+            const date = new Date();
             switch (spreadName) {
                 case 'Trải Bài Năng Lượng Sự Việc Cụ Thể':
                     return 'Năng Lượng Chính';
@@ -422,21 +491,17 @@
                     const weeks = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'];
                     return weeks[index];
                 case 'Trải Bài Tarot 3 Tháng':
-                    const currentMonth = new Date().getMonth();
-                    const months3 = [
-                        new Date(new Date().setMonth(currentMonth)).toLocaleString('vi-VN', { month: 'long' }), 
-                        new Date(new Date().setMonth(currentMonth + 1)).toLocaleString('vi-VN', { month: 'long' }), 
-                        new Date(new Date().setMonth(currentMonth + 2)).toLocaleString('vi-VN', { month: 'long' })
-                    ];
+                    const currentMonth3 = date.getMonth();
+                    const months3 = Array.from({ length: 3 }, (_, i) => 
+                        new Date(new Date().setMonth(currentMonth3 + i)).toLocaleString('vi-VN', { month: 'long' })
+                    );
                     const positions3 = [
-                        `${months3[0]} (Hiện tại)`,
-                        `${months3[1]}`,
-                        `${months3[2]}`,
+                        `${months3[0]} (Hiện tại)`, `${months3[1]}`, `${months3[2]}`, 
                         'Thách thức', 'Cơ hội', 'Kết quả tổng quan'
                     ];
                     return positions3[index] || `Vị trí ${index + 1}`;
                 case 'Trải Bài Tarot 6 Tháng':
-                    const currentMonth6 = new Date().getMonth();
+                    const currentMonth6 = date.getMonth();
                     const months6 = Array.from({ length: 6 }, (_, i) => 
                         new Date(new Date().setMonth(currentMonth6 + i)).toLocaleString('vi-VN', { month: 'long' })
                     );
@@ -458,10 +523,9 @@
         function copyToClipboard() {
             if (currentDrawnCards.length === 0) return;
 
-            const spreadDetails = currentDrawnCards.map((card, index) => {
-                const position = getPositionName(currentSpreadName, index);
+            const spreadDetails = currentDrawnCards.map(card => {
                 const orientationText = card.orientation === 'U' ? 'Xuôi' : 'Ngược';
-                return `${position}: ${card.name} (${orientationText})`;
+                return `${card.position}: ${card.name} (${orientationText})`;
             }).join('\n');
 
             const copyText = `${currentSpreadName}:\n${spreadDetails}\n\n[Yêu cầu giải bài chi tiết dựa trên các lá bài đã rút này.]`;
