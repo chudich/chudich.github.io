@@ -1,4 +1,4 @@
-<!DOCTYPE 2150d281025 html>
+<!DOCTYPE 22d281025 html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -633,7 +633,7 @@
         }
 
         /**
-         * Sửa lỗi mở link: Sử dụng window.open() với link tuyệt đối để tránh bị chặn.
+         * Phương pháp Sửa Lỗi Mở Link (Sử dụng thẻ A tạm thời)
          */
         function openAI(aiName) {
             let url = '';
@@ -644,17 +644,19 @@
                 url = 'https://chat.openai.com/';
             }
             
-            // Mở cửa sổ mới. Trình duyệt có thể yêu cầu bạn cho phép popup nếu bạn chạy code này cục bộ (local).
-            try {
-                const newWindow = window.open(url, '_blank');
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                    // Cảnh báo nếu trình chặn popup ngăn cản
-                    alert(`Trình duyệt của bạn có thể đang chặn cửa sổ bật lên. Vui lòng cho phép popup để mở ${aiName}.`);
-                }
-            } catch (e) {
-                 // Trường hợp lỗi khác (ví dụ: lỗi bảo mật)
-                 alert(`Không thể mở ${aiName}. Vui lòng truy cập trực tiếp tại: ${url}`);
-            }
+            // 1. Tạo một thẻ <a> tạm thời
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            // 2. Mô phỏng hành động click. Hành động này thường được trình duyệt coi là hành động của người dùng
+            // và ít bị chặn bởi Popup Blocker hơn window.open()
+            link.click();
+            
+            // 3. Xóa thẻ <a> sau khi sử dụng
+            document.body.removeChild(link);
         }
     </script>
 </body>
