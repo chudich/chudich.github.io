@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE 2145281025 html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -151,12 +151,12 @@
         /* --- Cấu trúc Lật Bài 3D --- */
         .card-item {
             width: 160px; 
-            height: 220px; /* Cố định chiều cao */
+            height: 220px; 
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             cursor: default;
             position: relative;
-            perspective: 1000px; /* Thêm phối cảnh cho hiệu ứng 3D */
+            perspective: 1000px; 
         }
 
         .card-inner {
@@ -164,20 +164,19 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s; /* Tốc độ lật */
-            transform-style: preserve-3d; /* Giữ các mặt trong không gian 3D */
+            transition: transform 0.6s; 
+            transform-style: preserve-3d; 
         }
         
-        /* Mặt úp và mặt ngửa */
         .card-back, .card-content {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden; /* Ẩn mặt sau khi xoay */
+            backface-visibility: hidden; 
             border-radius: 12px;
         }
 
-        /* Mặt Úp (Back) - Mặc định */
+        /* Mặt Úp (Back) */
         .card-back {
             background-color: var(--color-primary); 
             border: 3px solid #ccc; 
@@ -200,11 +199,10 @@
             background-color: #fff;
             border: 3px solid var(--color-accent); 
             padding: 12px;
-            transform: rotateY(180deg); /* Mặt ngửa xoay 180 độ so với mặt úp */
+            transform: rotateY(180deg); 
             z-index: 1;
         }
         
-        /* Trạng thái khi lá bài được tiết lộ (Card Item đã được lật) */
         .card-item.revealed .card-inner {
             transform: rotateY(180deg);
         }
@@ -227,14 +225,68 @@
             color: var(--color-text);
         }
         
-        .card-info {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: var(--base-font-size);
+        /* Khu vực nhập Entropy (Form) */
+        #entropy-form-container {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .entropy-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .entropy-box h4 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
         }
         
+        .entropy-box p {
+            margin-bottom: 20px;
+            font-size: 1.0rem;
+        }
+
+        #entropy-input {
+            width: 95%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid var(--color-accent);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        #submit-entropy {
+            background-color: var(--color-accent);
+            color: var(--color-primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: var(--font-weight-bold);
+            font-size: 1.1rem;
+            transition: background-color 0.2s;
+        }
+
+        #submit-entropy:hover {
+            background-color: #FFD740;
+        }
+
+
+        /* Khu vực AI Selection */
         .ai-selection {
             margin-top: 40px;
             padding: 25px;
@@ -244,6 +296,25 @@
             text-align: center;
             display: none; 
         }
+
+        .ai-selection button {
+            /* Tăng kích thước nút AI theo yêu cầu */
+            background-color: var(--color-accent);
+            color: var(--color-primary);
+            border: none;
+            padding: 15px 30px; /* To hơn */
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 900; /* Đậm hơn */
+            margin: 0 10px;
+            transition: background-color 0.2s;
+            font-size: 1.2rem; /* To hơn */
+        }
+        
+        .ai-selection button:hover {
+            background-color: #FFD740;
+        }
+
 
         .notes {
             margin-top: 40px;
@@ -261,6 +332,10 @@
                 max-width: 140px;
                 height: 180px;
             }
+            .ai-selection button {
+                padding: 10px 20px;
+                font-size: 1.0rem;
+            }
         }
     </style>
 </head>
@@ -277,12 +352,12 @@
         <div class="controls" id="controls">
             <h3>Chọn Phương Pháp Trải Bài:</h3>
             <div class="card-buttons">
-                <button onclick="drawCards(1, 'Trải Bài Năng Lượng Sự Việc Cụ Thể')">1 Lá: Sự Việc</button>
-                <button onclick="drawCards(7, 'Trải Bài Tarot 1 Tuần')">7 Lá: 1 Tuần</button>
-                <button onclick="drawCards(4, 'Trải Bài Tarot 1 Tháng')">4 Lá: 1 Tháng</button>
-                <button onclick="drawCards(6, 'Trải Bài Tarot 3 Tháng')">6 Lá: 3 Tháng</button>
-                <button onclick="drawCards(10, 'Trải Bài Tarot 6 Tháng')">10 Lá: 6 Tháng</button>
-                <button onclick="drawCards(12, 'Trải Bài Tarot 1 Năm')">12 Lá: 1 Năm</button>
+                <button onclick="showEntropyForm(1, 'Trải Bài Năng Lượng Sự Việc Cụ Thể')">1 Lá: Sự Việc</button>
+                <button onclick="showEntropyForm(7, 'Trải Bài Tarot 1 Tuần')">7 Lá: 1 Tuần</button>
+                <button onclick="showEntropyForm(4, 'Trải Bài Tarot 1 Tháng')">4 Lá: 1 Tháng</button>
+                <button onclick="showEntropyForm(6, 'Trải Bài Tarot 3 Tháng')">6 Lá: 3 Tháng</button>
+                <button onclick="showEntropyForm(10, 'Trải Bài Tarot 6 Tháng')">10 Lá: 6 Tháng</button>
+                <button onclick="showEntropyForm(12, 'Trải Bài Tarot 1 Năm')">12 Lá: 1 Năm</button>
             </div>
         </div>
 
@@ -309,6 +384,15 @@
         </div>
     </div>
 
+    <div id="entropy-form-container">
+        <div class="entropy-box">
+            <h4 id="entropy-title">Năng Lượng Kết Nối</h4>
+            <p>Vui lòng nhập **một từ, một cụm từ, hoặc một con số** bất kỳ liên quan đến vấn đề bạn muốn hỏi để kết nối năng lượng:</p>
+            <input type="text" id="entropy-input" placeholder="Ví dụ: đêm trăng, 11, câu hỏi của tôi..." autofocus>
+            <button id="submit-entropy">Rút Bài</button>
+        </div>
+    </div>
+
     <script>
         const MAJOR_ARCANA = [
             '0 - The Fool', 'I - The Magician', 'II - The High Priestess', 'III - The Empress', 
@@ -327,7 +411,18 @@
         const resultArea = document.getElementById('result-area');
         const drawingStatus = document.getElementById('drawing-status');
         const aiSelection = document.getElementById('ai-selection');
-        const infoElement = document.getElementById('card-info'); // Cần thêm thẻ này vào HTML nếu bạn muốn hiển thị thông tin vị trí
+        
+        // Form Entropy Elements
+        const entropyFormContainer = document.getElementById('entropy-form-container');
+        const entropyInput = document.getElementById('entropy-input');
+        const submitEntropyButton = document.getElementById('submit-entropy');
+        
+        let currentNumCards = 0;
+        let currentSpreadName = '';
+        let currentDrawnCards = [];
+        const DRAW_DELAY = 3000; 
+        const MONTH_NAMES = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
+                             'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
 
         function createDeck() {
             let deck = [...MAJOR_ARCANA];
@@ -340,12 +435,7 @@
         }
 
         const FULL_DECK = createDeck();
-        let currentSpreadName = '';
-        let currentDrawnCards = [];
-        const DRAW_DELAY = 3000; // 3 giây (3000ms)
-        const MONTH_NAMES = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
-                             'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-
+        
         function getMonthName(offset = 0) {
             const date = new Date();
             const currentMonthIndex = date.getMonth();
@@ -353,17 +443,66 @@
             return MONTH_NAMES[targetMonthIndex];
         }
 
-        // Hàm chính rút bài và bắt đầu hiển thị
+        // Hàm tạo giá trị Seed từ input của người dùng (Entropy)
+        function generateSeed(input) {
+            let hash = 0;
+            if (input.length === 0) {
+                // Nếu không nhập gì, lấy thời gian hiện tại
+                return new Date().getTime(); 
+            }
+            for (let i = 0; i < input.length; i++) {
+                const char = input.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0; // Chuyển thành 32bit integer
+            }
+            // Trả về giá trị tuyệt đối để dùng làm seed
+            return Math.abs(hash); 
+        }
+
+        // PRNG (Pseudo-Random Number Generator) dựa trên Seed
+        let seed = 1;
+        function seededRandom() {
+            // LCG (Linear Congruential Generator)
+            seed = (seed * 9301 + 49297) % 233280;
+            return seed / 233280;
+        }
+
+
+        // 1. Hiển thị form nhập Entropy
+        function showEntropyForm(numCards, spreadName) {
+            currentNumCards = numCards;
+            currentSpreadName = spreadName;
+            
+            // Vô hiệu hóa nút chính
+            allButtons.forEach(button => button.disabled = true);
+            
+            document.getElementById('entropy-title').textContent = `Kết nối năng lượng cho ${spreadName}`;
+            entropyInput.value = '';
+            entropyFormContainer.style.display = 'flex';
+            entropyInput.focus();
+        }
+
+        // 2. Xử lý khi nhấn nút Rút Bài trong form Entropy
+        submitEntropyButton.onclick = function() {
+            const entropyValue = entropyInput.value.trim();
+            entropyFormContainer.style.display = 'none';
+            
+            // Thiết lập Seed
+            seed = generateSeed(entropyValue);
+            
+            drawCards(currentNumCards, currentSpreadName);
+        };
+        
+        
+        // Hàm chính rút bài (Sử dụng seededRandom)
         function drawCards(numCards, spreadName) {
             
-            allButtons.forEach(button => button.disabled = true);
             resultArea.style.display = 'block';
             aiSelection.style.display = 'none';
             cardsContainer.innerHTML = ''; 
             drawingStatus.style.display = 'block';
             document.getElementById('spread-title').textContent = spreadName.toUpperCase();
             
-            // Đảm bảo thẻ card-info được tạo nếu chưa có (Để tránh lỗi nếu bạn chưa thêm lại thẻ này)
             if (!document.getElementById('card-info')) {
                 const infoDiv = document.createElement('div');
                 infoDiv.id = 'card-info';
@@ -377,17 +516,17 @@
             currentDrawnCards = [];
             currentSpreadName = spreadName;
 
-            // Xáo bài 
+            // Xáo bài (Fisher-Yates shuffle algorithm) - SỬ DỤNG SEEDED RANDOM
             for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
+                const j = Math.floor(seededRandom() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
 
-            // Rút bài, tạo mảng kết quả và thêm Placeholder
+            // Rút bài và thêm Placeholder
             for (let i = 0; i < numCards; i++) {
-                const cardIndex = Math.floor(Math.random() * deck.length);
-                const card = deck.splice(cardIndex, 1)[0];
-                const orientation = Math.random() < 0.5 ? 'U' : 'R';
+                // Rút bài không cần random nữa vì đã xáo bài
+                const card = deck[i]; 
+                const orientation = seededRandom() < 0.5 ? 'U' : 'R'; // Vẫn dùng seeded random cho hướng
                 const positionName = getPositionName(spreadName, i);
                 
                 currentDrawnCards.push({
@@ -434,7 +573,6 @@
 
             const orientationText = cardData.orientation === 'U' ? 'Xuôi' : 'Ngược';
             
-            // 1. Điền nội dung (lá bài Ngửa)
             const contentDiv = cardItem.querySelector('.card-content');
             contentDiv.innerHTML = `
                 <strong>${cardData.position}</strong>
@@ -442,12 +580,9 @@
                 <span>(${orientationText})</span>
             `;
 
-            // 2. Kích hoạt hiệu ứng lật (thêm class revealed)
             cardItem.classList.add('revealed');
 
-            // Kiểm tra nếu đây là lá bài cuối cùng
             if (index === totalCards - 1) {
-                // Đợi một chút để hiệu ứng lật hoàn thành trước khi hiển thị kết quả cuối
                 setTimeout(() => {
                     drawingStatus.style.display = 'none';
                     displayFinalResults();
@@ -457,7 +592,6 @@
             }
         }
         
-        // Hàm hiển thị kết quả cuối cùng (thông tin vị trí)
         function displayFinalResults() {
              const cardInfos = currentDrawnCards.map(card => card.position);
              const finalInfoElement = document.getElementById('card-info');
@@ -508,7 +642,7 @@
                 return `${card.position}: ${card.name} (${orientationText})`;
             }).join('\n');
 
-            const copyText = `${currentSpreadName}:\n${spreadDetails}\n\n[Yêu cầu giải bài chi tiết dựa trên các lá bài đã rút này.]`;
+            const copyText = `${currentSpreadName}:\n${spreadDetails}\n\n[Yêu cầu giải bài chi tiết dựa trên các lá bài đã rút này, kết hợp với từ khóa: "${entropyInput.value.trim() || 'Năng lượng ngẫu nhiên'}" ]`;
 
             navigator.clipboard.writeText(copyText).then(() => {
                 const copyMessage = document.getElementById('copy-message');
@@ -522,13 +656,15 @@
             });
         }
 
-        // Hàm mở AI Chat
+        // Sửa lỗi link Gemini và ChatGPT
         function openAI(aiName) {
             let url = '';
             
             if (aiName === 'Gemini') {
+                // Link mới nhất và chính xác cho Gemini
                 url = 'https://gemini.google.com/app';
             } else if (aiName === 'ChatGPT') {
+                // Link chính xác cho ChatGPT
                 url = 'https://chat.openai.com/';
             }
             
