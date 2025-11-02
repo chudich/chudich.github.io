@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đông Tây Vibes | iOS Tươi Sáng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Import Font SF Pro Display (or a similar system font) */
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap');
+
+        /* CSS Variables for iOS Light/Vibrant Theme */
+        :root {
+            /* Light Mode Colors (Tươi sáng) */
+            --background-color: #fcfcfc; /* Nền trắng sáng */
+            --secondary-background: #ffffff; /* Card/Container Background */
+            --text-color: #1c1c1e; /* Primary Text - Gần đen */
+            --secondary-text-color: #6a6a6f; /* Secondary Text - Xám đậm */
+            --ios-blue: #007aff; /* iOS Blue - Nổi bật */
+            --ios-purple: #9440ff; /* Màu tím nhấn mạnh */
+            --ios-blue-light: #4db8ff;
+            --ios-purple-light: #c295ff;
+            --separator-color: #e5e5ea; /* Light Separator */
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --font-size-medium: 17px;
+            --font-weight-bold: 600;
+        }
+
+        /* Base Reset & Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Loại bỏ highlight xanh khi chạm trên mobile */
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            min-height: 100vh;
+            padding-top: 120px; /* Space for the fixed header/menu */
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--ios-blue);
+        }
+
+        /* Header - Frosted Glass Effect */
+        header {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            backdrop-filter: blur(15px); /* Frosted Glass Effect */
+            -webkit-backdrop-filter: blur(15px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--separator-color);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            padding: 15px 0 0; /* Padding trên cho logo */
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--ios-purple);
+            font-size: 28px;
+            font-weight: 700;
+            padding: 0 0 10px 0;
+        }
+
+        /* Navigation (Segmented Control / Pill Button Look) */
+        .main-menu {
+            width: 100%;
+            border-top: 1px solid var(--separator-color); /* Dưới logo */
+            padding: 10px 0;
+        }
+
+        .main-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .main-menu ul li a {
+            color: var(--text-color);
+            font-size: 15px; /* Size nhỏ hơn cho menu trên */
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 18px; /* Pill Shape */
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .main-menu ul li a:hover {
+            background-color: var(--separator-color);
+            color: var(--ios-blue);
+        }
+
+        /* Menu Active/Pressed Effect (Khi link chuẩn bị mở) */
+        .main-menu ul li a:active {
+            background-color: var(--ios-blue);
+            color: #ffffff;
+            transform: scale(0.98);
+        }
+
+        .menu-toggle {
+            display: none; /* Hide on desktop */
+        }
+
+        /* Hero/Welcome Section - Large Title Style */
+        .hero {
+            background: linear-gradient(135deg, var(--ios-blue-light) 0%, var(--ios-purple-light) 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: var(--border-radius);
+            margin: 20px auto;
+            max-width: 1060px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: var(--font-size-medium);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        /* Primary Button - iOS Style */
+        .btn-primary {
+            display: inline-flex;
+            background-color: #ffffff;
+            color: var(--ios-blue);
+            padding: 14px 32px;
+            font-size: var(--font-size-medium);
+            font-weight: var(--font-weight-bold);
+            border-radius: 50px; /* Pill Shape */
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            color: var(--ios-purple);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Button Grid Section - Grouped List/Card Style */
+        .buttons {
+            padding: 40px 0 80px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        .button-grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .button-grid {
+            background-color: var(--secondary-background);
+            border-radius: var(--border-radius);
+            overflow: hidden; 
+            box-shadow: var(--shadow-light);
+            padding: 0;
+            border: 1px solid var(--separator-color);
+        }
+
+        .grid-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--separator-color);
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .grid-item:last-child {
+            border-bottom: none; 
+        }
+
+        .grid-item:hover {
+            background-color: var(--separator-color);
+        }
+
+        /* Link/Button Style inside Grid Item */
+        .grid-item a {
+            display: block;
+            flex-grow: 1;
+            color: var(--text-color);
+            font-size: var(--font-size-medium);
+            font-weight: var(--font-weight-bold); /* Đậm hơn */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Icon color change */
+        .grid-item a i {
+            color: var(--ios-purple);
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .grid-item a:hover i {
+             color: var(--ios-blue);
+        }
+
+        .grid-item a .icon-chevron {
+            color: var(--secondary-text-color);
+            font-size: 16px;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        /* Active/Pressed Effect for Grid Items */
+        .grid-item a:active {
+            color: var(--ios-blue);
+            transform: scale(0.99);
+        }
+
+        .grid-item a:active .icon-chevron {
+            color: var(--ios-blue);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-background);
+            border-top: 1px solid var(--separator-color);
+            text-align: center;
+            padding: 20px 0;
+            color: var(--secondary-text-color);
+            font-size: 14px;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 992px) {
+            body {
+                padding-top: 65px; /* Chỉ chừa chỗ cho logo và toggle */
+            }
+
+            header {
+                padding: 10px 0 0;
+            }
+
+            .header-content {
+                padding: 0 20px;
+            }
+
+            .main-menu {
+                display: none; /* Hide full menu by default on mobile */
+                width: 100%;
+                border-top: none;
+                padding: 0;
+                position: absolute;
+                top: 65px;
+                background-color: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .main-menu.active {
+                display: block;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 10px 0 20px;
+                border-bottom: 1px solid var(--separator-color);
+            }
+
+            .main-menu ul {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .main-menu ul li a {
+                padding: 12px 20px;
+                font-size: 16px;
+                border-radius: 0;
+                justify-content: flex-start;
+                margin: 0 15px;
+                border-bottom: 1px solid var(--separator-color);
+            }
+
+            .main-menu ul li:last-child a {
+                border-bottom: none;
+            }
+
+            .main-menu ul li a:hover {
+                background-color: transparent;
+            }
+
+            .menu-toggle {
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+            }
+
+            .menu-toggle span {
+                width: 25px;
+                height: 3px;
+                background: var(--ios-purple);
+                margin: 3px 0;
+            }
+
+            /* Adjustments for Hero on Mobile */
+            .hero h2 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .section-title {
+                padding: 0 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 40px 15px;
+            }
+            .hero h2 {
+                font-size: 24px;
+            }
+            .hero p {
+                font-size: 14px;
+            }
+            .btn-primary {
+                font-size: 15px;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <h1>Đông Tây Vibes</h1>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <nav class="main-menu" id="main-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="https://chudich.github.io/luchao.html"><i class="fas fa-scroll"></i> Kinh Dịch</a></li>
+                    <li><a href="#phong-thuy"><i class="fas fa-home"></i> Phong Thủy</a></li>
+                    <li><a href="https://chudich.github.io/lienhoadon.html"><i class="fas fa-dice"></i> Liên Hoa Độn</a></li>
+                    <li><a href="https://chudich.github.io/tuvi_phongthuy.html"><i class="fas fa-star"></i> Tử Vi</a></li>
+                    <li><a href="https://chudich.github.io/calendar.html"><i class="fas fa-calendar-alt"></i> Xem Ngày</a></li>
+                    <li><a href="#xin-keo"><i class="fas fa-yin-yang"></i> Xin Keo</a></li>
+                    <li><a href="https://chudich.github.io/xamQuanAm.html"><i class="fas fa-hand-holding-heart"></i> Xin Xăm</a></li>
+                    <li><a href="https://chudich.github.io/baitra_tientri_aichatbot.html"><i class="fas fa-magic"></i> Bài Trà</a></li>
+                    <li><a href="#thu-vien-audio"><i class="fas fa-headphones"></i> Audio</a></li>
+                    <li><a href="#thu-vien-video"><i class="fas fa-video"></i> Video</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Khám Phá Đông Tây Vibes</h2>
+            <p>Chào mừng bạn đến với hành trình khám phá sự giao thoa giữa văn hóa truyền thống phương Đông và tư duy hiện đại phương Tây. Tìm hiểu những giá trị sâu sắc từ Kinh Dịch, Phong Thủy, Tử Vi, Tứ Trụ, Bài Tarot, cùng kho tàng kiến thức phong phú, giúp bạn tìm thấy sự cân bằng và ý nghĩa trong cuộc sống.</p>
+            <a href="https://chudich.github.io/EnterThePath.html" class="btn-primary"><i class="fas fa-arrow-right"></i> Bắt Đầu Hành Trình</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="buttons">
+            <div class="button-grid-container">
+
+                <div>
+                    <div class="section-title">🔮 Công Cụ & Tiện Ích Đông Phương</div>
+                    <div class="button-grid">
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/luchao.html">
+                                <i class="fas fa-book-reader"></i> Kinh Dịch (Lục Hào)
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/lienhoadon.html">
+                                <i class="fas fa-link"></i> Liên Hoa Độn
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/tuvi_phongthuy.html">
+                                <i class="fas fa-star"></i> Tử Vi Phong Thủy
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                         <div class="grid-item">
+                            <a href="https://chudich.github.io/charm.html">
+                                <i class="fas fa-tree"></i> Bói Charm
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/calendar.html">
+                                <i class="fas fa-calendar-alt"></i> Xem Ngày Tốt Xấu
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title">✨ Linh Ứng & Tiên Tri</div>
+                    <div class="button-grid">
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/xamQuanAm.html">
+                                <i class="fas fa-fort-awesome"></i> Xin Xăm Quan Âm
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#xin-keo">
+                                <i class="fas fa-yin-yang"></i> Gieo Quẻ Âm Dương (Xin Keo)
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/baitra_tientri_aichatbot.html">
+                                <i class="fas fa-magic"></i> Bài Trà Tiên Tri
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="https://chudich.github.io/tarot.html">
+                                <i class="fas fa-hand-holding-heart"></i> Bài Tarot
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title">📚 Cộng Đồng & Tài Nguyên</div>
+                    <div class="button-grid">
+                        <div class="grid-item">
+                            <a href="#ebook">
+                                <i class="fas fa-feather-alt"></i> Thư Viện Ebook
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#thu-vien-audio">
+                                <i class="fas fa-headphones"></i> Thư Viện Audio
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#thu-vien-video">
+                                <i class="fas fa-video"></i> Thư Viện Video
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#fanpage">
+                                <i class="fab fa-facebook"></i> Fanpage Facebook
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#youtube">
+                                <i class="fab fa-youtube"></i> Kênh Youtube
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                        <div class="grid-item">
+                            <a href="#dien-dan">
+                                <i class="fas fa-users"></i> Diễn Đàn Thảo Luận
+                                <span class="icon-chevron fas fa-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Đông Tây Vibes. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu for mobile
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainMenu = document.getElementById('main-nav');
+        menuToggle.addEventListener('click', () => {
+            mainMenu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked (for mobile)
+        const menuLinks = document.querySelectorAll('.main-menu ul li a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Chỉ đóng nếu menu đang mở (trên mobile)
+                if (window.innerWidth <= 992 && mainMenu.classList.contains('active')) {
+                    setTimeout(() => {
+                        mainMenu.classList.remove('active');
+                        menuToggle.classList.remove('active');
+                    }, 200); // Đợi 200ms để hiệu ứng active được thấy rõ
+                }
+            });
+        });
+
+        // Active/Pressed state for grid links
+        const gridLinks = document.querySelectorAll('.button-grid a');
+        gridLinks.forEach(link => {
+            link.addEventListener('mousedown', function() {
+                this.classList.add('active');
+            });
+            link.addEventListener('mouseup', function() {
+                setTimeout(() => {
+                    this.classList.remove('active');
+                }, 200); // Đợi 200ms để người dùng thấy hiệu ứng sáng lên
+            });
+            link.addEventListener('mouseleave', function() {
+                this.classList.remove('active');
+            });
+            link.addEventListener('touchstart', function() {
+                this.classList.add('active');
+            }, {passive: true});
+            link.addEventListener('touchend', function(e) {
+                 e.preventDefault(); // Ngăn chặn sự kiện chạm mặc định để xử lý riêng
+                setTimeout(() => {
+                    this.classList.remove('active');
+                    // Tự mở link sau khi hiệu ứng kết thúc
+                    window.location.href = this.href;
+                }, 200);
+            });
+        });
+
+        // Remove the original typing effect script since it's not present in the new structure
+    </script>
+</body>
+</html>
