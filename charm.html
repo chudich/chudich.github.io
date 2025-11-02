@@ -1,0 +1,681 @@
+Đây là mã code JavaScript và HTML để tạo một công cụ "bói Charm" với các tính năng bạn yêu cầu, bao gồm giao diện kiểu iOS, hiệu ứng chờ lấy charm 3 giây, và chức năng sao chép kết quả để hỏi AI.
+Mã này sử dụng các thư viện Google Fonts (cho giao diện iOS) và Font Awesome (cho các icon).
+💻 Code (HTML, CSS, JavaScript)
+Bạn có thể lưu toàn bộ đoạn mã dưới đây thành một file duy nhất có tên là charm_reader.html và mở bằng trình duyệt.
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 Bói Charm - Charm Reading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS cho giao diện kiểu iOS */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f7; /* Gần với màu nền iOS */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            color: #1c1c1e;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px; /* Kích thước trung bình dễ nhìn */
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #3a3a3c;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* Menu chính */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .menu-button {
+            background-color: #007aff; /* Màu xanh dương iOS */
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: **bold**;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.3s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .menu-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Vùng hiển thị Charm */
+        #charm-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            min-height: 120px;
+            margin-bottom: 25px;
+        }
+
+        .charm-card {
+            background-color: #e0e0e5;
+            color: #1c1c1e;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            width: 150px; /* Kích thước trung bình */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease-out;
+        }
+
+        .charm-card i {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        /* Hiệu ứng chờ */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            font-size: 1.2rem;
+            color: #8e8e93;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #007aff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form kết quả */
+        #result-form {
+            background-color: #e8e8ed;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none; /* Ban đầu ẩn */
+        }
+
+        #result-form h3 {
+            color: #3a3a3c;
+            font-weight: **bold**;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .charm-result {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 5px solid #007aff;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+        }
+
+        .charm-result strong {
+            display: block;
+            font-size: 1.1rem;
+            color: #007aff;
+            margin-bottom: 5px;
+        }
+        
+        /* Menu AI và Về Trang Trước */
+        .ai-menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .ai-button {
+            background-color: #34c759; /* Xanh lá */
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: **bold**;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-button.gemini {
+            background-color: #007aff; /* Xanh dương */
+        }
+
+        .ai-button.back {
+            background-color: #8e8e93; /* Xám */
+        }
+
+        .ai-button:hover {
+            opacity: 0.85;
+        }
+
+        .ai-button i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔮 Chọn Số Charm</h1>
+
+    <div class="menu-container">
+        <button class="menu-button" onclick="startReading(1)">
+            Bói 1 Charm <i class="fas fa-magic"></i>
+        </button>
+        <button class="menu-button" onclick="startReading(3)">
+            Bói 3 Charm <i class="fas fa-dice-three"></i>
+        </button>
+        <button class="menu-button" onclick="startReading(5)">
+            Bói 5 Charm <i class="fas fa-star-of-life"></i>
+        </button>
+    </div>
+
+    <div id="charm-display">
+        </div>
+
+    <div id="result-form">
+        <h3>✨ Kết Quả Bói Charm</h3>
+        <div id="charm-results-content">
+            </div>
+
+        <div class="ai-menu-container">
+            <button class="ai-button gemini" onclick="askAI('Gemini')">
+                <i class="fas fa-brain"></i> Giải bằng Gemini
+            </button>
+            <button class="ai-button" onclick="askAI('ChatGPT')">
+                <i class="fas fa-comments"></i> Giải bằng ChatGPT
+            </button>
+            <button class="ai-button back" onclick="resetApp()">
+                <i class="fas fa-arrow-left"></i> Về trang trước
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Danh sách 227 Charm (đã được sửa lỗi và làm gọn cho JS)
+    const CHARM_LIST = [
+        { name: "Táo", meaning: "Sức khỏe, thu hoạch; giảng dạy, học tập; trái cấm, cám dỗ, sa ngã." },
+        { name: "Quả sồi", meaning: "May mắn, sung túc, gieo hạt giống để phát triển." },
+        { name: "Máy bay", meaning: "Du lịch, phiêu lưu, trải nghiệm mới, thay đổi hướng đi, khát vọng." },
+        { name: "Alice ở xứ sở thần tiên", meaning: "Người hỏi/người đọc (bạn), cuộc phiêu lưu mới, sự tò mò." },
+        { name: "Người ngoài hành tinh", meaning: "Kỳ lạ, khác biệt, độc đáo, cung hoàng đạo Bảo Bình." },
+        { name: "Cá sấu", meaning: "Thanh tẩy, sức mạnh thầm lặng, chờ đợi để tấn công." },
+        { name: "Cờ Mỹ", meaning: "Nước Mỹ, tự do, thống nhất, trật tự, luật pháp." },
+        { name: "Mỏ neo", meaning: "Sự kết nối, lòng trung thành, sự tận tụy, cắm rễ, quê hương." },
+        { name: "Thiên thần", meaning: "Người bảo vệ, đấng tối cao, người dẫn đường tinh thần, người thân đã khuất." },
+        { name: "Ankh", meaning: "Ai Cập cổ đại, sự sống, sự bất tử, may mắn, Thần Mặt trời." },
+        { name: "Vòm cung (Arch)", meaning: "Sự kết hợp, cam kết, khởi đầu mới, sự chuyển đổi." },
+        { name: "Mũi tên", meaning: "Chuyển động, hướng đi, đạt được mục tiêu, bảo vệ, Nhân Mã." },
+        { name: "Phi hành gia", meaning: "Tầm cao mới, suy nghĩ vượt ra ngoài khuôn khổ, quan điểm shift." },
+        { name: "Quả bơ", meaning: "Tình yêu, vẻ đẹp bên trong, dinh dưỡng, thai kỳ." },
+        { name: "Rìu", meaning: "Lưu trữ, chuẩn bị, xây dựng, sức mạnh, loại bỏ chướng ngại vật." },
+        { name: "Em bé", meaning: "Mang thai, trẻ em, ngây thơ, dự án mới." },
+        { name: "Ba lô", meaning: "Trẻ em, trường học, giáo dục, hành lý, mang theo thứ gì đó cần thiết." },
+        { name: "Trái bóng", meaning: "Hoạt động, thể thao, năng lượng, hoạt động thể chất, thiên thể, mặt trời hoặc mặt trăng." },
+        { name: "Ballet", meaning: "Sự bình yên và tĩnh lặng bên trong, giữ thăng bằng, sức mạnh nữ tính thiêng liêng." },
+        { name: "Chuối", meaning: "Giải phẫu nam tính, năng lượng tình dục, tăng trưởng tài chính, Luân xa đám rối mặt trời." },
+        { name: "Dơi", meaning: "Nhận thức về bản thân, chấp nhận cả ánh sáng và bóng tối, cái chết và sự ra đời." },
+        { name: "Gấu", meaning: "Tin tưởng vào bản năng, cởi mở." },
+        { name: "Gấu (gấu bông)", meaning: "Đứa trẻ bên trong, tự phản ánh." },
+        { name: "Ong", meaning: "Làm việc chăm chỉ, tận tụy, cộng đồng, phần thưởng cho những nỗ lực." },
+        { name: "Chuông", meaning: "Lễ kỷ niệm, tinh thần truyền tải thông điệp/cố gắng thu hút sự chú ý." },
+        { name: "Xe đạp", meaning: "Làm việc chăm chỉ, động lực, tập thể dục, quyết tâm, siêng năng." },
+        { name: "Chim", meaning: "Thay đổi, tự do, sự chuyển đổi sắp xảy ra, sức mạnh, kiến thức cao hơn." },
+        { name: "Nhà chim", meaning: "Nhà, nhà ông bà, làm tổ, tổ, gia đình." },
+        { name: "Xương", meaning: "Bói toán xương/đúc xương, tỷ lệ tử vong, niềm tin vào cuộc sống." },
+        { name: "Sách", meaning: "Học tập, đọc, ghi nhật ký, kiến thức, trí nhớ, giáo dục." },
+        { name: "Bé trai", meaning: "Trẻ em, thanh thiếu niên, nam, năng lượng nam tính theo khuôn mẫu." },
+        { name: "Bowling", meaning: "Cố gắng hoàn thành một cái gì đó, hoạt động nhóm, vui chơi/trò chơi." },
+        { name: "Chổi", meaning: "Quét dưới thảm (tránh), dọn dẹp, phù thủy, ma thuật nghi lễ, khả năng sinh sản." },
+        { name: "Cọ phấn", meaning: "Vẻ đẹp hình thể, vẻ đẹp bên ngoài, tập trung vào ngoại hình." },
+        { name: "Con nai đực", meaning: "Năng lượng nam tính, khả năng lãnh đạo, sức mạnh duyên dáng, sự bình yên bên trong." },
+        { name: "Con bò đực/ Ox", meaning: "Kim Ngưu, làm việc chăm chỉ, nâng vật nặng, siêng năng, kiên nhẫn." },
+        { name: "Bướm", meaning: "Sự chuyển đổi, khởi đầu mới, hướng dẫn tinh thần." },
+        { name: "Xương rồng", meaning: "Sức mạnh để sống sót trong những tình huống khó khăn." },
+        { name: "Lồng", meaning: "Bị mắc kẹt, bị giới hạn, mong muốn tự do, môi trường áp bức." },
+        { name: "Lạc đà", meaning: "Hành trình dài phía trước, kiên nhẫn, lập kế hoạch hợp lý, sa mạc." },
+        { name: "Máy ảnh", meaning: "Ảnh chụp nhanh cuộc sống hiện tại, khoảnh khắc trong thời gian, ký ức, nhiếp ảnh." },
+        { name: "Kẹo", meaning: "Sự ngọt ngào, tận hưởng cuộc sống, vui vẻ, niềm vui, cám dỗ." },
+        { name: "Xe", meaning: "Di chuyển, thay đổi, chuyến đi đường bộ, từ điểm này đến điểm khác." },
+        { name: "Cà rốt", meaning: "Vườn, ăn uống lành mạnh, thịnh vượng." },
+        { name: "Lâu đài", meaning: "Nhà, ước mơ, du lịch, quyền lực, sự thống trị, sự bảo vệ, sự giàu có." },
+        { name: "Mèo", meaning: "Độc lập, phù thủy, quen thuộc, trực giác, phiêu lưu, lòng dũng cảm." },
+        { name: "Điện thoại di động", meaning: "Giao tiếp, kết nối với người khác, tin nhắn từ ai đó, hạn chế thời gian sử dụng màn hình." },
+        { name: "Cherry", meaning: "Tình dục, sự trong sáng, giải thưởng, đãi ngộ, tuổi mới lớn." },
+        { name: "Đồng hồ", meaning: "Thời gian trôi qua, năng lượng được đưa vào." },
+        { name: "Mây", meaning: "Cõi thiên đường, giấc ngủ, giấc mơ, thiên thần, bí ẩn, cảm xúc." },
+        { name: "Mây có tia sét", meaning: "Mất cân bằng, Thần thánh đang cố đánh thức bạn lên." },
+        { name: "Cỏ ba lá", meaning: "May mắn đang đến với bạn, hãy chú ý đến những điều tốt đẹp đang xảy ra." },
+        { name: "Cua", meaning: "Vẻ ngoài cứng rắn, hay thay đổi tâm trạng, cảm xúc, trực giác, Cự Giải." },
+        { name: "Hộp bút chì", meaning: "Sự sáng tạo, đứa trẻ bên trong, suy nghĩ vượt ra ngoài khuôn khổ, chăm sóc trẻ em." },
+        { name: "Thập tự giá", meaning: "Đức tin, tín ngưỡng Cơ đốc giáo trong quá khứ và/hoặc hiện tại." },
+        { name: "Vương miện", meaning: "Lòng tự trọng, sự tự tin, quyền lực, sự tôn trọng, ông chủ." },
+        { name: "Cốc/Chén thánh", meaning: "Cảm xúc, sự viên mãn về mặt tinh thần, cung nước (Cự Giải, Bọ Cạp, Song Ngư)." },
+        { name: "Cupcake", meaning: "Đồ ăn vặt, món tráng miệng, đứa trẻ bên trong, sự chấp nhận bản thân, sinh nhật." },
+        { name: "Cupid", meaning: "Ham muốn, dục vọng, đam mê, sự hấp dẫn, tình cảm, Thần tình yêu." },
+        { name: "Lược", meaning: "Xem xét các chi tiết nhỏ, tìm kiếm hoặc phân tích rất kỹ lưỡng về một cái gì đó." },
+        { name: "Máy tính", meaning: "Làm việc trên máy tính, công nghệ." },
+        { name: "Sách dạy nấu ăn", meaning: "Thực phẩm, chế độ ăn kiêng, sự thoải mái, nuôi dưỡng bản thân." },
+        { name: "Ghế dài", meaning: "Trang trí nhà cửa, thư giãn, nhà, tự chăm sóc." },
+        { name: "Hươu", meaning: "Sự dịu dàng, duyên dáng, đứa trẻ bên trong, nhận thức về môi trường xung quanh." },
+        { name: "Khủng long", meaning: "Thứ gì đó từ quá khứ của bạn hoặc thứ gì đó cũ kỹ, lạc hậu theo cách suy nghĩ." },
+        { name: "DNA", meaning: "Tổ tiên, gen, nghiệp chướng, thai kỳ, trí nhớ tế bào, ý thức cao hơn." },
+        { name: "Chó", meaning: "Trung thành, tình yêu vô điều kiện, an toàn, tình bạn, sự trung thực." },
+        { name: "Cá heo", meaning: "Hạnh phúc, cân bằng giữa tâm trí và tâm hồn, trực giác & trí thông minh." },
+        { name: "Chuồn chuồn", meaning: "Tự nhận thức, chuyển đổi, hành trình tâm linh." },
+        { name: "Rồng", meaning: "Hỗn loạn, sức mạnh siêu nhiên, trí tuệ, sức mạnh, kiến thức ẩn giấu." },
+        { name: "Dreamcatcher", meaning: "Giấc mơ, chú ý đến giấc mơ, bảo vệ, giấc ngủ, người Mỹ bản địa." },
+        { name: "Đại bàng", meaning: "Kết nối với Thần thánh, tự do, lòng can đảm, sự trung thực, lòng dũng cảm." },
+        { name: "Trái đất", meaning: "Các vấn đề toàn cầu, ý thức tập thể, môi trường, cộng đồng, du lịch." },
+        { name: "Tháp Eiffel", meaning: "Pháp, Châu Âu, du lịch, vẻ đẹp, sự chú ý." },
+        { name: "Voi", meaning: "Trí tuệ, may mắn, kinh nghiệm, lòng trung thành, chướng ngại vật đang được loại bỏ." },
+        { name: "Mắt", meaning: "Sự bảo vệ, con mắt độc ác, trực giác, con mắt thứ ba, cánh cổng dẫn đến tâm hồn." },
+        { name: "Quạt", meaning: "Làm mát, chuyển động, ý tưởng mới." },
+        { name: "Nanh (Fang)", meaning: "Hút năng lượng, rút cạn, bị lợi dụng, khám phá điều gì đó, Halloween." },
+        { name: "Tiên (Fairy)", meaning: "Khám phá chủ nghĩa bảo vệ môi trường, ma thuật, trực giác, tinh quái." },
+        { name: "Lông vũ", meaning: "Món quà từ Thần thánh, ai đó đang lắng nghe lời cầu nguyện của bạn." },
+        { name: "Bàn chân", meaning: "Sức sống, sự tôn trọng, tang tóc, bước tới, em bé &/hoặc thai kỳ." },
+        { name: "Cá", meaning: "Sự sung túc, may mắn, khả năng sinh sản, sự yên tĩnh, thanh thản, hạnh phúc." },
+        { name: "Ếch", meaning: "Tái sinh, khả năng sinh sản, chuyển đổi, giải phóng gánh nặng cảm xúc." },
+        { name: "Ếch đang yêu", meaning: "Mối quan hệ, cam kết, tận hưởng sự đồng hành." },
+        { name: "Ngọn lửa", meaning: "Sự soi sáng, trí tuệ, kiến thức, đam mê, sức sống, tiêu thụ." },
+        { name: "Chim hồng hạc", meaning: "Tìm kiếm sự cân bằng, hạnh phúc, gia đình, các mối quan hệ, du lịch." },
+        { name: "Hoa", meaning: "Sự ngây thơ, khởi đầu mới, lòng biết ơn, sự ngưỡng mộ, mùa xuân hoặc mùa hè." },
+        { name: "Nĩa", meaning: "Sự nuôi dưỡng, thay đổi hướng đi, ngã ba đường (quyết định), tình dục." },
+        { name: "Cáo", meaning: "Thông minh, độc lập, tinh nghịch." },
+        { name: "Ma", meaning: "Tâm linh, tinh thần, siêu nhiên, quá khứ." },
+        { name: "Quà tặng", meaning: "Điều gì đó bất ngờ, phần thưởng, vật phẩm miễn phí." },
+        { name: "Con gái", meaning: "Trẻ em, thanh thiếu niên, nữ, năng lượng nữ tính theo khuôn mẫu." },
+        { name: "Kính", meaning: "Nhìn rõ, mong manh, vấn đề nhạy cảm, cần xem xét lại điều gì đó." },
+        { name: "Súng", meaning: "Nguy hiểm, quyền lực, sức mạnh." },
+        { name: "Mũ tốt nghiệp", meaning: "Thành công, thành tích, tốt nghiệp, lên cấp, học điều gì đó mới." },
+        { name: "Nho", meaning: "Sự sung túc, khả năng sinh sản, may mắn, nữ thần." },
+        { name: "Còng tay", meaning: "Cảm giác bị kìm kẹp, trách nhiệm, quy tắc, ràng buộc, sở hữu." },
+        { name: "Bàn tay", meaning: "Dâng hiến, xây dựng, sử dụng bàn tay của bạn, nghệ thuật/thủ công." },
+        { name: "Bàn tay có trái tim", meaning: "Năng lượng reiki, chữa bệnh bằng năng lượng, lòng tốt, tạo ra thứ gì đó với ý định và tình yêu." },
+        { name: "Bàn tay có hình xoắn ốc", meaning: "Năng lượng reiki, chữa bệnh bằng năng lượng, mát-xa, chữa bệnh." },
+        { name: "Móc treo (Quần áo)", meaning: "Tiếp tục một điều mà bạn đã nằm giữ." },
+        { name: "Bàn tay Hamsa", meaning: "Biểu tượng bảo vệ cổ xưa của Trung Đông, đại diện cho luân xa và dòng năng lượng." },
+        { name: "Đàn hạc", meaning: "Thiên thần, âm nhạc, nhạc cổ điển, nâng cao rung động, niềm tự hào, chiến thắng." },
+        { name: "Mũ (bóng chày)", meaning: "Thể thao, hoạt động, có thể đại diện cho một người bạn nghĩ đến." },
+        { name: "Mũ (cao bồi)", meaning: "Trang trại, miền Tây, làm nông, làm việc với động vật, kẻ ngoài vòng pháp luật." },
+        { name: "Giày cao gót", meaning: "Ăn mặc chỉnh tề, thời trang, tầm cao mới, tham vọng, sự nghiệp, tình dục." },
+        { name: "Ngựa", meaning: "Giải phóng bản thân, chuyển động, lòng can đảm, sức mạnh, sự kiên trì, du lịch." },
+        { name: "Ngựa (Ngựa bập bênh)", meaning: "Đứa trẻ bên trong, tuổi thơ, nỗi nhớ." },
+        { name: "Khinh khí cầu", meaning: "Du lịch, nhìn nhận mọi thứ theo góc nhìn mới, tận hưởng những gì xung quanh." },
+        { name: "Chim ruồi", meaning: "Lo lắng, chuyển động nhanh, nhịp độ nhanh, dừng lại để tận hưởng cuộc sống, kết nối với Thần thánh." },
+        { name: "Kem", meaning: "Nỗi nhớ tuổi thơ, thành công trong tình yêu, sự thỏa mãn, may mắn." },
+        { name: "Vô cực", meaning: "Linh hồn tồn tại mãi mãi, sự cân bằng, quan hệ đối tác, sự lãng mạn, hôn nhân." },
+        { name: "Mặt nạ Jester", meaning: "Đóng vai, không coi trọng mọi thứ, lá bài tarot The Fool." },
+        { name: "Cân công lý", meaning: "Hợp pháp, công lý, sự thật, công bằng, cân bằng, Thiên Bình, Nữ thần Ai Cập Maat." },
+        { name: "Chìa khóa", meaning: "Mở ra điều chưa biết, nhận ra, mở khóa, giác ngộ, cõi tâm linh." },
+        { name: "Dao", meaning: "Cắt đứt quan hệ, hy sinh, chia rẽ, sợ hãi, tức giận, hung hăng." },
+        { name: "Bọ rùa", meaning: "May mắn, duyên dáng, hạnh phúc ở nhà hoặc trong mối quan hệ." },
+        { name: "Đèn", meaning: "Điều ước thành hiện thực, hy vọng, Aladdin/Disney." },
+        { name: "Lá", meaning: "Mùa thu, thay đổi, buông bỏ cái cũ." },
+        { name: "Chanh", meaning: "'khi cuộc sống cho bạn những quả chanh', hy vọng cho tương lai, Mùa xuân/Hè." },
+        { name: "Phao cứu sinh", meaning: "Sự hỗ trợ, cần giúp đỡ, được cung cấp sự hỗ trợ, thời điểm khó khăn, an toàn." },
+        { name: "Bóng đèn", meaning: "Ý tưởng mới, sự đổi mới, khoảnh khắc 'à ha'." },
+        { name: "Thằn lằn", meaning: "Sự tái sinh, vòng đời, sức mạnh nữ tính, sức mạnh." },
+        { name: "Khóa", meaning: "Bí mật, thứ gì đó ẩn giấu, bí ẩn, giữ an toàn cho thứ gì đó." },
+        { name: "Hoa sen", meaning: "Sự phát triển về mặt tinh thần, thoát khỏi thời kỳ khó khăn, vẻ đẹp." },
+        { name: "Hoa sen với Thiền định", meaning: "Sự phát triển bên trong, tự phản ánh, thiền định, yoga, tự chăm sóc." },
+        { name: "Microphone", meaning: "Nói lên sự thật của bạn, biểu diễn, tiếp cận khán giả." },
+        { name: "Kính hiển vi", meaning: "Xem xét lại điều gì đó, chi tiết nhỏ, khoa học, nhà khoa học." },
+        { name: "Gương", meaning: "Tự phản ánh, vẻ đẹp, sự phù phiếm, công việc bóng tối, tự đánh giá." },
+        { name: "Tình nhân", meaning: "Mối quan hệ, hôn nhân, cam kết." },
+        { name: "Găng tay", meaning: "Mùa đông, ngày lễ, lạnh, đôi, làm việc cùng nhau." },
+        { name: "Gậy đo lường (Thước kẻ)", meaning: "Ghi chú, kiểm tra, tìm hiểu sâu hơn, nghiên cứu." },
+        { name: "Caduceus (Gậy của Hermes)", meaning: "Y học, bác sĩ, sức khỏe thể chất, trường y." },
+        { name: "Khỉ", meaning: "Sự vui tươi, tìm ra giải pháp cho các vấn đề của bạn." },
+        { name: "Mặt trăng", meaning: "Sự giác ngộ, kiến thức bên trong, cảm xúc, nữ tính, trực giác." },
+        { name: "Chuột", meaning: "Yên tĩnh, nhút nhát, e thẹn. Hoặc có thể đại diện cho chuột máy tính/Mickey." },
+        { name: "Âm nhạc", meaning: "Đam mê, sở thích, chữa lành bằng âm thanh, thể hiện bản thân." },
+        { name: "Nấm", meaning: "Tổ tiên, chữa lành, ảo giác, thiên nhiên, rừng." },
+        { name: "Đinh (công cụ)", meaning: "Sự thống nhất, sức mạnh, ý chí, kinh nghiệm tình dục." },
+        { name: "Lưới", meaning: "Bắt được thứ gì đó, nắm bắt cơ hội, bị bắt, phức tạp." },
+        { name: "Sổ tay", meaning: "Ghi chép, học được điều gì đó, viết nhật ký, thể hiện bản thân." },
+        { name: "Y tá", meaning: "Giúp đỡ người khác, nghề liên quan đến việc giúp đỡ, chữa lành, giải quyết vấn đề." },
+        { name: "Bạch tuộc", meaning: "Tìm cách thoát khỏi tình huống, thông minh và khôn ngoan." },
+        { name: "Om / Ohm / Aum", meaning: "Biểu tượng cho sự thống nhất trong Vũ trụ, biểu tượng thiêng liêng cao nhất của Ấn Độ giáo." },
+        { name: "Quả cam", meaning: "Thịnh vượng, thành công, năng lượng, gợi cảm, khả năng sinh sản." },
+        { name: "Rái cá", meaning: "Niềm vui, sự vui tươi, sáng tạo, cân bằng những vấn đề nghiêm túc với niềm vui." },
+        { name: "Cú", meaning: "Trí tuệ, kiến thức, trực giác, cái chết và sự tái sinh, kiến thức thiêng liêng." },
+        { name: "Cọ vẽ", meaning: "Sử dụng các kỹ năng sáng tạo của bạn, tạo ra thứ gì đó, sơn nhà." },
+        { name: "Khay sơn", meaning: "Sự sáng tạo, nghĩ ra giải pháp sáng tạo, đứa trẻ bên trong, nghệ sĩ." },
+        { name: "Cây cọ", meaning: "Lưỡng tính, sự thật, sự phát triển, khả năng sinh sản, cuộc sống vĩnh hằng, du lịch." },
+        { name: "Vẹt", meaning: "Sử dụng giọng nói của bạn, sức mạnh của lời nói, luân xa cổ họng." },
+        { name: "Móng chân", meaning: "Vật nuôi, động vật, động vật đã qua, theo dấu chân." },
+        { name: "Biểu tượng hòa bình", meaning: "Giải quyết xung đột, hợp tác, ý thức tập thể." },
+        { name: "Con công", meaning: "Hào nhoáng, thu hút sự chú ý của người khác, sự tự tin, cá tính." },
+        { name: "Pegasus", meaning: "Trí tưởng tượng, sự sáng tạo, tự do, di chuyển nhanh để đạt được mục tiêu." },
+        { name: "Ngũ giác", meaning: "Nguyên tố đất, cõi vật chất, biểu tượng của sự bảo vệ, không gian thiêng liêng." },
+        { name: "Nước hoa", meaning: "Sang trọng, được kết hợp lại với nhau, vệ sinh, ấn tượng tốt, thu hút điều gì đó mới." },
+        { name: "Heo có cánh", meaning: "Điều gì đó không thể xảy ra, bất ngờ, không thể tin được." },
+        { name: "Dứa", meaning: "Sang trọng, chào đón, tình bạn, sức bền, quan hệ tình dục." },
+        { name: "Pizza", meaning: "Mối quan hệ với thức ăn, sự nuông chiều, sự tận hưởng." },
+        { name: "Bí ngô", meaning: "Mùa thu, Halloween, Samhain, sự phong phú khi mở ra." },
+        { name: "Cỗ xe bí ngô", meaning: "Từ câu chuyện Cô bé Lọ Lem, những cơ hội mới đang chờ đón." },
+        { name: "Ví", meaning: "Kết nối với vật chất, mua sắm, tiền bạc, sở thích." },
+        { name: "Mảnh ghép", meaning: "Yếu tố còn thiếu, ghép lại với nhau, giải pháp, thử thách." },
+        { name: "Dấu hỏi", meaning: "Câu hỏi, sự tò mò, tìm kiếm câu trả lời, cần làm rõ." },
+        { name: "Thỏ", meaning: "Khả năng sinh sản, xảy ra nhanh chóng, sinh sản mới, Mùa xuân, Ostara." },
+        { name: "Vợt (Racquet)", meaning: "Chuyển động vật lý, thay đổi hướng." },
+        { name: "Cầu vồng", meaning: "Sự thức tỉnh bên trong tâm linh, sự kiện đẹp sau sự kiện tiêu cực, hy vọng, luân xa." },
+        { name: "Cừu đực", meaning: "Sức mạnh, sự táo bạo, con đường mới &/hoặc khởi đầu mới, Bạch Dương." },
+        { name: "Tê giác", meaning: "Thứ gì đó mạnh mẽ hơn hoặc khó khăn hơn dự đoán, sức bền, sức mạnh." },
+        { name: "Robot", meaning: "Cắt đứt cảm xúc, che giấu cảm xúc thật với người khác, sợ bị tổn thương." },
+        { name: "Cây thước (Measuring Stick)", meaning: "Ghi chú, kiểm tra, tìm hiểu sâu hơn, nghiên cứu." },
+        { name: "Cân công lý", meaning: "Sự cân bằng, luật pháp, công lý, cung hoàng đạo Thiên Bình." },
+        { name: "Bù nhìn", meaning: "Mùa thu, đất nước, nỗi sợ hãi, cái bóng." },
+        { name: "Kéo", meaning: "Cắt thứ gì đó ra, giải phóng." },
+        { name: "Xe buýt trường học", meaning: "Trở lại trường, trẻ em, học tập, ôn lại những điều cơ bản." },
+        { name: "Bọ cạp", meaning: "Bị đốt hoặc bị thương, bảo vệ bản thân, nguy hiểm, cái chết và sự tái sinh." },
+        { name: "Cá ngựa", meaning: "Đàn ông đảm nhiệm vai trò gia đình, may mắn, sức mạnh, sự kiên trì." },
+        { name: "Máy khâu", meaning: "Sự sáng tạo, làm ra thứ gì đó, sửa một chi tiết nhỏ trong tình huống." },
+        { name: "Vỏ", meaning: "Sức sống, sự cứu chuộc, chữa lành, sự phục sinh, khả năng sinh sản." },
+        { name: "Cừu", meaning: "Mong muốn tuân thủ, sự thuộc về, sự vâng lời, giấc ngủ và những giấc mơ." },
+        { name: "Đầu lâu", meaning: "Cái chết (theo nghĩa đen hoặc nghĩa bóng), cảnh báo về nguy hiểm, chất độc." },
+        { name: "Rắn", meaning: "Khả năng sinh sản, nỗi sợ hãi, hành trình hướng tới sự tự nhận thức, tình dục, sự chuyển đổi." },
+        { name: "Ốc sên", meaning: "Chậm chạp, phòng thủ, bảo vệ, nhạy cảm, tự lực, ẩn sĩ." },
+        { name: "Bông tuyết", meaning: "Mùa đông, lạnh lẽo, độc đáo, cá nhân, nhạy cảm, mong manh." },
+        { name: "Nhện", meaning: "Sự kiên nhẫn và sáng tạo (làm mạng nhện)." },
+        { name: "Thìa", meaning: "Sự nuôi dưỡng, hỗ trợ, sự hài lòng, âu yếm (thìa)." },
+        { name: "Con mực", meaning: "Thay đổi bản thân để phù hợp với môi trường của bạn, hòa nhập." },
+        { name: "Ngôi sao", meaning: "Tốt may mắn, mong muốn thành hiện thực, tinh thần con người, cuộc sống, sự thật, ánh sáng." },
+        { name: "Sao biển", meaning: "Bám víu vào thứ gì đó, cần chăm sóc bản thân." },
+        { name: "Dâu tây", meaning: "Ăn uống lành mạnh, mùa xuân hoặc mùa hè, sự gợi cảm, khả năng sinh sản, sự sung túc." },
+        { name: "Xe đẩy (trẻ sơ sinh)", meaning: "Khởi đầu mới, khả năng sinh sản, trẻ em, vật nuôi, thứ gì đó quý giá." },
+        { name: "Mặt trời", meaning: "Sự ấm áp, sức sống, niềm vui, nam tính thiêng liêng, năng lượng, sức mạnh, bản thân." },
+        { name: "Chim én", meaning: "Hoàn thành một hành trình dài, có thể tượng trưng cho một thủy thủ." },
+        { name: "Thiên nga", meaning: "Người yêu, mối liên kết cha mẹ/con cái, sự trong sáng, vẻ đẹp, sự duyên dáng." },
+        { name: "Taj Mahal", meaning: "Biểu tượng của tình yêu, tượng trưng cho hành trình tâm linh, kỳ quan thế giới, du lịch." },
+        { name: "Ấm trà", meaning: "Lấp đầy thứ gì đó về mặt cảm xúc, tình bạn, sự thoải mái, niềm vui." },
+        { name: "Răng (răng nanh)", meaning: "Hút năng lượng, làm cạn kiệt, bị lợi dụng, khám phá thứ gì đó, Halloween." },
+        { name: "Tivi", meaning: "Giải trí, danh tiếng, thư giãn, cuộc sống tự động." },
+        { name: "Cà vạt", meaning: "Công việc, công ty, thẩm quyền, kinh doanh." },
+        { name: "Hổ", meaning: "Độc lập, sức mạnh, ẩn giấu trong tầm nhìn rõ ràng." },
+        { name: "Răng", meaning: "Có thể tượng trưng cho Luân xa Họng, sức sống, sức mạnh, có thể là lời cảnh báo." },
+        { name: "Bàn chải đánh răng", meaning: "Chăm sóc bản thân, sự tự tin." },
+        { name: "Cây", meaning: "Sự phát triển, nhà cửa, gia đình, quan sát, bám rễ sâu, sức mạnh." },
+        { name: "Xe tải", meaning: "Tương tự như ô tô nhưng cũng có thể được coi là kéo một thứ gì đó, mang theo dư thừa." },
+        { name: "Rùa", meaning: "Sự kiên nhẫn, tuổi thọ, chậm và đều đặn chiến thắng cuộc đua, được bảo vệ." },
+        { name: "UFO", meaning: "Âm mưu, không giải thích được, bí ẩn, ngoài thế giới này." },
+        { name: "Kỳ lân", meaning: "Phép thuật, sự hướng dẫn từ thần thánh, sự trong sáng, phước lành." },
+        { name: "Đồng phục", meaning: "Chuyên nghiệp, sự nghiệp, sự tin tưởng, trợ lý." },
+        { name: "Ô", meaning: "Nơi trú ẩn, sự bảo vệ, chờ đợi cơn bão, sự kiên nhẫn." },
+        { name: "Dụng cụ nhà bếp", meaning: "Thức ăn, chế độ ăn kiêng, sự thay đổi, lòng tự trọng, sự đổi mới." },
+        { name: "Hút bụi", meaning: "Vệ sinh, hấp thụ năng lượng (tốt và xấu)." },
+        { name: "Valentine", meaning: "Tình yêu, mối quan hệ, sự say đắm, sự quan tâm đến ai đó, sự lãng mạn, tháng 2." },
+        { name: "Răng ma cà rồng", meaning: "Hút năng lượng, làm cạn kiệt, bị lợi dụng, khám phá điều gì đó, Halloween." },
+        { name: "Trò chơi điện tử", meaning: "Tuổi thơ, nỗi nhớ, sự vui vẻ, sự thích thú." },
+        { name: "Lưới nhện", meaning: "Lập kế hoạch, sự kết nối của vũ trụ, sự can thiệp của thần thánh, các kế hoạch dài hạn." },
+        { name: "Cá voi", meaning: "Giao phối suốt đời (tìm bạn đời), tin tưởng vào tiếng nói bên trong của bạn." },
+        { name: "Bánh xe", meaning: "Thay đổi hướng, lập kế hoạch, đưa ra quyết định." },
+        { name: "Cối xay gió", meaning: "Khai thác năng lượng tâm linh, chuyển đổi, có thể tượng trưng cho chuyến đi đến một nơi nào đó." },
+        { name: "Phù thủy (Mũ hoặc Người)", meaning: "Phép thuật, bói toán, trí tuệ, khám phá những khía cạnh của bản thân." },
+        { name: "Sói", meaning: "Sức mạnh, đáng tin cậy, làm việc chăm chỉ, bản năng, lòng trung thành, làm việc nhóm." },
+        { name: "Vòng hoa", meaning: "Ý nghĩa có thể thay đổi theo mùa/ngày lễ, cuộc sống vĩnh cửu, niềm vui, lễ kỷ niệm, đức tin." },
+        { name: "Cờ lê", meaning: "Công cụ, sửa chữa, thay thế 'ném cờ lê vào kế hoạch để gây hư hại hoặc thay đổi'." },
+        { name: "X", meaning: "'X đánh dấu vị trí' một điểm đến hoặc kết quả mong muốn, có thể đại diện cho một đối tác cũ, bạn cũ." },
+        { name: "Yard Stick (Thước kẻ)", meaning: "Ghi chú, kiểm tra, tìm hiểu sâu hơn, nghiên cứu." },
+        { name: "Yin-yang", meaning: "Biểu tượng Trung Quốc cổ đại, tính hai mặt, sự cân bằng, sự kết nối, nam tính/nữ tính." },
+        { name: "Yoga", meaning: "Thiền, cân bằng, kéo giãn, tìm kiếm sự bình yên nội tâm, kết nối tâm linh." },
+        { name: "Ngựa vằn", meaning: "Xã hội hóa, thân thiện, cố gắng hòa nhập." }
+    ];
+
+    // Tạo danh sách ICON tượng trưng (Do danh sách gốc không có icon)
+    const ICON_MAP = {
+        "Táo": "fa-apple-whole", "Quả sồi": "fa-tree", "Máy bay": "fa-plane", "Alice ở xứ sở thần tiên": "fa-hat-wizard",
+        "Người ngoài hành tinh": "fa-alien-8bit", "Cá sấu": "fa-paw", "Cờ Mỹ": "fa-flag-usa", "Mỏ neo": "fa-anchor",
+        "Thiên thần": "fa-feather-alt", "Ankh": "fa-cross", "Vòm cung (Arch)": "fa-archway", "Mũi tên": "fa-arrow-right",
+        "Phi hành gia": "fa-rocket", "Quả bơ": "fa-seedling", "Rìu": "fa-axe", "Em bé": "fa-baby",
+        "Ba lô": "fa-backpack", "Trái bóng": "fa-volleyball-ball", "Ballet": "fa-shoe-prints", "Chuối": "fa-banana",
+        "Dơi": "fa-bat", "Gấu": "fa-bear", "Gấu (gấu bông)": "fa-teddy-bear", "Ong": "fa-bee",
+        "Chuông": "fa-bell", "Xe đạp": "fa-bicycle", "Chim": "fa-dove", "Nhà chim": "fa-house-chimney",
+        "Xương": "fa-bone", "Sách": "fa-book", "Bé trai": "fa-person", "Bowling": "fa-bowling-ball",
+        "Chổi": "fa-broom", "Cọ phấn": "fa-brush", "Con nai đực": "fa-deer", "Con bò đực/ Ox": "fa-bull",
+        "Bướm": "fa-butterfly", "Xương rồng": "fa-cactus", "Lồng": "fa-inbox", "Lạc đà": "fa-camel",
+        "Máy ảnh": "fa-camera", "Kẹo": "fa-candy-cane", "Xe": "fa-car", "Cà rốt": "fa-carrot",
+        "Lâu đài": "fa-fort-awesome", "Mèo": "fa-cat", "Điện thoại di động": "fa-mobile-alt", "Cherry": "fa-cherry",
+        "Đồng hồ": "fa-clock", "Mây": "fa-cloud", "Mây có tia sét": "fa-cloud-showers-heavy", "Cỏ ba lá": "fa-leaf",
+        "Cua": "fa-crab", "Hộp bút chì": "fa-pencil-ruler", "Thập tự giá": "fa-cross", "Vương miện": "fa-crown",
+        "Cốc/Chén thánh": "fa-wine-glass", "Cupcake": "fa-cake-candles", "Cupid": "fa-heart", "Lược": "fa-comb",
+        "Máy tính": "fa-laptop", "Sách dạy nấu ăn": "fa-utensils", "Ghế dài": "fa-couch", "Hươu": "fa-deer",
+        "Khủng long": "fa-tooth", "DNA": "fa-dna", "Chó": "fa-dog", "Cá heo": "fa-dolphin",
+        "Chuồn chuồn": "fa-dragonfly", "Rồng": "fa-dragon", "Dreamcatcher": "fa-wind", "Đại bàng": "fa-crow",
+        "Trái đất": "fa-globe-americas", "Tháp Eiffel": "fa-tower-cell", "Voi": "fa-elephant", "Mắt": "fa-eye",
+        "Quạt": "fa-fan", "Nanh (Fang)": "fa-skull-crossbones", "Tiên (Fairy)": "fa-wand-sparkles", "Lông vũ": "fa-feather",
+        "Bàn chân": "fa-shoe-prints", "Cá": "fa-fish", "Ếch": "fa-frog", "Ếch đang yêu": "fa-heart-pulse",
+        "Ngọn lửa": "fa-fire", "Chim hồng hạc": "fa-flamingo", "Hoa": "fa-flower", "Nĩa": "fa-fork-knife",
+        "Cáo": "fa-fox", "Ma": "fa-ghost", "Quà tặng": "fa-gift", "Con gái": "fa-person-dress",
+        "Kính": "fa-glasses", "Súng": "fa-gun", "Mũ tốt nghiệp": "fa-graduation-cap", "Nho": "fa-grape",
+        "Còng tay": "fa-handcuffs", "Bàn tay": "fa-hand", "Bàn tay có trái tim": "fa-hand-holding-heart", "Bàn tay có hình xoắn ốc": "fa-hand-sparkles",
+        "Móc treo (Quần áo)": "fa-hanger", "Bàn tay Hamsa": "fa-hand-holding-hand", "Đàn hạc": "fa-guitar", "Mũ (bóng chày)": "fa-baseball-cap",
+        "Mũ (cao bồi)": "fa-hat-cowboy", "Giày cao gót": "fa-shoe-heel", "Ngựa": "fa-horse", "Ngựa (Ngựa bập bênh)": "fa-horse-head",
+        "Khinh khí cầu": "fa-balloon", "Chim ruồi": "fa-bird", "Kem": "fa-ice-cream", "Vô cực": "fa-infinity",
+        "Mặt nạ Jester": "fa-face-laugh-squint", "Cân công lý": "fa-scale-balanced", "Chìa khóa": "fa-key", "Dao": "fa-knife",
+        "Bọ rùa": "fa-bugs", "Đèn": "fa-lightbulb", "Lá": "fa-leaf", "Chanh": "fa-lemon",
+        "Phao cứu sinh": "fa-life-ring", "Bóng đèn": "fa-lightbulb", "Thằn lằd": "fa-lizard", "Khóa": "fa-lock",
+        "Hoa sen": "fa-spa", "Hoa sen với Thiền định": "fa-hand-holding-water", "Microphone": "fa-microphone", "Kính hiển vi": "fa-magnifying-glass",
+        "Gương": "fa-mirror", "Tình nhân": "fa-people-arrows", "Găng tay": "fa-mitten", "Gậy đo lường (Thước kẻ)": "fa-ruler-combined",
+        "Caduceus (Gậy của Hermes)": "fa-staff-snake", "Khỉ": "fa-monkey", "Mặt trăng": "fa-moon", "Chuột": "fa-mouse",
+        "Âm nhạc": "fa-music", "Nấm": "fa-mushroom", "Đinh (công cụ)": "fa-nail", "Lưới": "fa-sitemap",
+        "Sổ tay": "fa-notebook", "Y tá": "fa-user-nurse", "Bạch tuộc": "fa-octopus", "Om / Ohm / Aum": "fa-om",
+        "Quả cam": "fa-orange", "Rái cá": "fa-otter", "Cú": "fa-owl", "Cọ vẽ": "fa-paintbrush",
+        "Khay sơn": "fa-palette", "Cây cọ": "fa-palm-tree", "Vẹt": "fa-parrot", "Móng chân": "fa-shoe-prints",
+        "Biểu tượng hòa bình": "fa-peace", "Con công": "fa-crow", "Pegasus": "fa-horse-head", "Ngũ giác": "fa-star",
+        "Nước hoa": "fa-spray-can-sparkles", "Heo có cánh": "fa-piggy-bank", "Dứa": "fa-pineapple", "Pizza": "fa-pizza-slice",
+        "Bí ngô": "fa-pumpkins", "Cỗ xe bí ngô": "fa-wagon-sweet", "Ví": "fa-wallet", "Mảnh ghép": "fa-puzzle-piece",
+        "Dấu hỏi": "fa-question-circle", "Thỏ": "fa-rabbit", "Vợt (Racquet)": "fa-tennis-ball", "Cầu vồng": "fa-rainbow",
+        "Cừu đực": "fa-sheep", "Tê giác": "fa-rhino", "Robot": "fa-robot", "Cây thước (Measuring Stick)": "fa-ruler",
+        "Cân công lý": "fa-balance-scale", "Bù nhìn": "fa-hat-wizard", "Kéo": "fa-scissors", "Xe buýt trường học": "fa-bus-simple",
+        "Bọ cạp": "fa-spider", "Cá ngựa": "fa-fish", "Máy khâu": "fa-tshirt", "Vỏ": "fa-shell",
+        "Cừu": "fa-sheep", "Đầu lâu": "fa-skull", "Rắn": "fa-snake", "Ốc sên": "fa-snail",
+        "Bông tuyết": "fa-snowflake", "Nhện": "fa-spider-web", "Thìa": "fa-spoon", "Con mực": "fa-squid",
+        "Ngôi sao": "fa-star", "Sao biển": "fa-star", "Dâu tây": "fa-strawberry", "Xe đẩy (trẻ sơ sinh)": "fa-baby-carriage",
+        "Mặt trời": "fa-sun", "Chim én": "fa-swallow", "Thiên nga": "fa-swatchbook", "Taj Mahal": "fa-building",
+        "Ấm trà": "fa-tea-pot", "Răng (răng nanh)": "fa-tooth", "Tivi": "fa-tv", "Cà vạt": "fa-tie",
+        "Hổ": "fa-tiger", "Răng": "fa-tooth", "Bàn chải đánh răng": "fa-tooth", "Cây": "fa-tree",
+        "Xe tải": "fa-truck-front", "Rùa": "fa-turtle", "UFO": "fa-space-station-moon", "Kỳ lân": "fa-unicorn",
+        "Đồng phục": "fa-user-tie", "Ô": "fa-umbrella", "Dụng cụ nhà bếp": "fa-utensils", "Hút bụi": "fa-vacuum",
+        "Valentine": "fa-heart", "Răng ma cà rồng": "fa-tooth", "Trò chơi điện tử": "fa-gamepad", "Lưới nhện": "fa-spider-web",
+        "Cá voi": "fa-whale", "Bánh xe": "fa-wheel", "Cối xay gió": "fa-windmill", "Phù thủy (Mũ hoặc Người)": "fa-hat-wizard",
+        "Sói": "fa-wolf", "Vòng hoa": "fa-wreath", "Cờ lê": "fa-wrench", "X": "fa-xmark",
+        "Yard Stick (Thước kẻ)": "fa-ruler", "Yin-yang": "fa-yin-yang", "Yoga": "fa-person-yoga", "Ngựa vằn": "fa-zebra"
+    };
+
+    let selectedCharms = [];
+
+    /**
+     * Bắt đầu quá trình bói Charm
+     * @param {number} numCharms Số lượng charm cần bói (1, 3, hoặc 5).
+     */
+    function startReading(numCharms) {
+        // Ẩn form kết quả và xóa kết quả cũ
+        document.getElementById('result-form').style.display = 'none';
+        document.getElementById('charm-results-content').innerHTML = '';
+        selectedCharms = [];
+
+        // Hiển thị trạng thái chờ
+        const display = document.getElementById('charm-display');
+        display.innerHTML = `<div class="loading"><div class="spinner"></div> Đang lấy ${numCharms} Charm...</div>`;
+        disableButtons(true);
+
+        // Giả lập thời gian chờ 3 giây
+        setTimeout(() => {
+            selectedCharms = getRandomCharms(numCharms);
+            displayCharms(selectedCharms);
+            showResults(selectedCharms);
+            disableButtons(false);
+        }, 3000);
+    }
+
+    /**
+     * Chọn ngẫu nhiên N charm từ danh sách (không trùng lặp)
+     * @param {number} n Số lượng charm cần chọn.
+     * @returns {Array} Danh sách các charm đã chọn.
+     */
+    function getRandomCharms(n) {
+        const shuffled = CHARM_LIST.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, n);
+    }
+
+    /**
+     * Hiển thị các charm đã chọn lên màn hình
+     * @param {Array} charms Danh sách các charm.
+     */
+    function displayCharms(charms) {
+        const display = document.getElementById('charm-display');
+        display.innerHTML = '';
+        charms.forEach((charm, index) => {
+            const iconClass = ICON_MAP[charm.name] || 'fa-question';
+            const card = document.createElement('div');
+            card.className = 'charm-card';
+            card.innerHTML = `
+                <i class="fas ${iconClass}" title="${charm.name}"></i>
+                Charm ${index + 1}: ${charm.name}
+            `;
+            display.appendChild(card);
+
+            // Thêm hiệu ứng lắc nhẹ sau khi hiển thị
+            setTimeout(() => {
+                card.style.transform = 'translateY(-5px)';
+                setTimeout(() => card.style.transform = 'translateY(0)', 150);
+            }, index * 200);
+        });
+    }
+
+    /**
+     * Hiển thị form tổng hợp kết quả
+     * @param {Array} charms Danh sách các charm đã chọn.
+     */
+    function showResults(charms) {
+        const resultsContent = document.getElementById('charm-results-content');
+        let htmlContent = '';
+        charms.forEach((charm, index) => {
+            htmlContent += `
+                <div class="charm-result">
+                    <strong>Charm ${index + 1}: ${charm.name}</strong>
+                    Ý nghĩa: ${charm.meaning}
+                </div>
+            `;
+        });
+        resultsContent.innerHTML = htmlContent;
+        document.getElementById('result-form').style.display = 'block';
+    }
+
+    /**
+     * Vô hiệu hóa hoặc kích hoạt các nút bói chính
+     * @param {boolean} disabled Trạng thái (true: vô hiệu hóa, false: kích hoạt).
+     */
+    function disableButtons(disabled) {
+        document.querySelectorAll('.menu-button').forEach(button => {
+            button.disabled = disabled;
+        });
+    }
+
+    /**
+     * Hàm xử lý khi bấm nút hỏi AI
+     * @param {string} aiName Tên AI (Gemini hoặc ChatGPT).
+     */
+    function askAI(aiName) {
+        if (selectedCharms.length === 0) {
+            alert('Vui lòng bói Charm trước khi hỏi AI.');
+            return;
+        }
+
+        let prompt = `Tôi đã bói được các Charm sau và ý nghĩa của chúng:\n\n`;
+        selectedCharms.forEach((charm, index) => {
+            prompt += `Charm ${index + 1}: Tên - ${charm.name}. Ý nghĩa: ${charm.meaning}\n`;
+        });
+        prompt += `\nBạn hãy tổng hợp và giải đoán ý nghĩa tổng thể của các Charm này cho tôi.`;
+
+        // Sao chép nội dung
+        navigator.clipboard.writeText(prompt).then(() => {
+            alert(`Đã sao chép kết quả Charm vào clipboard! Bây giờ bạn có thể dán vào ${aiName} để giải đoán.`);
+            // Mở AI tương ứng (sử dụng link tượng trưng)
+            let aiLink = '';
+            if (aiName === 'Gemini') {
+                // Link tượng trưng để mở Gemini (cần thay bằng link thực tế nếu có)
+                aiLink = 'https://gemini.google.com/app';
+            } else if (aiName === 'ChatGPT') {
+                // Link tượng trưng để mở ChatGPT (cần thay bằng link thực tế nếu có)
+                aiLink = 'https://chat.openai.com/';
+            }
+            if (aiLink) {
+                window.open(aiLink, '_blank');
+            }
+        }).catch(err => {
+            console.error('Không thể sao chép văn bản: ', err);
+            alert('Lỗi: Không thể sao chép kết quả. Vui lòng sao chép thủ công.');
+        });
+    }
+
+    /**
+     * Đặt lại ứng dụng về trạng thái ban đầu
+     */
+    function resetApp() {
+        document.getElementById('result-form').style.display = 'none';
+        document.getElementById('charm-display').innerHTML = '';
+        disableButtons(false);
+        selectedCharms = [];
+        // Về trang trước
+        window.location.href = '#top'; // Link tượng trưng
+    }
+</script>
+
+</body>
+</html>
