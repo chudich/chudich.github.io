@@ -4,8 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch Âm Dương với Can Chi, Tiết Khí và Ngày Thiên Xá</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Định nghĩa màu sắc mới */
+        :root {
+            --color-primary-teal: #00BCD4; /* Xanh ngọc tươi sáng */
+            --color-secondary-coral: #FF7043; /* Hồng san hô */
+            --color-accent-lime: #CDDC39; /* Vàng chanh */
+            --color-bg-light: #F4F8F9; /* Nền siêu sáng */
+            --color-text-dark: #263238; /* Text đậm */
+            --color-text-light: #FFFFFF;
+        }
+
         /* Import font trẻ trung và hiện đại */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
@@ -17,11 +27,12 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(rgba(255, 111, 0, 0.2), rgba(255, 235, 59, 0.2)), url('https://example.com/background-image.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: var(--color-bg-light); 
+            /* Thay đổi background gradient và loại bỏ ảnh nền giả */
+            background: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 100%);
             margin: 0;
             padding: 20px;
-            color: #333;
+            color: var(--color-text-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,13 +42,13 @@
 
         /* Header */
         header {
-            background: linear-gradient(45deg, #ff6f00, #ffa726); /* Match existing button gradient */
+            background: linear-gradient(90deg, var(--color-primary-teal), #00ACC1); /* Gradient xanh ngọc */
             padding: 15px 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(8px);
         }
 
@@ -60,200 +71,200 @@
 
         .main-menu ul li {
             margin: 0 10px;
-            opacity: 0;
-            animation: fadeInMenu 0.5s ease forwards;
-            animation-delay: calc(0.1s * var(--i));
-        }
-
-        .main-menu ul li:nth-child(1) { --i: 1; }
-
-        @keyframes fadeInMenu {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            opacity: 1; /* Đảm bảo hiển thị */
+            /* Bỏ animation delay để tải nhanh hơn */
         }
 
         .main-menu ul li a {
             display: block;
             padding: 10px 20px;
-            background: linear-gradient(135deg, #007AFF, #00C6FF); /* iOS blue */
-            color: #FFFFFF;
+            background: var(--color-secondary-coral); /* Nền hồng san hô */
+            color: var(--color-text-light);
             text-decoration: none;
-            font-size: 1.2rem; /* Medium text size */
-            font-weight: 700; /* Bold */
-            border-radius: 10px;
-            border: 2px solid #FFFFFF;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(4px);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            border-radius: 25px; /* Bo tròn hiện đại */
+            border: 1px solid var(--color-text-light);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
         .main-menu ul li a:hover {
-            background: linear-gradient(135deg, #005BB5, #0096D6);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background: #FF5722;
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            position: absolute;
-            top: 15px;
-            right: 20px;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: #FFFFFF;
-            margin: 4px 0;
-            transition: all 0.3s;
-        }
-
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
-
+        /* Tiêu đề */
         h2, h3, h4 {
-            color: #d84315; /* Màu cam đậm trẻ trung */
+            color: var(--color-primary-teal); /* Xanh ngọc cho tiêu đề */
             text-align: center;
             margin: 15px 0;
-            font-weight: 600;
+            font-weight: 800; /* Rất đậm */
+            text-transform: uppercase;
         }
 
+        /* Khối điều khiển (Controls) */
         .controls {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.95); /* Nền trắng trong suốt nhẹ */
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            gap: 15px; /* Tăng khoảng cách */
+            background: var(--color-text-light); 
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 600px;
-            margin-bottom: 20px;
+            max-width: 700px;
+            margin-bottom: 25px;
         }
 
         select, input {
             padding: 12px;
             font-size: 16px;
-            border: 2px solid #ff8f00; /* Viền cam nổi bật */
+            border: 1px solid #B0BEC5; /* Viền xám nhẹ */
             border-radius: 8px;
-            background-color: #fff8e1; /* Nền vàng nhạt ấm áp */
+            background-color: #ECEFF1; /* Nền input xám rất nhạt */
+            color: var(--color-text-dark);
             transition: border-color 0.3s, box-shadow 0.3s;
             width: 100%;
-            max-width: 150px;
+            max-width: 160px;
         }
 
         select:focus, input:focus {
             outline: none;
-            border-color: #d84315;
-            box-shadow: 0 0 8px rgba(216, 67, 21, 0.3);
+            border-color: var(--color-primary-teal);
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.3);
+            background-color: var(--color-text-light);
         }
 
         button {
-            padding: 12px 24px;
-            background: linear-gradient(45deg, #ff6f00, #ffa726); /* Gradient cam-vàng */
-            color: white;
+            padding: 12px 28px;
+            background: linear-gradient(45deg, var(--color-primary-teal), #00ACC1); /* Gradient Xanh ngọc */
+            color: var(--color-text-light);
             border: none;
-            border-radius: 8px;
+            border-radius: 25px; /* Bo tròn cho nút */
             cursor: pointer;
             font-size: 16px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 111, 0, 0.4);
+            box-shadow: 0 6px 15px rgba(0, 188, 212, 0.5);
         }
 
+        /* Bảng Lịch (Calendar) */
         table {
             width: 100%;
             max-width: 700px;
             border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
+            background: var(--color-text-light);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
         th, td {
-            border: 1px solid #ffe0b2; /* Viền vàng nhạt */
-            padding: 12px;
+            border: 1px solid #E0F7FA; /* Viền xanh nhạt */
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
         th {
-            background: linear-gradient(45deg, #ff6f00, #ffa726);
-            color: white;
-            font-weight: 600;
+            background: linear-gradient(90deg, var(--color-secondary-coral), #FF5722);
+            color: var(--color-text-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1rem;
         }
 
         td:hover {
-            background-color: #ffe0b2; /* Nền vàng nhạt khi hover */
+            background-color: #FBEFEF; /* Nền hồng rất nhạt khi hover */
         }
 
         .sunday {
-            color: #d32f2f; /* Đỏ cho Chủ nhật */
+            color: #E53935; /* Đỏ tươi cho Chủ nhật */
         }
 
         .saturday {
-            color: #0288d1; /* Xanh dương cho Thứ bảy */
+            color: #00796B; /* Xanh lá đậm cho Thứ bảy */
         }
 
         .today {
-            background-color: #ffca28; /* Vàng sáng cho ngày hiện tại */
-            font-weight: bold;
+            background-color: var(--color-accent-lime) !important; /* Vàng chanh nổi bật */
+            color: var(--color-text-dark);
+            font-weight: 700;
+            border: 2px solid #AFB42B;
+        }
+        
+        /* Nội dung ô ngày */
+        td strong {
+            font-size: 20px;
+            display: block;
+            line-height: 1.1;
+            margin-bottom: 2px;
+            color: var(--color-text-dark);
+        }
+        td small {
+            font-size: 12px; /* Giảm size chữ âm lịch để đỡ rối */
+            color: #78909C; 
+            font-weight: 600;
         }
 
+        /* Các khối thông tin */
         .calendar-container, #notes, #importantDays, #thienXaDays {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: var(--color-text-light);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
             margin: 20px 0;
             width: 100%;
             max-width: 700px;
+            border-left: 5px solid var(--color-secondary-coral); /* Viền màu phụ nổi bật */
+        }
+        
+        /* Ghi chú tiết khí */
+        #notes {
+            border-left: 5px solid var(--color-primary-teal);
         }
 
         #notes ul, #importantDaysList ul, #thienXaDaysList ul {
             list-style-type: none;
-            padding: 0;
+            padding-left: 0;
         }
 
         #notes li, #importantDaysList li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #444;
-            font-size: 14px;
+            font-size: 15px;
         }
 
-        #thienXaDaysList {
-            font-weight: bold;
+        #thienXaDaysList li {
+            font-weight: 700;
             font-size: 16px;
-            color: #d32f2f; /* Đỏ nổi bật cho ngày Thiên Xá */
+            color: #E53935; /* Đỏ tươi cho ngày Thiên Xá */
+            background: #FFEBEE;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .additional-buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-top: 20px;
         }
 
@@ -261,61 +272,78 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 10000; /* Tăng z-index */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background: #fff8e1; /* Nền vàng nhạt ấm áp */
-            padding: 20px;
-            border-radius: 12px;
+            background: var(--color-text-light); 
+            padding: 30px;
+            border-radius: 16px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             text-align: left;
         }
 
         .close {
-            color: #ff6f00;
+            color: var(--color-secondary-coral);
             float: right;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s;
         }
 
         .close:hover,
         .close:focus {
-            color: #d84315;
+            color: #FF5722;
         }
 
         .modal-content p {
             margin: 10px 0;
             font-size: 16px;
-            color: #333;
+            color: var(--color-text-dark);
+        }
+
+        .modal-content strong {
+            color: var(--color-primary-teal);
         }
 
         .modal-content form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .modal-content label {
-            color: #d84315;
+            color: var(--color-primary-teal);
             font-weight: 600;
+            margin-top: 5px;
         }
-
-        .modal-content input, .modal-content select {
+        
+        /* Modal buttons */
+        #calcDaysModal button, #findTimeModal button {
+             background: linear-gradient(45deg, var(--color-secondary-coral), #FF5722);
+             box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
+        }
+        #calcDaysModal button:hover, #findTimeModal button:hover {
+            box-shadow: 0 6px 15px rgba(255, 112, 67, 0.5);
+        }
+        
+        #calcResult, #findResult {
+            margin-top: 15px;
             padding: 10px;
-            border: 2px solid #ff8f00;
             border-radius: 8px;
-            background-color: #fff;
+            background-color: #E8F5E9; /* Xanh lá nhạt cho kết quả */
+            font-weight: 600;
+            color: #388E3C;
         }
 
         /* Responsive Design */
@@ -325,12 +353,12 @@
             }
 
             h2 {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .controls {
                 flex-direction: column;
-                padding: 10px;
+                padding: 15px;
             }
 
             select, input, button {
@@ -340,50 +368,32 @@
             }
 
             table {
-                font-size: 14px;
+                font-size: 13px;
             }
 
             th, td {
-                padding: 8px;
+                padding: 6px;
             }
-
-            .modal-content {
-                width: 95%;
-                padding: 15px;
+            
+            td strong {
+                font-size: 16px;
             }
-
-            .main-menu {
-                display: none;
+            td small {
+                font-size: 10px;
             }
 
             .main-menu.active {
-                display: block;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: linear-gradient(45deg, #ff6f00, #ffa726);
-                backdrop-filter: blur(8px);
-                padding: 10px 0;
+                top: 55px; /* Điều chỉnh vị trí menu mobile */
+                background: linear-gradient(45deg, #00ACC1, var(--color-primary-teal));
             }
-
-            .main-menu ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .main-menu ul li {
-                margin: 5px 0;
-            }
-
+            
             .main-menu ul li a {
-                font-size: 1.1rem; /* Medium text size for mobile */
-                padding: 8px 16px;
+                font-size: 1rem;
             }
 
             .menu-toggle {
-                display: flex;
-                justify-content: flex-end;
+                right: 15px;
+                top: 18px;
             }
         }
     </style>
@@ -393,8 +403,8 @@
         <div class="container">
             <nav class="main-menu">
                 <ul>
-                    <li><a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a></li>
-                </ul>
+                    <li style="--i: 1;"><a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a></li>
+                    </ul>
             </nav>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
@@ -425,13 +435,11 @@
     </div>
     <div id="calendar" class="calendar-container"></div>
 
-    <!-- Form hiển thị ngày quan trọng -->
     <div id="importantDays" class="calendar-container">
         <h3>Ngày quan trọng trong tháng</h3>
         <div id="importantDaysList"></div>
     </div>
 
-    <!-- Form hiển thị ngày Thiên Xá -->
     <div id="thienXaDays" class="calendar-container">
         <h3>Ngày Thiên Xá trong tháng</h3>
         <div id="thienXaDaysList"></div>
@@ -442,7 +450,6 @@
         <button onclick="showFindTimeModal()">Tìm thời điểm</button>
     </div>
 
-    <!-- Modal for Day Details -->
     <div id="dayModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('dayModal')">&times;</span>
@@ -451,29 +458,22 @@
         </div>
     </div>
 
-    <!-- Modal for Tính số ngày -->
     <div id="calcDaysModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('calcDaysModal')">&times;</span>
             <h3>Tính số ngày</h3>
             <form id="calcDaysForm">
                 <label>Chọn mốc thời gian:</label>
-                <input type="number" id="startDay" placeholder="Ngày" min="1" max="31" required>
-                <select id="startMonth">
-                    <option value="1">Tháng 1</option>
-                    <option value="2">Tháng 2</option>
-                    <option value="3">Tháng 3</option>
-                    <option value="4">Tháng 4</option>
-                    <option value="5">Tháng 5</option>
-                    <option value="6">Tháng 6</option>
-                    <option value="7">Tháng 7</option>
-                    <option value="8">Tháng 8</option>
-                    <option value="9">Tháng 9</option>
-                    <option value="10">Tháng 10</option>
-                    <option value="11">Tháng 11</option>
-                    <option value="12">Tháng 12</option>
-                </select>
-                <input type="number" id="startYear" placeholder="Năm" min="1900" max="2100" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="startDay" placeholder="Ngày" min="1" max="31" required style="width: 30%;">
+                    <select id="startMonth" style="width: 35%;">
+                        <option value="1">Tháng 1</option><option value="2">Tháng 2</option><option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option><option value="5">Tháng 5</option><option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option><option value="8">Tháng 8</option><option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
+                    </select>
+                    <input type="number" id="startYear" placeholder="Năm" min="1900" max="2100" required style="width: 35%;">
+                </div>
                 <label>Số ngày (dương để đếm tới, âm để đếm lùi):</label>
                 <input type="number" id="numDays" placeholder="Số ngày" required>
                 <button type="button" onclick="calculateDate()">Tính toán</button>
@@ -482,46 +482,33 @@
         </div>
     </div>
 
-    <!-- Modal for Tìm thời điểm -->
     <div id="findTimeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('findTimeModal')">&times;</span>
             <h3>Tìm thời điểm</h3>
             <form id="findTimeForm">
                 <label>Mốc thời gian 1:</label>
-                <input type="number" id="date1Day" placeholder="Ngày" min="1" max="31" required>
-                <select id="date1Month">
-                    <option value="1">Tháng 1</option>
-                    <option value="2">Tháng 2</option>
-                    <option value="3">Tháng 3</option>
-                    <option value="4">Tháng 4</option>
-                    <option value="5">Tháng 5</option>
-                    <option value="6">Tháng 6</option>
-                    <option value="7">Tháng 7</option>
-                    <option value="8">Tháng 8</option>
-                    <option value="9">Tháng 9</option>
-                    <option value="10">Tháng 10</option>
-                    <option value="11">Tháng 11</option>
-                    <option value="12">Tháng 12</option>
-                </select>
-                <input type="number" id="date1Year" placeholder="Năm" min="1900" max="2100" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="date1Day" placeholder="Ngày" min="1" max="31" required style="width: 30%;">
+                    <select id="date1Month" style="width: 35%;">
+                        <option value="1">Tháng 1</option><option value="2">Tháng 2</option><option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option><option value="5">Tháng 5</option><option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option><option value="8">Tháng 8</option><option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
+                    </select>
+                    <input type="number" id="date1Year" placeholder="Năm" min="1900" max="2100" required style="width: 35%;">
+                </div>
                 <label>Mốc thời gian 2:</label>
-                <input type="number" id="date2Day" placeholder="Ngày" min="1" max="31" required>
-                <select id="date2Month">
-                    <option value="1">Tháng 1</option>
-                    <option value="2">Tháng 2</option>
-                    <option value="3">Tháng 3</option>
-                    <option value="4">Tháng 4</option>
-                    <option value="5">Tháng 5</option>
-                    <option value="6">Tháng 6</option>
-                    <option value="7">Tháng 7</option>
-                    <option value="8">Tháng 8</option>
-                    <option value="9">Tháng 9</option>
-                    <option value="10">Tháng 10</option>
-                    <option value="11">Tháng 11</option>
-                    <option value="12">Tháng 12</option>
-                </select>
-                <input type="number" id="date2Year" placeholder="Năm" min="1900" max="2100" required>
+                 <div style="display: flex; gap: 10px;">
+                    <input type="number" id="date2Day" placeholder="Ngày" min="1" max="31" required style="width: 30%;">
+                    <select id="date2Month" style="width: 35%;">
+                        <option value="1">Tháng 1</option><option value="2">Tháng 2</option><option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option><option value="5">Tháng 5</option><option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option><option value="8">Tháng 8</option><option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option><option value="11">Tháng 11</option><option value="12">Tháng 12</option>
+                    </select>
+                    <input type="number" id="date2Year" placeholder="Năm" min="1900" max="2100" required style="width: 35%;">
+                </div>
                 <button type="button" onclick="calculateDaysBetween()">Tính toán</button>
             </form>
             <div id="findResult"></div>
@@ -540,7 +527,7 @@
 
         const LunarDateLib = window._calendar;
 
-        // Hardcoded solar terms for 2025
+        // Hardcoded solar terms for 2025 (Giữ nguyên dữ liệu)
         const solarTerms2025 = {
             1: [
                 { name: "Tiểu Hàn", day: 5, time: "22:34" },
@@ -592,10 +579,10 @@
             ]
         };
 
-        // URL giả định cho dữ liệu ngày quan trọng
+        // URL giả định cho dữ liệu ngày quan trọng (Giữ nguyên dữ liệu)
         const IMPORTANT_DAYS_URL = 'https://example.com/api/important-days';
 
-        // Hàm lấy dữ liệu ngày quan trọng từ URL
+        // Hàm lấy dữ liệu ngày quan trọng từ URL (Giữ nguyên logic)
         async function fetchImportantDays(year, month) {
             try {
                 // Giả lập dữ liệu (thay bằng fetch thực tế khi có URL chính thức)
@@ -623,25 +610,25 @@
             }
         }
 
-        // Hàm hiển thị ngày quan trọng
+        // Hàm hiển thị ngày quan trọng (Giữ nguyên logic)
         async function displayImportantDays(year, month) {
             const importantDaysList = document.getElementById('importantDaysList');
             const days = await fetchImportantDays(year, month);
 
             if (days.length === 0) {
-                importantDaysList.innerHTML = '<p>Không có ngày quan trọng trong tháng này.</p>';
+                importantDaysList.innerHTML = '<p style="color: #607D8B;">Không có ngày quan trọng trong tháng này.</p>';
                 return;
             }
 
             let html = '<ul>';
             days.forEach(day => {
-                html += `<li>${day}</li>`;
+                html += `<li><span style="color: var(--color-secondary-coral); margin-right: 5px;">&#9733;</span> ${day}</li>`;
             });
             html += '</ul>';
             importantDaysList.innerHTML = html;
         }
 
-        // Hàm kiểm tra mùa theo tháng âm lịch
+        // Hàm kiểm tra mùa theo tháng âm lịch (Giữ nguyên logic)
         function getSeason(lunarMonth) {
             if ([1, 2, 3].includes(lunarMonth)) return 'Xuân';
             if ([4, 5, 6].includes(lunarMonth)) return 'Hạ';
@@ -650,7 +637,7 @@
             return null;
         }
 
-        // Hàm kiểm tra ngày Thiên Xá
+        // Hàm kiểm tra ngày Thiên Xá (Giữ nguyên logic)
         function isThienXaDay(canChiDay, season) {
             const thienXaRules = {
                 'Xuân': 'Mậu Dần',
@@ -661,7 +648,7 @@
             return canChiDay === thienXaRules[season];
         }
 
-        // Hàm tìm ngày Thiên Xá trong tháng
+        // Hàm tìm ngày Thiên Xá trong tháng (Giữ nguyên logic)
         function findThienXaDays(year, month) {
             const daysInMonth = new Date(year, month, 0).getDate();
             const thienXaDays = [];
@@ -693,38 +680,39 @@
             return thienXaDays;
         }
 
-        // Hàm hiển thị ngày Thiên Xá
+        // Hàm hiển thị ngày Thiên Xá (Giữ nguyên logic)
         function displayThienXaDays(year, month) {
             const thienXaDaysList = document.getElementById('thienXaDaysList');
             const thienXaDays = findThienXaDays(year, month);
 
             if (thienXaDays.length === 0) {
-                thienXaDaysList.innerHTML = '<p>Không có ngày Thiên Xá trong tháng này.</p>';
+                thienXaDaysList.innerHTML = '<p style="color: #607D8B;">Không có ngày Thiên Xá trong tháng này.</p>';
                 return;
             }
 
             let html = '<ul>';
             thienXaDays.forEach(day => {
-                html += `<li>Ngày Thiên Xá (${day.season}): ${day.solar} (Âm lịch: ${day.lunar}, Can Chi: ${day.canChi})</li>`;
+                html += `<li><span style="color: #E53935; margin-right: 5px;">&#10024;</span> Ngày Thiên Xá (${day.season}): ${day.solar} (Âm: ${day.lunar}, Can Chi: ${day.canChi})</li>`;
             });
             html += '</ul>';
             thienXaDaysList.innerHTML = html;
         }
 
+        // Hàm tạo lịch (Giữ nguyên logic)
         function generateCalendar() {
             const month = parseInt(document.getElementById('month').value);
             const year = parseInt(document.getElementById('year').value);
             const calendarDiv = document.getElementById('calendar');
 
             if (isNaN(year) || year < 1900 || year > 2100) {
-                calendarDiv.innerHTML = '<p>Vui lòng nhập năm từ 1900 đến 2100.</p>';
+                calendarDiv.innerHTML = '<p style="color: red;">Vui lòng nhập năm từ 1900 đến 2100.</p>';
                 return;
             }
 
             const daysInMonth = new Date(year, month, 0).getDate();
             const firstDay = new Date(year, month - 1, 1).getDay();
 
-            let table = '<table><tr><th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th></tr><tr>';
+            let table = '<table><thead><tr><th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th></tr></thead><tbody><tr>';
             let day = 1;
 
             // Empty cells before the first day
@@ -755,7 +743,7 @@
                 }
                 table += '</tr>';
             }
-            table += '</table>';
+            table += '</tbody></table>';
 
             // Solar term notes
             const notes = getSolarTermNotes(year, month);
@@ -767,6 +755,7 @@
             displayThienXaDays(year, month);
         }
 
+        // Hàm tạo ô ngày (Giữ nguyên logic)
         function getDayCell(year, month, day) {
             let lunarDay = 'N/A';
             let canChiDay = 'N/A';
@@ -793,12 +782,14 @@
             if (weekday === 6) className = 'saturday';
             const todayClass = (day === new Date().getDate() && month === new Date().getMonth() + 1 && year === new Date().getFullYear()) ? ' today' : '';
 
+            // Cập nhật cấu trúc hiển thị trong ô
             return `<td class="${className}${todayClass}" onclick="showDetails(${year}, ${month}, ${day}, '${lunarDay}', '${canChiDay}', '${canChiMonth}', '${canChiYear}', '${tietKhi}')">
                 <strong style="font-size: 20px;">${day}</strong><br>
-                <small style="font-size: 14px; color: #666;">${lunarDay}</small>
+                <small style="font-size: 12px; color: #78909C; font-weight: 600;">${lunarDay.split('/')[0]}/${lunarDay.split('/')[1]}</small>
             </td>`;
         }
 
+        // Hàm hiển thị modal chi tiết (Giữ nguyên logic)
         function showDetails(year, month, day, lunarDay, canChiDay, canChiMonth, canChiYear, tietKhi) {
             document.getElementById('modal-title').innerHTML = `Thông tin ngày ${day}/${month}/${year}`;
             document.getElementById('modal-details').innerHTML = `
@@ -818,30 +809,33 @@
             };
         }
 
+        // Hàm đóng modal (Giữ nguyên logic)
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
+        // Hàm lấy ghi chú tiết khí (Giữ nguyên logic)
         function getSolarTermNotes(year, month) {
             if (year !== 2025) {
-                return '<div id="notes"><p>Tiết khí chỉ khả dụng cho năm 2025.</p></div>';
+                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B;">Tiết khí chỉ khả dụng cho năm 2025.</p></div>';
             }
 
             const terms = solarTerms2025[month] || [];
             if (terms.length === 0) {
-                return '<div id="notes"><p>Không có tiết khí trong tháng này.</p></div>';
+                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B;">Không có tiết khí trong tháng này.</p></div>';
             }
 
             let notesHtml = '<div id="notes"><h4>Ghi chú tiết khí:</h4><ul>';
             terms.forEach(term => {
                 const formattedDay = term.day < 10 ? '0' + term.day : term.day;
                 const formattedMonth = month < 10 ? '0' + month : month;
-                notesHtml += `<li>Tiết ${term.name} bắt đầu vào ${term.time} ngày ${formattedDay}.${formattedMonth}.${year}</li>`;
+                notesHtml += `<li><span style="color: var(--color-primary-teal); font-weight: 600;">&#9679;</span> Tiết ${term.name} bắt đầu: ${term.time} ngày ${formattedDay}.${formattedMonth}.${year}</li>`;
             });
             notesHtml += '</ul></div>';
             return notesHtml;
         }
 
+        // Hàm hiển thị modal tính ngày (Giữ nguyên logic)
         function showCalcDaysModal() {
             document.getElementById('calcDaysModal').style.display = 'flex';
             document.getElementById('calcResult').innerHTML = '';
@@ -852,6 +846,7 @@
             };
         }
 
+        // Hàm tính ngày (Giữ nguyên logic)
         function calculateDate() {
             const day = parseInt(document.getElementById('startDay').value);
             const month = parseInt(document.getElementById('startMonth').value);
@@ -859,7 +854,8 @@
             const numDays = parseInt(document.getElementById('numDays').value);
 
             if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(numDays)) {
-                document.getElementById('calcResult').innerHTML = '<p style="color: red;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('calcResult').innerHTML = '<p style="color: #D32F2F;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('calcResult').style.backgroundColor = '#FFEBEE';
                 return;
             }
 
@@ -872,9 +868,12 @@
             const resultYear = resultDate.getFullYear();
 
             const direction = numDays >= 0 ? 'tới' : 'lùi';
-            document.getElementById('calcResult').innerHTML = `<p>Kết quả: Từ ${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year} đếm ${direction} ${Math.abs(numDays)} ngày là ngày ${resultDay < 10 ? '0' + resultDay : resultDay}.${resultMonth < 10 ? '0' + resultMonth : resultMonth}.${resultYear}.</p>`;
+            document.getElementById('calcResult').innerHTML = `<p>Kết quả: Từ <span style="color: var(--color-secondary-coral);">${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year}</span> đếm ${direction} ${Math.abs(numDays)} ngày là ngày <span style="color: var(--color-secondary-coral);">${resultDay < 10 ? '0' + resultDay : resultDay}.${resultMonth < 10 ? '0' + resultMonth : resultMonth}.${resultYear}</span>.</p>`;
+            document.getElementById('calcResult').style.backgroundColor = '#E8F5E9';
+            document.getElementById('calcResult').style.color = '#388E3C';
         }
 
+        // Hàm hiển thị modal tìm thời điểm (Giữ nguyên logic)
         function showFindTimeModal() {
             document.getElementById('findTimeModal').style.display = 'flex';
             document.getElementById('findResult').innerHTML = '';
@@ -885,6 +884,7 @@
             };
         }
 
+        // Hàm tính số ngày giữa 2 mốc (Giữ nguyên logic)
         function calculateDaysBetween() {
             const day1 = parseInt(document.getElementById('date1Day').value);
             const month1 = parseInt(document.getElementById('date1Month').value);
@@ -894,7 +894,8 @@
             const year2 = parseInt(document.getElementById('date2Year').value);
 
             if (isNaN(day1) || isNaN(month1) || isNaN(year1) || isNaN(day2) || isNaN(month2) || isNaN(year2)) {
-                document.getElementById('findResult').innerHTML = '<p style="color: red;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('findResult').innerHTML = '<p style="color: #D32F2F;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('findResult').style.backgroundColor = '#FFEBEE';
                 return;
             }
 
@@ -903,7 +904,9 @@
             const msPerDay = 24 * 60 * 60 * 1000;
             const daysBetween = Math.floor(Math.abs(date2 - date1) / msPerDay);
 
-            document.getElementById('findResult').innerHTML = `<p>Kết quả: Giữa ${day1 < 10 ? '0' + day1 : day1}.${month1 < 10 ? '0' + month1 : month1}.${year1} và ${day2 < 10 ? '0' + day2 : day2}.${month2 < 10 ? '0' + month2 : month2}.${year2} là ${daysBetween} ngày.</p>`;
+            document.getElementById('findResult').innerHTML = `<p>Kết quả: Giữa <span style="color: var(--color-secondary-coral);">${day1 < 10 ? '0' + day1 : day1}.${month1 < 10 ? '0' + month1 : month1}.${year1}</span> và <span style="color: var(--color-secondary-coral);">${day2 < 10 ? '0' + day2 : day2}.${month2 < 10 ? '0' + month2 : month2}.${year2}</span> là <span style="color: var(--color-primary-teal); font-size: 1.1em;">${daysBetween}</span> ngày.</p>`;
+            document.getElementById('findResult').style.backgroundColor = '#E8F5E9';
+            document.getElementById('findResult').style.color = '#388E3C';
         }
 
         // Initialize calendar
