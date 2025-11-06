@@ -17,7 +17,7 @@
         }
 
         /* Import font trẻ trung và hiện đại */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
         * {
             margin: 0;
@@ -103,7 +103,7 @@
             font-weight: 800; /* Rất đậm */
             text-transform: uppercase;
         }
-        
+
         h2 {
             font-size: 28px; /* Tăng size h2 */
         }
@@ -129,7 +129,7 @@
             max-width: 700px;
             margin-bottom: 25px;
         }
-        
+
         .controls label {
             font-weight: 700; /* Đậm cho label */
             color: var(--color-text-dark);
@@ -223,7 +223,7 @@
             font-weight: 700;
             border: 2px solid #AFB42B;
         }
-        
+
         /* Nội dung ô ngày */
         td strong {
             font-size: 24px; /* TĂNG SIZE DƯƠNG LỊCH */
@@ -250,7 +250,7 @@
             max-width: 700px;
             border-left: 5px solid var(--color-secondary-coral); 
         }
-        
+
         /* Ghi chú tiết khí */
         #notes {
             border-left: 5px solid var(--color-primary-teal);
@@ -279,6 +279,19 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
+            flex-direction: column; /* Thay đổi thành cột để Phi Thiên Xá nằm dưới Tìm thời điểm */
+            align-items: center; /* Căn giữa các nút */
+        }
+
+        .additional-buttons button, .additional-buttons a button {
+            width: 250px; /* Định kích thước cố định cho nút */
+            max-width: 90%;
+            margin: 5px 0; /* Khoảng cách giữa các nút */
+        }
+        
+        .additional-buttons a {
+            text-decoration: none; /* Bỏ gạch chân cho thẻ a */
+            display: block; /* Để thẻ a chiếm hết chiều rộng của nút bên trong */
         }
 
         /* Modal */
@@ -357,7 +370,7 @@
             .controls {
                 padding: 15px;
             }
-            
+
             .controls label {
                 font-size: 16px;
             }
@@ -376,7 +389,7 @@
             th, td {
                 padding: 6px;
             }
-            
+
             td strong {
                 font-size: 20px; /* Dương lịch mobile */
             }
@@ -387,13 +400,17 @@
             .main-menu ul li a {
                 font-size: 1.1rem;
             }
-            
+
             #thienXaDaysList li, #importantDaysList li {
                 font-size: 15px;
             }
-            
+
             .modal-content p, .modal-content label {
                 font-size: 16px;
+            }
+
+            .additional-buttons button, .additional-buttons a button {
+                width: 100%; /* Đảm bảo các nút full width trên mobile */
             }
         }
     </style>
@@ -448,6 +465,11 @@
     <div class="additional-buttons">
         <button onclick="showCalcDaysModal()">Tính số ngày</button>
         <button onclick="showFindTimeModal()">Tìm thời điểm</button>
+        <a href="https://chudich.github.io/phithienxa.html">
+            <button style="background: linear-gradient(45deg, #FF7043, #FF5722);">
+                Phi Thiên Xá
+            </button>
+        </a>
     </div>
 
     <div id="dayModal" class="modal">
