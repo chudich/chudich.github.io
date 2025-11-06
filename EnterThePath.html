@@ -4,8 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enter The Path - Đông Tây Vibes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
   <style>
+    /* Định nghĩa màu sắc mới */
+    :root {
+      --color-primary-purple: #9B59B6; /* Tím sáng trong - Amethyst */
+      --color-home-blue: #3498DB; /* Xanh dương nổi bật */
+      --color-text-dark: #333333;
+      --color-light-bg: #F8F8F8;
+    }
+
     /* Reset và thiết lập cơ bản */
     * {
       margin: 0;
@@ -16,13 +24,13 @@
     body {
       font-family: 'Roboto', sans-serif;
       background: #FFFFFF; /* Nền trắng */
-      color: #333333; /* Chữ đen/xám đậm */
+      color: var(--color-text-dark); /* Chữ đen/xám đậm */
       line-height: 1.6;
     }
 
     /* --- Banner (Header) --- */
     header {
-      background: #F8F8F8; /* Nền xám nhạt */
+      background: var(--color-light-bg); /* Nền xám nhạt */
       padding: 20px 25px;
       display: flex;
       align-items: center;
@@ -31,39 +39,40 @@
       border-bottom: 1px solid #EEEEEE; /* Đường viền nhẹ */
     }
 
-    /* Menu Quay Lại Trang Chủ */
+    /* Menu Quay Lại Trang Chủ (Thay đổi font-size, font-weight và màu sắc) */
     .home-btn {
       position: absolute;
       left: 20px;
-      padding: 8px 15px;
-      background: none; /* Không nền */
-      color: #795548; /* Màu nâu nhẹ - tương tự IChing.html */
-      font-weight: 500;
-      font-size: 15px;
+      padding: 10px 18px;
+      background: none;
+      color: var(--color-home-blue); /* MÀU XANH DƯƠNG */
+      font-weight: 700; /* Tăng độ đậm */
+      font-size: 16px; /* Tăng size */
       text-decoration: none;
       text-align: center;
       border-radius: 4px;
-      border: 1px solid #D7CCC8;
+      border: 2px solid var(--color-home-blue);
       transition: all 0.2s;
     }
 
     .home-btn:hover {
-      background: #F5F5F5;
-      color: #5D4037;
-      border-color: #BCAAA4;
+      background: var(--color-home-blue);
+      color: #FFFFFF;
     }
 
+    /* Tiêu đề "Đông Tây Vibes" (Thay đổi màu và độ đậm) */
     header h1 {
-      color: #333333;
-      font-size: 28px;
-      font-weight: 700;
+      color: var(--color-primary-purple); /* MÀU TÍM SÁNG TRONG */
+      font-size: 30px;
+      font-weight: 900; /* Chữ Rất Đậm */
       text-transform: uppercase;
       letter-spacing: 2px;
+      text-shadow: 0 0 5px rgba(155, 89, 182, 0.4);
     }
 
-    /* --- Section button (Loại bỏ background image) --- */
+    /* --- Section button --- */
     .button-section {
-      background: #FFFFFF; /* Nền trắng sạch sẽ */
+      background: #FFFFFF;
       padding: 60px 20px;
     }
 
@@ -71,38 +80,39 @@
       max-width: 1000px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Nút lớn hơn một chút */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
     }
 
+    /* Các nút menu (Thay đổi font-size, font-weight và màu sắc) */
     .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 80px; /* Chiều cao tối thiểu */
+      min-height: 85px; /* Tăng chiều cao tối thiểu */
       padding: 15px;
-      background: #FFFFFF; /* Nền trắng */
-      color: #795548; /* Màu chữ nâu nhẹ */
+      background: #FFFFFF;
+      color: var(--color-primary-purple); /* MÀU TÍM SÁNG TRONG */
       text-decoration: none;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 20px; /* Tăng size */
+      font-weight: 700; /* Chữ Đậm */
       text-align: center;
-      border-radius: 4px;
-      border: 1px solid #D7CCC8; /* Viền nâu nhẹ */
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Đổ bóng nhẹ */
+      border-radius: 6px;
+      border: 2px solid var(--color-primary-purple); /* Viền đậm hơn */
+      box-shadow: 0 2px 4px rgba(155, 89, 182, 0.2);
       transition: all 0.2s;
     }
 
     .btn:hover {
-      background: #F9F9F9; /* Nền hover */
-      transform: translateY(-1px);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-      border-color: #BCAAA4;
+      background: var(--color-primary-purple);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(155, 89, 182, 0.4);
     }
 
     /* --- Footer --- */
     footer {
-      background: #F8F8F8;
+      background: var(--color-light-bg);
       text-align: center;
       padding: 15px;
       color: #999999;
@@ -113,19 +123,19 @@
     /* Mobile tối ưu */
     @media (max-width: 768px) {
       header h1 {
-        font-size: 22px;
+        font-size: 24px;
       }
       .home-btn {
-        font-size: 12px;
-        padding: 6px 12px;
+        font-size: 14px;
+        padding: 8px 14px;
         left: 10px;
       }
       .button-grid {
-        grid-template-columns: 1fr; /* 1 cột trên mobile */
+        grid-template-columns: 1fr;
       }
       .btn {
-        font-size: 16px;
-        min-height: 60px;
+        font-size: 18px;
+        min-height: 70px;
       }
     }
   </style>
