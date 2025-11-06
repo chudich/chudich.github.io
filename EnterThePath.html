@@ -39,15 +39,15 @@
       border-bottom: 1px solid #EEEEEE; /* Đường viền nhẹ */
     }
 
-    /* Menu Quay Lại Trang Chủ (Thay đổi font-size, font-weight và màu sắc) */
+    /* Menu Quay Lại Trang Chủ (Đã giảm padding để giảm kích thước) */
     .home-btn {
       position: absolute;
       left: 20px;
-      padding: 10px 18px;
+      padding: 8px 14px; /* Giảm padding */
       background: none;
       color: var(--color-home-blue); /* MÀU XANH DƯƠNG */
-      font-weight: 700; /* Tăng độ đậm */
-      font-size: 16px; /* Tăng size */
+      font-weight: 700;
+      font-size: 16px;
       text-decoration: none;
       text-align: center;
       border-radius: 4px;
@@ -60,7 +60,7 @@
       color: #FFFFFF;
     }
 
-    /* Tiêu đề "Đông Tây Vibes" (Thay đổi màu và độ đậm) */
+    /* Tiêu đề "Đông Tây Vibes" (Đã tăng margin-left để tránh bị che) */
     header h1 {
       color: var(--color-primary-purple); /* MÀU TÍM SÁNG TRONG */
       font-size: 30px;
@@ -68,7 +68,18 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       text-shadow: 0 0 5px rgba(155, 89, 182, 0.4);
+      /* FIX LỖI CHỒNG LẤN: Đảm bảo khoảng cách an toàn */
+      margin-left: 140px; 
+      margin-right: 20px;
     }
+    
+    /* FIX: Điều chỉnh lại ở màn hình lớn để căn giữa tốt hơn, nhưng vẫn đảm bảo khoảng cách tối thiểu */
+    @media (min-width: 769px) {
+        header h1 {
+            margin-left: 0; /* Cho phép căn giữa trên màn hình lớn */
+        }
+    }
+
 
     /* --- Section button --- */
     .button-section {
@@ -84,17 +95,17 @@
       gap: 20px;
     }
 
-    /* Các nút menu (Thay đổi font-size, font-weight và màu sắc) */
+    /* Các nút menu (Đã tăng size chữ lên 22px) */
     .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 85px; /* Tăng chiều cao tối thiểu */
+      min-height: 90px; /* Tăng chiều cao tối thiểu */
       padding: 15px;
       background: #FFFFFF;
       color: var(--color-primary-purple); /* MÀU TÍM SÁNG TRONG */
       text-decoration: none;
-      font-size: 20px; /* Tăng size */
+      font-size: 22px; /* TĂNG SIZE CHỮ MENU */
       font-weight: 700; /* Chữ Đậm */
       text-align: center;
       border-radius: 6px;
@@ -124,6 +135,9 @@
     @media (max-width: 768px) {
       header h1 {
         font-size: 24px;
+        /* Giữ khoảng cách an toàn cho tiêu đề trên mobile */
+        margin-left: 110px; 
+        margin-right: 10px;
       }
       .home-btn {
         font-size: 14px;
@@ -134,7 +148,7 @@
         grid-template-columns: 1fr;
       }
       .btn {
-        font-size: 18px;
+        font-size: 20px; /* Vẫn giữ kích thước lớn trên mobile */
         min-height: 70px;
       }
     }
