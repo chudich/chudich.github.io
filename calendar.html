@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Âm Dương</title>
+    <title>Lịch Âm Dương với Can Chi, Tiết Khí và Ngày Thiên Xá</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Định nghĩa màu sắc mới */
@@ -27,8 +27,6 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--color-bg-light); 
-            /* Thay đổi background gradient và loại bỏ ảnh nền giả */
             background: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 100%);
             margin: 0;
             padding: 20px;
@@ -38,6 +36,7 @@
             flex-direction: column;
             align-items: center;
             padding-top: 80px; /* Space for fixed header */
+            font-size: 16px; /* Tăng font cơ bản */
         }
 
         /* Header */
@@ -71,19 +70,18 @@
 
         .main-menu ul li {
             margin: 0 10px;
-            opacity: 1; /* Đảm bảo hiển thị */
-            /* Bỏ animation delay để tải nhanh hơn */
+            opacity: 1; 
         }
 
         .main-menu ul li a {
             display: block;
-            padding: 10px 20px;
-            background: var(--color-secondary-coral); /* Nền hồng san hô */
+            padding: 12px 24px; /* Tăng padding */
+            background: var(--color-secondary-coral); 
             color: var(--color-text-light);
             text-decoration: none;
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            border-radius: 25px; /* Bo tròn hiện đại */
+            font-size: 1.2rem; /* Tăng size menu */
+            font-weight: 700; /* Đậm hơn */
+            border-radius: 25px; 
             border: 1px solid var(--color-text-light);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
@@ -99,11 +97,21 @@
 
         /* Tiêu đề */
         h2, h3, h4 {
-            color: var(--color-primary-teal); /* Xanh ngọc cho tiêu đề */
+            color: var(--color-primary-teal); 
             text-align: center;
             margin: 15px 0;
             font-weight: 800; /* Rất đậm */
             text-transform: uppercase;
+        }
+        
+        h2 {
+            font-size: 28px; /* Tăng size h2 */
+        }
+        h3 {
+            font-size: 22px; /* Tăng size h3 */
+        }
+        h4 {
+            font-size: 18px; /* Tăng size h4 */
         }
 
         /* Khối điều khiển (Controls) */
@@ -112,7 +120,7 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 15px; /* Tăng khoảng cách */
+            gap: 15px; 
             background: var(--color-text-light); 
             padding: 20px;
             border-radius: 16px;
@@ -121,13 +129,20 @@
             max-width: 700px;
             margin-bottom: 25px;
         }
+        
+        .controls label {
+            font-weight: 700; /* Đậm cho label */
+            color: var(--color-text-dark);
+            font-size: 18px; /* Tăng size label */
+        }
 
         select, input {
             padding: 12px;
-            font-size: 16px;
-            border: 1px solid #B0BEC5; /* Viền xám nhẹ */
+            font-size: 18px; /* Tăng size input */
+            font-weight: 600; /* Đậm cho input */
+            border: 1px solid #B0BEC5; 
             border-radius: 8px;
-            background-color: #ECEFF1; /* Nền input xám rất nhạt */
+            background-color: #ECEFF1; 
             color: var(--color-text-dark);
             transition: border-color 0.3s, box-shadow 0.3s;
             width: 100%;
@@ -143,13 +158,13 @@
 
         button {
             padding: 12px 28px;
-            background: linear-gradient(45deg, var(--color-primary-teal), #00ACC1); /* Gradient Xanh ngọc */
+            background: linear-gradient(45deg, var(--color-primary-teal), #00ACC1); 
             color: var(--color-text-light);
             border: none;
-            border-radius: 25px; /* Bo tròn cho nút */
+            border-radius: 25px; 
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 18px; /* Tăng size button */
+            font-weight: 800; /* Rất đậm cho button */
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
@@ -174,11 +189,12 @@
         }
 
         th, td {
-            border: 1px solid #E0F7FA; /* Viền xanh nhạt */
+            border: 1px solid #E0F7FA; 
             padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-size: 16px; /* Size chữ mặc định trong ô */
         }
 
         th {
@@ -186,23 +202,23 @@
             color: var(--color-text-light);
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 1rem;
+            font-size: 18px; /* Tăng size tiêu đề cột */
         }
 
         td:hover {
-            background-color: #FBEFEF; /* Nền hồng rất nhạt khi hover */
+            background-color: #FBEFEF; 
         }
 
         .sunday {
-            color: #E53935; /* Đỏ tươi cho Chủ nhật */
+            color: #E53935; 
         }
 
         .saturday {
-            color: #00796B; /* Xanh lá đậm cho Thứ bảy */
+            color: #00796B; 
         }
 
         .today {
-            background-color: var(--color-accent-lime) !important; /* Vàng chanh nổi bật */
+            background-color: var(--color-accent-lime) !important; 
             color: var(--color-text-dark);
             font-weight: 700;
             border: 2px solid #AFB42B;
@@ -210,16 +226,17 @@
         
         /* Nội dung ô ngày */
         td strong {
-            font-size: 20px;
+            font-size: 24px; /* TĂNG SIZE DƯƠNG LỊCH */
+            font-weight: 800; /* RẤT ĐẬM DƯƠNG LỊCH */
             display: block;
             line-height: 1.1;
             margin-bottom: 2px;
             color: var(--color-text-dark);
         }
         td small {
-            font-size: 12px; /* Giảm size chữ âm lịch để đỡ rối */
+            font-size: 14px; /* TĂNG SIZE ÂM LỊCH */
             color: #78909C; 
-            font-weight: 600;
+            font-weight: 700; /* ĐẬM ÂM LỊCH */
         }
 
         /* Các khối thông tin */
@@ -231,7 +248,7 @@
             margin: 20px 0;
             width: 100%;
             max-width: 700px;
-            border-left: 5px solid var(--color-secondary-coral); /* Viền màu phụ nổi bật */
+            border-left: 5px solid var(--color-secondary-coral); 
         }
         
         /* Ghi chú tiết khí */
@@ -239,21 +256,17 @@
             border-left: 5px solid var(--color-primary-teal);
         }
 
-        #notes ul, #importantDaysList ul, #thienXaDaysList ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
         #notes li, #importantDaysList li {
             margin-bottom: 8px;
             color: #444;
-            font-size: 15px;
+            font-size: 16px; /* Tăng size list item */
+            font-weight: 600; /* Đậm list item */
         }
 
         #thienXaDaysList li {
-            font-weight: 700;
-            font-size: 16px;
-            color: #E53935; /* Đỏ tươi cho ngày Thiên Xá */
+            font-weight: 800; /* Rất đậm Thiên Xá */
+            font-size: 18px; /* Tăng size Thiên Xá */
+            color: #E53935; 
             background: #FFEBEE;
             padding: 8px;
             border-radius: 6px;
@@ -272,7 +285,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 10000; /* Tăng z-index */
+            z-index: 10000; 
             left: 0;
             top: 0;
             width: 100%;
@@ -290,85 +303,74 @@
             max-width: 500px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             text-align: left;
+            font-size: 18px; /* Tăng size trong modal */
         }
 
         .close {
             color: var(--color-secondary-coral);
             float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #FF5722;
+            font-size: 30px; /* Tăng size nút đóng */
         }
 
         .modal-content p {
             margin: 10px 0;
-            font-size: 16px;
-            color: var(--color-text-dark);
+            font-size: 18px;
+            font-weight: 600; /* Đậm cho nội dung modal */
         }
 
         .modal-content strong {
             color: var(--color-primary-teal);
-        }
-
-        .modal-content form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            font-weight: 800; /* Rất đậm cho key info */
         }
 
         .modal-content label {
             color: var(--color-primary-teal);
-            font-weight: 600;
+            font-weight: 700; /* Đậm cho label modal */
             margin-top: 5px;
+            font-size: 18px;
         }
-        
-        /* Modal buttons */
-        #calcDaysModal button, #findTimeModal button {
-             background: linear-gradient(45deg, var(--color-secondary-coral), #FF5722);
-             box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);
-        }
-        #calcDaysModal button:hover, #findTimeModal button:hover {
-            box-shadow: 0 6px 15px rgba(255, 112, 67, 0.5);
-        }
-        
+
         #calcResult, #findResult {
             margin-top: 15px;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
-            background-color: #E8F5E9; /* Xanh lá nhạt cho kết quả */
-            font-weight: 600;
+            background-color: #E8F5E9; 
+            font-weight: 800; /* Rất đậm cho kết quả */
             color: #388E3C;
+            font-size: 18px; /* Tăng size kết quả */
         }
 
         /* Responsive Design */
         @media (max-width: 600px) {
             body {
                 padding: 10px;
+                font-size: 14px;
             }
 
             h2 {
-                font-size: 22px;
+                font-size: 24px;
+            }
+            h3 {
+                font-size: 20px;
             }
 
             .controls {
-                flex-direction: column;
                 padding: 15px;
+            }
+            
+            .controls label {
+                font-size: 16px;
             }
 
             select, input, button {
                 width: 100%;
                 max-width: none;
                 margin: 5px 0;
+                font-size: 16px;
             }
 
             table {
-                font-size: 13px;
+                font-size: 12px;
             }
 
             th, td {
@@ -376,24 +378,22 @@
             }
             
             td strong {
-                font-size: 16px;
+                font-size: 20px; /* Dương lịch mobile */
             }
             td small {
-                font-size: 10px;
+                font-size: 12px; /* Âm lịch mobile */
             }
 
-            .main-menu.active {
-                top: 55px; /* Điều chỉnh vị trí menu mobile */
-                background: linear-gradient(45deg, #00ACC1, var(--color-primary-teal));
+            .main-menu ul li a {
+                font-size: 1.1rem;
             }
             
-            .main-menu ul li a {
-                font-size: 1rem;
+            #thienXaDaysList li, #importantDaysList li {
+                font-size: 15px;
             }
-
-            .menu-toggle {
-                right: 15px;
-                top: 18px;
+            
+            .modal-content p, .modal-content label {
+                font-size: 16px;
             }
         }
     </style>
@@ -404,7 +404,7 @@
             <nav class="main-menu">
                 <ul>
                     <li style="--i: 1;"><a href="https://chudich.github.io/IChing.html">Về Trang Chủ</a></li>
-                    </ul>
+                </ul>
             </nav>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
@@ -616,7 +616,7 @@
             const days = await fetchImportantDays(year, month);
 
             if (days.length === 0) {
-                importantDaysList.innerHTML = '<p style="color: #607D8B;">Không có ngày quan trọng trong tháng này.</p>';
+                importantDaysList.innerHTML = '<p style="color: #607D8B; font-weight: 600;">Không có ngày quan trọng trong tháng này.</p>';
                 return;
             }
 
@@ -686,7 +686,7 @@
             const thienXaDays = findThienXaDays(year, month);
 
             if (thienXaDays.length === 0) {
-                thienXaDaysList.innerHTML = '<p style="color: #607D8B;">Không có ngày Thiên Xá trong tháng này.</p>';
+                thienXaDaysList.innerHTML = '<p style="color: #607D8B; font-weight: 600;">Không có ngày Thiên Xá trong tháng này.</p>';
                 return;
             }
 
@@ -705,7 +705,7 @@
             const calendarDiv = document.getElementById('calendar');
 
             if (isNaN(year) || year < 1900 || year > 2100) {
-                calendarDiv.innerHTML = '<p style="color: red;">Vui lòng nhập năm từ 1900 đến 2100.</p>';
+                calendarDiv.innerHTML = '<p style="color: red; font-weight: 600;">Vui lòng nhập năm từ 1900 đến 2100.</p>';
                 return;
             }
 
@@ -784,8 +784,8 @@
 
             // Cập nhật cấu trúc hiển thị trong ô
             return `<td class="${className}${todayClass}" onclick="showDetails(${year}, ${month}, ${day}, '${lunarDay}', '${canChiDay}', '${canChiMonth}', '${canChiYear}', '${tietKhi}')">
-                <strong style="font-size: 20px;">${day}</strong><br>
-                <small style="font-size: 12px; color: #78909C; font-weight: 600;">${lunarDay.split('/')[0]}/${lunarDay.split('/')[1]}</small>
+                <strong style="font-size: 24px;">${day}</strong><br>
+                <small style="font-size: 14px; color: #78909C; font-weight: 700;">${lunarDay.split('/')[0]}/${lunarDay.split('/')[1]}</small>
             </td>`;
         }
 
@@ -817,12 +817,12 @@
         // Hàm lấy ghi chú tiết khí (Giữ nguyên logic)
         function getSolarTermNotes(year, month) {
             if (year !== 2025) {
-                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B;">Tiết khí chỉ khả dụng cho năm 2025.</p></div>';
+                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B; font-weight: 600;">Tiết khí chỉ khả dụng cho năm 2025.</p></div>';
             }
 
             const terms = solarTerms2025[month] || [];
             if (terms.length === 0) {
-                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B;">Không có tiết khí trong tháng này.</p></div>';
+                return '<div id="notes" style="border-left: 5px solid #FFCDD2;"><p style="color: #607D8B; font-weight: 600;">Không có tiết khí trong tháng này.</p></div>';
             }
 
             let notesHtml = '<div id="notes"><h4>Ghi chú tiết khí:</h4><ul>';
@@ -854,7 +854,7 @@
             const numDays = parseInt(document.getElementById('numDays').value);
 
             if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(numDays)) {
-                document.getElementById('calcResult').innerHTML = '<p style="color: #D32F2F;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('calcResult').innerHTML = '<p style="color: #D32F2F; font-weight: 700;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
                 document.getElementById('calcResult').style.backgroundColor = '#FFEBEE';
                 return;
             }
@@ -894,7 +894,7 @@
             const year2 = parseInt(document.getElementById('date2Year').value);
 
             if (isNaN(day1) || isNaN(month1) || isNaN(year1) || isNaN(day2) || isNaN(month2) || isNaN(year2)) {
-                document.getElementById('findResult').innerHTML = '<p style="color: #D32F2F;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
+                document.getElementById('findResult').innerHTML = '<p style="color: #D32F2F; font-weight: 700;">Vui lòng nhập đầy đủ thông tin hợp lệ.</p>';
                 document.getElementById('findResult').style.backgroundColor = '#FFEBEE';
                 return;
             }
