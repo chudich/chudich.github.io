@@ -279,19 +279,22 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
-            flex-direction: column; /* Thay đổi thành cột để Phi Thiên Xá nằm dưới Tìm thời điểm */
-            align-items: center; /* Căn giữa các nút */
+            /* FIX LỖI SO LE: Dùng flex-direction: row và cho phép các phần tử bọc dòng */
+            flex-direction: row; 
+            align-items: center; 
         }
 
         .additional-buttons button, .additional-buttons a button {
-            width: 250px; /* Định kích thước cố định cho nút */
+            width: 200px; /* Định kích thước đồng nhất cho nút */
             max-width: 90%;
-            margin: 5px 0; /* Khoảng cách giữa các nút */
+            margin: 5px 0; 
+            flex-grow: 1; /* Cho phép các nút giãn ra khi cần thiết, nhưng vẫn cố gắng giữ kích thước */
+            min-width: 150px;
         }
         
         .additional-buttons a {
-            text-decoration: none; /* Bỏ gạch chân cho thẻ a */
-            display: block; /* Để thẻ a chiếm hết chiều rộng của nút bên trong */
+            text-decoration: none; 
+            display: block; 
         }
 
         /* Modal */
@@ -409,8 +412,12 @@
                 font-size: 16px;
             }
 
+            .additional-buttons {
+                flex-direction: column; /* Trở lại cột trên mobile để không bị quá hẹp */
+            }
+            
             .additional-buttons button, .additional-buttons a button {
-                width: 100%; /* Đảm bảo các nút full width trên mobile */
+                width: 100%; 
             }
         }
     </style>
