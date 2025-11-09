@@ -1,4 +1,4 @@
-<!DOCTYPE 22d071125 html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -259,7 +259,7 @@
             font-size: 1.0rem;
         }
 
-        #entropy-input, #num-cards-input {
+        #entropy-input, #num-cards-input, #custom-entropy-input {
             width: 95%;
             padding: 12px;
             margin-bottom: 20px;
@@ -267,8 +267,9 @@
             border-radius: 8px;
             font-size: 1.1rem;
             text-align: center;
+            box-sizing: border-box; /* Quan trọng để width 95% hoạt động đúng */
         }
-        
+
         #num-cards-input {
             width: 50%;
             margin: 0 auto 20px auto;
@@ -394,7 +395,7 @@
         </div>
     </div>
 
-    <div id="entropy-form-container">
+    <div id="entropy-form-container" style="display: none;">
         <div class="entropy-box">
             <h4 id="entropy-title">Năng Lượng Kết Nối</h4>
             <p>Vui lòng nhập **một từ, một cụm từ, hoặc một con số** bất kỳ liên quan đến vấn đề bạn muốn hỏi để kết nối năng lượng:</p>
@@ -402,16 +403,16 @@
             <button id="submit-entropy">Rút Bài</button>
         </div>
     </div>
-    
+
     <div id="custom-card-form-container" style="display: none;">
         <div class="entropy-box">
             <h4>Chọn Số Lá Bài</h4>
             <p>Nhập số lượng lá bài bạn muốn rút (tối đa 78 lá):</p>
             <input type="number" id="num-cards-input" placeholder="Số lá (1-78)" min="1" max="78">
-            
+
             <p>Và một từ khóa kết nối năng lượng:</p>
             <input type="text" id="custom-entropy-input" placeholder="Từ khóa..." autofocus>
-            
+
             <button id="submit-custom-cards">Rút Bài Tùy Chọn</button>
         </div>
     </div>
@@ -439,7 +440,7 @@
         const entropyFormContainer = document.getElementById('entropy-form-container');
         const entropyInput = document.getElementById('entropy-input');
         const submitEntropyButton = document.getElementById('submit-entropy');
-        
+
         // Form Tùy Chọn Mới
         const customCardFormContainer = document.getElementById('custom-card-form-container');
         const numCardsInput = document.getElementById('num-cards-input');
@@ -473,34 +474,57 @@
             return MONTH_NAMES[targetMonthIndex];
         }
 
-        function generateSeed(input) {
-            let hash = 0;
-            // Nếu input rỗng, dùng timestamp để tạo seed
-            if (input.length === 0) {
-                return new Date().getTime(); 
-            }
-            for (let i = 0; i < input.length; i++) {
-                const char = input.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash |= 0; // Chuyển thành số nguyên 32 bit
-            }
-            return Math.abs(hash); // Trả về giá trị dương
-        }
-
+        // --- CẢI TIẾN: Seeded Random (Giữ nguyên cho tính ổn định) ---
         let seed = 1;
         function seededRandom() {
+            // Sử dụng một hàm PRNG có chu kỳ lớn và chất lượng tốt
             seed = (seed * 9301 + 49297) % 233280;
             return seed / 233280;
+        }
+
+        // --- CẢI TIẾN: Thuật toán Tạo Seed Tương Thích Năng Lượng ---
+        function generateSeed(input) {
+            const cleanedInput = input.trim().toLowerCase();
+            let hash = 0;
+            const now = new Date();
+
+            // 1. Tăng cường Entropy từ Chuỗi (Tính tổng code ASCII)
+            if (cleanedInput.length > 0) {
+                for (let i = 0; i < cleanedInput.length; i++) {
+                    const char = cleanedInput.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash |= 0; // Chuyển thành số nguyên 32 bit
+                }
+                hash = Math.abs(hash * cleanedInput.length);
+            }
+
+            // 2. Thêm Entropy từ Thời gian hiện tại (giờ, phút, giây, mili giây)
+            // Tăng cường cảm giác kết nối năng lượng "ngay lúc này".
+            const timeHash = now.getHours() * 3600000 + 
+                             now.getMinutes() * 60000 + 
+                             now.getSeconds() * 1000 + 
+                             now.getMilliseconds();
+            
+            // Kết hợp Seed từ Input và Seed từ Thời gian
+            let finalSeed = Math.abs(hash + timeHash) % 233280; 
+
+            // Nếu input rỗng, dùng seed từ thời gian để tạo ngẫu nhiên
+            if (cleanedInput.length === 0) {
+                 finalSeed = timeHash % 233280;
+            }
+
+            // Đảm bảo seed luôn là số nguyên dương
+            return Math.max(1, finalSeed); 
         }
 
         function disableAllButtons() {
              allButtons.forEach(button => button.disabled = true);
         }
-        
+
         function enableAllButtons() {
              allButtons.forEach(button => button.disabled = false);
         }
-        
+
         // Hàm hiển thị form Entropy cho các trải bài cố định
         function showEntropyForm(numCards, spreadName) {
             currentNumCards = numCards;
@@ -512,22 +536,22 @@
             entropyInput.value = '';
             entropyFormContainer.style.display = 'flex';
             entropyInput.focus();
-            
+
             // Đảm bảo form tùy chọn đang ẩn
             customCardFormContainer.style.display = 'none';
         }
-        
+
         // Hàm hiển thị form cho trải bài tùy chọn
         function showCustomCardForm() {
              currentSpreadName = 'Trải Bài Tùy Chọn';
              disableAllButtons();
-             
+
              numCardsInput.value = '';
              customEntropyInput.value = '';
-             
+
              customCardFormContainer.style.display = 'flex';
              numCardsInput.focus();
-             
+
              // Đảm bảo form cố định đang ẩn
              entropyFormContainer.style.display = 'none';
         }
@@ -540,26 +564,26 @@
 
             drawCards(currentNumCards, currentSpreadName, entropyValue);
         };
-        
+
         submitCustomCardsButton.onclick = function() {
             let numCards = parseInt(numCardsInput.value.trim());
             const entropyValue = customEntropyInput.value.trim();
-            
+
             if (isNaN(numCards) || numCards < 1 || numCards > 78) {
                 alert('Vui lòng nhập số lá bài hợp lệ (từ 1 đến 78).');
                 numCardsInput.focus();
                 return;
             }
-            
+
             customCardFormContainer.style.display = 'none';
-            
+
             currentNumCards = numCards;
             seed = generateSeed(entropyValue);
-            
+
             drawCards(currentNumCards, currentSpreadName, entropyValue);
         };
 
-
+        // --- CẢI TIẾN: Logic rút bài thay thế (Mô phỏng Rút Bài Cảm Ứng) ---
         function drawCards(numCards, spreadName, entropyValue) {
 
             resultArea.style.display = 'block';
@@ -572,18 +596,44 @@
             const deck = [...FULL_DECK];
             currentDrawnCards = [];
             currentSpreadName = spreadName;
-            
-            // Lưu từ khóa entropy để dùng khi sao chép
+
             window.lastEntropyValue = entropyValue; 
 
-            // Xáo bài (Shuffle) bằng thuật toán Fisher-Yates (đã seed)
+            // 1. Xáo bài cơ bản (Fisher-Yates) với Seed
+            // Tạo ra một bộ bài đã xáo nền tảng
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(seededRandom() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
-
+            
+            const shuffledDeck = [...deck];
+            const drawnIndices = new Set(); // Theo dõi các chỉ số đã được chọn
+            
             for (let i = 0; i < numCards; i++) {
-                const card = deck[i]; 
+                let cardIndex = -1;
+                let attempts = 0;
+                
+                // Thuật toán chọn bài "cảm ứng": Chọn ngẫu nhiên một vị trí trong bộ bài
+                // đã xáo, mô phỏng việc nhắm mắt chọn bừa.
+                do {
+                    // Seeded random để chọn một vị trí ngẫu nhiên trong 78 lá
+                    const randomFloat = seededRandom();
+                    cardIndex = Math.floor(randomFloat * FULL_DECK.length);
+                    attempts++;
+                } while (drawnIndices.has(cardIndex) && attempts < 100); 
+
+                // Nếu sau 100 lần thử vẫn chưa tìm được, lấy bài đầu tiên chưa được chọn
+                if(drawnIndices.has(cardIndex)) {
+                     cardIndex = deck.findIndex((card, idx) => !drawnIndices.has(idx));
+                }
+
+                if (cardIndex === -1) break; // Lỗi, không còn bài để rút
+
+                drawnIndices.add(cardIndex);
+
+                const card = shuffledDeck[cardIndex];
+                
+                // Chiều bài: Sử dụng Seeded Random riêng cho chiều bài
                 const orientation = seededRandom() < 0.5 ? 'U' : 'R'; 
                 const positionName = getPositionName(spreadName, i);
 
@@ -593,6 +643,7 @@
                     position: positionName
                 });
 
+                // Tạo DOM cho lá bài
                 const cardItem = document.createElement('div');
                 cardItem.className = 'card-item';
                 cardItem.id = `card-idx-${i}`;
@@ -693,7 +744,7 @@
             if (currentDrawnCards.length === 0) return;
 
             const entropy = window.lastEntropyValue || 'Năng lượng ngẫu nhiên';
-            
+
             const spreadDetails = currentDrawnCards.map(card => {
                 const orientationText = card.orientation === 'U' ? 'Xuôi' : 'Ngược';
                 return `${card.position}: ${card.name} (${orientationText})`;
@@ -732,8 +783,7 @@
             link.style.display = 'none';
             document.body.appendChild(link);
 
-            // 2. Mô phỏng hành động click. Hành động này thường được trình duyệt coi là hành động của người dùng
-            // và ít bị chặn bởi Popup Blocker hơn window.open()
+            // 2. Mô phỏng hành động click.
             link.click();
 
             // 3. Xóa thẻ <a> sau khi sử dụng
