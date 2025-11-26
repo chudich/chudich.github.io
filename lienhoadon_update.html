@@ -1,0 +1,570 @@
+<!DOCTYPE 241025 html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>NguyenK - Quẻ Kiện (Liên Hoa + Luận Đoán)</title>
+    <style>
+        /* Thêm font San Francisco cho iOS, Roboto cho Android/Desktop, và Sans-serif làm dự phòng */
+        body { 
+            background: #f0f0f0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            color: #333; 
+        }
+        a { text-decoration: none; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .banner { position: relative; text-align: center; margin-bottom: 20px; }
+        .banner img { width: 100%; height: auto; display: block; }
+        .home-btn { position: absolute; top: 10px; left: 10px; background: #ff8000; color: #fff; font-weight: bold; padding: 12px 20px; border-radius: 8px; font-size: 18px; }
+        .home-btn:hover { background: #e67300; }
+        .input-section { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .input-table { width: 100%; max-width: 300px; margin-bottom: 20px; padding: 15px; border-radius: 8px; background: #ffe0b2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .input-table input[type="text"] { width: 60px; font-size: 16px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; text-align: center; margin: 5px; }
+        .input-table input[type="button"] { padding: 8px 16px; font-size: 16px; font-weight: bold; background: #993300; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        .input-table input[type="button"]:hover { background: #7a2900; }
+        .reset-btn { background: #555; margin-top: 10px; }
+        .reset-btn:hover { background: #333; }
+        .canvas-section { width: 100%; max-height: 400px; overflow: auto; padding: 20px; text-align: center; }
+        .history-section { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; }
+        .luan-doan-section { padding: 20px; background: #f9f9f9; border-radius: 8px; margin-top: 20px; }
+        .luan-doan-section select { padding: 10px; font-size: 16px; margin-bottom: 10px; }
+        .luan-doan-section pre { white-space: pre-wrap; font-size: 14px; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #eee; min-height: 160px; }
+
+        /* STYLE MỚI CHO KẾT LUẬN */
+        .ket-luan-highlight {
+            font-weight: bold;
+            font-size: 1.5em; /* Kích thước to hơn */
+            color: #007aff; /* Màu xanh dương (Màu iOS Blue) */
+            padding-top: 10px;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container { width: 100%; padding: 10px; }
+            .input-table { width: 100%; }
+            .home-btn { font-size: 16px; padding: 10px 15px; }
+            .canvas-section { max-height: 300px; }
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://sophiemeisam.github.io/saveSvgAsPng.js"></script>
+    <script src="https://sophiemeisam.github.io/raphael.js"></script>
+    <script src="https://sophiemeisam.github.io/khiet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            <img src="https://sophiemeisam.github.io/bannerlienhoa.jpg" alt="Banner Liên Hoa">
+            <a href="https://chudich.github.io/IChing.html" class="home-btn">Về Trang Chủ</a>
+        </div>
+
+        <div class="input-section">
+            <div class="input-table" id="dontable">
+                <h3>ĐỘN QUÁI</h3>
+                <input type="text" name="phai" placeholder="PHẢI" value="1">
+                <input type="text" name="trai" placeholder="TRÁI" value="1">
+                <input type="button" value="ĐỘN">
+                <input type="button" class="reset-btn" value="XÓA">
+                <p>PHẢI: Số X tay Phải. TRÁI: Số Y tay Trái. Nhấn <b>ĐỘN</b>.</p>
+            </div>
+
+            <div class="input-table" id="timtable">
+                <h3>TÌM QUÁI</h3>
+                <input type="text" name="phai" placeholder="PHẢI" value="1">
+                <input type="text" name="trai" placeholder="TRÁI" value="1">
+                <input type="text" name="dong" placeholder="ĐỘNG" value="1">
+                <input type="button" value="TÌM">
+                <input type="button" class="reset-btn" value="XÓA">
+                <p>PHẢI: Thượng quái số, TRÁI: Hạ quái số, ĐỘNG: Hào động số. Nhấn <b>TÌM</b>.</p>
+            </div>
+
+            <div class="input-table" id="namthangtable">
+                <h3>THỜI QUÁI KIỆN</h3>
+                <input type="text" name="nam" placeholder="NĂM">
+                <input type="text" name="thang" placeholder="THÁNG">
+                <input type="text" name="ngay" placeholder="NGÀY">
+                <input type="text" name="gio" placeholder="GIỜ">
+                <input type="button" value="ĐỘN">
+                <input type="button" class="reset-btn" value="XÓA">
+            </div>
+
+            <div class="input-table" id="maihoatable">
+                <h3>MAI HOA</h3>
+                <input type="text" name="nam" placeholder="NĂM">
+                <input type="text" name="thang" placeholder="THÁNG">
+                <input type="text" name="ngay" placeholder="NGÀY">
+                <input type="button" value="QUAI">
+                <input type="button" class="reset-btn" value="XÓA">
+            </div>
+
+            <div class="history-section">
+                <h3>Lịch Sử Quẻ</h3>
+                <ul id="history-list"></ul>
+            </div>
+        </div>
+
+        <div class="canvas-section" id="canvas"></div>
+
+        <div class="luan-doan-section">
+            <h3>Luận Đoán Cơ Bản</h3>
+            <select id="guaSelect">
+                <option value="">Chọn Quẻ Đơn</option>
+                <option value="1">Kiền (Kim)</option>
+                <option value="2">Đoài (Kim)</option>
+                <option value="3">Ly (Hoả)</option>
+                <option value="4">Chấn (Mộc)</option>
+                <option value="5">Tốn (Mộc)</option>
+                <option value="6">Khảm (Thủy)</option>
+                <option value="7">Cấn (Thổ)</option>
+                <option value="8">Khôn (Thổ)</option>
+            </select>
+            <pre id="ketQua">Chọn quẻ đơn để xem luận đoán...</pre>
+        </div>
+    </div>
+
+<script>
+$(document).ready(function() {
+    // === MAPPING & HELPERS (GIỮ NGUYÊN) ===
+    const hanhOfGua = { 1: 'Kim', 2: 'Kim', 3: 'Hoả', 4: 'Mộc', 5: 'Mộc', 6: 'Thủy', 7: 'Thổ', 8: 'Thổ' };
+    const guaName = { 1: 'Kiền', 2: 'Đoài', 3: 'Ly', 4: 'Chấn', 5: 'Tốn', 6: 'Khảm', 7: 'Cấn', 8: 'Khôn' };
+    const sinhRule = { 'Kim': 'Thủy', 'Hoả': 'Thổ', 'Mộc': 'Hoả', 'Thủy': 'Mộc', 'Thổ': 'Kim' };
+    const khacRule = { 'Kim': 'Mộc', 'Hoả': 'Kim', 'Mộc': 'Thổ', 'Thủy': 'Hoả', 'Thổ': 'Thủy' };
+    function isSinh(src,tgt){ return sinhRule[src]===tgt; }
+    function isKhac(src,tgt){ return khacRule[src]===tgt; }
+    function sameElement(g1,g2){ return hanhOfGua[g1] === hanhOfGua[g2]; }
+
+    // Trọng số theo cấp độ (Cấp 1 là mạnh nhất, Cấp 5 là yếu nhất)
+    const capWeight = {1:6, 2:4, 3:3, 4:2, 5:1};
+
+    // Hệ số nhân ĐIỀU CHỈNH theo yêu cầu: Trợ Lực phải lớn hơn Tiêu Tán/Hao Tổn
+    let troMultiplier = 1.5;    // TĂNG lên 1.5 để Trợ Lực là điểm cộng lớn
+    let tieuMultiplier = 1.0;   // Giữ ở mức cân bằng
+    let haoMultiplier = 1.0;    // Giữ ở mức cân bằng
+
+    // Hàm interactionLevel cũ đã bị loại bỏ/ít dùng, thay bằng logic chi tiết.
+    function interactionLevel(srcPos, tgtPos) {
+        // Cấp 1: Mạnh nhất/Gần nhất (1-2, 2-1, 3-4, 4-3, 1-3, 3-1, 2-4, 4-2)
+        const cap1pairs = [[1,2],[2,1],[3,4],[4,3],[1,3],[3,1],[2,4],[4,2]];
+        for (let p of cap1pairs) if (p[0]===srcPos && p[1]===tgtPos) return 1;
+        // Cấp 2: Trung bình/Kém gần (1-4, 4-1, 2-3, 3-2)
+        const cap2pairs = [[1,4],[4,1],[2,3],[3,2]];
+        for (let p of cap2pairs) if (p[0]===srcPos && p[1]===tgtPos) return 2;
+        // Cấp 5: Yếu nhất/Liên quan đến Biến (5, 6)
+        if (srcPos>=5 || tgtPos>=5) return 5;
+        // Cấp 3: Các trường hợp còn lại (fallback)
+        return 3;
+    }
+    
+    // === UI / History helpers (GIỮ NGUYÊN) ===
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('queHistory') || '[]');
+        $('#history-list').empty().append(history.map((item, index) => `<li data-index="${index}">${item.type}: ${item.inputs}</li>`));
+        $('#history-list li').click(function() {
+            const item = history[$(this).data('index')];
+            Khiet.drawKhongThoi('canvas', item.phai, item.trai, item.dong, 200);
+            adjustCanvasSize();
+            updateQueData(item.phai, item.trai, item.dong);
+        });
+    }
+    loadHistory();
+    function saveToHistory(data) {
+        let history = JSON.parse(localStorage.getItem('queHistory') || '[]');
+        history.push(data);
+        if (history.length > 10) history.shift();
+        localStorage.setItem('queHistory', JSON.stringify(history));
+        loadHistory();
+    }
+    function validateInputs(inputs) {
+        return inputs.every(input => {
+            const value = $.trim(input.val());
+            if (!value || isNaN(value)) { alert("Vui lòng nhập số hợp lệ!"); return false; }
+            return true;
+        });
+    }
+    function resetForm($form) { $form.find('input[type="text"]').val(''); }
+    function adjustCanvasSize() {
+        const $svg = $('#canvas svg')[0];
+        if ($svg) {
+            try {
+                const bbox = $svg.getBBox();
+                $svg.setAttribute('width', bbox.width + 40);
+                $svg.setAttribute('height', bbox.height + 40);
+                $svg.style.minWidth = '2000px';
+                $svg.style.minHeight = '1200px';
+            } catch(e){}
+        }
+    }
+
+    // === queData management (GIỮ NGUYÊN) ===
+    let queData = [], currentNumKhongThoi = 13;
+    function updateQueData(phai, trai, dong) {
+        phai = parseFloat(phai);
+        trai = parseFloat(trai) || phai;
+        dong = parseFloat(dong) || (phai + trai);
+        // Kiểm tra xem Khiet.computeKhongThoi có tồn tại không
+        if (typeof Khiet === 'undefined' || typeof Khiet.computeKhongThoi !== 'function') {
+            console.error("Lỗi: Thư viện Khiet.js hoặc hàm computeKhongThoi không tồn tại.");
+            return;
+        }
+
+        const ktArray = Khiet.computeKhongThoi(phai, trai, dong, true);
+        queData = ktArray.map(kt => ({
+            chuThuong: Khiet.getQuaiNumber(kt.pChanh),
+            chuHa: Khiet.getQuaiNumber(kt.tChanh),
+            hoThuong: Khiet.getQuaiNumber(kt.pHo),
+            hoHa: Khiet.getQuaiNumber(kt.tHo),
+            bienThuong: Khiet.getQuaiNumber(kt.pBien),
+            bienHa: Khiet.getQuaiNumber(kt.tBien)
+        }));
+        currentNumKhongThoi = ktArray.length;
+    }
+
+    // === Hàm luận đoán (UPDATE THEO QUY TẮC LỰC CỦA TÀI LIỆU) ===
+    function tinhLuanDoan(selectedGua) {
+        if (!queData || queData.length === 0) { $('#ketQua').text('Chưa có bảng quẻ (vui lòng tạo quẻ trước).'); return; }
+        if (!selectedGua) { $('#ketQua').text('Vui lòng chọn 1 quẻ đơn để luận đoán.'); return; }
+
+        const selectedHanh = hanhOfGua[selectedGua];
+
+        // counters per cap (1..5)
+        // Sinh/Trợ là Lợi, Khắc/Tiêu Tán/Hao Tổn là Hại
+        const sinhCounts = {1:0,2:0,3:0,4:0,5:0};
+        const khacCounts = {1:0,2:0,3:0,4:0,5:0};
+        const troCounts  = {1:0,2:0,3:0,4:0,5:0};
+        const tieuTanCounts = {1:0,2:0,3:0,4:0,5:0}; // Hao lực do Sinh (Nguồn)
+        const haoTonCounts = {1:0,2:0,3:0,4:0,5:0};  // Hao lực do Khắc (Cả Nguồn và Đích)
+
+        // iterate each Không Thời
+        for (let kt = 0; kt < currentNumKhongThoi; kt++) {
+            const kd = queData[kt];
+            // map positions 1..6
+            const posGua = {1: kd.chuThuong, 2: kd.chuHa, 3: kd.hoThuong, 4: kd.hoHa, 5: kd.bienThuong, 6: kd.bienHa};
+
+            // Loop qua tất cả các vị trí (pos 1-6) để tìm tác động
+            for (let pos = 1; pos <= 6; pos++) {
+                
+                const tgtGua = posGua[pos]; // Đích
+
+                // Biến (5, 6) chỉ BỊ tác động (không gây tác động), trừ tương tác nội bộ (5<->6)
+                // Tuy nhiên, để đơn giản và theo quy tắc Biến lực yếu nhất (Cấp 5), ta vẫn loop.
+                for (let src = 1; src <= 6; src++) {
+                    if (src === pos) continue; // Không xét tương tác với chính nó
+
+                    const srcGua = posGua[src];
+                    
+                    if (!srcGua || !tgtGua) continue; 
+
+                    const srcHanh = hanhOfGua[srcGua];
+                    const tgtHanh = hanhOfGua[tgtGua]; 
+
+                    // Định nghĩa vị trí (giúp code dễ đọc hơn)
+                    const srcIsChinh = (src===1 || src===2);
+                    const posIsChinh = (pos===1 || pos===2);
+                    const srcIsHo = (src===3 || src===4);
+                    const posIsHo = (pos===3 || pos===4);
+                    const srcIsBien = (src===5 || src===6);
+                    const posIsBien = (pos===5 || pos===6);
+
+                    // --- QUY TẮC CHUNG CHO BIẾN (CẤP 5) ---
+                    // Tương tác Biến/Không Biến (5/6 với 1/2/3/4) hoặc Tương tác nội bộ Biến (5<->6)
+                    let isTuanThuBienRule = (srcIsBien || posIsBien); 
+                    
+                    if (isTuanThuBienRule) {
+                        // Tương tác nội bộ Biến 5<->6 (Vẫn tính Sinh/Khắc/Trợ/Tiêu tán Cấp 5)
+                        if (srcIsBien && posIsBien) {
+                            if (tgtGua === selectedGua) {
+                                if (isSinh(srcHanh, tgtHanh)) sinhCounts[5]++;
+                                if (isKhac(srcHanh, tgtHanh)) khacCounts[5]++;
+                            }
+                            if (srcGua === selectedGua && isSinh(srcHanh, tgtHanh)) tieuTanCounts[5]++;
+                            if (srcGua === selectedGua && isKhac(srcHanh, tgtHanh)) haoTonCounts[5]++;
+                            if (tgtGua === selectedGua && isKhac(srcHanh, tgtHanh)) haoTonCounts[5]++;
+                            if (srcHanh === tgtHanh && tgtGua === selectedGua) troCounts[5]++;
+                            continue;
+                        }
+                        
+                        // Quẻ Biến chỉ BỊ ảnh hưởng bởi Chính/Hỗ với Lực Cấp 5 (Biến là Đích: posIsBien)
+                        if (posIsBien && tgtGua === selectedGua) {
+                            if (isSinh(srcHanh, tgtHanh)) sinhCounts[5]++;
+                            if (isKhac(srcHanh, tgtHanh)) khacCounts[5]++;
+                        }
+                        
+                        // Quẻ Biến là Nguồn (srcIsBien): Không gây tác động mạnh (Không tính Sinh/Khắc/Trợ)
+                        // Ngoại lệ: Ta vẫn tính tiêu tán cho Nguồn (Biến) nếu nó sinh cho Đích (Chính/Hỗ)
+                        if (srcIsBien && srcGua === selectedGua && isSinh(srcHanh, tgtHanh)) {
+                             tieuTanCounts[5]++; 
+                        }
+                        // Quẻ Biến là Nguồn (srcIsBien): Vẫn hao tổn Cấp 5 nếu khắc/sinh cho Chính/Hỗ.
+                        if (srcIsBien && srcGua === selectedGua && (isKhac(srcHanh, tgtHanh) || isSinh(srcHanh, tgtHanh))) {
+                             haoTonCounts[5]++; 
+                        }
+
+                        continue; // Bỏ qua logic chi tiết cho tương tác Biến
+                    }
+                    
+                    // --- 1. TƯƠNG SINH (LỢI: ĐÍCH Tăng Lực / HẠI: NGUỒN Tiêu Tán) ---
+                    if (isSinh(srcHanh, tgtHanh)) {
+                        let sinhCap = null;
+                        let tieuTanCap = null;
+
+                        // QUY TẮC TĂNG LỰC (LỢI) - CHO ĐÍCH (pos)
+                        if (pos === 1 && src === 3) sinhCap = 1; // 3->1 (Cấp 1)
+                        else if (pos === 1 && src === 4) sinhCap = 2; // 4->1 (Cấp 2)
+                        else if (pos === 2 && src === 4) sinhCap = 1; // 4->2 (Cấp 1)
+                        else if (pos === 2 && src === 3) sinhCap = 2; // 3->2 (Cấp 2)
+                        else if ((pos === 1 && src === 2) || (pos === 2 && src === 1)) sinhCap = 2; // 1<->2 (Cấp 2)
+                        else if ((pos === 3 && src === 4) || (pos === 4 && src === 3)) sinhCap = 2; // 3<->4 (Cấp 2)
+                        else if ((pos === 3 && src === 1) || (pos === 4 && src === 2)) sinhCap = 1; // 1->3, 2->4 (Cấp 1)
+                        else if ((pos === 3 && src === 2) || (pos === 4 && src === 1)) sinhCap = 2; // 2->3, 1->4 (Cấp 2)
+
+                        if (sinhCap && tgtGua === selectedGua) {
+                            sinhCounts[sinhCap]++;
+                        }
+
+                        // QUY TẮC TIÊU TÁN LỰC (HẠI) - CHO NGUỒN (src)
+                        // Cấp 1: Sinh thuận/ngược trong 1 cặp (1->2, 2->1, 3->4, 4->3)
+                        if ((src===1 && pos===2) || (src===2 && pos===1) || 
+                            (src===3 && pos===4) || (src===4 && pos===3)) {
+                            tieuTanCap = 1;
+                        }
+                        // Cấp 2: Sinh chéo (1->4, 2->3)
+                        else if ((src===1 && pos===4) || (src===2 && pos===3)) {
+                            tieuTanCap = 2;
+                        }
+                        // Cấp 1: Sinh thẳng (1->3, 2->4) (Theo quy tắc Q1/Q2 sinh Q3/Q4, Q3/Q4 nhận Cấp 1. Nguồn bị Tán Cấp 1)
+                        else if ((src===1 && pos===3) || (src===2 && pos===4)) {
+                            tieuTanCap = 1;
+                        }
+                         // Cấp 2: Sinh chéo (3->2, 4->1) (Theo quy tắc Q3/Q4 sinh Q1/Q2, Q1/Q2 nhận Cấp 2. Nguồn bị Tán Cấp 2)
+                        else if ((src===3 && pos===2) || (src===4 && pos===1)) {
+                            tieuTanCap = 2;
+                        }
+
+                        if (tieuTanCap && srcGua === selectedGua) {
+                             tieuTanCounts[tieuTanCap]++;
+                        }
+                    } // end isSinh
+
+                    // --- 2. TƯƠNG KHẮC (HẠI: ĐÍCH Khắc + Hao Tổn / NGUỒN Hao Tổn) ---
+                    if (isKhac(srcHanh, tgtHanh)) {
+                        let khacCap = null;
+                        let srcHaoCap = null; // Nguồn (bên khắc)
+                        let posHaoCap = null; // Đích (bên bị khắc)
+                        
+                        // Lực Khắc TRỰC TIẾP (áp dụng cho ĐÍCH, nơi chịu HẠI nặng nhất)
+                        
+                        // Khắc trong Quẻ Chính (1<->2)
+                        if (srcIsChinh && posIsChinh) {
+                            srcHaoCap = 3; // Nguồn (khắc) Hao 3
+                            posHaoCap = 2; // Đích (bị khắc) Hao 2
+                            khacCap = 2; // Đích ăn đòn cấp 2
+                        }
+                        // Khắc trong Quẻ Hỗ (3<->4)
+                        else if (srcIsHo && posIsHo) {
+                            srcHaoCap = 2; // Nguồn Hao 2
+                            posHaoCap = 1; // Đích Hao 1
+                            khacCap = 1; // Đích ăn đòn cấp 1
+                        }
+                        // Khắc: Chính (1/2) -> Hỗ (3/4)
+                        else if (srcIsChinh && posIsHo) {
+                            if ((src===1 && pos===3) || (src===2 && pos===4)) { // 1->3, 2->4
+                                srcHaoCap = 2; // Nguồn Hao 2
+                                posHaoCap = 1; // Đích Hao 1
+                                khacCap = 1; // Đích ăn đòn cấp 1
+                            } else if ((src===1 && pos===4) || (src===2 && pos===3)) { // 1->4, 2->3
+                                srcHaoCap = 3; // Nguồn Hao 3
+                                posHaoCap = 2; // Đích Hao 2
+                                khacCap = 2; // Đích ăn đòn cấp 2
+                            }
+                        }
+                        // Khắc: Hỗ (3/4) -> Chính (1/2)
+                        else if (srcIsHo && posIsChinh) {
+                            if ((src===3 && pos===1) || (src===4 && pos===2)) { // 3->1, 4->2
+                                srcHaoCap = 2; // Nguồn Hao 2
+                                posHaoCap = 1; // Đích Hao 1
+                                khacCap = 1; // Đích ăn đòn cấp 1
+                            } else if ((src===3 && pos===2) || (src===4 && pos===1)) { // 3->2, 4->1
+                                srcHaoCap = 3; // Nguồn Hao 3
+                                posHaoCap = 2; // Đích Hao 2
+                                khacCap = 2; // Đích ăn đòn cấp 2
+                            }
+                        }
+                        
+                        // Cập nhật Lực Khắc cho ĐÍCH (nếu Đích là selectedGua)
+                        if (khacCap && tgtGua === selectedGua) {
+                            khacCounts[khacCap]++;
+                        }
+
+                        // Cập nhật Hao Tổn cho NGUỒN (nếu Nguồn là selectedGua)
+                        if (srcGua === selectedGua && srcHaoCap !== null) {
+                            haoTonCounts[srcHaoCap]++;
+                        }
+
+                        // Cập nhật Hao Tổn cho ĐÍCH (nếu Đích là selectedGua)
+                        if (tgtGua === selectedGua && posHaoCap !== null) {
+                            haoTonCounts[posHaoCap]++;
+                        }
+                    } // end isKhac
+
+                    // --- 3. TRỢ LỰC (LỢI: Đích nhận trợ lực) ---
+                    // Trợ lực áp dụng khi src và target là đồng ngũ hành (pos nhận trợ lực)
+                    if (srcHanh === tgtHanh) {
+                        let supportCap = null;
+
+                        // Cấp 3: 1<->2, 3<->4, 1<->3, 2<->4
+                        if ((srcIsChinh && posIsChinh) || (srcIsHo && posIsHo) ||
+                            (src===1 && pos===3) || (src===3 && pos===1) || 
+                            (src===2 && pos===4) || (src===4 && pos===2)) {
+                            supportCap = 3;
+                        }
+                        // Cấp 4: 1<->4, 2<->3
+                        else if ((src===1 && pos===4) || (src===4 && pos===1) || 
+                                 (src===2 && pos===3) || (src===3 && pos===2)) {
+                            supportCap = 4;
+                        }
+                        
+                        if (supportCap && tgtGua === selectedGua) {
+                            troCounts[supportCap]++;
+                        }
+                    } // end trợ lực
+                } // end src loop
+            } // end pos loop
+        } // end kt loop
+
+        // === COMPUTE SCORE ===
+        function sumObj(o) { return Object.values(o).reduce((s,v)=>s+(v||0),0); }
+
+        let benefitScore = 0, harmScore = 0;
+        for (let c=1;c<=5;c++) {
+            const w = capWeight[c] || 1;
+            benefitScore += (sinhCounts[c]||0) * w;
+            benefitScore += (troCounts[c]||0) * w * troMultiplier; // Dùng troMultiplier = 1.5
+
+            harmScore += (khacCounts[c]||0) * w;
+            harmScore += (tieuTanCounts[c]||0) * w * tieuMultiplier; // Dùng tieuMultiplier = 1.0
+            harmScore += (haoTonCounts[c]||0) * w * haoMultiplier;  // Dùng haoMultiplier = 1.0
+        }
+
+        const totalScore = benefitScore + harmScore;
+        const pctBenefit = totalScore > 0 ? (benefitScore / totalScore * 100).toFixed(2) : '0.00';
+        const pctHarm    = totalScore > 0 ? (harmScore / totalScore * 100).toFixed(2) : '0.00';
+
+        const totalSinh = sumObj(sinhCounts);
+        const totalKhac = sumObj(khacCounts);
+        const totalTro  = sumObj(troCounts);
+        const totalTieu = sumObj(tieuTanCounts);
+        const totalHao  = sumObj(haoTonCounts);
+
+        // Build readable report
+        let text = `Luận đoán cho quẻ ${guaName[selectedGua]} (${selectedHanh})\n\n`;
+        text += `Tổng qua ${currentNumKhongThoi} không thời.\n\n`;
+
+        text += `— Sinh (Lợi) Tăng Lực theo cấp (Đích nhận lực): Tổng ${totalSinh}\n`;
+        for (let c=1;c<=5;c++) text += `  Cấp ${c}: ${sinhCounts[c]||0}\n`;
+
+        text += `\n— Khắc (Hại) Lực Khắc Trực Tiếp (Đích chịu khắc): Tổng ${totalKhac}\n`;
+        for (let c=1;c<=5;c++) text += `  Cấp ${c}: ${khacCounts[c]||0}\n`;
+
+        text += `\n— Trợ lực (Đồng Hành, Lợi): Tổng ${totalTro} (Được tính mạnh hơn x${troMultiplier})\n`;
+        for (let c=1;c<=5;c++) text += `  Cấp ${c}: ${troCounts[c]||0}\n`;
+
+        text += `\n— Tiêu tán (Hao khí do Sinh - Nguồn bị tán): Tổng ${totalTieu} (Được tính x${tieuMultiplier})\n`;
+        for (let c=1;c<=5;c++) text += `  Cấp ${c}: ${tieuTanCounts[c]||0}\n`;
+
+        text += `\n— Hao tổn (Giảm sức sau Khắc/Sinh): Tổng ${totalHao} (Được tính x${haoMultiplier})\n`;
+        for (let c=1;c<=5;c++) text += `  Cấp ${c}: ${haoTonCounts[c]||0}\n\n`;
+        
+        text += `Tổng điểm lợi: ${benefitScore.toFixed(2)}\nTổng điểm hại: ${harmScore.toFixed(2)}\n\n`;
+        text += `Tỷ lệ (theo trọng số): Có lợi ${pctBenefit}% — Có hại ${pctHarm}%\n\n`;
+
+        // Phần Kết luận TÁCH RIÊNG và áp dụng style mới
+        let ketLuan = "";
+        if (benefitScore > harmScore * 1.05) ketLuan = "Kết luận: Có lợi chiếm ưu thế.";
+        else if (harmScore > benefitScore * 1.05) ketLuan = "Kết luận: Có hại chiếm ưu thế.";
+        else ketLuan = "Kết luận: Lợi và hại tương đối cân bằng — cần xem các không thời tiếp theo để quyết định.";
+
+        // THAY ĐỔI Ở ĐÂY: Dùng HTML để chèn kết luận với style đặc biệt
+        // Loại bỏ kết luận đã thêm vào text để tránh trùng lặp khi chèn HTML
+        const finalOutput = text + `<span class="ket-luan-highlight">${ketLuan}</span>`;
+
+        // Dùng .html() thay vì .text() để render HTML
+        $('#ketQua').html(finalOutput);
+    }
+
+    // === event bindings (GIỮ NGUYÊN) ===
+    $('#dontable input[type="button"]').click(function() {
+        const [$phai, $trai] = [$('#dontable input[name="phai"]'), $('#dontable input[name="trai"]')];
+        if (!validateInputs([$phai, $trai])) return;
+        const [phai, trai, dong] = [$.trim($phai.val()), $.trim($trai.val()), null];
+        Khiet.drawKhongThoi('canvas', phai, trai, dong, 200);
+        adjustCanvasSize();
+        saveToHistory({ type: 'Độn Quái', inputs: `PHẢI: ${phai}, TRÁI: ${trai}`, phai, trai, dong });
+        updateQueData(phai, trai, dong);
+    });
+
+    $('#timtable input[type="button"]').click(function() {
+        const [$phai, $trai, $dong] = [$('#timtable input[name="phai"]'), $('#timtable input[name="trai"]'), $('#timtable input[name="dong"]')];
+        if (!validateInputs([$phai, $trai, $dong])) return;
+        const [phai, trai, dong] = [$.trim($phai.val()), $.trim($trai.val()), $.trim($dong.val())];
+        Khiet.drawKhongThoi('canvas', phai, trai, dong, 200);
+        adjustCanvasSize();
+        saveToHistory({ type: 'Tìm Quái', inputs: `PHẢI: ${phai}, TRÁI: ${trai}, ĐỘNG: ${dong}`, phai, trai, dong });
+        updateQueData(phai, trai, dong);
+    });
+
+    $('#namthangtable input[type="button"]').click(function() {
+        const [$nam, $thang, $ngay, $gio] = [$('#namthangtable input[name="nam"]'), $('#namthangtable input[name="thang"]'), $('#namthangtable input[name="ngay"]'), $('#namthangtable input[name="gio"]')];
+        if (!validateInputs([$nam, $thang, $ngay, $gio])) return;
+        const [nam, thang, ngay, gio] = [parseFloat($.trim($nam.val())), parseFloat($.trim($thang.val())), parseFloat($.trim($ngay.val())), parseFloat($.trim($gio.val()))];
+        const phai = nam + thang + ngay, trai = phai + gio, dong = trai;
+        Khiet.drawKhongThoi('canvas', phai, trai, dong, 200);
+        adjustCanvasSize();
+        saveToHistory({ type: 'Thời Quái Kiện', inputs: `NĂM: ${nam}, THÁNG: ${thang}, NGÀY: ${ngay}, GIỜ: ${gio}`, phai, trai, dong });
+        updateQueData(phai, trai, dong);
+    });
+
+    $('#maihoatable input[type="button"]').click(function() {
+        const [$nam, $thang, $ngay] = [$('#maihoatable input[name="nam"]'), $('#maihoatable input[name="thang"]'), $('#maihoatable input[name="ngay"]')];
+        if (!validateInputs([$nam, $thang, $ngay])) return;
+        const [nam, thang, ngay] = [parseFloat($.trim($nam.val())), parseFloat($.trim($thang.val())), parseFloat($.trim($ngay.val()))];
+        const phai = nam + thang + ngay;
+        Khiet.drawKhongThoiMaiHoa('canvas', phai, 200);
+        adjustCanvasSize();
+        saveToHistory({ type: 'Mai Hoa', inputs: `NĂM: ${nam}, THÁNG: ${thang}, NGÀY: ${ngay}`, phai });
+        updateQueData(phai, null, null);
+    });
+
+    $('.reset-btn').click(function() { resetForm($(this).closest('.input-table')); });
+
+    let longPressTimer, touchStartX, touchStartY;
+    $('.canvas-section').on('touchstart', function(e) {
+        e.stopPropagation();
+        const touch = e.originalEvent.touches[0];
+        [touchStartX, touchStartY] = [touch.pageX, touch.pageY];
+        longPressTimer = setTimeout(() => {
+            const $svg = $('#canvas svg')[0];
+            if ($svg) saveSvgAsPng($svg, `que_${new Date().toISOString()}.png`, { scale: 2, backgroundColor: '#fff' });
+            else alert('Vui lòng tạo quẻ trước!');
+        }, 1000);
+    }).on('touchmove', function(e) {
+        const touch = e.originalEvent.touches[0];
+        if (Math.abs(touch.pageX - touchStartX) > 10 || Math.abs(touch.pageY - touchStartY) > 10) clearTimeout(longPressTimer);
+    }).on('touchend touchcancel', function() { clearTimeout(longPressTimer); });
+
+    $('#guaSelect').change(function() {
+        const val = parseInt($(this).val());
+        tinhLuanDoan(val);
+    });
+
+    // Expose for debugging
+    window.updateQueData = updateQueData;
+    window.tinhLuanDoan = tinhLuanDoan;
+
+});
+</script>
+</body>
+</html>
