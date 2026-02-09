@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Liên Hoa Độn – Thỉnh Chữ Lấy Số</title>
+<style>
+body{
+  background: radial-gradient(circle at top, #fff2cc, #f7c873, #e97a7a);
+  color:#5a1a1a;
+  font-family:"Noto Serif","Times New Roman",serif;
+  text-align:center;
+  padding:20px;
+}
+h1{letter-spacing:3px;color:#7a0000; margin-bottom: 5px;}
+.note{font-size:16px;color:#7a0000;margin-bottom:10px}
+
+/* Style cho ảnh Thổ Công */
+.tho-cong-img {
+  width: 100%;
+  max-width: 400px; /* Kích thước ảnh hài hòa */
+  height: auto;
+  border-radius: 15px;
+  border: 3px solid #c99b2b;
+  box-shadow: 0 0 25px rgba(180, 80, 40, 0.5);
+  margin: 10px auto 20px auto;
+  display: block;
+}
+
+.box{
+  background:linear-gradient(#fff6df,#f6d28b);
+  border:2px solid #c99b2b;border-radius:14px;
+  padding:18px;margin:18px auto;max-width:520px;
+  box-shadow:0 0 18px rgba(180,80,40,.35)
+}
+.title-big{font-size:200%;font-weight:bold;color:#8b0000;margin-bottom:8px}
+.han{font-size:64px;margin:12px 0;color:#7a0000}
+.info{font-size:18px}
+button{
+  background:linear-gradient(#ffdf7f,#f2b233);
+  color:#6b1c00;border:none;border-radius:10px;
+  padding:12px 22px;font-size:18px;cursor:pointer
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+.copyBox{display:none}
+textarea{width:100%;height:130px;font-size:16px}
+</style>
+</head>
+<body>
+
+<h1>🜃 LIÊN HOA ĐỘN 🜃</h1>
+<div class="note">靜心 · 誠意 · 請示</div>
+
+<img src="https://r2cdn.perplexity.ai/pplx-full-size-image-u-121/4a29270e-e3e9-467a-974a-1017e4f7a1f8/image.png" alt="Thổ Công" class="tho-cong-img">
+
+<div class="box">
+  <div class="title-big">Quẻ Thượng – Thỉnh Chữ Thượng</div>
+  <div id="thuongChar" class="han">—</div>
+  <div id="thuongInfo" class="info"></div>
+  <button id="btnThuong">Thỉnh Chữ Thượng</button>
+</div>
+
+<div class="box">
+  <div class="title-big">Quẻ Hạ – Thỉnh Chữ Hạ</div>
+  <div id="haChar" class="han">—</div>
+  <div id="haInfo" class="info"></div>
+  <button id="btnHa" disabled>Thỉnh Chữ Hạ</button>
+</div>
+
+<div class="box copyBox" id="copyBox">
+  <div class="title-big">Nhận Chữ</div>
+  <textarea id="resultText"></textarea><br>
+  <button onclick="copyResult()">Copy Nội Dung</button>
+</div>
+
+<div class="note">此數既出 · 不可再擾</div>
+
+<script>
+// Danh sách 500 chữ Hán Phồn Thể - Giữ nguyên gốc
+const HAN_DATA = [
+    {c:"乾",v:"Càn (Trời)",n:11},{c:"坤",v:"Khôn (Đất)",n:8},{c:"震",v:"Chấn (Sấm)",n:15},{c:"巽",v:"Tốn (Gió)",n:12},
+    {c:"坎",v:"Khảm (Nước)",n:7},{c:"離",v:"Ly (Lửa)",n:19},{c:"艮",v:"Cấn (Núi)",n:7},{c:"兌",v:"Đoài (Đầm)",n:7},
+    {c:"天",v:"Thiên (Trời)",n:4},{c:"地",v:"Địa (Đất)",n:6},{c:"玄",v:"Huyền (Sâu kín)",n:5},{c:"黃",v:"Hoàng (Vàng)",n:12},
+    {c:"宇",v:"Vũ (Không gian)",n:6},{c:"宙",v:"Trụ (Thời gian)",n:8},{c:"洪",v:"Hồng (Lớn)",n:9},{c:"荒",v:"Hoang (Vắng)",n:10},
+    {c:"日",v:"Nhật (Mặt trời)",n:4},{c:"月",v:"Nguyệt (Mặt trăng)",n:4},{c:"盈",v:"Doanh (Đầy)",n:9},{c:"昃",v:"Trắc (Nghiêng)",n:8},
+    {c:"辰",v:"Thần (Sao)",n:7},{c:"宿",v:"Tú (Chòm sao)",n:11},{c:"列",v:"Liệt (Hàng)",n:6},{c:"張",v:"Trương (Bủa ra)",n:11},
+    {c:"寒",v:"Hàn (Lạnh)",n:12},{c:"來",v:"Lai (Đến)",n:8},{c:"暑",v:"Thử (Nóng)",n:13},{c:"往",v:"Vãng (Đi)",n:8},
+    {c:"秋",v:"Thu (Mùa thu)",n:9},{c:"收",v:"Thu (Gặt)",n:6},{c:"冬",v:"Đông (Mùa đông)",n:5},{c:"藏",v:"Tàng (Cất)",n:18},
+    {c:"閏",v:"Nhuận (Dư)",n:12},{c:"餘",v:"Dư (Thừa)",n:15},{c:"成",v:"Thành (Nên)",n:6},{c:"歲",v:"Tuế (Năm)",n:13},
+    {c:"律",v:"Luật (Pháp luật)",n:9},{c:"呂",v:"Lữ (Âm luật)",n:7},{c:"調",v:"Điều (Hòa hợp)",n:15},{c:"陽",v:"Dương (Sáng)",n:12},
+    {c:"雲",v:"Vân (Mây)",n:12},{c:"騰",v:"Đằng (Bay lên)",n:20},{c:"致",v:"Trí (Đưa đến)",n:10},{c:"雨",v:"Vũ (Mưa)",n:8},
+    {c:"露",v:"Lộ (Sương)",n:21},{c:"結",v:"Kết (Đọng lại)",n:12},{c:"為",v:"Vi (Làm)",n:12},{c:"霜",v:"Sương (Móc)",n:17},
+    {c:"金",v:"Kim (Vàng)",n:8},{c:"生",v:"Sinh (Nảy nở)",n:5},{c:"麗",v:"Lệ (Đẹp)",n:19},{c:"水",v:"Thủy (Nước)",n:4},
+    {c:"玉",v:"Ngọc (Đá quý)",n:5},{c:"出",v:"Xuất (Ra)",n:5},{c:"崑",v:"Côn (Tên núi)",n:11},{c:"岡",v:"Cương (Chỏm núi)",n:8},
+    {c:"劍",v:"Kiếm (Gươm)",n:15},{c:"號",v:"Hiệu (Tên gọi)",n:13},{c:"巨",v:"Cự (Lớn)",n:5},{c:"闕",v:"Khuyết (Cửa cung)",n:18},
+    {c:"珠",v:"Châu (Ngọc trai)",n:10},{c:"稱",v:"Xưng (Khen)",n:14},{c:"夜",v:"Dạ (Đêm)",n:8},{c:"光",v:"Quang (Sáng)",n:6},
+    {c:"果",v:"Quả (Trái)",n:8},{c:"珍",v:"Trân (Quý)",n:10},{c:"李",v:"Lý (Mận)",n:7},{c:"柰",v:"Nại (Táo)",n:9},
+    {c:"菜",v:"Thái (Rau)",n:12},{c:"重",v:"Trọng (Nặng)",n:9},{c:"芥",v:"Giới (Cỏ giới)",n:8},{c:"薑",v:"Khương (Gừng)",n:17},
+    {c:"海",v:"Hải (Biển)",n:10},{c:"鹹",v:"Hàm (Mặn)",n:20},{c:"河",v:"Hà (Sông)",n:8},{c:"淡",v:"Đạm (Nhạt)",n:11},
+    {c:"鱗",v:"Lân (Vảy cá)",n:23},{c:"潛",v:"Tiềm (Chìm)",n:15},{c:"羽",v:"Vũ (Lông chim)",n:6},{c:"翔",v:"Tường (Bay)",n:12},
+    {c:"龍",v:"Long (Rồng)",n:16},{c:"師",v:"Sư (Thầy)",n:10},{c:"火",v:"Hỏa (Lửa)",n:4},{c:"帝",v:"Đế (Vua)",n:9},
+    {c:"鳥",v:"Niểu (Chim)",n:11},{c:"官",v:"Quan (Chức quan)",n:8},{c:"人",v:"Nhân (Người)",n:2},{c:"皇",v:"Hoàng (Vua)",n:9},
+    {c:"始",v:"Thủy (Đầu)",n:8},{c:"制",v:"Chế (Làm ra)",n:8},{c:"文",v:"Văn (Chữ viết)",n:4},{c:"字",v:"Tự (Chữ)",n:6},
+    {c:"乃",v:"Nãi (Bèn)",n:2},{c:"服",v:"Phục (Áo)",n:8},{c:"衣",v:"Y (Áo xiêm)",n:6},{c:"裳",v:"Thường (Váy)",n:14},
+    {c:"推",v:"Thôi (Nhường)",n:11},{c:"位",v:"Vị (Ngai vàng)",n:7},{c:"讓",v:"Nhượng (Nhường)",n:24},{c:"國",v:"Quốc (Nước)",n:11},
+    {c:"有",v:"Hữu (Có)",n:6},{c:"虞",v:"Ngu (Họ Ngu)",n:13},{c:"陶",v:"Đào (Họ Đào)",n:11},{c:"唐",v:"Đường (Họ Đường)",n:10},
+    {c:"弔",v:"Điếu (Thương xót)",n:4},{c:"民",v:"Dân (Người dân)",n:5},{c:"伐",v:"Phạt (Đánh dẹp)",n:6},{c:"罪",v:"Tội (Lỗi)",n:13},
+    {c:"周",v:"Chu (Họ Chu)",n:8},{c:"發",v:"Phát (Họ Phát)",n:12},{c:"殷",v:"Ân (Nhà Ân)",n:10},{c:"湯",v:"Thang (Vua Thang)",n:12},
+    {c:"坐",v:"Tọa (Ngồi)",n:7},{c:"朝",v:"Triều (Chầu)",n:12},{c:"問",v:"Vấn (Hỏi)",n:11},{c:"道",v:"Đạo (Đạo lý)",n:12},
+    {c:"垂",v:"Thùy (Rủ xuống)",n:8},{c:"拱",v:"Củng (Khoanh tay)",n:9},{c:"平",v:"Bình (Yên)",n:5},{c:"章",v:"Chương (Sáng sủa)",n:11},
+    {c:"愛",v:"Ái (Yêu)",n:13},{c:"育",v:"Dục (Nuôi dưỡng)",n:8},{c:"黎",v:"Lê (Đông đảo)",n:15},{c:"首",v:"Thủ (Đầu)",n:9},
+    {c:"臣",v:"Thần (Bề tôi)",n:6},{c:"伏",v:"Phục (Chịu)",n:6},{c:"戎",v:"Nhung (Người Nhung)",n:6},{c:"羌",v:"Khương (Người Khương)",n:9},
+    {c:"遐",v:"Hà (Xa)",n:13},{c:"邇",v:"Nhĩ (Gần)",n:17},{c:"一",v:"Nhất (Một)",n:1},{c:"體",v:"Thể (Thân thể)",n:23},
+    {c:"率",v:"Suất (Dẫn dắt)",n:11},{c:"賓",v:"Tân (Khách)",n:14},{c:"歸",v:"Quy (Về)",n:18},{c:"王",v:"Vương (Vua)",n:4},
+    {c:"鳴",v:"Minh (Hót)",n:14},{c:"鳳",v:"Phượng (Chim phượng)",n:14},{c:"在",v:"Tại (Ở)",n:6},{c:"竹",v:"Trúc (Tre)",n:6},
+    {c:"白",v:"Bạch (Trắng)",n:5},{c:"駒",v:"Câu (Ngựa non)",n:15},{c:"食",v:"Thực (Ăn)",n:9},{c:"場",v:"Trường (Bãi)",n:12},
+    {c:"化",v:"Hóa (Thay đổi)",n:4},{c:"被",v:"Bị (Chạm tới)",n:10},{c:"草",v:"Thảo (Cỏ)",n:10},{c:"木",v:"Mộc (Cây)",n:4},
+    {c:"賴",v:"Lại (Nhờ vào)",n:16},{c:"及",v:"Cập (Đến)",n:3},{c:"萬",v:"Vạn (Mười ngàn)",n:13},{c:"方",v:"Phương (Vùng)",n:4},
+    {c:"蓋",v:"Cái (Dù)",n:13},{c:"此",v:"Thử (Này)",n:6},{c:"身",v:"Thân (Thân mình)",n:7},{c:"髮",v:"Phát (Tóc)",n:14},
+    {c:"四大",v:"Tứ Đại (4 yếu tố)",n:9},{c:"五常",v:"Ngũ Thường (5 đức)",n:15},{c:"恭",v:"Cung (Kính)",n:10},{c:"惟",v:"Duy (Nghĩ)",n:11},
+    {c:"鞠",v:"Cúc (Nuôi)",n:17},{c:"養",v:"Dưỡng (Dạy)",n:15},{c:"豈",v:"Khởi (Há)",n:10},{c:"敢",v:"Cảm (Dám)",n:13},
+    {c:"毀",v:"Hủy (Làm hại)",n:13},{c:"傷",v:"Thương (Đau)",n:13},{c:"女",v:"Nữ (Con gái)",n:3},{c:"慕",v:"Mộ (Mến)",n:15},
+    {c:"貞",v:"Trinh (Khiết)",n:9},{c:"潔",v:"Khiết (Sạch)",n:15},{c:"男",v:"Nam (Con trai)",n:7},{c:"效",v:"Hiệu (Bắt chước)",n:10},
+    {c:"才",v:"Tài (Tài năng)",n:3},{c:"良",v:"Lương (Tốt)",n:7},{c:"知",v:"Tri (Biết)",n:8},{c:"過",v:"Quá (Lỗi)",n:12},
+    {c:"必",v:"Tất (Chắc chắn)",n:5},{c:"改",v:"Cải (Sửa)",n:7},{c:"得",v:"Đắc (Được)",n:11},{c:"能",v:"Năng (Có thể)",n:10},
+    {c:"莫",v:"Mạc (Chớ)",n:11},{c:"忘",v:"Vong (Quên)",n:7},{c:"罔",v:"Võng (Đừng)",n:8},{c:"談",v:"Đàm (Nói)",n:15},
+    {c:"彼",v:"Bỉ (Người kia)",n:8},{c:"短",v:"Đoản (Ngắn)",n:12},{c:"靡",v:"Mĩ (Chớ)",n:19},{c:"恃",v:"Thị (Cậy)",n:9},
+    {c:"己",v:"Kỷ (Bản thân)",n:3},{c:"長",v:"Trường (Dài)",n:8},{c:"信",v:"Tín (Tin)",n:9},{c:"使",v:"Sứ ( Khiến)",n:8},
+    {c:"可",v:"Khả (Có thể)",n:5},{c:"覆",v:"Phúc (Lặp lại)",n:18},{c:"器",v:"Khí (Đồ dùng)",n:16},{c:"欲",v:"Dục (Muốn)",n:11},
+    {c:"難",v:"Nan (Khó)",n:19},{c:"量",v:"Lượng (Đo)",n:12},{c:"墨",v:"Mặc (Mực)",n:15},{c:"悲",v:"Bi (Buồn)",n:12},
+    {c:"絲",v:"Ty (Tơ)",n:12},{c:"染",v:"Nhiễm (Nhuộm)",n:9},{c:"詩",v:"Thi (Thơ)",n:13},{c:"讚",v:"Tán (Khen)",n:26},
+    {c:"羔",v:"Gao (Con cừu)",n:10},{c:"羊",v:"Dương (Con dê)",n:6},{c:"景",v:"Cảnh (Sáng)",n:12},{c:"行",v:"Hạnh (Nết)",n:6},
+    {c:"維",v:"Duy (Gìn giữ)",n:14},{c:"賢",v:"Hiền (Người tài)",n:15},{c:"克",v:"Khắc (Được)",n:7},{c:"念",v:"Niệm (Nhớ)",n:8},
+    {c:"作",v:"Tác (Làm)",n:7},{c:"聖",v:"Thánh (Bậc thánh)",n:13},{c:"德",v:"Đức (Đạo đức)",n:15},{c:"建",v:"Kiến (Xây)",n:9},
+    {c:"名",v:"Danh (Tiếng tăm)",n:6},{c:"立",v:"Lập (Đứng)",n:5},{c:"形",v:"Hình (Dáng)",n:7},{c:"端",v:"Đoan (Ngay ngắn)",n:14},
+    {c:"表",v:"Biểu (Hiện ra)",n:8},{c:"正",v:"Chánh (Thẳng)",n:5},{c:"空",v:"Không (Trống)",n:8},{c:"谷",v:"Cốc (Hang)",n:7},
+    {c:"傳",v:"Truyền (Vang đi)",n:13},{c:"聲",v:"Thanh (Tiếng)",n:17},{c:"虛",v:"Hư (Trống)",n:12},{c:"堂",v:"Đường (Nhà lớn)",n:11},
+    {c:"習",v:"Tập (Quen)",n:11},{c:"聽",v:"Thính (Nghe)",n:22},{c:"禍",v:"Họa (Tai ương)",n:13},{c:"因",v:"Nhân (Bởi vì)",n:6},
+    {c:"惡",v:"Ác (Xấu)",n:12},{c:"積",v:"Tích (Chứa)",n:16},{c:"福",v:"Phúc (May mắn)",n:13},{c:"緣",v:"Duyên (Cớ)",n:15},
+    {c:"善",v:"Thiện (Tốt lành)",n:12},{c:"慶",v:"Khánh (Mừng)",n:15},{c:"尺",v:"Xích (Thước)",n:4},{c:"璧",v:"Bích (Ngọc)",n:18},
+    {c:"非",v:"Phi (Chẳng phải)",n:8},{c:"寶",v:"Bảo (Quý)",n:20},{c:"寸",v:"Thốn (Tấc)",n:3},{c:"陰",v:"Âm (Bóng tối)",n:11},
+    {c:"是",v:"Thị (Phải)",n:9},{c:"競",v:"Cạnh (Tranh)",n:20},{c:"資",v:"Tư (Nhờ vào)",n:13},{c:"父",v:"Phụ (Cha)",n:4},
+    {c:"事",v:"Sự (Thờ)",n:8},{c:"君",v:"Quân (Vua)",n:7},{c:"曰",v:"Viết (Rằng)",n:4},{c:"嚴",v:"Nghiêm (Kính)",n:19},
+    {c:"與",v:"Dữ (Và)",n:14},{c:"敬",v:"Kính (Trọng)",n:13},{c:"孝",v:"Hiếu (Hiếu thảo)",n:7},{c:"當",v:"Đương (Nên)",n:13},
+    {c:"竭",v:"Kiệt (Hết sức)",n:14},{c:"力",v:"Lực (Sức khỏe)",n:2},{c:"忠",v:"Trung (Hết lòng)",n:8},{c:"則",v:"Tắc (Thì)",n:9},
+    {c:"盡",v:"Tận (Hết)",n:14},{c:"命",v:"Mạng (Tính mạng)",n:8},{c:"臨",v:"Lâm (Đến)",n:17},{c:"深",v:"Thâm (Sâu)",n:11},
+    {c:"履",v:"Lý (Giẫm)",n:15},{c:"薄",v:"Bạc (Mỏng)",n:16},{c:"夙",v:"Túc (Sớm)",n:6},{c:"興",v:"Hưng (Dậy)",n:16},
+    {c:"溫",v:"Ôn (Ấm)",n:13},{c:"凊",v:"Thanh (Mát)",n:11},{c:"似",v:"Tự (Giống)",n:7},{c:"蘭",v:"Lan (Hoa lan)",n:20},
+    {c:"斯",v:"Tư (Này)",n:12},{c:"馨",v:"Hinh (Thơm)",n:20},{c:"如",v:"Như (Giống như)",n:6},{c:"松",v:"Tùng (Cây tùng)",n:8},
+    {c:"之",v:"Chi (Của)",n:4},{c:"盛",v:"Thịnh (Tốt tươi)",n:11},{c:"川",v:"Xuyên (Sông)",n:3},{c:"流",v:"Lưu (Chảy)",n:10},
+    {c:"不",v:"Bất (Không)",n:4},{c:"息",v:"Tức (Ngừng)",n:10},{c:"淵",v:"Uyên (Sâu)",n:11},{c:"澄",v:"Trừng (Trong)",n:15},
+    {c:"取",v:"Thủ (Lấy)",n:8},{c:"映",v:"Ánh (Chiếu)",n:9},{c:"容",v:"Dung (Dáng vẻ)",n:10},{c:"止",v:"Chỉ (Dáng đi)",n:4},
+    {c:"若",v:"Nhược (Như)",n:8},{c:"思",v:"Tư (Nghĩ)",n:9},{c:"言",v:"Ngôn (Lời nói)",n:7},{c:"辭",v:"Từ (Lời lẽ)",n:19},
+    {c:"安",v:"An (Yên tĩnh)",n:6},{c:"定",v:"Định (Ổn định)",n:8},{c:"篤",v:"Đốc (Vững)",n:16},{c:"初",v:"Sơ (Ban đầu)",n:7},
+    {c:"誠",v:"Thành (Thật)",n:14},{c:"美",v:"Mỹ (Đẹp)",n:9},{c:"慎",v:"Thận (Cẩn thận)",n:13},{c:"終",v:"Chung (Sau cùng)",n:11},
+    {c:"宜",v:"Nghi (Nên)",n:8},{c:"令",v:"Lệnh (Tốt)",n:5},{c:"榮",v:"Vinh (Vinh dự)",n:14},{c:"業",v:"Nghiệp (Sự nghiệp)",n:13},
+    {c:"所",v:"Sở (Chỗ)",n:8},{c:"基",v:"Cơ (Nền móng)",n:11},{c:"籍",v:"Tịch (Sổ sách)",n:20},{c:"甚",v:"Thậm (Rất)",n:9},
+    {c:"無",v:"Vô (Không có)",n:12},{c:"竟",v:"Cánh (Cùng)",n:11},{c:"學",v:"Học (Học tập)",n:16},{c:"優",v:"Ưu (Giỏi)",n:17},
+    {c:"登",v:"Đăng (Lên)",n:12},{c:"仕",v:"Sĩ (Làm quan)",n:5},{c:"攝",v:"Nhiếp (Nắm giữ)",n:21},{c:"職",v:"Chức (Chức vụ)",n:18},
+    {c:"從",v:"Tòng (Theo)",n:11},{c:"政",v:"Chánh (Chính trị)",n:9},{c:"存",v:"Tồn (Còn)",n:6},{c:"以",v:"Dĩ (Dùng)",n:5},
+    {c:"甘",v:"Cam (Ngọt)",n:5},{c:"棠",v:"Đường (Cây đường)",n:12},{c:"去",v:"Khứ (Đi qua)",n:5},{c:"而",v:"Nhi (Mà)",n:6},
+    {c:"益",v:"Ích (Thêm)",n:10},{c:"詠",v:"Vịnh (Ca ngợi)",n:12},{c:"樂",v:"Nhạc (Vui vẻ)",n:15},{c:"殊",v:"Thù (Khác)",n:10},
+    {c:"貴",v:"Quý (Quý giá)",n:12},{c:"賤",v:"Tiện (Rẻ mạt)",n:15},{c:"禮",v:"Lễ (Nghi lễ)",n:17},{c:"別",v:"Biệt (Khác biệt)",n:7},
+    {c:"尊",v:"Tôn (Cao)",n:12},{c:"卑",v:"Tiên (Thấp)",n:11},{c:"上",v:"Thượng (Trên)",n:3},{c:"和",v:"Hòa (Hợp)",n:8},
+    {c:"下",v:"Hạ (Dưới)",n:3},{c:"睦",v:"Mục (Hòa thuận)",n:13},{c:"夫",v:"Phu (Chồng)",n:4},{c:"唱",v:"Xướng (Xướng)",n:11},
+    {c:"婦",v:"Phụ (Vợ)",n:11},{c:"隨",v:"Tùy (Theo)",n:15},{c:"外",v:"Ngoại (Ngoài)",n:5},{c:"訓",v:"Huấn (Dạy)",n:10},
+    {c:"傅",v:"Phó (Thầy)",n:12},{c:"入",v:"Nhập (Vào)",n:2},{c:"奉",v:"Phụng (Thờ)",n:8},{c:"母",v:"Mẫu (Mẹ)",n:5},
+    {c:"儀",v:"Nghi (Phép tắc)",n:15},{c:"諸",v:"Gia (Họ hàng)",n:15},{c:"姑",v:"Cô (Cô/Dì)",n:8},{c:"伯",v:"Bá (Bác)",n:7},
+    {c:"叔",v:"Thúc (Chú)",n:8},{c:"猶",v:"Do (Như là)",n:12},{c:"子",v:"Tử (Con)",n:3},{c:"比",v:"Bỉ (So)",n:4},
+    {c:"兒",v:"Nhi (Trẻ con)",n:8},{c:"孔",v:"Khổng (Rất)",n:4},{c:"懷",v:"Hoài (Nhớ)",n:19},{c:"兄",v:"Huynh (Anh)",n:5},
+    {c:"弟",v:"Đệ (Em)",n:7},{c:"同",v:"Đồng (Cùng)",n:6},{c:"氣",v:"Khí (Khí huyết)",n:10},{c:"連",v:"Liên (Nối)",n:11},
+    {c:"枝",v:"Chi (Cành)",n:8},{c:"交",v:"Giao (Chơi)",n:6},{c:"友",v:"Hữu (Bạn)",n:4},{c:"投",v:"Đầu (Hợp)",n:7},
+    {c:"分",v:"Phân (Phần)",n:4},{c:"切",v:"Thiết (Gần)",n:4},{c:"磨",v:"Ma (Mài)",n:16},{c:"箴",v:"Châm (Khuyên)",n:15},
+    {c:"規",v:"Quy (Khuôn phép)",n:11},{c:"諫",v:"Gián (Can gián)",n:16},{c:"仁",v:"Nhân (Lòng nhân)",n:4},{c:"慈",v:"Từ (Thương xót)",n:13},
+    {c:"隱",v:"Ẩn (Đau xót)",n:17},{c:"惻",v:"Trắc (Thương)",n:12},{c:"造",v:"Tạo (Lúc)",n:11},{c:"次",v:"Thứ (Tạm thời)",n:6},
+    {c:"弗",v:"Phất (Chớ)",n:5},{c:"離",v:"Ly (Rời)",n:19},{c:"節",v:"Tiết (Tiết tháo)",n:15},{c:"義",v:"Nghĩa (Lẽ phải)",n:13},
+    {c:"廉",v:"Liêm (Sạch)",n:13},{c:"退",v:"Thoái (Nhường)",n:10},{c:"顛",v:"Điên (Ngã)",n:20},{c:"沛",v:"Phái (Bối rối)",n:8},
+    {c:"匪",v:"Phỉ (Chẳng)",n:10},{c:"虧",v:"Khuy (Thiếu)",n:17},{c:"性",v:"Tính (Bản tính)",n:8},{c:"靜",v:"Tĩnh (Yên)",n:16},
+    {c:"情",v:"Tình (Tình cảm)",n:11},{c:"逸",v:"Dật (Thảnh thơi)",n:12},{c:"心",v:"Tâm (Lòng)",n:4},{c:"動",v:"Động (Rung động)",n:11},
+    {c:"神",v:"Thần (Tinh thần)",n:10},{c:"疲",v:"Bì (Mệt)",n:10},{c:"守",v:"Thủ (Giữ)",n:6},{c:"真",v:"Chân (Chân thực)",n:10},
+    {c:"志",v:"Chí (Chí hướng)",n:7},{c:"滿",v:"Mãn (Đầy)",n:14},{c:"逐",v:"Trục (Theo đuổi)",n:11},{c:"物",v:"Vật (Ngoại vật)",n:8},
+    {c:"意",v:"Ý (Ý chí)",n:13},{c:"移",v:"Di (Lay chuyển)",n:11},{c:"堅",v:"Kiên (Vững)",n:11},{c:"持",v:"Trì (Giữ)",n:9},
+    {c:"雅",v:"Nhã (Cao nhã)",n:12},{c:"操",v:"Thao (Tiết tháo)",n:16},{c:"好",v:"Hảo (Tốt)",n:6},{c:"爵",v:"Tước (Chức tước)",n:18},
+    {c:"自",v:"Tự (Tự mình)",n:6},{c:"縻",v:"Mi (Ràng buộc)",n:17},{c:"都",v:"Đô (Kinh đô)",n:11},{c:"邑",v:"Ấp (Đất phong)",n:7},
+    {c:"華",v:"Hoa (Phồn hoa)",n:12},{c:"夏",v:"Hạ (Nước Hoa Hạ)",n:10},{c:"東",v:"Đông (Phía Đông)",n:8},{c:"西",v:"Tây (Phía Tây)",n:6},
+    {c:"二",v:"Nhị (Hai)",n:2},{c:"京",v:"Kinh (Kinh thành)",n:8},{c:"背",v:"Bối (Sau lưng)",n:9},{c:"芒",v:"Mang (Núi Mang)",n:9},
+    {c:"面",v:"Diện (Mặt)",n:9},{c:"洛",v:"Lạc (Sông Lạc)",n:9},{c:"浮",v:"Phù (Nổi)",n:10},{c:"渭",v:"Vị (Sông Vị)",n:12},
+    {c:"據",v:"Cứ (Dựa vào)",n:16},{c:"涇",v:"Kinh (Sông Kinh)",n:10},{c:"宮",v:"Cung (Cung điện)",n:10},{c:"殿",v:"Điện (Điện thờ)",n:13},
+    {c:"盤",v:"Bàn (Xoay quanh)",n:15},{c:"鬱",v:"Uất (Rậm rạp)",n:29},{c:"樓",v:"Lâu (Lầu)",n:15},{c:"觀",v:"Quan (Cung lâu)",n:25},
+    {c:"飛",v:"Phi (Bay)",n:9},{c:"驚",v:"Kinh (Sợ)",n:23},{c:"圖",v:"Đồ (Bản đồ)",n:14},{c:"寫",v:"Tả (Vẽ)",n:15},
+    {c:"禽",v:"Cầm (Thú)",n:13},{c:"獸",v:"Thú (Muông thú)",n:19},{c:"畫",v:"Họa (Vẽ)",n:12},{c:"彩",v:"Thái (Màu sắc)",n:11},
+    {c:"仙",v:"Tiên (Tiên nhân)",n:5},{c:"靈",v:"Linh (Linh thiêng)",n:24},{c:"丙",v:"Bính (Sáng)",n:5},{c:"舍",v:"Xá (Nhà)",n:8},
+    {c:"傍",v:"Bàng (Bên cạnh)",n:12},{c:"啟",v:"Khải (Mở)",n:11},{c:"甲",v:"Giáp (Thứ nhất)",n:5},{c:"帳",v:"Trướng (Màn)",n:11},
+    {c:"對",v:"Đối (Đối diện)",n:14},{c:"楹",v:"Doanh (Cột nhô)",n:13},{c:"肆",v:"Tứ (Bày)",n:13},{c:"筵",v:"Diên (Tiệc)",n:13},
+    {c:"設",v:"Thiết (Bày)",n:11},{c:"席",v:"Tịch (Chiếu)",n:10},{c:"鼓",v:"Cổ (Trống)",n:13},{c:"瑟",v:"Sắt (Đàn sắt)",n:13},
+    {c:"吹",v:"Xuy (Thổi)",n:7},{c:"笙",v:"Sanh (Khèn)",n:11},{c:"陞",v:"Thăng (Lên)",n:10},{c:"階",v:"Giai (Bậc thang)",n:12},
+    {c:"納",v:"Nạp (Thu)",n:10},{c:"陛",v:"Bệ (Thềm vua)",n:11},{c:"弁",v:"Biện (Mũ)",n:5},{c:"轉",v:"Chuyển (Quay)",n:18},
+    {c:"疑",v:"Nghi (Ngờ)",n:14},{c:"星",v:"Tinh (Sao)",n:9},{c:"右",v:"Hữu (Bên phải)",n:5},{c:"通",v:"Thông (Thông qua)",n:11},
+    {c:"廣",v:"Quảng (Rộng)",n:15},{c:"內",v:"Nội (Trong)",n:4},{c:"左",v:"Tả (Bên trái)",n:5},{c:"達",v:"Đạt (Đến)",n:13},
+    {c:"承",v:"Thừa (Vâng)",n:8},{c:"明",v:"Minh (Sáng)",n:8},{c:"既",v:"Ký (Đã)",n:9},{c:"集",v:"Tập (Họp)",n:12},
+    {c:"墳",v:"Phần (Gò)",n:15},{c:"典",v:"Điển (Sách quý)",n:8},{c:"亦",v:"Diệc (Cũng)",n:6},{c:"聚",v:"Tụ (Nhóm)",n:14},
+    {c:"群",v:"Quần (Bầy)",n:13},{c:"英",v:"Anh (Tài giỏi)",n:9},{c:"杜",v:"Đỗ (Họ Đỗ)",n:7},{c:"稿",v:"Phác (Bản thảo)",n:15},
+    {c:"漆",v:"Tất (Sơn)",n:14},{c:"書",v:"Thư (Sách)",n:10},{c:"壁",v:"Bích (Tường)",n:16},{c:"經",v:"Kinh (Sách kinh)",n:13},
+    {c:"府",v:"Phủ (Dinh thự)",n:8},{c:"羅",v:"La (Bày hàng)",n:19},{c:"將",v:"Tướng (Tướng quân)",n:11},{c:"相",v:"Tướng (Tướng quốc)",n:9},
+    {c:"路",v:"Lộ (Đường)",n:13},{c:"俠",v:"Hiệp (Hiệp sĩ)",n:9},{c:"槐",v:"Hòe (Cây hòe)",n:13},{c:"卿",v:"Khanh (Quan lớn)",n:12},
+    {c:"戶",v:"Hộ (Cửa)",n:4},{c:"封",v:"Phong (Ban)",n:9},{c:"八",v:"Bát (Tám)",n:2},{c:"縣",v:"Huyện (Quận huyện)",n:16},
+    {c:"家",v:"Gia (Nhà)",n:10},{c:"給",v:"Cấp (Cung cấp)",n:12},{c:"千",v:"Thiên (Ngàn)",n:3},{c:"兵",v:"Binh (Lính)",n:7},
+    {c:"高",v:"Cao (Cao lớn)",n:10},{c:"冠",v:"Quan (Mũ)",n:9},{c:"陪",v:"Bồi (Theo hầu)",n:11},{c:"乘",v:"Thừa (Xe)",n:10},
+    {c:"驅",v:"Khu (Ruổi)",n:21},{c:"轂",v:"Cốc (Bánh xe)",n:17},{c:"振",v:"Chấn (Rung)",n:10},{c:"纓",v:"Anh (Giải mũ)",n:23},
+    {c:"世",v:"Thế (Đời)",n:5},{c:"祿",v:"Lộc (Bổng lộc)",n:12},{c:"侈",v:"Xỉ (Giàu sang)",n:8},{c:"富",v:"Phú (Giàu)",n:12},
+    {c:"車",v:"Xa (Xe)",n:7},{c:"駕",v:"Giá (Ngựa xe)",n:15},{c:"肥",v:"Phì (Béo)",n:8},{c:"輕",v:"Khinh (Nhẹ)",n:14},
+    {c:"策",v:"Sách (Thẻ)",n:12},{c:"功",v:"Công (Công lao)",n:5},{c:"茂",v:"Mậu (Xanh tốt)",n:9},{c:"實",v:"Thực (Có thật)",n:14},
+    {c:"勒",v:"Lặc (Khắc)",n:11},{c:"碑",v:"Bi (Bia đá)",n:13},{c:"刻",v:"Khắc (Chạm)",n:8},{c:"銘",v:"Minh (Ghi khắc)",n:14},
+    {c:"磻",v:"Bàn (Sông Bàn)",n:15},{c:"溪",v:"Khê (Khe nước)",n:13},{c:"伊",v:"Y (Sông Y)",n:6},{c:"尹",v:"Doãn (Quan Doãn)",n:4},
+    {c:"佐",v:"Tả (Giúp)",n:7},{c:"時",v:"Thời (Thời thế)",n:10},{c:"阿",v:"A (Gò cao)",n:8},{c:"衡",v:"Hành (Cái cân)",n:16},
+    {c:"奄",v:"Yêm (Bỗng nhiên)",n:8},{c:"宅",v:"Trạch (Nhà ở)",n:6},{c:"曲",v:"Khúc (Cong)",n:6},{c:"阜",v:"Phụ (Gò đất)",n:8},
+    {c:"微",v:"Vi (Nhỏ)",n:13},{c:"旦",v:"Đán (Sáng sớm)",n:5},{c:"孰",v:"Thục (Ai)",n:11},{c:"營",v:"Doanh (Xây dựng)",n:17},
+    {c:"桓",v:"Hoàn (Hoàn Công)",n:10},{c:"匡",v:"Khuông (Giúp)",n:6},{c:"合",v:"Hợp (Hợp)",n:6},{c:"濟",v:"Tế (Cứu giúp)",n:17},
+    {c:"弱",v:"Nhược (Yếu)",n:10},{c:"扶",v:"Phù (Giúp đỡ)",n:7},{c:"傾",v:"Khuynh (Nghiêng)",n:13},{c:"綺",v:"Khỉ (Đẹp)",n:14},
+    {c:"回",v:"Hồi (Quay lại)",n:6},{c:"漢",v:"Hán (Nhà Hán)",n:14},{c:"惠",v:"Huệ (Ơn huệ)",n:12},{c:"說",v:"Thuyết (Nói)",n:14},
+    {c:"感",v:"Cảm (Cảm động)",n:13},{c:"武",v:"Võ (Võ thuật)",n:8},{c:"丁",v:"Đinh (Họ Đinh)",n:2},{c:"俊",v:"Tuấn (Tài giỏi)",n:9},
+    {c:"乂",v:"Nghệ (Cai trị)",n:4},{c:"密",v:"Mật (Kín)",n:11},{c:"勿",v:"Vật (Chớ)",n:4},{c:"多",v:"Đa (Nhiều)",n:6},
+    {c:"士",v:"Sĩ (Người giỏi)",n:3},{c:"實",v:"Thực (Đầy đủ)",n:14},{c:"寧",v:"Ninh (Yên)",n:14},{c:"晉",v:"Tấn (Nhà Tấn)",n:10},
+    {c:"楚",v:"Sở (Nước Sở)",n:13},{c:"更",v:"Canh (Thay đổi)",n:7},{c:"霸",v:"Bá (Xưng bá)",n:21},{c:"趙",v:"Triệu (Nước Triệu)",n:14},
+    {c:"魏",v:"Ngụy (Nước Ngụy)",n:18},{c:"困",v:"Khốn (Khó khăn)",n:7},{c:"橫",v:"Hoành (Ngang)",n:15},{c:"假",v:"Giả (Mượn)",n:11},
+    {c:"途",v:"Đồ (Đường)",n:10},{c:"滅",v:"Diệt (Mất)",n:13},{c:"虢",v:"Quắc (Nước Quắc)",n:15},{c:"踐",v:"Tiễn (Giẫm)",n:15},
+    {c:"土",v:"Thổ (Đất)",n:3},{c:"會",v:"Hội (Họp)",n:13},{c:"盟",v:"Minh (Thề)",n:13},{c:"何",v:"Hà (Cái gì)",n:7},
+    {c:"遵",v:"Tuân (Theo)",n:15},{c:"約",v:"Ước (Giao ước)",n:9},{c:"法",v:"Pháp (Pháp luật)",n:8},{c:"韓",v:"Hàn (Họ Hàn)",n:17},
+    {c:"弊",v:"Tệ (Hại)",n:15},{c:"煩",v:"Phiền (Rắc rối)",n:13},{c:"刑",v:"Hình (Hình phạt)",n:6},{c:"起",v:"Khởi (Nổi lên)",n:10},
+    {c:"翦",v:"Tiễn (Cắt đứt)",n:15},{c:"頗",v:"Phả (Hơi)",n:14},{c:"牧",v:"Mục (Chăn nuôi)",n:8},{c:"用",v:"Dụng (Dụng dùng)",n:5},
+    {c:"軍",v:"Quân (Quân đội)",n:9},{c:"精",v:"Tinh (Giỏi)",n:14},{c:"宣",v:"Tuyên (Rộng)",n:9},{c:"威",v:"Uy (Oai)",n:9},
+    {c:"砂",v:"Sa (Cát)",n:9},{c:"漠",v:"Mạc (Sa mạc)",n:14},{c:"馳",v:"Trì (Chạy nhanh)",n:13},{c:"誉",v:"Dự (Tiếng vang)",n:21},
+    {c:"丹",v:"Đan (Màu đỏ)",n:4},{c:"青",v:"Thanh (Màu xanh)",n:8},{c:"九州",v:"Cửu Châu (9 châu)",n:8},{c:"百郡",v:"Bách Quận (100 quận)",n:15},
+    {c:"秦",v:"Tần (Nước Tần)",n:10},{c:"嶺",v:"Lĩnh (Núi cao)",n:17},{c:"雁",v:"Nhạn (Chim nhạn)",n:12},{c:"門",v:"Môn (Cửa)",n:8},
+    {c:"紫",v:"Tử (Màu tím)",n:12},{c:"塞",v:"Tái (Biên giới)",n:13},{c:"雞",v:"Kê (Con gà)",n:18},{c:"田",v:"Điền (Ruộng)",n:5},
+    {c:"赤",v:"Xích (Đỏ)",n:7},{c:"城",v:"Thành (Thành quách)",n:10},{c:"昆",v:"Côn (Anh em)",n:8},{c:"池",v:"Trì (Ao)",n:6},
+    {c:"碣",v:"Kiệt (Bia đá)",n:14},{c:"石",v:"Thạch (Đá)",n:5},{c:"鉅",v:"Cự (Rất lớn)",n:13},{c:"野",v:"Dã (Cánh đồng)",n:11},
+    {c:"洞",v:"Động (Hang động)",n:9},{c:"庭",v:"Đình (Sân)",n:10},{c:"曠",v:"Khoáng (Rộng)",n:18},{c:"遠",v:"Viễn (Xa)",n:13},
+    {c:"綿",v:"Miên (Dài)",n:14},{c:"邈",v:"Mạc (Xa xăm)",n:17},{c:"岩",v:"Nham (Núi đá)",n:8},{c:"岫",v:"Hựu (Hang núi)",n:8},
+    {c:"杳",v:"Yểu (Mờ mịt)",n:8},{c:"冥",v:"Minh (U tối)",n:10},{c:"治",v:"Trị (Cai trị)",n:8},{c:"本",v:"Bổn (Gốc)",n:5},
+    {c:"於",v:"Ư (Ở tại)",n:8},{c:"農",v:"Nông (Nông nghiệp)",n:13},{c:"務",v:"Vụ (Công việc)",n:11},{c:"茲",v:"Tư (Này)",n:9},
+    {c:"稼",v:"Giá (Cấy)",n:15},{c:"穡",v:"Sắc (Gặt)",n:18},{c:"俶",v:"Thục (Bắt đầu)",n:10},{c:"載",v:"Tái (Năm)",n:13},
+    {c:"南",v:"Nam (Phía Nam)",n:9},{c:"畝",v:"Mẫu (Sào ruộng)",n:10},{c:"我",v:"Ngã (Ta)",n:7},{c:"藝",v:"Nghệ (Trồng trọt)",n:19},
+    {c:"黍",v:"Thử (Lúa nếp)",n:12},{c:"稷",v:"Tắc (Lúa tẻ)",n:15},{c:"稅",v:"Thuế (Nộp thuế)",n:12},{c:"熟",v:"Thục (Chín)",n:15},
+    {c:"貢",v:"Cống (Dâng)",n:10},{c:"新",v:"Tân (Mới)",n:13},{c:"勸",v:"Khuyến (Khuyên)",n:20},{c:"賞",v:"Thưởng (Thưởng)",n:15},
+    {c:"黜",v:"Truất (Đuổi)",n:17},{c:"陟",v:"Trắc (Thăng)",n:10},{c:"孟",v:"Mạnh (Họ Mạnh)",n:8},{c:"軻",v:"Kha (Tên Kha)",n:12},
+    {c:"敦",v:"Đôn (Đôn hậu)",n:12},{c:"素",v:"Tố (Trắng sạch)",n:10},{c:"史",v:"Sử (Sử sách)",n:5},{c:"魚",v:"Ngư (Họ Ngư)",n:11},
+    {c:"秉",v:"Bỉnh (Giữ)",n:8},{c:"直",v:"Trực (Thẳng)",n:8},{c:"庶",v:"Thứ (Gần)",n:11},{c:"幾",v:"Kỷ (Mong sao)",n:12},
+    {c:"中",v:"Trung (Ở giữa)",n:4},{c:"庸",v:"Dung (Thường)",n:11},{c:"勞",v:"Lao (Vất vả)",n:12},{c:"謙",v:"Khiêm (Khiêm tốn)",n:17},
+    {c:"謹",v:"Cẩn (Cẩn thận)",n:17},{c:"敕",v:"Sắc (Răn bảo)",n:9},{c:"聆",v:"Linh (Nghe)",n:11},{c:"音",v:"Âm (Tiếng)",n:9},
+    {c:"察",v:"Sát (Xem xét)",n:14},{c:"理",v:"Lý (Lẽ phải)",n:11},{c:"鑒",v:"Giám (Gương soi)",n:22},{c:"貌",v:"Mạo (Dáng vẻ)",n:14},
+    {c:"辨",v:"Biện (Phân biệt)",n:16},{c:"色",v:"Sắc (Màu sắc)",n:6},{c:"貽",v:"Di (Để lại)",n:12},{c:"厥",v:"Quyết (Của họ)",n:12},
+    {c:"嘉",v:"Gia (Tốt đẹp)",n:14},{c:"猷",v:"Mưu (Mưu kế)",n:13},{c:"勉",v:"Miễn (Cố gắng)",n:10},{c:"其",v:"Kỳ (Hãy)",n:8},
+    {c:"祗",v:"Chi (Kính trọng)",n:10},{c:"植",v:"Thực (Dựng lên)",n:12},{c:"省",v:"Tỉnh (Xét mình)",n:9},{c:"躬",v:"Cung (Thân mình)",n:10},
+    {c:"譏",v:"Cơ (Chê cười)",n:18},{c:"誡",v:"Giới (Răn bảo)",n:14},{c:"寵",v:"Sủng (Yêu quý)",n:19},{c:"增",v:"Tăng (Thêm)",n:15},
+    {c:"抗",v:"Kháng (Ngăn)",n:8},{c:"極",v:"Cực (Hết mức)",n:13},{c:"殆",v:"Đãi (Nguy hại)",n:9},{c:"辱",v:"Nhục (Xấu hổ)",n:10},
+    {c:"近",v:"Cận (Gần)",n:8},{c:"恥",v:"Sỉ (Hổ thẹn)",n:10},{c:"林",v:"Lâm (Rừng)",n:8},{c:"皋",v:"Gao (Bờ nước)",n:10},
+    {c:"幸",v:"Hạnh (May)",n:8},{c:"即",v:"Tức (Đến ngay)",n:7},{c:"兩",v:"Lưỡng (Hai)",n:8},{c:"疏",v:"Sơ (Họ Sơ)",n:12},
+    {c:"見",v:"Kiến (Thấy)",n:7},{c:"機",v:"Cơ (Thời cơ)",n:16},{c:"解",v:"Giải (Cởi bỏ)",n:13},{c:"組",v:"Tổ (Dây ấn)",n:11},
+    {c:"誰",v:"Thùy (Ai)",n:15},{c:"逼",v:"Bức (Ép)",n:12},{c:"索",v:"Sách (Tìm)",n:10},{c:"居",v:"Cư (Ở)",n:8},
+    {c:"閒",v:"Nhàn (Rảnh rỗi)",n:12},{c:"沈",v:"Trầm (Lặng lẽ)",n:7},{c:"默",v:"Mặc (Yên lặng)",n:16},{c:"寂",v:"Tịch (Vắng)",n:11},
+    {c:"寥",v:"Liêu (Trống trải)",n:14},{c:"求",v:"Cầu (Tìm)",n:7},{c:"古",v:"Cổ (Xưa)",n:5},{c:"尋",v:"Tầm (Tìm kiếm)",n:12},
+    {c:"論",v:"Luận (Bàn)",n:15},{c:"散",v:"Tán (Giải trí)",n:12},{c:"慮",v:"Lự (Lo nghĩ)",n:15},{c:"逍",v:"Tiêu (Thong dong)",n:10},
+    {c:"遙",v:"Dao (Xa xăm)",n:13},{c:"欣",v:"Hân (Vui)",n:8},{c:"奏",v:"Tấu (Thưa)",n:9},{c:"累",v:"Lụy (Vướng bận)",n:11},
+    {c:"遣",v:"Khiển (Đuổi đi)",n:13},{c:"戚",v:"Thích (Buồn)",n:11},{c:"謝",v:"Tạ (Từ biệt)",n:17},{c:"歡",v:"Hoan (Vui)",n:22},
+    {c:"招",v:"Chiêu (Vẫy)",n:8},{c:"渠",v:"Cừ (Ngòi nước)",n:12},{c:"荷",v:"Hà (Cây sen)",n:10},{c:"的",v:"Đích (Rõ ràng)",n:8},
+    {c:"歷",v:"Lịch (Trải qua)",n:16},{c:"園",v:"Viên (Vườn)",n:13},{c:"莽",v:"Mãng (Cỏ rậm)",n:10},{c:"抽",v:"Trừu (Nảy nở)",n:8},
+    {c:"條",v:"Điều (Cành cây)",n:11},{c:"枇",v:"Tỳ (Cây tỳ bà)",n:8},{c:"杷",v:"Bà (Cây tỳ bà)",n:8},{c:"晚",v:"Vãn (Muộn)",n:11},
+    {c:"翠",v:"Thúy (Xanh)",n:14},{c:"梧",v:"Ngô (Cây ngô đồng)",n:11},{c:"桐",v:"Đồng (Cây ngô đồng)",n:10},{c:"早",v:"Tảo (Sớm)",n:6},
+    {c:"凋",v:"Điều (Héo)",n:10},{c:"陳",v:"Trần (Cũ)",n:16},{c:"根",v:"Căn (Rễ)",n:10},{c:"委",v:"Ủy (Rũ bỏ)",n:8},
+    {c:"翳",v:"Ế (Che lấp)",n:17},{c:"落",v:"Lạc (Rụng)",n:12},{c:"葉",v:"Diệp (Lá)",n:12},{c:"飄",v:"Phiêu (Bay)",n:20},
+    {c:"搖",v:"Dao (Rung)",n:13},{c:"遊",v:"Du (Đi chơi)",n:12},{c:"鵾",v:"Côn (Chim côn)",n:19},{c:"獨",v:"Độc (Một mình)",n:16},
+    {c:"運",v:"Vận (Vận chuyển)",n:12},{c:"凌",v:"Lăng (Vượt lên)",n:10},{c:"摩",v:"Ma (Chạm)",n:15},{c:"絳",v:"Giáng (Màu đỏ)",n:12},
+    {c:"霄",v:"Tiêu (Chín tầng mây)",n:15},{c:"耽",v:"Đam (Mê)",n:10},{c:"讀",v:"Độc (Đọc)",n:22},{c:"玩",v:"Ngoạn (Thưởng thức)",n:8},
+    {c:"市",v:"Thị (Chợ)",n:5},{c:"寓",v:"Ngụ (Ở trọ)",n:12},{c:"目",v:"Mục (Mắt)",n:5},{c:"囊",v:"Nang (Túi)",n:22},
+    {c:"箱",v:"Tương (Rương)",n:15},{c:"易",v:"Dị (Dễ dàng)",n:8},{c:"輶",v:"Du (Xe nhẹ)",n:16},{c:"攸",v:"Du (Chỗ)",n:7},
+    {c:"畏",v:"Úy (Sợ)",n:9},{c:"屬",v:"Thuộc (Loài)",n:21},{c:"耳",v:"Nhĩ (Tai)",n:6},{c:"垣",v:"Viên (Tường)",n:9},
+    {c:"具",v:"Cụ (Đầy đủ)",n:8},{c:"膳",v:"Thiện (Bữa ăn)",n:16},{c:"餐",v:"Xan (Ăn)",n:16},{c:"飯",v:"Phạn (Cơm)",n:12},
+    {c:"適",v:"Thích (Vừa khéo)",n:14},{c:"口",v:"Khẩu (Miệng)",n:3},{c:"充",v:"Sung (Đầy)",n:6},{c:"腸",v:"Trường (Ruột)",n:13},
+    {c:"飽",v:"Bão (No)",n:13},{c:"飫",v:"Yêu (Thỏa thuê)",n:12},{c:"烹",v:"Phanh (Nấu)",n:11},{c:"宰",v:"Tể (Mổ thịt)",n:10},
+    {c:"饑",v:"Cơ (Đói)",n:20},{c:"厭",v:"Yếm (Chán)",n:14},{c:"糟",v:"Tao (Bã)",n:17},{c:"糠",v:"Khang (Cám)",n:17}
+];
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function pick(){return HAN_DATA[Math.floor(Math.random()*HAN_DATA.length)]}
+
+let thuong=null,ha=null;
+const btnThuong=document.getElementById("btnThuong");
+const btnHa=document.getElementById("btnHa");
+const thuongChar=document.getElementById("thuongChar");
+const thuongInfo=document.getElementById("thuongInfo");
+const haChar=document.getElementById("haChar");
+const haInfo=document.getElementById("haInfo");
+const resultText=document.getElementById("resultText");
+const copyBox=document.getElementById("copyBox");
+
+btnThuong.onclick=async()=>{
+  btnThuong.disabled=true;
+  thuongChar.innerText="⋯⋯";
+  thuongInfo.innerText="Thổ khí đang định số…";
+  await wait(5000);
+  thuong=pick();
+  thuongChar.innerText=thuong.c;
+  thuongInfo.innerText=`Nghĩa: ${thuong.v} | Số nét: ${thuong.n}`;
+  btnHa.disabled=false;
+}
+
+btnHa.onclick=async()=>{
+  btnHa.disabled=true;
+  haChar.innerText="⋯⋯";
+  haInfo.innerText="Thổ khí đang định số…";
+  await wait(10000);
+  ha=pick();
+  haChar.innerText=ha.c;
+  haInfo.innerText=`Nghĩa: ${ha.v} | Số nét: ${ha.n}`;
+  resultText.value = 
+`QUẺ THƯỢNG:
+${thuong.c} – ${thuong.v} – ${thuong.n} nét
+
+QUẺ HẠ:
+${ha.c} – ${ha.v} – ${ha.n} nét`;
+  copyBox.style.display="block";
+}
+
+function copyResult(){
+  resultText.select();
+  document.execCommand("copy");
+  alert("Đã copy nội dung!");
+}
+</script>
+</body>
+</html>
