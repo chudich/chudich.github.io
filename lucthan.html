@@ -2,48 +2,34 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Liên Hoa Độn - Tra Cứu Lục Thân</title>
+    <title>Liên Hoa Độn - Thuật Toán Chuẩn</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; display: flex; justify-content: center; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
-        select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 8px; background: #e8f4fd; border-left: 5px solid #3498db; min-height: 50px; line-height: 1.6; }
-        .highlight { color: #e74c3c; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #2c3e50; color: #ecf0f1; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #34495e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #f1c40f; text-transform: uppercase; letter-spacing: 2px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 16px; background: #ecf0f1; color: #2c3e50; }
+        #resultBox { margin-top: 25px; padding: 20px; background: #2ecc71; color: #fff; border-radius: 10px; display: none; line-height: 1.7; }
+        .tag { display: inline-block; background: #e67e22; padding: 2px 8px; border-radius: 4px; font-weight: bold; margin: 2px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Tra Cứu Lục Thân</h2>
+<div class="container">
+    <h2>Liên Hoa Độn Lục Thân</h2>
     
-    <div class="group">
-        <label>Giới tính của TA:</label>
-        <select id="gender" onchange="analyze()">
+    <div class="input-group">
+        <label>1. Giới tính của TA:</label>
+        <select id="gender" onchange="runLogic()">
             <option value="nam">Nam</option>
             <option value="nu">Nữ</option>
         </select>
     </div>
 
-    <div class="group">
-        <label>Quẻ đơn của TA:</label>
-        <select id="queTA" onchange="analyze()">
-            <option value="Kim">Kiền (Kim)</option>
-            <option value="Kim">Đoài (Kim)</option>
-            <option value="Hoa">Ly (Hỏa)</option>
-            <option value="Moc">Chấn (Mộc)</option>
-            <option value="Moc">Tốn (Mộc)</option>
-            <option value="Thuy">Khảm (Thủy)</option>
-            <option value="Tho">Khôn (Thổ)</option>
-            <option value="Tho">Cấn (Thổ)</option>
-        </select>
-    </div>
-
-    <div class="group">
-        <label>Chọn Quẻ cần đối ứng:</label>
-        <select id="queDoiUng" onchange="analyze()">
+    <div class="input-group">
+        <label>2. Quẻ đơn của TA:</label>
+        <select id="queTA" onchange="runLogic()">
             <option value="Kim">Kiền / Đoài (Kim)</option>
             <option value="Hoa">Ly (Hỏa)</option>
             <option value="Moc">Chấn / Tốn (Mộc)</option>
@@ -52,69 +38,108 @@
         </select>
     </div>
 
-    <div id="result">Chọn các mục trên để xem kết quả...</div>
+    <div class="input-group">
+        <label>3. Quẻ Đối Ứng (Quẻ đang xét):</label>
+        <select id="queDU" onchange="runLogic()">
+            <option value="Kim">Kiền / Đoài (Kim)</option>
+            <option value="Hoa">Ly (Hỏa)</option>
+            <option value="Moc">Chấn / Tốn (Mộc)</option>
+            <option value="Thuy">Khảm (Thủy)</option>
+            <option value="Tho">Khôn / Cấn (Thổ)</option>
+        </select>
+    </div>
+
+    <div id="resultBox"></div>
 </div>
 
 <script>
-function analyze() {
+const Hanh = {
+    Kim: { sinh: 'Thuy', khac: 'Moc', biKhac: 'Hoa', biSinh: 'Tho' },
+    Thuy: { sinh: 'Moc', khac: 'Hoa', biKhac: 'Tho', biSinh: 'Kim' },
+    Moc: { sinh: 'Hoa', khac: 'Tho', biKhac: 'Kim', biSinh: 'Thuy' },
+    Hoa: { sinh: 'Tho', khac: 'Kim', biKhac: 'Thuy', biSinh: 'Moc' },
+    Tho: { sinh: 'Kim', khac: 'Thuy', biKhac: 'Moc', biSinh: 'Hoa' }
+};
+
+function runLogic() {
     const gender = document.getElementById('gender').value;
-    const hTA = document.getElementById('queTA').value;
-    const hDU = document.getElementById('queDoiUng').value;
-    const res = document.getElementById('result');
-
-    // Xác định mối quan hệ ngũ hành
-    let quanHe = ""; // H, P, T, C, Q
+    const TA = document.getElementById('queTA').value;
+    const DU = document.getElementById('queDU').value;
+    const box = document.getElementById('resultBox');
     
-    if (hTA === hDU) quanHe = "H"; // Ngang vai
-    else if (checkSinh(hDU, hTA)) quanHe = "P"; // DU sinh TA
-    else if (checkSinh(hTA, hDU)) quanHe = "C"; // TA sinh DU
-    else if (checkKhac(hTA, hDU)) quanHe = "T"; // TA khắc DU
-    else if (checkKhac(hDU, hTA)) quanHe = "Q"; // DU khắc TA
+    let members = [];
 
-    let info = "";
+    // --- LOGIC TRUY HỒI THEO QUY TẮC ---
+    
+    // 1. Mẹ (P): Mẹ sinh TA
+    const Me = Hanh[TA].biSinh;
+    if (DU === Me) members.push("Mẹ ruột");
 
+    // 2. Cha (T): Con khắc Cha (TA khắc Cha)
+    const Cha = Hanh[TA].khac;
+    if (DU === Cha) members.push("Cha ruột");
+
+    // 3. Vợ/Chồng (T/Q): Chồng khắc Vợ
     if (gender === 'nam') {
-        switch(quanHe) {
-            case "H": info = "<b>Huynh đệ:</b> Anh chị em ruột, hoặc <span class='highlight'>Bà Sơ Nội</span> (Mẹ của Ông Cố)."; break;
-            case "P": info = "<b>Phụ mẫu:</b> <span class='highlight'>Mẹ ruột</span>, Ông ngoại, hoặc Cố ngoại."; break;
-            case "T": info = "<b>Thê Tài:</b> <span class='highlight'>Vợ</span>, <span class='highlight'>Cha ruột</span>, Ông Cố nội."; break;
-            case "C": info = "<b>Tử Tôn:</b> <span class='highlight'>Bà nội</span> (Mẹ của Cha), cháu chắt."; break;
-            case "Q": info = "<b>Quan Quỷ:</b> <span class='highlight'>Con cái</span>, <span class='highlight'>Ông nội</span>, Bà ngoại."; break;
-        }
+        const Vo = Hanh[TA].khac; // Nam khắc Vợ
+        if (DU === Vo) members.push("Vợ (ngang vai)");
     } else {
-        switch(quanHe) {
-            case "H": info = "<b>Huynh đệ:</b> Anh chị em, <span class='highlight'>Cha chồng</span> (đồng quẻ TA), Bà sơ nội."; break;
-            case "P": info = "<b>Phụ mẫu:</b> <span class='highlight'>Mẹ ruột</span>, Ông ngoại."; break;
-            case "T": info = "<b>Thê Tài:</b> <span class='highlight'>Cha ruột</span>, Ông Cố nội."; break;
-            case "C": info = "<b>Tử Tôn:</b> <span class='highlight'>Con cái</span>, <span class='highlight'>Bà nội</span>."; break;
-            case "Q": info = "<b>Quan Quỷ:</b> <span class='highlight'>Chồng</span>, <span class='highlight'>Bà ngoại</span> (Mẹ của mẹ), Ông nội."; break;
-        }
+        const Chong = Hanh[TA].biKhac; // Chồng khắc Nữ
+        if (DU === Chong) members.push("Chồng");
     }
 
-    res.innerHTML = `Mối quan hệ: <b>${quanHe}</b><br>${info}`;
+    // 4. Con (C/Q):
+    if (gender === 'nam') {
+        const ConNam = Hanh[TA].biKhac; // Con khắc Cha (Nam)
+        if (DU === ConNam) members.push("Con cái");
+    } else {
+        const ConNu = Hanh[TA].sinh; // Nữ sinh Con
+        if (DU === ConNu) members.push("Con cái");
+    }
+
+    // 5. Ông/Bà Nội:
+    const BaNoi = Hanh[Cha].biSinh; // Mẹ sinh Cha
+    if (DU === BaNoi) members.push("Bà Nội");
+    
+    const OngNoi = Hanh[Cha].khac; // Con khắc Cha (Cha khắc Ông Nội)
+    if (DU === OngNoi) members.push("Ông Nội");
+
+    // 6. Ông/Bà Ngoại:
+    const BaNgoai = Hanh[Me].biSinh; // Mẹ sinh Mẹ
+    if (DU === BaNgoai) members.push("Bà Ngoại");
+
+    const OngNgoai = Hanh[Me].khac; // Con khắc Cha (Mẹ khắc Ông Ngoại)
+    if (DU === OngNgoai) members.push("Ông Ngoại");
+
+    // 7. Cha chồng (Dành cho Nữ):
+    if (gender === 'nu') {
+        const Chong = Hanh[TA].biKhac;
+        const ChaChong = Hanh[Chong].khac; // Chồng khắc Cha chồng
+        if (DU === ChaChong) members.push("Cha Chồng (Đồng quẻ TA)");
+    }
+
+    // 8. Đời Cố (Cố nội):
+    const OngCoNoi = Hanh[OngNoi].khac; // Ông nội khắc Ông cố
+    if (DU === OngCoNoi) members.push("Ông Cố Nội");
+    
+    const BaSoNoi = Hanh[OngCoNoi].biSinh; // Mẹ sinh Ông Cố
+    if (DU === BaSoNoi) members.push("Bà Sơ Nội (Đồng quẻ TA)");
+
+    // Hiển thị kết quả
+    if (members.length > 0) {
+        box.style.display = 'block';
+        box.innerHTML = `Quẻ này đối với bạn là:<br><span class="tag">${members.join('</span> <span class="tag">')}</span>`;
+    } else if (TA === DU) {
+        box.style.display = 'block';
+        box.innerHTML = `Quẻ này là <b>Huynh Đệ</b> (Anh chị em, ngang vai)`;
+    } else {
+        box.style.display = 'block';
+        box.innerHTML = "Quẻ này thuộc các đời xa hơn hoặc chưa xác định danh xưng.";
+    }
 }
 
-function checkSinh(a, b) {
-    if (a==="Tho" && b==="Kim") return true;
-    if (a==="Kim" && b==="Thuy") return true;
-    if (a==="Thuy" && b==="Moc") return true;
-    if (a==="Moc" && b==="Hoa") return true;
-    if (a==="Hoa" && b==="Tho") return true;
-    return false;
-}
-
-function checkKhac(a, b) {
-    if (a==="Hoa" && b==="Kim") return true;
-    if (a==="Kim" && b==="Moc") return true;
-    if (a==="Moc" && b==="Tho") return true;
-    if (a==="Tho" && b==="Thuy") return true;
-    if (a==="Thuy" && b==="Hoa") return true;
-    return false;
-}
-
-// Chạy lần đầu
-analyze();
+// Khởi chạy
+runLogic();
 </script>
-
 </body>
 </html>
