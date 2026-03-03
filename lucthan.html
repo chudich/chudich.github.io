@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Liên Hoa Độn - Tra Cứu Lục Thân</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; display: flex; justify-content: center; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 8px; background: #e8f4fd; border-left: 5px solid #3498db; min-height: 50px; line-height: 1.6; }
+        .highlight { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Tra Cứu Lục Thân</h2>
+    
+    <div class="group">
+        <label>Giới tính của TA:</label>
+        <select id="gender" onchange="analyze()">
+            <option value="nam">Nam</option>
+            <option value="nu">Nữ</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label>Quẻ đơn của TA:</label>
+        <select id="queTA" onchange="analyze()">
+            <option value="Kim">Kiền (Kim)</option>
+            <option value="Kim">Đoài (Kim)</option>
+            <option value="Hoa">Ly (Hỏa)</option>
+            <option value="Moc">Chấn (Mộc)</option>
+            <option value="Moc">Tốn (Mộc)</option>
+            <option value="Thuy">Khảm (Thủy)</option>
+            <option value="Tho">Khôn (Thổ)</option>
+            <option value="Tho">Cấn (Thổ)</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label>Chọn Quẻ cần đối ứng:</label>
+        <select id="queDoiUng" onchange="analyze()">
+            <option value="Kim">Kiền / Đoài (Kim)</option>
+            <option value="Hoa">Ly (Hỏa)</option>
+            <option value="Moc">Chấn / Tốn (Mộc)</option>
+            <option value="Thuy">Khảm (Thủy)</option>
+            <option value="Tho">Khôn / Cấn (Thổ)</option>
+        </select>
+    </div>
+
+    <div id="result">Chọn các mục trên để xem kết quả...</div>
+</div>
+
+<script>
+function analyze() {
+    const gender = document.getElementById('gender').value;
+    const hTA = document.getElementById('queTA').value;
+    const hDU = document.getElementById('queDoiUng').value;
+    const res = document.getElementById('result');
+
+    // Xác định mối quan hệ ngũ hành
+    let quanHe = ""; // H, P, T, C, Q
+    
+    if (hTA === hDU) quanHe = "H"; // Ngang vai
+    else if (checkSinh(hDU, hTA)) quanHe = "P"; // DU sinh TA
+    else if (checkSinh(hTA, hDU)) quanHe = "C"; // TA sinh DU
+    else if (checkKhac(hTA, hDU)) quanHe = "T"; // TA khắc DU
+    else if (checkKhac(hDU, hTA)) quanHe = "Q"; // DU khắc TA
+
+    let info = "";
+
+    if (gender === 'nam') {
+        switch(quanHe) {
+            case "H": info = "<b>Huynh đệ:</b> Anh chị em ruột, hoặc <span class='highlight'>Bà Sơ Nội</span> (Mẹ của Ông Cố)."; break;
+            case "P": info = "<b>Phụ mẫu:</b> <span class='highlight'>Mẹ ruột</span>, Ông ngoại, hoặc Cố ngoại."; break;
+            case "T": info = "<b>Thê Tài:</b> <span class='highlight'>Vợ</span>, <span class='highlight'>Cha ruột</span>, Ông Cố nội."; break;
+            case "C": info = "<b>Tử Tôn:</b> <span class='highlight'>Bà nội</span> (Mẹ của Cha), cháu chắt."; break;
+            case "Q": info = "<b>Quan Quỷ:</b> <span class='highlight'>Con cái</span>, <span class='highlight'>Ông nội</span>, Bà ngoại."; break;
+        }
+    } else {
+        switch(quanHe) {
+            case "H": info = "<b>Huynh đệ:</b> Anh chị em, <span class='highlight'>Cha chồng</span> (đồng quẻ TA), Bà sơ nội."; break;
+            case "P": info = "<b>Phụ mẫu:</b> <span class='highlight'>Mẹ ruột</span>, Ông ngoại."; break;
+            case "T": info = "<b>Thê Tài:</b> <span class='highlight'>Cha ruột</span>, Ông Cố nội."; break;
+            case "C": info = "<b>Tử Tôn:</b> <span class='highlight'>Con cái</span>, <span class='highlight'>Bà nội</span>."; break;
+            case "Q": info = "<b>Quan Quỷ:</b> <span class='highlight'>Chồng</span>, <span class='highlight'>Bà ngoại</span> (Mẹ của mẹ), Ông nội."; break;
+        }
+    }
+
+    res.innerHTML = `Mối quan hệ: <b>${quanHe}</b><br>${info}`;
+}
+
+function checkSinh(a, b) {
+    if (a==="Tho" && b==="Kim") return true;
+    if (a==="Kim" && b==="Thuy") return true;
+    if (a==="Thuy" && b==="Moc") return true;
+    if (a==="Moc" && b==="Hoa") return true;
+    if (a==="Hoa" && b==="Tho") return true;
+    return false;
+}
+
+function checkKhac(a, b) {
+    if (a==="Hoa" && b==="Kim") return true;
+    if (a==="Kim" && b==="Moc") return true;
+    if (a==="Moc" && b==="Tho") return true;
+    if (a==="Tho" && b==="Thuy") return true;
+    if (a==="Thuy" && b==="Hoa") return true;
+    return false;
+}
+
+// Chạy lần đầu
+analyze();
+</script>
+
+</body>
+</html>
