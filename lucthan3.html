@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Liên Hoa Độn v3.1 - Chú Thích Phả Hệ Ngoại</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+        .card { max-width: 700px; margin: auto; background: #1e293b; padding: 25px; border-radius: 15px; border: 1px solid #334155; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        h2 { text-align: center; color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+        label { font-weight: bold; color: #94a3b8; display: block; margin-top: 15px; }
+        select { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: none; background: #334155; color: white; font-size: 16px; }
+        #res { margin-top: 25px; padding: 20px; background: #0f172a; border-left: 5px solid #38bdf8; border-radius: 10px; line-height: 2; display: none; }
+        .tag { display: inline-block; background: #0369a1; color: white; padding: 3px 12px; border-radius: 6px; margin: 4px; font-weight: 600; font-size: 0.85em; }
+        .category { color: #38bdf8; font-weight: bold; margin-top: 15px; border-bottom: 1px solid #334155; padding-bottom: 5px; font-size: 1.1em; }
+        .logic-note { font-size: 0.8em; color: #64748b; margin-top: 20px; text-align: center; border-top: 1px solid #334155; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Liên Hoa Độn Lục Thân v3.1</h2>
+
+    <label>Giới tính TA:</label>
+    <select id="gender" onchange="run()"><option value="nam">Nam</option><option value="nu">Nữ</option></select>
+
+    <label>Quẻ đơn của TA:</label>
+    <select id="queTA" onchange="run()">
+        <option value="Kiền">Kiền (Kim Dương)</option><option value="Đoài">Đoài (Kim Âm)</option>
+        <option value="Ly">Ly (Hỏa)</option><option value="Chấn">Chấn (Mộc Dương)</option>
+        <option value="Tốn">Tốn (Mộc Âm)</option><option value="Khảm">Khảm (Thủy)</option>
+        <option value="Khôn">Khôn (Thổ Âm)</option><option value="Cấn">Cấn (Thổ Dương)</option>
+    </select>
+
+    <label>Quẻ đối ứng:</label>
+    <select id="queDU" onchange="run()">
+        <option value="Kim">Kiền / Đoài (Kim)</option><option value="Hoa">Ly (Hỏa)</option>
+        <option value="Moc">Chấn / Tốn (Mộc)</option><option value="Thuy">Khảm (Thủy)</option>
+        <option value="Tho">Khôn / Cấn (Thổ)</option>
+    </select>
+
+    <div id="res"></div>
+    <div class="logic-note">Logic: Con khắc Cha | Chồng khắc Vợ | Mẹ sinh Con</div>
+</div>
+
+<script>
+const HMap = { 'Kiền':'Kim','Đoài':'Kim','Ly':'Hoa','Chấn':'Moc','Tốn':'Moc','Khảm':'Thuy','Khôn':'Tho','Cấn':'Tho' };
+const HanhLogic = {
+    Kim: { khac: 'Moc', biKhac: 'Hoa', sinh: 'Thuy', biSinh: 'Tho' },
+    Thuy: { khac: 'Hoa', biKhac: 'Tho', sinh: 'Moc', biSinh: 'Kim' },
+    Moc: { khac: 'Tho', biKhac: 'Kim', sinh: 'Hoa', biSinh: 'Thuy' },
+    Hoa: { khac: 'Kim', biKhac: 'Thuy', sinh: 'Tho', biSinh: 'Moc' },
+    Tho: { khac: 'Thuy', biKhac: 'Moc', sinh: 'Kim', biSinh: 'Hoa' }
+};
+
+function run() {
+    const gender = document.getElementById('gender').value;
+    const qTA = document.getElementById('queTA').value;
+    const hTA = HMap[qTA];
+    const hDU = document.getElementById('queDU').value;
+    const box = document.getElementById('res');
+    let cat = { H: [], P: [], Q: [], C: [], T: [] };
+
+    const hP = HanhLogic[hTA].biSinh, hH = hTA, hC = HanhLogic[hTA].sinh, hT = HanhLogic[hTA].khac, hQ = HanhLogic[hTA].biKhac;
+
+    // 1. NHÓM HUYNH (H)
+    if(hDU === hH) {
+        cat.H.push("TA (Bản thể)", "Huynh đệ", "Bà Cố (Mẹ Bà Nội)", "Dượng (Chồng Cô)", "Ông Cố Ngoại (Cha của Bà Ngoại)", "Mẹ của Ông Ngoại", "Con rể Cậu", "Cháu nội Cậu");
+    }
+    // 2. NHÓM PHỤ MẪU (P)
+    if(hDU === hP) {
+        cat.P.push("Mẹ ruột", "Ông Nội", "Bác gái / Thím", "Cậu / Dì");
+    }
+    // 3. NHÓM QUAN QUỶ (Q)
+    if(hDU === hQ) {
+        if(gender === 'nam') cat.Q.push("Con cái"); else cat.Q.push("Chồng");
+        cat.Q.push("Ông Cố (Cha Bà Nội)", "Bà Cố (Mẹ Ông Nội)", "Cha của Ông Ngoại", "Bà Ngoại", "Con rể Dì", "Cháu ngoại Cậu");
+    }
+    // 4. NHÓM CHI HAO / TỬ TÔN (C)
+    if(hDU === hC) {
+        if(gender === 'nu') cat.C.push("Con cái");
+        cat.C.push("Bà Nội", "Ông Ngoại", "Mợ (Vợ Cậu)", "Cháu ngoại Dì");
+    }
+    // 5. NHÓM THÊ TÀI (T)
+    if(hDU === hT) {
+        if(gender === 'nam') cat.T.push("Vợ");
+        cat.T.push("Cha ruột", "Cô ruột", "Bà Cố (Mẹ của Bà Ngoại)", "Dượng (Chồng Dì)", "Con cái Cậu");
+    }
+
+    box.style.display = 'block';
+    let html = "";
+    const labels = { H: "Huynh đệ (H)", P: "Phụ mẫu (P)", Q: "Quan quỷ (Q)", C: "Chi hao / Tử tôn (C)", T: "Thê tài (T)" };
+    for (let k in cat) if (cat[k].length > 0) {
+        html += `<div class="category">${labels[k]}</div><div>${[...new Set(cat[k])].map(i => `<span class="tag">${i}</span>`).join('')}</div>`;
+    }
+    box.innerHTML = html || "Chưa xác định.";
+}
+run();
+</script>
+</body>
+</html>
