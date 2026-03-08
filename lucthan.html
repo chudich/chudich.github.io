@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Liên Hoa Độn v2 - Toàn Hệ Nội Ngoại</title>
+    <title>Liên Hoa Độn v2 - Hiệu Đính</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
         .card { max-width: 650px; margin: auto; background: #1e293b; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; }
@@ -26,7 +26,7 @@
         <option value="nu">Nữ</option>
     </select>
 
-    <label>Quẻ đơn của TA:</label>
+    <label>Quẻ đơn của TA (Bản thể):</label>
     <select id="queTA" onchange="run()">
         <option value="Kiền">Kiền (Kim Dương)</option>
         <option value="Đoài">Đoài (Kim Âm)</option>
@@ -38,25 +38,23 @@
         <option value="Cấn">Cấn (Thổ Dương)</option>
     </select>
 
-    <label>Quẻ đối ứng cần tìm:</label>
+    <label>Quẻ đối ứng cần kiểm tra:</label>
     <select id="queDU" onchange="run()">
-        <option value="Kiền">Kiền / Đoài (Kim)</option>
-        <option value="Ly">Ly (Hỏa)</option>
-        <option value="Chấn / Tốn">Chấn / Tốn (Mộc)</option>
-        <option value="Khảm">Khảm (Thủy)</option>
-        <option value="Khôn / Cấn">Khôn / Cấn (Thổ)</option>
+        <option value="Kim">Kiền / Đoài (Kim)</option>
+        <option value="Hoa">Ly (Hỏa)</option>
+        <option value="Moc">Chấn / Tốn (Mộc)</option>
+        <option value="Thuy">Khảm (Thủy)</option>
+        <option value="Tho">Khôn / Cấn (Thổ)</option>
     </select>
 
     <div id="res"></div>
-    <div class="desc">Quy tắc: Con khắc Cha | Chồng khắc Vợ | Mẹ sinh Con</div>
+    <div class="desc">Dựa trên dữ liệu soạn thảo: Con khắc Cha | Chồng khắc Vợ | Mẹ sinh Con</div>
 </div>
 
 <script>
 const HanhMap = {
-    'Kiền': 'Kim', 'Đoài': 'Kim',
-    'Ly': 'Hoa',
-    'Chấn': 'Moc', 'Tốn': 'Moc',
-    'Khảm': 'Thuy',
+    'Kiền': 'Kim', 'Đoài': 'Kim', 'Ly': 'Hoa',
+    'Chấn': 'Moc', 'Tốn': 'Moc', 'Khảm': 'Thuy',
     'Khôn': 'Tho', 'Cấn': 'Tho'
 };
 
@@ -72,64 +70,58 @@ function run() {
     const gender = document.getElementById('gender').value;
     const qTA = document.getElementById('queTA').value;
     const hTA = HanhMap[qTA];
-    
-    // Xử lý quẻ đối ứng (lấy hành)
-    const rawDU = document.getElementById('queDU').value;
-    let hDU = "";
-    if(rawDU.includes("Kim")) hDU = "Kim";
-    else if(rawDU.includes("Hỏa")) hDU = "Hoa";
-    else if(rawDU.includes("Mộc")) hDU = "Moc";
-    else if(rawDU.includes("Thủy")) hDU = "Thuy";
-    else if(rawDU.includes("Thổ")) hDU = "Tho";
+    const hDU = document.getElementById('queDU').value; // Lấy giá trị hành đối ứng
 
     const box = document.getElementById('res');
     let categories = { H: [], P: [], Q: [], C: [], T: [] };
 
-    // --- XÁC ĐỊNH HÀNH CỦA LỤC THÂN ---
-    const pHanh = HanhLogic[hTA].biSinh; // P sinh TA
-    const hHanh = hTA;                   // Huynh đồng hành TA
-    const cHanh = HanhLogic[hTA].sinh;   // TA sinh C
-    const tHanh = HanhLogic[hTA].khac;   // TA khắc T
-    const qHanh = HanhLogic[hTA].biKhac; // Q khắc TA
+    // --- XÁC ĐỊNH HÀNH CỦA LỤC THÂN THEO QUY TẮC ---
+    const pHanh = HanhLogic[hTA].biSinh; 
+    const hHanh = hTA;                   
+    const cHanh = HanhLogic[hTA].sinh;   
+    const tHanh = HanhLogic[hTA].khac;   
+    const qHanh = HanhLogic[hTA].biKhac; 
 
-    // --- 1. NHÓM HUYNH (H) ---
+    // --- TRUY XUẤT DỮ LIỆU ---
+
+    // 1. NHÓM HUYNH (H)
     if(hDU === hHanh) {
         if(qTA === 'Ly' || qTA === 'Khảm') {
             categories.H.push("TA (Huynh ẩn bên trong)");
         } else {
-            // Kiểm tra xem là chính bản thể hay là quẻ cặp (Huynh lộ)
             const Caps = {'Kiền':'Đoài','Đoài':'Kiền','Chấn':'Tốn','Tốn':'Chấn','Khôn':'Cấn','Cấn':'Khôn'};
-            if(rawDU.includes(qTA)) categories.H.push("TA (Bản thể)");
-            if(rawDU.includes(Caps[qTA])) categories.H.push("Huynh đệ (H - Lộ)");
+            const rawText = document.getElementById('queDU').options[document.getElementById('queDU').selectedIndex].text;
+            if(rawText.includes(qTA)) categories.H.push("TA (Bản thể)");
+            if(rawText.includes(Caps[qTA])) categories.H.push("Huynh đệ (H - Lộ)");
         }
-        categories.H.push("Ông Cố Nội (Cha của Ông Nội)", "Bà Sơ Nội", "Ông Cố Ngoại (Cha Bà Ngoại)", "Mẹ của Ông Ngoại", "Anh/Chị/Em họ (Con của Dì/Cậu)", "Con rể của Cậu", "Cháu nội của Cậu");
+        categories.H.push("Ông Cố (Cha Bà Ngoại)", "Mẹ của Ông Ngoại", "Anh/Chị/Em họ (Con Dì/Cậu)", "Con rể của Cậu", "Cháu nội của Cậu", "Ông Cố Nội", "Bà Sơ Nội");
     }
 
-    // --- 2. NHÓM PHỤ MẪU (P) ---
+    // 2. NHÓM PHỤ MẪU (P)
     if(hDU === pHanh) {
-        categories.P.push("Mẹ ruột", "Bà Nội", "Cậu / Dì ruột", "Con dâu của Cậu");
+        categories.P.push("Mẹ ruột", "Cậu / Dì ruột", "Con dâu của Cậu", "Bà Nội");
     }
 
-    // --- 3. NHÓM QUAN QUỶ (Q) ---
+    // 3. NHÓM QUAN QUỶ (Q)
     if(hDU === qHanh) {
         if(gender === 'nam') categories.Q.push("Con cái");
         else categories.Q.push("Chồng");
-        categories.Q.push("Bà Ngoại", "Ông Sơ Nội", "Cha của Ông Ngoại", "Cháu ngoại của Cậu", "Cháu nội của Dì", "Con rể của Dì");
+        categories.Q.push("Bà Ngoại", "Cha của Ông Ngoại", "Cháu ngoại của Cậu", "Cháu nội của Dì", "Con rể của Dì", "Ông Sơ Nội");
     }
 
-    // --- 4. NHÓM CHI HAO / TỬ TÔN (C) ---
+    // 4. NHÓM CHI HAO / TỬ TÔN (C)
     if(hDU === cHanh) {
         if(gender === 'nu') categories.C.push("Con cái");
-        categories.C.push("Ông Nội", "Ông Ngoại", "Mợ (Vợ của Cậu)", "Cháu ngoại của Dì");
+        categories.C.push("Ông Ngoại", "Mợ (Vợ Cậu)", "Cháu ngoại của Dì", "Ông Nội");
     }
 
-    // --- 5. NHÓM THÊ TÀI (T) ---
+    // 5. NHÓM THÊ TÀI (T)
     if(hDU === tHanh) {
         if(gender === 'nam') categories.T.push("Vợ");
-        categories.T.push("Cha ruột", "Bà Cố Nội", "Bà Cố Ngoại (Mẹ Bà Ngoại)", "Con cái của Cậu", "Dượng (Chồng của Dì)", "Con dâu của Dì");
+        categories.T.push("Bà Cố (Mẹ Bà Ngoại)", "Con cái của Cậu", "Dượng (Chồng Dì)", "Con dâu của Dì", "Cha ruột", "Bà Cố Nội");
     }
 
-    // Hiển thị kết quả
+    // HIỂN THỊ
     box.style.display = 'block';
     let html = "";
     const labels = { H: "Huynh đệ (H)", P: "Phụ mẫu (P)", Q: "Quan quỷ (Q)", C: "Chi hao / Tử tôn (C)", T: "Thê tài (T)" };
@@ -140,7 +132,6 @@ function run() {
             html += `<div>${categories[key].map(item => `<span class="tag">${item}</span>`).join('')}</div>`;
         }
     }
-
     box.innerHTML = html || "Quẻ thuộc đời xa hơn hoặc chưa xác định danh xưng.";
 }
 run();
