@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm Quẻ Đối - Kinh Dịch</title>
+    <title>Tra Cứu Quẻ Đối - Kinh Dịch</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; width: 100%; text-align: center; }
-        h2 { color: #333; margin-bottom: 1.5rem; }
-        .select-group { display: flex; gap: 20px; margin-bottom: 20px; justify-content: center; }
-        .menu-item { flex: 1; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 16px; cursor: pointer; }
-        #result-box { margin-top: 20px; padding: 20px; border: 2px dashed #3498db; border-radius: 8px; background-color: #ebf5fb; min-height: 80px; }
-        .res-title { font-size: 14px; color: #7f8c8d; margin: 0; }
-        .res-value { font-size: 24px; font-weight: bold; color: #2c3e50; margin-top: 10px; }
-        .highlight { color: #e74c3c; }
+        body { font-family: 'Arial', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 600px; width: 100%; text-align: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; transition: border-color 0.3s; }
+        select:focus { border-color: #e67e22; }
+        .result-area { background: #fffaf0; border: 2px solid #e67e22; border-radius: 10px; padding: 25px; margin-top: 20px; }
+        .label { font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .que-name { font-size: 28px; font-weight: bold; color: #d35400; margin: 0; }
+        .sub-name { font-size: 18px; color: #7f8c8d; margin-top: 5px; }
+        h2 { margin-top: 0; color: #2c3e50; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="card">
     <h2>Tra Cứu Quẻ Đối</h2>
     
-    <div class="select-group">
-        <div class="menu-item">
-            <label for="thuong">Quẻ Thượng</label>
-            <select id="thuong" onchange="timQueDoi()">
+    <div class="grid">
+        <div>
+            <div class="label">Quẻ Thượng (Ngoại)</div>
+            <select id="thuong" onchange="xuLy()">
                 <option value="">-- Chọn --</option>
                 <option value="Kiền">Kiền (Trời)</option>
                 <option value="Đoài">Đoài (Đầm)</option>
@@ -38,10 +37,9 @@
                 <option value="Khôn">Khôn (Đất)</option>
             </select>
         </div>
-
-        <div class="menu-item">
-            <label for="ha">Quẻ Hạ</label>
-            <select id="ha" onchange="timQueDoi()">
+        <div>
+            <div class="label">Quẻ Hạ (Nội)</div>
+            <select id="ha" onchange="xuLy()">
                 <option value="">-- Chọn --</option>
                 <option value="Kiền">Kiền (Trời)</option>
                 <option value="Đoài">Đoài (Đầm)</option>
@@ -55,40 +53,48 @@
         </div>
     </div>
 
-    <div id="result-box">
-        <p class="res-title">Cặp quẻ đối tương ứng:</p>
-        <div id="result" class="res-value">Hãy chọn đủ 2 quẻ</div>
+    <div class="result-area">
+        <div class="label">Quẻ Đối Kết Quả:</div>
+        <p id="tenQue" class="que-name">---</p>
+        <p id="moTaQue" class="sub-name">Chọn quẻ để xem kết quả</p>
     </div>
 </div>
 
 <script>
-    // Định nghĩa bảng tra cứu cặp đối
-    const capDoi = {
-        "Kiền": "Khôn",
-        "Khôn": "Kiền",
-        "Đoài": "Cấn",
-        "Cấn": "Đoài",
-        "Ly": "Khảm",
-        "Khảm": "Ly",
-        "Chấn": "Tốn",
-        "Tốn": "Chấn"
+    // 1. Định nghĩa cặp đối
+    const capDoi = { "Kiền":"Khôn", "Khôn":"Kiền", "Đoài":"Cấn", "Cấn":"Đoài", "Ly":"Khảm", "Khảm":"Ly", "Chấn":"Tốn", "Tốn":"Chấn" };
+
+    // 2. Định nghĩa tên gọi khi ghép quẻ (Tượng quẻ)
+    const tuongQue = { "Kiền":"Thiên", "Khôn":"Địa", "Ly":"Hỏa", "Khảm":"Thủy", "Chấn":"Lôi", "Tốn":"Phong", "Cấn":"Sơn", "Đoài":"Trạch" };
+
+    // 3. Data 64 quẻ (Dùng Key là "Thượng-Hạ")
+    const data64Que = {
+        "Kiền-Kiền": "Càn vi Thiên", "Kiền-Đoài": "Thiên Trạch Lý", "Kiền-Ly": "Thiên Hỏa Đồng Nhân", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Kiền-Tốn": "Thiên Phong Cấu", "Kiền-Khảm": "Thiên Thủy Tụng", "Kiền-Cấn": "Thiên Sơn Độn", "Kiền-Khôn": "Thiên Địa Bĩ",
+        "Khôn-Kiền": "Địa Thiên Thái", "Khôn-Đoài": "Địa Trạch Lâm", "Khôn-Ly": "Địa Hỏa Minh Di", "Khôn-Chấn": "Địa Lôi Phục", "Khôn-Tốn": "Địa Phong Thăng", "Khôn-Khảm": "Địa Thủy Sư", "Khôn-Cấn": "Địa Sơn Khiêm", "Khôn-Khôn": "Khôn vi Địa",
+        "Ly-Kiền": "Hỏa Thiên Đại Hữu", "Ly-Đoài": "Hỏa Trạch Khuê", "Ly-Ly": "Ly vi Hỏa", "Ly-Chấn": "Hỏa Lôi Phệ Hạp", "Ly-Tốn": "Hỏa Phong Đỉnh", "Ly-Khảm": "Hỏa Thủy Vị Tế", "Ly-Cấn": "Hỏa Sơn Lữ", "Ly-Khôn": "Hỏa Địa Tấn",
+        "Khảm-Kiền": "Thủy Thiên Nhu", "Khảm-Đoài": "Thủy Trạch Tiết", "Khảm-Ly": "Thủy Hỏa Ký Tế", "Khảm-Chấn": "Thủy Lôi Truân", "Khảm-Tốn": "Thủy Phong Tỉnh", "Khảm-Khảm": "Khảm vi Thủy", "Khảm-Cấn": "Thủy Sơn Kiển", "Khảm-Khôn": "Thủy Địa Tỷ",
+        "Chấn-Kiền": "Lôi Thiên Đại Tráng", "Chấn-Đoài": "Lôi Trạch Quy Muội", "Chấn-Ly": "Lôi Hỏa Phong", "Chấn-Chấn": "Chấn vi Lôi", "Chấn-Tốn": "Lôi Phong Hằng", "Chấn-Khảm": "Lôi Thủy Giải", "Chấn-Cấn": "Lôi Sơn Tiểu Quá", "Chấn-Khôn": "Lôi Địa Dự",
+        "Tốn-Kiền": "Phong Thiên Tiểu Súc", "Tốn-Đoài": "Phong Trạch Trung Phu", "Tốn-Ly": "Phong Hỏa Gia Nhân", "Tốn-Chấn": "Phong Lôi Ích", "Tốn-Tốn": "Tốn vi Phong", "Tốn-Khảm": "Phong Thủy Hoán", "Tốn-Cấn": "Phong Sơn Tiệm", "Tốn-Khôn": "Phong Địa Quan",
+        "Cấn-Kiền": "Sơn Thiên Đại Súc", "Cấn-Đoài": "Sơn Trạch Tổn", "Cấn-Ly": "Sơn Hỏa Bí", "Cấn-Chấn": "Sơn Lôi Di", "Cấn-Tốn": "Sơn Phong Cổ", "Cấn-Khảm": "Sơn Thủy Mông", "Cấn-Cấn": "Cấn vi Sơn", "Cấn-Khôn": "Sơn Địa Bác",
+        "Đoài-Kiền": "Trạch Thiên Quải", "Đoài-Đoài": "Đoài vi Trạch", "Đoài-Ly": "Trạch Hỏa Cách", "Đoài-Chấn": "Trạch Lôi Tùy", "Đoài-Tốn": "Trạch Phong Đại Quá", "Đoài-Khảm": "Trạch Thủy Khốn", "Đoài-Cấn": "Trạch Sơn Hàm", "Đoài-Khôn": "Trạch Địa Tụy"
     };
 
-    function timQueDoi() {
-        const thuong = document.getElementById("thuong").value;
-        const ha = document.getElementById("ha").value;
-        const resultDiv = document.getElementById("result");
-
-        if (thuong && ha) {
-            const doiThuong = capDoi[thuong];
-            const doiHa = capDoi[ha];
+    function xuLy() {
+        const t = document.getElementById("thuong").value;
+        const h = document.getElementById("ha").value;
+        
+        if (t && h) {
+            // Tìm quẻ đối
+            const doiT = capDoi[t];
+            const doiH = capDoi[h];
             
-            resultDiv.innerHTML = `
-                <span class="highlight">${doiThuong}</span> trên 
-                <span class="highlight">${doiHa}</span>
-            `;
-        } else {
-            resultDiv.innerText = "Hãy chọn đủ 2 quẻ";
+            // Lấy tên quẻ từ data
+            const key = `${doiT}-${doiH}`;
+            const tenDayDu = data64Que[key];
+            
+            // Hiển thị
+            document.getElementById("tenQue").innerText = tenDayDu;
+            document.getElementById("moTaQue").innerText = `${tuongQue[doiT]} ${tuongQue[doiH]} (${doiT} trên ${doiH})`;
         }
     }
 </script>
