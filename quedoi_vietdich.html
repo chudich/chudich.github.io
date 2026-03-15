@@ -3,100 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tra Cứu Đối Quẻ - Việt Dịch Chánh Tông</title>
+    <title>Việt Dịch Chánh Tông - Chuẩn Xác</title>
     <style>
         :root {
-            --primary: #2980b9; /* Màu xanh dương chủ đạo */
-            --vach-color: #3498db; /* Màu của vạch quẻ */
+            --primary: #2980b9;
+            --vach-color: #3498db;
             --bg: #ebf2f7;
             --card: #ffffff;
         }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: var(--bg); 
-            display: flex; 
-            justify-content: center; 
-            padding: 20px; 
-            color: #2c3e50;
+            display: flex; justify-content: center; padding: 20px; color: #2c3e50;
         }
         .container { 
-            background: var(--card); 
-            padding: 30px; 
-            border-radius: 15px; 
+            background: var(--card); padding: 30px; border-radius: 15px; 
             box-shadow: 0 10px 30px rgba(41, 128, 185, 0.15); 
-            max-width: 800px; 
-            width: 100%; 
-            border-top: 6px solid var(--primary); 
+            max-width: 800px; width: 100%; border-top: 6px solid var(--primary); 
         }
-        h2 { text-align: center; color: var(--primary); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 30px; text-transform: uppercase; }
         
         .main-ui { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 20px; align-items: center; }
         .side { display: flex; flex-direction: column; align-items: center; }
         
         select { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 2px solid #dce4ec; 
-            margin-bottom: 20px; 
-            font-size: 16px; 
-            font-weight: 500;
-            color: #34495e;
-            cursor: pointer; 
-            outline: none;
+            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #dce4ec; 
+            margin-bottom: 20px; font-size: 16px; cursor: pointer; 
         }
-        select:focus { border-color: var(--primary); }
         
-        /* Hiển thị vạch quẻ */
         .que-display { 
-            border: 2px solid #e1f0fa; 
-            padding: 25px; 
-            border-radius: 12px; 
-            background: #f8fbff; 
-            width: 140px; 
-            text-align: center; 
-            min-height: 200px; 
+            border: 2px solid #e1f0fa; padding: 25px; border-radius: 12px; 
+            background: #f8fbff; width: 140px; text-align: center; 
             display: flex; 
-            flex-direction: column-reverse; /* Vẽ từ hào 1 ở dưới lên */
-            justify-content: center; 
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            flex-direction: column-reverse; /* Hào 1 (đầu mảng) sẽ nằm dưới cùng */
+            gap: 8px;
         }
-        .vach { height: 14px; margin: 5px 0; border-radius: 3px; transition: all 0.4s ease; }
-        
-        /* Vạch Dương (Liền) */
-        .vach.duong { background-color: var(--vach-color); width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        
-        /* Vạch Âm (Đứt) */
-        .vach.am { display: flex; justify-content: space-between; background: transparent; }
+        .vach { height: 14px; border-radius: 3px; }
+        .vach.duong { background-color: var(--vach-color); width: 100%; }
+        .vach.am { display: flex; justify-content: space-between; }
         .vach.am::before, .vach.am::after { 
-            content: ''; 
-            background-color: var(--vach-color); 
-            width: 44%; 
-            height: 100%; 
-            border-radius: 3px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            content: ''; background-color: var(--vach-color); width: 44%; height: 100%; border-radius: 3px; 
         }
         
-        .arrow { font-size: 45px; color: var(--primary); text-align: center; opacity: 0.7; }
-        .que-name { margin-top: 18px; font-weight: 700; color: var(--primary); font-size: 18px; text-align: center; }
-        .label-text { margin-bottom: 10px; font-size: 14px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; }
-
-        @media (max-width: 600px) {
-            .main-ui { grid-template-columns: 1fr; }
-            .arrow { transform: rotate(90deg); margin: 15px 0; }
-        }
+        .arrow { font-size: 45px; color: var(--primary); text-align: center; }
+        .que-name { margin-top: 18px; font-weight: 700; color: var(--primary); font-size: 18px; }
+        .label-text { margin-bottom: 10px; font-size: 13px; font-weight: bold; color: #7f8c8d; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Việt Dịch Chánh Tông - Đối Quẻ</h2>
+    <h2>Đối Quẻ - Việt Dịch Chánh Tông</h2>
     
     <div class="main-ui">
         <div class="side">
-            <div class="label-text">Chọn Quẻ Gốc</div>
-            <select id="selectQue" onchange="updateDoiQue()">
-                </select>
+            <div class="label-text">CHỌN QUẺ GỐC</div>
+            <select id="selectQue" onchange="updateDoiQue()"></select>
             <div class="que-display" id="displayGoc"></div>
             <div class="que-name" id="nameGoc"></div>
         </div>
@@ -104,15 +66,17 @@
         <div class="arrow">⇌</div>
 
         <div class="side">
-            <div class="label-text">Quẻ Đối Tương Ứng</div>
-            <div class="que-display" id="displayDoi"></div>
+            <div class="label-text">QUẺ ĐỐI</div>
+            <div style="height: 52px;"></div> <div class="que-display" id="displayDoi"></div>
             <div class="que-name" id="nameDoi"></div>
         </div>
     </div>
 </div>
 
 <script>
-// (Phần script data giữ nguyên như cũ để đảm bảo logic Việt Dịch)
+/** * DATA CHUẨN: Mảng vạch [Hào 1, Hào 2, Hào 3, Hào 4, Hào 5, Hào 6]
+ * 1: Dương (—), 0: Âm (- -)
+ */
 const dataDich = {
     "Thuần Kiền": { vach: [1,1,1,1,1,1], doi: "Thuần Khôn" },
     "Thuần Khôn": { vach: [0,0,0,0,0,0], doi: "Thuần Kiền" },
@@ -181,11 +145,9 @@ const dataDich = {
 };
 
 const selectQue = document.getElementById('selectQue');
-// Sắp xếp Alphabet để dễ tìm kiếm
 Object.keys(dataDich).sort().forEach(name => {
     let option = document.createElement('option');
-    option.value = name;
-    option.text = name;
+    option.value = name; option.text = name;
     selectQue.appendChild(option);
 });
 
@@ -214,6 +176,5 @@ function updateDoiQue() {
 
 updateDoiQue();
 </script>
-
 </body>
 </html>
