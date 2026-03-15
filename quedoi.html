@@ -3,101 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tra Cứu Quẻ Đối - Kinh Dịch</title>
+    <title>Tra Cứu Quẻ Đối - Đảo Âm Dương</title>
     <style>
-        /* Căn chỉnh tổng thể */
+        :root {
+            --primary: #a04000; /* Màu nâu code 1 */
+            --vach-color: #3498db; /* Màu xanh dương code 2 */
+            --bg: #fdf6e3; /* Màu nền code 1 */
+            --card: #ffffff;
+        }
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
-            background: #fdf6e3; 
-            display: flex; 
-            justify-content: center; 
-            padding: 20px; 
-            margin: 0;
+            background: var(--bg); 
+            display: flex; flex-direction: column; align-items: center; padding: 20px;
         }
-
-        .card { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            max-width: 550px; 
-            width: 100%; 
-            text-align: center; 
+        .container { 
+            background: var(--card); padding: 30px; border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 650px; width: 100%; text-align: center;
             border: 1px solid #e0d0b0;
         }
-
-        /* Sửa lỗi so le: Dùng flex-start và align-items center */
+        h2 { color: #5d4037; margin-bottom: 25px; text-transform: uppercase; }
+        
+        /* Layout chọn quẻ giống code 1 */
         .grid { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            justify-content: center;
-            align-items: flex-start; /* Đảm bảo hai khối bắt đầu từ cùng một độ cao */
+            display: flex; gap: 15px; margin-bottom: 30px; 
+            justify-content: center; align-items: flex-start; 
         }
-
-        .menu-column { 
-            flex: 1; 
-            display: flex;
-            flex-direction: column;
+        .menu-column { flex: 1; display: flex; flex-direction: column; }
+        .label-small { 
+            font-size: 13px; color: #8b572a; font-weight: bold;
+            margin-bottom: 8px; text-transform: uppercase;
         }
-
-        .label { 
-            font-size: 13px; 
-            color: #8b572a; 
-            font-weight: bold;
-            margin-bottom: 8px; 
-            text-transform: uppercase;
-            height: 20px; /* Cố định chiều cao nhãn để không bị lệch */
-        }
-
-        /* Ép các ô Select bằng nhau tuyệt đối */
         select { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 2px solid #d2b48c; 
-            font-size: 16px; 
-            background-color: #fff;
-            box-sizing: border-box; /* Quan trọng để padding không làm tăng kích thước */
-            height: 48px; 
-            cursor: pointer;
+            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #d2b48c; 
+            font-size: 16px; background-color: #fff; cursor: pointer; outline: none;
         }
 
-        .result-area { 
-            background: #fff9f0; 
-            border: 2px double #e67e22; 
-            border-radius: 10px; 
-            padding: 25px; 
-            margin-top: 20px; 
-            min-height: 120px;
+        /* Khung hiển thị quẻ giống code 2 nhưng màu theo code 1 */
+        .result-area {
+            background: #fff9f0; border: 2px double #e67e22;
+            border-radius: 15px; padding: 30px; margin-top: 10px;
         }
 
+        .que-visual { display: flex; gap: 30px; justify-content: center; align-items: center; margin: 20px 0; }
+        .quai-don { display: flex; flex-direction: column; gap: 8px; width: 90px; }
+        
+        /* Vạch quẻ xanh dương code 2 */
+        .vach { height: 14px; border-radius: 3px; }
+        .vach.duong { background-color: var(--vach-color); width: 100%; }
+        .vach.am { display: flex; justify-content: space-between; }
+        .vach.am::before, .vach.am::after { 
+            content: ''; background-color: var(--vach-color); width: 43%; height: 100%; border-radius: 3px; 
+        }
+
+        /* Tên quẻ size to 200% và đậm */
         .que-name { 
-            font-size: 32px; 
-            font-weight: bold; 
-            color: #a04000; 
-            margin: 10px 0; 
+            margin-top: 15px; font-weight: bold; color: #a04000; 
+            font-size: 2.5rem; /* Rất to và đậm */
+            line-height: 1.2;
         }
-
-        .sub-info { 
-            font-size: 16px; 
-            color: #7f8c8d; 
-            font-style: italic;
-        }
-
-        h2 { color: #5d4037; margin-bottom: 25px; }
+        .sub-info { font-size: 16px; color: #7f8c8d; font-style: italic; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>DỊCH LÝ - TÌM QUẺ ĐỐI</h2>
+<div class="container">
+    <h2>DỊCH LÝ - TÌM QUẺ ĐỐI (CÁCH 1)</h2>
     
     <div class="grid">
         <div class="menu-column">
-            <div class="label">Quẻ Thượng</div>
+            <div class="label-small">Quẻ Thượng Gốc</div>
             <select id="thuong" onchange="tinhToan()">
-                <option value="">-- Chọn --</option>
                 <option value="Kiền">Kiền (Trời)</option>
                 <option value="Đoài">Đoài (Đầm)</option>
                 <option value="Ly">Ly (Lửa)</option>
@@ -109,9 +85,8 @@
             </select>
         </div>
         <div class="menu-column">
-            <div class="label">Quẻ Hạ</div>
+            <div class="label-small">Quẻ Hạ Gốc</div>
             <select id="ha" onchange="tinhToan()">
-                <option value="">-- Chọn --</option>
                 <option value="Kiền">Kiền (Trời)</option>
                 <option value="Đoài">Đoài (Đầm)</option>
                 <option value="Ly">Ly (Lửa)</option>
@@ -125,44 +100,79 @@
     </div>
 
     <div class="result-area">
-        <div class="label" style="color:#999">Kết quả Quẻ Đối:</div>
+        <div class="label-small" style="color:#999">HÌNH TƯỢNG QUẺ ĐỐI (ĐẢO ÂM DƯƠNG):</div>
+        
+        <div class="que-visual">
+            <div id="vachThuong" class="quai-don"></div>
+            <div id="vachHa" class="quai-don"></div>
+        </div>
+
         <div id="tenQue" class="que-name">---</div>
-        <div id="moTa" class="sub-info">Vui lòng chọn đủ Thượng và Hạ</div>
+        <div id="moTa" class="sub-info">Chọn quẻ để xem kết quả</div>
     </div>
 </div>
 
 <script>
-    const capDoi = { "Kiền":"Khôn", "Khôn":"Kiền", "Đoài":"Cấn", "Cấn":"Đoài", "Ly":"Khảm", "Khảm":"Ly", "Chấn":"Tốn", "Tốn":"Chấn" };
-    
+    // Logic Cách 1: Đối hào (Âm biến Dương, Dương biến Âm)
+    const capDoi = { 
+        "Kiền":"Khôn", "Khôn":"Kiền", 
+        "Đoài":"Cấn", "Cấn":"Đoài", 
+        "Ly":"Khảm", "Khảm":"Ly", 
+        "Chấn":"Tốn", "Tốn":"Chấn" 
+    };
+
+    // Hình tượng vạch quái đơn (Đọc từ TRÊN xuống DƯỚI)
+    const QUAI_VÀCH = {
+        "Kiền": [1,1,1], "Khôn": [0,0,0], "Chấn": [0,0,1], "Tốn": [1,1,0],
+        "Khảm": [0,1,0], "Ly": [1,0,1], "Cấn": [1,0,0], "Đoài": [0,1,1]
+    };
+
     const tuong = { "Kiền":"Thiên", "Khôn":"Địa", "Ly":"Hỏa", "Khảm":"Thủy", "Chấn":"Lôi", "Tốn":"Phong", "Cấn":"Sơn", "Đoài":"Trạch" };
 
     const data64 = {
-        "Kiền-Kiền": "Càn vi Thiên", "Kiền-Đoài": "Thiên Trạch Lý", "Kiền-Ly": "Thiên Hỏa Đồng Nhân", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Kiền-Tốn": "Thiên Phong Cấu", "Kiền-Khảm": "Thiên Thủy Tụng", "Kiền-Cấn": "Thiên Sơn Độn", "Kiền-Khôn": "Thiên Địa Bĩ",
-        "Khôn-Kiền": "Địa Thiên Thái", "Khôn-Đoài": "Địa Trạch Lâm", "Khôn-Ly": "Địa Hỏa Minh Di", "Khôn-Chấn": "Địa Lôi Phục", "Khôn-Tốn": "Địa Phong Thăng", "Khôn-Khảm": "Địa Thủy Sư", "Khôn-Cấn": "Địa Sơn Khiêm", "Khôn-Khôn": "Khôn vi Địa",
-        "Ly-Kiền": "Hỏa Thiên Đại Hữu", "Ly-Đoài": "Hỏa Trạch Khuê", "Ly-Ly": "Ly vi Hỏa", "Ly-Chấn": "Hỏa Lôi Phệ Hạp", "Ly-Tốn": "Hỏa Phong Đỉnh", "Ly-Khảm": "Hỏa Thủy Vị Tế", "Ly-Cấn": "Hỏa Sơn Lữ", "Ly-Khôn": "Hỏa Địa Tấn",
-        "Khảm-Kiền": "Thủy Thiên Nhu", "Khảm-Đoài": "Thủy Trạch Tiết", "Khảm-Ly": "Thủy Hỏa Ký Tế", "Khảm-Chấn": "Thủy Lôi Truân", "Khảm-Tốn": "Thủy Phong Tỉnh", "Khảm-Khảm": "Khảm vi Thủy", "Khảm-Cấn": "Thủy Sơn Kiển", "Khảm-Khôn": "Thủy Địa Tỷ",
-        "Chấn-Kiền": "Lôi Thiên Đại Tráng", "Chấn-Đoài": "Lôi Trạch Quy Muội", "Chấn-Ly": "Lôi Hỏa Phong", "Chấn-Chấn": "Chấn vi Lôi", "Chấn-Tốn": "Lôi Phong Hằng", "Chấn-Khảm": "Lôi Thủy Giải", "Chấn-Cấn": "Lôi Sơn Tiểu Quá", "Chấn-Khôn": "Lôi Địa Dự",
-        "Tốn-Kiền": "Phong Thiên Tiểu Súc", "Tốn-Đoài": "Phong Trạch Trung Phu", "Tốn-Ly": "Phong Hỏa Gia Nhân", "Tốn-Chấn": "Phong Lôi Ích", "Tốn-Tốn": "Tốn vi Phong", "Tốn-Khảm": "Phong Thủy Hoán", "Tốn-Cấn": "Phong Sơn Tiệm", "Tốn-Khôn": "Phong Địa Quan",
-        "Cấn-Kiền": "Sơn Thiên Đại Súc", "Cấn-Đoài": "Sơn Trạch Tổn", "Cấn-Ly": "Sơn Hỏa Bí", "Cấn-Chấn": "Sơn Lôi Di", "Cấn-Tốn": "Sơn Phong Cổ", "Cấn-Khảm": "Sơn Thủy Mông", "Cấn-Cấn": "Cấn vi Sơn", "Cấn-Khôn": "Sơn Địa Bác",
-        "Đoài-Kiền": "Trạch Thiên Quải", "Đoài-Đoài": "Đoài vi Trạch", "Đoài-Ly": "Trạch Hỏa Cách", "Đoài-Chấn": "Trạch Lôi Tùy", "Đoài-Tốn": "Trạch Phong Đại Quá", "Đoài-Khảm": "Trạch Thủy Khốn", "Đoài-Cấn": "Trạch Sơn Hàm", "Đoài-Khôn": "Trạch Địa Tụy"
+        "Kiền-Kiền": "Thuần Càn", "Kiền-Đoài": "Thiên Trạch Lý", "Kiền-Ly": "Thiên Hỏa Đồng Nhân", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Kiền-Tốn": "Thiên Phong Cấu", "Kiền-Khảm": "Thiên Thủy Tụng", "Kiền-Cấn": "Thiên Sơn Độn", "Kiền-Khôn": "Thiên Địa Bĩ",
+        "Khôn-Kiền": "Địa Thiên Thái", "Khôn-Đoài": "Địa Trạch Lâm", "Khôn-Ly": "Địa Hỏa Minh Di", "Khôn-Chấn": "Địa Lôi Phục", "Khôn-Tốn": "Địa Phong Thăng", "Khôn-Khảm": "Địa Thủy Sư", "Khôn-Cấn": "Địa Sơn Khiêm", "Khôn-Khôn": "Thuần Khôn",
+        "Ly-Kiền": "Hỏa Thiên Đại Hữu", "Ly-Đoài": "Hỏa Trạch Khuê", "Ly-Ly": "Thuần Ly", "Ly-Chấn": "Hỏa Lôi Phệ Hạp", "Ly-Tốn": "Hỏa Phong Đỉnh", "Ly-Khảm": "Hỏa Thủy Vị Tế", "Ly-Cấn": "Hỏa Sơn Lữ", "Ly-Khôn": "Hỏa Địa Tấn",
+        "Khảm-Kiền": "Thủy Thiên Nhu", "Khảm-Đoài": "Thủy Trạch Tiết", "Khảm-Ly": "Thủy Hỏa Ký Tế", "Khảm-Chấn": "Thủy Lôi Truân", "Khảm-Tốn": "Thủy Phong Tỉnh", "Khảm-Khảm": "Thuần Khảm", "Khảm-Cấn": "Thủy Sơn Kiển", "Khảm-Khôn": "Thủy Địa Tỷ",
+        "Chấn-Kiền": "Lôi Thiên Đại Tráng", "Chấn-Đoài": "Lôi Trạch Quy Muội", "Chấn-Ly": "Lôi Hỏa Phong", "Chấn-Chấn": "Thuần Chấn", "Chấn-Tốn": "Lôi Phong Hằng", "Chấn-Khảm": "Lôi Thủy Giải", "Chấn-Cấn": "Lôi Sơn Tiểu Quá", "Chấn-Khôn": "Lôi Địa Dự",
+        "Tốn-Kiền": "Phong Thiên Tiểu Súc", "Tốn-Đoài": "Phong Trạch Trung Phu", "Tốn-Ly": "Phong Hỏa Gia Nhân", "Tốn-Chấn": "Phong Lôi Ích", "Tốn-Tốn": "Thuần Tốn", "Tốn-Khảm": "Phong Thủy Hoán", "Tốn-Cấn": "Phong Sơn Tiệm", "Tốn-Khôn": "Phong Địa Quán",
+        "Cấn-Kiền": "Sơn Thiên Đại Súc", "Cấn-Đoài": "Sơn Trạch Tổn", "Cấn-Ly": "Sơn Hỏa Bí", "Cấn-Chấn": "Sơn Lôi Di", "Cấn-Tốn": "Sơn Phong Cổ", "Cấn-Khảm": "Sơn Thủy Mông", "Cấn-Cấn": "Thuần Cấn", "Cấn-Khôn": "Sơn Địa Bác",
+        "Đoài-Kiền": "Trạch Thiên Quải", "Đoài-Đoài": "Thuần Đoài", "Đoài-Ly": "Trạch Hỏa Cách", "Đoài-Chấn": "Trạch Lôi Tùy", "Đoài-Tốn": "Trạch Phong Đại Quá", "Đoài-Khảm": "Trạch Thủy Khốn", "Đoài-Cấn": "Trạch Sơn Hàm", "Đoài-Khôn": "Trạch Địa Tụy"
     };
+
+    function drawVach(quaiName, elementId) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        const vachs = QUAI_VÀCH[quaiName];
+        vachs.forEach(v => {
+            const d = document.createElement('div');
+            d.className = v === 1 ? 'vach duong' : 'vach am';
+            container.appendChild(d);
+        });
+    }
 
     function tinhToan() {
         const t = document.getElementById("thuong").value;
         const h = document.getElementById("ha").value;
-        
+
         if (t && h) {
+            // Thực hiện đảo âm dương theo Cách 1
             const doiT = capDoi[t];
             const doiH = capDoi[h];
             const key = `${doiT}-${doiH}`;
-            
-            document.getElementById("tenQue").innerText = data64[key];
-            document.getElementById("moTa").innerText = `${tuong[doiT]} ${tuong[doiH]} (Quẻ ${doiT} trên ${doiH})`;
-        } else {
-            document.getElementById("tenQue").innerText = "---";
-            document.getElementById("moTa").innerText = "Vui lòng chọn đủ Thượng và Hạ";
+
+            // Hiển thị tên quẻ (To & Đậm)
+            document.getElementById("tenQue").innerText = data64[key] || "Chưa cập nhật";
+            document.getElementById("moTa").innerText = `${tuong[doiT]} ${tuong[doiH]} (Tượng: ${doiT} trên ${doiH})`;
+
+            // Vẽ vạch quẻ đối theo chiều ngang (Thượng trái - Hạ phải)
+            drawVach(doiT, 'vachThuong');
+            drawVach(doiH, 'vachHa');
         }
     }
+
+    // Chạy khởi tạo
+    tinhToan();
 </script>
 
 </body>
