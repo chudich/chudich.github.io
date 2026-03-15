@@ -3,178 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Việt Dịch Chánh Tông - Chuẩn Xác</title>
+    <title>Việt Dịch Chánh Tông - Ngang</title>
     <style>
         :root {
             --primary: #2980b9;
             --vach-color: #3498db;
-            --bg: #ebf2f7;
-            --card: #ffffff;
+            --bg: #f0f4f8;
         }
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
             background: var(--bg); 
-            display: flex; justify-content: center; padding: 20px; color: #2c3e50;
+            display: flex; flex-direction: column; align-items: center; padding: 20px;
         }
         .container { 
-            background: var(--card); padding: 30px; border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(41, 128, 185, 0.15); 
-            max-width: 800px; width: 100%; border-top: 6px solid var(--primary); 
+            background: #fff; padding: 30px; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 600px; width: 100%; text-align: center;
         }
-        h2 { text-align: center; color: var(--primary); margin-bottom: 30px; text-transform: uppercase; }
-        
-        .main-ui { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 20px; align-items: center; }
-        .side { display: flex; flex-direction: column; align-items: center; }
+        h2 { color: var(--primary); margin-bottom: 25px; font-size: 1.2rem; }
         
         select { 
-            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #dce4ec; 
-            margin-bottom: 20px; font-size: 16px; cursor: pointer; 
+            width: 80%; padding: 12px; border-radius: 10px; border: 2px solid #dce4ec; 
+            font-size: 16px; margin-bottom: 40px; outline: none;
         }
+
+        /* Khung chứa quẻ */
+        .que-box { margin-bottom: 40px; display: inline-block; }
+        .label-text { font-size: 12px; font-weight: bold; color: #95a5a6; margin-bottom: 10px; text-transform: uppercase; }
         
-        .que-display { 
-            border: 2px solid #e1f0fa; padding: 25px; border-radius: 12px; 
-            background: #f8fbff; width: 140px; text-align: center; 
-            display: flex; 
-            flex-direction: column-reverse; /* Hào 1 (đầu mảng) sẽ nằm dưới cùng */
-            gap: 8px;
-        }
-        .vach { height: 14px; border-radius: 3px; }
+        /* Hiển thị ngang: Thượng bên trái - Hạ bên phải */
+        .que-visual { display: flex; gap: 20px; justify-content: center; align-items: center; }
+        .quai-don { display: flex; flex-direction: column; gap: 8px; width: 80px; }
+        
+        /* Vạch quẻ */
+        .vach { height: 12px; border-radius: 2px; transition: 0.3s; }
         .vach.duong { background-color: var(--vach-color); width: 100%; }
         .vach.am { display: flex; justify-content: space-between; }
         .vach.am::before, .vach.am::after { 
-            content: ''; background-color: var(--vach-color); width: 44%; height: 100%; border-radius: 3px; 
+            content: ''; background-color: var(--vach-color); width: 42%; height: 100%; border-radius: 2px; 
         }
-        
-        .arrow { font-size: 45px; color: var(--primary); text-align: center; }
-        .que-name { margin-top: 18px; font-weight: 700; color: var(--primary); font-size: 18px; }
-        .label-text { margin-bottom: 10px; font-size: 13px; font-weight: bold; color: #7f8c8d; }
+
+        .que-name { margin-top: 15px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .divider { color: var(--primary); font-size: 24px; margin: 20px 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Đối Quẻ - Việt Dịch Chánh Tông</h2>
+    <h2>VIỆT DỊCH CHÁNH TÔNG</h2>
     
-    <div class="main-ui">
-        <div class="side">
-            <div class="label-text">CHỌN QUẺ GỐC</div>
-            <select id="selectQue" onchange="updateDoiQue()"></select>
-            <div class="que-display" id="displayGoc"></div>
-            <div class="que-name" id="nameGoc"></div>
-        </div>
+    <div class="label-text">Chọn Quẻ Để Tra Cứu</div>
+    <select id="selectQue" onchange="update()"></select>
 
-        <div class="arrow">⇌</div>
-
-        <div class="side">
-            <div class="label-text">QUẺ ĐỐI</div>
-            <div style="height: 52px;"></div> <div class="que-display" id="displayDoi"></div>
-            <div class="que-name" id="nameDoi"></div>
+    <div class="que-box">
+        <div class="label-text">QUẺ GỐC (Thượng - Hạ)</div>
+        <div class="que-visual">
+            <div id="gocThuong" class="quai-don"></div>
+            <div id="gocHa" class="quai-don"></div>
         </div>
+        <div id="nameGoc" class="que-name"></div>
+    </div>
+
+    <div class="divider">⇅ ĐỐI QUẺ ⇅</div>
+
+    <div class="que-box">
+        <div class="que-visual">
+            <div id="doiThuong" class="quai-don"></div>
+            <div id="doiHa" class="quai-don"></div>
+        </div>
+        <div id="nameDoi" class="que-name"></div>
     </div>
 </div>
 
 <script>
-/** * DATA CHUẨN: Mảng vạch [Hào 1, Hào 2, Hào 3, Hào 4, Hào 5, Hào 6]
- * 1: Dương (—), 0: Âm (- -)
+/**
+ * QUY ƯỚC: [vạch 1, vạch 2, vạch 3] đọc từ TRÊN XUỐNG DƯỚI
+ * 1: Dương, 0: Âm
  */
-const dataDich = {
-    "Thuần Kiền": { vach: [1,1,1,1,1,1], doi: "Thuần Khôn" },
-    "Thuần Khôn": { vach: [0,0,0,0,0,0], doi: "Thuần Kiền" },
-    "Thiên Trạch Lý": { vach: [1,1,0,1,1,1], doi: "Phong Thiên Tiểu Súc" },
-    "Phong Thiên Tiểu Súc": { vach: [1,1,1,0,1,1], doi: "Thiên Trạch Lý" },
-    "Thiên Hoả Đồng Nhân": { vach: [1,0,1,1,1,1], doi: "Hoả Thiên Đại Hữu" },
-    "Hoả Thiên Đại Hữu": { vach: [1,1,1,1,0,1], doi: "Thiên Hoả Đồng Nhân" },
-    "Thiên Lôi Vô Vọng": { vach: [1,0,0,1,1,1], doi: "Sơn Thiên Đại Súc" },
-    "Sơn Thiên Đại Súc": { vach: [1,1,1,0,0,1], doi: "Thiên Lôi Vô Vọng" },
-    "Thiên Phong Cấu": { vach: [0,1,1,1,1,1], doi: "Trạch Thiên Quải" },
-    "Trạch Thiên Quải": { vach: [1,1,1,1,1,0], doi: "Thiên Phong Cấu" },
-    "Thiên Thủy Tụng": { vach: [0,1,0,1,1,1], doi: "Thủy Thiên Nhu" },
-    "Thủy Thiên Nhu": { vach: [1,1,1,0,1,0], doi: "Thiên Thủy Tụng" },
-    "Thiên Sơn Độn": { vach: [0,0,1,1,1,1], doi: "Lôi Thiên Đại Tráng" },
-    "Lôi Thiên Đại Tráng": { vach: [1,1,1,1,0,0], doi: "Thiên Sơn Độn" },
-    "Thiên Địa Bĩ": { vach: [0,0,0,1,1,1], doi: "Địa Thiên Thái" },
-    "Địa Thiên Thái": { vach: [1,1,1,0,0,0], doi: "Thiên Địa Bĩ" },
-    "Trạch Hoả Cách": { vach: [1,0,1,1,1,0], doi: "Hoả Phong Đỉnh" },
-    "Hoả Phong Đỉnh": { vach: [0,1,1,1,0,1], doi: "Trạch Hoả Cách" },
-    "Trạch Lôi Tùy": { vach: [1,0,0,1,1,0], doi: "Sơn Phong Cổ" },
-    "Sơn Phong Cổ": { vach: [0,1,1,0,0,1], doi: "Trạch Lôi Tùy" },
-    "Trạch Phong Đại Quá": { vach: [0,1,1,1,1,0], doi: "Sơn Lôi Di" },
-    "Sơn Lôi Di": { vach: [1,0,0,0,0,1], doi: "Trạch Phong Đại Quá" },
-    "Trạch Thủy Khốn": { vach: [0,1,0,1,1,0], doi: "Thủy Phong Tĩnh" },
-    "Thủy Phong Tĩnh": { vach: [0,1,1,0,1,0], doi: "Trạch Thủy Khốn" },
-    "Trạch Sơn Hàm": { vach: [0,0,1,1,1,0], doi: "Lôi Phong Hằng" },
-    "Lôi Phong Hằng": { vach: [0,1,1,1,0,0], doi: "Trạch Sơn Hàm" },
-    "Trạch Địa Tụy": { vach: [0,0,0,1,1,0], doi: "Địa Phong Thăng" },
-    "Địa Phong Thăng": { vach: [0,1,1,0,0,0], doi: "Trạch Địa Tụy" },
-    "Thuần Đoài": { vach: [1,1,0,1,1,0], doi: "Thuần Tốn" },
-    "Thuần Tốn": { vach: [0,1,1,0,1,1], doi: "Thuần Đoài" },
-    "Hoả Lôi Phệ Hạp": { vach: [1,0,0,1,0,1], doi: "Sơn Hoả Bí" },
-    "Sơn Hoả Bí": { vach: [1,0,1,0,0,1], doi: "Hoả Lôi Phệ Hạp" },
-    "Hoả Thủy Vị Tế": { vach: [0,1,0,1,0,1], doi: "Thủy Hoả Ký Tế" },
-    "Thủy Hoả Ký Tế": { vach: [1,0,1,0,1,0], doi: "Hoả Thủy Vị Tế" },
-    "Hoả Sơn Lữ": { vach: [0,0,1,1,0,1], doi: "Lôi Hoả Phong" },
-    "Lôi Hoả Phong": { vach: [1,0,1,1,0,0], doi: "Hoả Sơn Lữ" },
-    "Hoả Địa Tấn": { vach: [0,0,0,1,0,1], doi: "Địa Hoả Minh Di" },
-    "Địa Hoả Minh Di": { vach: [1,0,1,0,0,0], doi: "Hoả Địa Tấn" },
-    "Hoả Trạch Khuê": { vach: [1,1,0,1,0,1], doi: "Phong Hoả Gia Nhân" },
-    "Phong Hoả Gia Nhân": { vach: [1,0,1,1,0,1], doi: "Hoả Trạch Khuê" },
-    "Thuần Ly": { vach: [1,0,1,1,0,1], doi: "Thuần Khảm" },
-    "Thuần Khảm": { vach: [0,1,0,0,1,0], doi: "Thuần Ly" },
-    "Lôi Thủy Giải": { vach: [0,1,0,0,0,1], doi: "Thủy Sơn Kiển" },
-    "Thủy Sơn Kiển": { vach: [0,0,1,0,1,0], doi: "Lôi Thủy Giải" },
-    "Lôi Sơn Tiểu Quá": { vach: [0,0,1,1,0,0], doi: "Phong Trạch Trung Phu" },
-    "Phong Trạch Trung Phu": { vach: [1,1,0,0,1,1], doi: "Lôi Sơn Tiểu Quá" },
-    "Lôi Địa Dự": { vach: [0,0,0,0,0,1], doi: "Địa Sơn Khiêm" },
-    "Địa Sơn Khiêm": { vach: [1,0,0,0,0,0], doi: "Lôi Địa Dự" },
-    "Lôi Trạch Quy Muội": { vach: [1,1,0,0,0,1], doi: "Phong Sơn Tiệm" },
-    "Phong Sơn Tiệm": { vach: [0,0,1,1,1,0], doi: "Lôi Trạch Quy Muội" },
-    "Thuần Chấn": { vach: [1,0,0,1,0,0], doi: "Thuần Cấn" },
-    "Thuần Cấn": { vach: [0,0,1,0,0,1], doi: "Thuần Chấn" },
-    "Phong Thủy Hoán": { vach: [0,1,0,0,1,1], doi: "Thủy Trạch Tiết" },
-    "Thủy Trạch Tiết": { vach: [1,1,0,1,0,0], doi: "Phong Thủy Hoán" },
-    "Phong Địa Quán": { vach: [0,0,0,0,1,1], doi: "Địa Trạch Lâm" },
-    "Địa Trạch Lâm": { vach: [1,1,0,0,0,0], doi: "Phong Địa Quán" },
-    "Phong Lôi Ích": { vach: [1,0,0,0,1,1], doi: "Sơn Trạch Tổn" },
-    "Sơn Trạch Tổn": { vach: [1,1,0,0,0,1], doi: "Phong Lôi Ích" },
-    "Thủy Địa Tỷ": { vach: [0,0,0,0,1,0], doi: "Địa Thủy Sư" },
-    "Địa Thủy Sư": { vach: [0,1,0,0,0,0], doi: "Thủy Địa Tỷ" },
-    "Thủy Lôi Truân": { vach: [1,0,0,0,1,0], doi: "Sơn Thủy Mông" },
-    "Sơn Thủy Mông": { vach: [0,1,0,0,0,1], doi: "Thủy Lôi Truân" },
-    "Sơn Địa Bác": { vach: [0,0,0,0,0,1], doi: "Địa Lôi Phục" },
-    "Địa Lôi Phục": { vach: [1,0,0,0,0,0], doi: "Sơn Địa Bác" }
+const QUAI = {
+    "Kiền": [1,1,1], "Khôn": [0,0,0], "Chấn": [0,0,1], "Tốn": [1,1,0],
+    "Khảm": [0,1,0], "Ly": [1,0,1], "Cấn": [1,0,0], "Đoài": [0,1,1]
 };
 
-const selectQue = document.getElementById('selectQue');
-Object.keys(dataDich).sort().forEach(name => {
-    let option = document.createElement('option');
-    option.value = name; option.text = name;
-    selectQue.appendChild(option);
+const dataDich = {
+    "Lôi Địa Dự": { thuong: "Chấn", ha: "Khôn", doi: "Địa Sơn Khiêm" },
+    "Địa Sơn Khiêm": { thuong: "Khôn", ha: "Cấn", doi: "Lôi Địa Dự" },
+    "Trạch Hoả Cách": { thuong: "Đoài", ha: "Ly", doi: "Hoả Phong Đỉnh" },
+    "Hoả Phong Đỉnh": { thuong: "Ly", ha: "Tốn", doi: "Trạch Hoả Cách" },
+    "Phong Lôi Ích": { thuong: "Tốn", ha: "Chấn", doi: "Sơn Trạch Tổn" },
+    "Sơn Trạch Tổn": { thuong: "Cấn", ha: "Đoài", doi: "Phong Lôi Ích" },
+    "Lôi Phong Hằng": { thuong: "Chấn", ha: "Tốn", doi: "Trạch Sơn Hàm" },
+    "Trạch Sơn Hàm": { thuong: "Đoài", ha: "Cấn", doi: "Lôi Phong Hằng" },
+    "Thiên Trạch Lý": { thuong: "Kiền", ha: "Đoài", doi: "Phong Thiên Tiểu Súc" },
+    "Phong Thiên Tiểu Súc": { thuong: "Tốn", ha: "Kiền", doi: "Thiên Trạch Lý" },
+    "Thiên Hoả Đồng Nhân": { thuong: "Kiền", ha: "Ly", doi: "Hoả Thiên Đại Hữu" },
+    "Hoả Thiên Đại Hữu": { thuong: "Ly", ha: "Kiền", doi: "Thiên Hoả Đồng Nhân" },
+    "Thiên Lôi Vô Vọng": { thuong: "Kiền", ha: "Chấn", doi: "Sơn Thiên Đại Súc" },
+    "Sơn Thiên Đại Súc": { thuong: "Cấn", ha: "Kiền", doi: "Thiên Lôi Vô Vọng" },
+    "Thiên Phong Cấu": { thuong: "Kiền", ha: "Tốn", doi: "Trạch Thiên Quải" },
+    "Trạch Thiên Quải": { thuong: "Đoài", ha: "Kiền", doi: "Thiên Phong Cấu" },
+    "Thiên Thủy Tụng": { thuong: "Kiền", ha: "Khảm", doi: "Thủy Thiên Nhu" },
+    "Thủy Thiên Nhu": { thuong: "Khảm", ha: "Kiền", doi: "Thiên Thủy Tụng" },
+    "Thiên Sơn Độn": { thuong: "Kiền", ha: "Cấn", doi: "Lôi Thiên Đại Tráng" },
+    "Lôi Thiên Đại Tráng": { thuong: "Chấn", ha: "Kiền", doi: "Thiên Sơn Độn" },
+    "Thiên Địa Bĩ": { thuong: "Kiền", ha: "Khôn", doi: "Địa Thiên Thái" },
+    "Địa Thiên Thái": { thuong: "Khôn", ha: "Kiền", doi: "Thiên Địa Bĩ" },
+    "Thuần Kiền": { thuong: "Kiền", ha: "Kiền", doi: "Thuần Khôn" },
+    "Thuần Khôn": { thuong: "Khôn", ha: "Khôn", doi: "Thuần Kiền" },
+    "Trạch Lôi Tùy": { thuong: "Đoài", ha: "Chấn", doi: "Sơn Phong Cổ" },
+    "Sơn Phong Cổ": { thuong: "Cấn", ha: "Tốn", doi: "Trạch Lôi Tùy" },
+    "Trạch Phong Đại Quá": { thuong: "Đoài", ha: "Tốn", doi: "Sơn Lôi Di" },
+    "Sơn Lôi Di": { thuong: "Cấn", ha: "Chấn", doi: "Trạch Phong Đại Quá" },
+    "Trạch Thủy Khốn": { thuong: "Đoài", ha: "Khảm", doi: "Thủy Phong Tĩnh" },
+    "Thủy Phong Tĩnh": { thuong: "Khảm", ha: "Tốn", doi: "Trạch Thủy Khốn" },
+    "Trạch Địa Tụy": { thuong: "Đoài", ha: "Khôn", doi: "Địa Phong Thăng" },
+    "Địa Phong Thăng": { thuong: "Khôn", ha: "Tốn", doi: "Trạch Địa Tụy" },
+    "Thuần Đoài": { thuong: "Đoài", ha: "Đoài", doi: "Thuần Tốn" },
+    "Thuần Tốn": { thuong: "Tốn", ha: "Tốn", doi: "Thuần Đoài" },
+    "Hoả Lôi Phệ Hạp": { thuong: "Ly", ha: "Chấn", doi: "Sơn Hoả Bí" },
+    "Sơn Hoả Bí": { thuong: "Cấn", ha: "Ly", doi: "Hoả Lôi Phệ Hạp" },
+    "Hoả Thủy Vị Tế": { thuong: "Ly", ha: "Khảm", doi: "Thủy Hoả Ký Tế" },
+    "Thủy Hoả Ký Tế": { thuong: "Khảm", ha: "Ly", doi: "Hoả Thủy Vị Tế" },
+    "Hoả Sơn Lữ": { thuong: "Ly", ha: "Cấn", doi: "Lôi Hoả Phong" },
+    "Lôi Hoả Phong": { thuong: "Chấn", ha: "Ly", doi: "Hoả Sơn Lữ" },
+    "Hoả Địa Tấn": { thuong: "Ly", ha: "Khôn", doi: "Địa Hoả Minh Di" },
+    "Địa Hoả Minh Di": { thuong: "Khôn", ha: "Ly", doi: "Hoả Địa Tấn" },
+    "Hoả Trạch Khuê": { thuong: "Ly", ha: "Đoài", doi: "Phong Hoả Gia Nhân" },
+    "Phong Hoả Gia Nhân": { thuong: "Tốn", ha: "Ly", doi: "Hoả Trạch Khuê" },
+    "Thuần Ly": { thuong: "Ly", ha: "Ly", doi: "Thuần Khảm" },
+    "Thuần Khảm": { thuong: "Khảm", ha: "Khảm", doi: "Thuần Ly" },
+    "Lôi Thủy Giải": { thuong: "Chấn", ha: "Khảm", doi: "Thủy Sơn Kiển" },
+    "Thủy Sơn Kiển": { thuong: "Khảm", ha: "Cấn", doi: "Lôi Thủy Giải" },
+    "Lôi Sơn Tiểu Quá": { thuong: "Chấn", ha: "Cấn", doi: "Phong Trạch Trung Phu" },
+    "Phong Trạch Trung Phu": { thuong: "Tốn", ha: "Đoài", doi: "Lôi Sơn Tiểu Quá" },
+    "Lôi Trạch Quy Muội": { thuong: "Chấn", ha: "Đoài", doi: "Phong Sơn Tiệm" },
+    "Phong Sơn Tiệm": { thuong: "Tốn", ha: "Cấn", doi: "Lôi Trạch Quy Muội" },
+    "Thuần Chấn": { thuong: "Chấn", ha: "Chấn", doi: "Thuần Cấn" },
+    "Thuần Cấn": { thuong: "Cấn", ha: "Cấn", doi: "Thuần Chấn" },
+    "Phong Thủy Hoán": { thuong: "Tốn", ha: "Khảm", doi: "Thủy Trạch Tiết" },
+    "Thủy Trạch Tiết": { thuong: "Khảm", ha: "Đoài", doi: "Phong Thủy Hoán" },
+    "Phong Địa Quán": { thuong: "Tốn", ha: "Khôn", doi: "Địa Trạch Lâm" },
+    "Địa Trạch Lâm": { thuong: "Khôn", ha: "Đoài", doi: "Phong Địa Quán" },
+    "Thủy Địa Tỷ": { thuong: "Khảm", ha: "Khôn", doi: "Địa Thủy Sư" },
+    "Địa Thủy Sư": { thuong: "Khôn", ha: "Khảm", doi: "Thủy Địa Tỷ" },
+    "Thủy Lôi Truân": { thuong: "Khảm", ha: "Chấn", doi: "Sơn Thủy Mông" },
+    "Sơn Thủy Mông": { thuong: "Cấn", ha: "Khảm", doi: "Thủy Lôi Truân" },
+    "Sơn Địa Bác": { thuong: "Cấn", ha: "Khôn", doi: "Địa Lôi Phục" },
+    "Địa Lôi Phục": { thuong: "Khôn", ha: "Chấn", doi: "Sơn Địa Bác" }
+};
+
+const select = document.getElementById('selectQue');
+Object.keys(dataDich).sort().forEach(n => {
+    let opt = document.createElement('option');
+    opt.value = n; opt.text = n;
+    select.appendChild(opt);
 });
 
-function drawVach(vachArray, targetId) {
-    const container = document.getElementById(targetId);
+function drawQuai(quaiName, elementId) {
+    const container = document.getElementById(elementId);
     container.innerHTML = '';
-    vachArray.forEach(v => {
-        const div = document.createElement('div');
-        div.className = v === 1 ? 'vach duong' : 'vach am';
-        container.appendChild(div);
+    const vachs = QUAI[quaiName];
+    vachs.forEach(v => {
+        const d = document.createElement('div');
+        d.className = v === 1 ? 'vach duong' : 'vach am';
+        container.appendChild(d);
     });
 }
 
-function updateDoiQue() {
-    const nameGoc = selectQue.value;
-    const queGoc = dataDich[nameGoc];
-    const nameDoi = queGoc.doi;
-    const queDoi = dataDich[nameDoi];
+function update() {
+    const nameGoc = select.value;
+    const itemGoc = dataDich[nameGoc];
+    const nameDoi = itemGoc.doi;
+    const itemDoi = dataDich[nameDoi];
 
+    // Vẽ Gốc
     document.getElementById('nameGoc').innerText = nameGoc;
-    drawVach(queGoc.vach, 'displayGoc');
+    drawQuai(itemGoc.thuong, 'gocThuong');
+    drawQuai(itemGoc.ha, 'gocHa');
 
+    // Vẽ Đối
     document.getElementById('nameDoi').innerText = nameDoi;
-    drawVach(queDoi.vach, 'displayDoi');
+    drawQuai(itemDoi.thuong, 'doiThuong');
+    drawQuai(itemDoi.ha, 'doiHa');
 }
 
-updateDoiQue();
+update();
 </script>
 </body>
 </html>
