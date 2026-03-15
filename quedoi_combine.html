@@ -11,6 +11,7 @@
             --bg: #fdf6e3;
             --card: #ffffff;
             --border: #d2b48c;
+            --btn-bg: #8b572a;
         }
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -23,6 +24,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             max-width: 700px; width: 100%; text-align: center;
             border: 1px solid #e0d0b0; margin-bottom: 50px;
+            position: relative;
         }
         h2 { color: #5d4037; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
         .method-desc { font-size: 14px; color: #8b572a; font-style: italic; margin-bottom: 20px; }
@@ -51,6 +53,26 @@
         /* Tên quẻ 200% và Đậm */
         .que-name { margin-top: 10px; font-weight: bold; color: #a04000; font-size: 2.5rem; line-height: 1.2; }
         .sub-info { font-size: 15px; color: #7f8c8d; font-style: italic; margin-top: 8px; }
+
+        /* Button Thư Viện */
+        .library-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background-color: var(--btn-bg);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .library-btn:hover {
+            background-color: #a04000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -86,6 +108,7 @@
         <div id="c1_ten" class="que-name">---</div>
         <div id="c1_mota" class="sub-info">Kết quả biến vạch</div>
     </div>
+    <a href="https://example.com/thu-vien-bien-dich" target="_blank" class="library-btn">📘 THƯ VIỆN</a>
 </div>
 
 <div class="section-container">
@@ -105,6 +128,7 @@
         <div id="c2_ten" class="que-name">---</div>
         <div id="c2_mota" class="sub-info">Kết quả theo danh sách đối</div>
     </div>
+    <a href="https://example.com/thu-vien-viet-dich" target="_blank" class="library-btn">📘 THƯ VIỆN</a>
 </div>
 
 <script>
@@ -117,7 +141,6 @@
 
     const TUONG = { "Kiền":"Thiên", "Khôn":"Địa", "Ly":"Hoả", "Khảm":"Thủy", "Chấn":"Lôi", "Tốn":"Phong", "Cấn":"Sơn", "Đoài":"Trạch" };
     
-    // Ánh xạ tên quẻ từ cặp quái đơn
     const DATA_NAME = {
         "Kiền-Kiền": "Thuần Kiền", "Khôn-Khôn": "Thuần Khôn", "Kiền-Đoài": "Thiên Trạch Lý", "Tốn-Kiền": "Phong Thiên Tiểu Súc",
         "Kiền-Ly": "Thiên Hoả Đồng Nhân", "Ly-Kiền": "Hoả Thiên Đại Hữu", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Cấn-Kiền": "Sơn Thiên Đại Súc",
@@ -188,8 +211,6 @@
     function logicC2() {
         const selected = document.getElementById("c2_select").value;
         const target = PAIR_DATA[selected];
-        
-        // Tách quái đơn để vẽ vạch
         const parts = target.split(' ');
         let th, ha;
         if (parts[0] === "Thuần") {
@@ -197,7 +218,6 @@
         } else {
             th = parts[0]; ha = parts[1];
         }
-
         document.getElementById("c2_ten").innerText = target;
         document.getElementById("c2_mota").innerText = `Đối Việt Dịch: ${th} trên ${ha}`;
         drawVach(th, 'c2_vachT'); drawVach(ha, 'c2_vachH');
@@ -213,7 +233,6 @@
         });
     }
 
-    // Khởi tạo
     const c2Sel = document.getElementById("c2_select");
     Object.keys(PAIR_DATA).sort().forEach(n => {
         let o = document.createElement('option'); o.value = n; o.text = n; c2Sel.appendChild(o);
