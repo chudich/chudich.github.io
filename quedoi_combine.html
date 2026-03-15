@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Tra Cứu Đối Quẻ Song Song</title>
+    <title>Dịch Lý Song Hành - Phân Minh 2 Cách</title>
     <style>
         :root {
             --primary: #a04000;
@@ -24,9 +24,9 @@
             max-width: 700px; width: 100%; text-align: center;
             border: 1px solid #e0d0b0; margin-bottom: 50px;
         }
-        h2 { color: #5d4037; margin-bottom: 25px; text-transform: uppercase; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        h2 { color: #5d4037; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        .method-desc { font-size: 14px; color: #8b572a; font-style: italic; margin-bottom: 20px; }
         
-        /* Layout Controls */
         .grid { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
         .menu-column { flex: 1; display: flex; flex-direction: column; }
         .label-small { font-size: 13px; color: #8b572a; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
@@ -36,13 +36,11 @@
             font-size: 16px; background-color: #fff; cursor: pointer; outline: none;
         }
 
-        /* Result Area */
         .result-area {
             background: #fff9f0; border: 2px double #e67e22;
             border-radius: 15px; padding: 25px; margin-top: 10px;
         }
 
-        /* Vạch quẻ hiển thị ngang */
         .que-visual { display: flex; gap: 30px; justify-content: center; align-items: center; margin: 15px 0; }
         .quai-don { display: flex; flex-direction: column; gap: 8px; width: 90px; }
         .vach { height: 14px; border-radius: 3px; }
@@ -50,19 +48,16 @@
         .vach.am { display: flex; justify-content: space-between; }
         .vach.am::before, .vach.am::after { content: ''; background-color: var(--vach-color); width: 43%; height: 100%; border-radius: 3px; }
 
-        /* Tên quẻ 200% & Bold */
+        /* Tên quẻ 200% và Đậm */
         .que-name { margin-top: 10px; font-weight: bold; color: #a04000; font-size: 2.5rem; line-height: 1.2; }
         .sub-info { font-size: 15px; color: #7f8c8d; font-style: italic; margin-top: 8px; }
-        
-        .divider-line { width: 100%; height: 2px; background: var(--border); margin: 40px 0; opacity: 0.3; }
     </style>
 </head>
 <body>
 
 <div class="section-container">
-    <h2>Cách 1: Đối Hào (Âm Dương Biến)</h2>
-    <p style="font-size: 14px; color: #8b572a; margin-top:-15px">Nguyên lý: Hào Âm biến Dương, Hào Dương biến Âm</p>
-    
+    <h2>CÁCH 1: ĐỐI HÀO (BIẾN DỊCH)</h2>
+    <div class="method-desc">Quy tắc: Đảo ngược tính chất từng hào (Âm thành Dương, Dương thành Âm)</div>
     <div class="grid">
         <div class="menu-column">
             <div class="label-small">Thượng Gốc</div>
@@ -83,161 +78,144 @@
             </select>
         </div>
     </div>
-
     <div class="result-area">
         <div class="que-visual">
             <div id="c1_vachT" class="quai-don"></div>
             <div id="c1_vachH" class="quai-don"></div>
         </div>
         <div id="c1_ten" class="que-name">---</div>
-        <div id="c1_mota" class="sub-info">Kết quả hiển thị tại đây</div>
+        <div id="c1_mota" class="sub-info">Kết quả biến vạch</div>
     </div>
 </div>
 
 <div class="section-container">
-    <h2>Cách 2: Việt Dịch Chánh Tông (Đảo Hình)</h2>
-    <p style="font-size: 14px; color: #8b572a; margin-top:-15px">Nguyên lý: Lộn ngược hình quẻ (Phản quẻ)</p>
-
+    <h2>CÁCH 2: VIỆT DỊCH CHÁNH TÔNG</h2>
+    <div class="method-desc">Quy tắc: Đối quẻ theo danh mục 64 quẻ đối truyền thống</div>
     <div class="grid">
         <div class="menu-column">
             <div class="label-small">Chọn Quẻ Gốc</div>
             <select id="c2_select" onchange="logicC2()"></select>
         </div>
     </div>
-
     <div class="result-area">
         <div class="que-visual">
             <div id="c2_vachT" class="quai-don"></div>
             <div id="c2_vachH" class="quai-don"></div>
         </div>
         <div id="c2_ten" class="que-name">---</div>
-        <div id="c2_mota" class="sub-info">Kết quả hiển thị tại đây</div>
+        <div id="c2_mota" class="sub-info">Kết quả theo danh sách đối</div>
     </div>
 </div>
 
 <script>
-    // --- DATA CHUNG ---
     const QUAI_V = {
         "Kiền": [1,1,1], "Khôn": [0,0,0], "Chấn": [0,0,1], "Tốn": [1,1,0],
-        "Khảm": [0,1,0], "Ly": [1,0,1], "Cấn": [1,0,0], "Đoài": [0,1,1]
+        "Khảm": [0,1,0], "Ly": [1,0,1], "Cấn": [1,0,0], "Đoài": [0,1,1],
+        "Thiên": [1,1,1], "Địa": [0,0,0], "Lôi": [0,0,1], "Phong": [1,1,0],
+        "Thủy": [0,1,0], "Hoả": [1,0,1], "Sơn": [1,0,0], "Trạch": [0,1,1]
     };
-    const TUONG = { "Kiền":"Thiên", "Khôn":"Địa", "Ly":"Hỏa", "Khảm":"Thủy", "Chấn":"Lôi", "Tốn":"Phong", "Cấn":"Sơn", "Đoài":"Trạch" };
 
-    const DATA_64 = {
-        "Kiền-Kiền": "Thuần Càn", "Kiền-Đoài": "Thiên Trạch Lý", "Kiền-Ly": "Thiên Hỏa Đồng Nhân", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Kiền-Tốn": "Thiên Phong Cấu", "Kiền-Khảm": "Thiên Thủy Tụng", "Kiền-Cấn": "Thiên Sơn Độn", "Kiền-Khôn": "Thiên Địa Bĩ",
-        "Khôn-Kiền": "Địa Thiên Thái", "Khôn-Đoài": "Địa Trạch Lâm", "Khôn-Ly": "Địa Hỏa Minh Di", "Khôn-Chấn": "Địa Lôi Phục", "Khôn-Tốn": "Địa Phong Thăng", "Khôn-Khảm": "Địa Thủy Sư", "Khôn-Cấn": "Địa Sơn Khiêm", "Khôn-Khôn": "Thuần Khôn",
-        "Ly-Kiền": "Hỏa Thiên Đại Hữu", "Ly-Đoài": "Hỏa Trạch Khuê", "Ly-Ly": "Thuần Ly", "Ly-Chấn": "Hỏa Lôi Phệ Hạp", "Ly-Tốn": "Hỏa Phong Đỉnh", "Ly-Khảm": "Hỏa Thủy Vị Tế", "Ly-Cấn": "Hỏa Sơn Lữ", "Ly-Khôn": "Hỏa Địa Tấn",
-        "Khảm-Kiền": "Thủy Thiên Nhu", "Khảm-Đoài": "Thủy Trạch Tiết", "Khảm-Ly": "Thủy Hỏa Ký Tế", "Khảm-Chấn": "Thủy Lôi Truân", "Khảm-Tốn": "Thủy Phong Tỉnh", "Khảm-Khảm": "Thuần Khảm", "Khảm-Cấn": "Thủy Sơn Kiển", "Khảm-Khôn": "Thủy Địa Tỷ",
-        "Chấn-Kiền": "Lôi Thiên Đại Tráng", "Chấn-Đoài": "Lôi Trạch Quy Muội", "Chấn-Ly": "Lôi Hỏa Phong", "Chấn-Chấn": "Thuần Chấn", "Chấn-Tốn": "Lôi Phong Hằng", "Chấn-Khảm": "Lôi Thủy Giải", "Chấn-Cấn": "Lôi Sơn Tiểu Quá", "Chấn-Khôn": "Lôi Địa Dự",
-        "Tốn-Kiền": "Phong Thiên Tiểu Súc", "Tốn-Đoài": "Phong Trạch Trung Phu", "Tốn-Ly": "Phong Hỏa Gia Nhân", "Tốn-Chấn": "Phong Lôi Ích", "Tốn-Tốn": "Thuần Tốn", "Tốn-Khảm": "Phong Thủy Hoán", "Tốn-Cấn": "Phong Sơn Tiệm", "Tốn-Khôn": "Phong Địa Quán",
-        "Cấn-Kiền": "Sơn Thiên Đại Súc", "Cấn-Đoài": "Sơn Trạch Tổn", "Cấn-Ly": "Sơn Hỏa Bí", "Cấn-Chấn": "Sơn Lôi Di", "Cấn-Tốn": "Sơn Phong Cổ", "Cấn-Khảm": "Sơn Thủy Mông", "Cấn-Cấn": "Thuần Cấn", "Cấn-Khôn": "Sơn Địa Bác",
-        "Đoài-Kiền": "Trạch Thiên Quải", "Đoài-Đoài": "Thuần Đoài", "Đoài-Ly": "Trạch Hỏa Cách", "Đoài-Chấn": "Trạch Lôi Tùy", "Đoài-Tốn": "Trạch Phong Đại Quá", "Đoài-Khảm": "Trạch Thủy Khốn", "Đoài-Cấn": "Trạch Sơn Hàm", "Đoài-Khôn": "Trạch Địa Tụy"
+    const TUONG = { "Kiền":"Thiên", "Khôn":"Địa", "Ly":"Hoả", "Khảm":"Thủy", "Chấn":"Lôi", "Tốn":"Phong", "Cấn":"Sơn", "Đoài":"Trạch" };
+    
+    // Ánh xạ tên quẻ từ cặp quái đơn
+    const DATA_NAME = {
+        "Kiền-Kiền": "Thuần Kiền", "Khôn-Khôn": "Thuần Khôn", "Kiền-Đoài": "Thiên Trạch Lý", "Tốn-Kiền": "Phong Thiên Tiểu Súc",
+        "Kiền-Ly": "Thiên Hoả Đồng Nhân", "Ly-Kiền": "Hoả Thiên Đại Hữu", "Kiền-Chấn": "Thiên Lôi Vô Vọng", "Cấn-Kiền": "Sơn Thiên Đại Súc",
+        "Kiền-Tốn": "Thiên Phong Cấu", "Đoài-Kiền": "Trạch Thiên Quải", "Kiền-Khảm": "Thiên Thủy Tụng", "Khảm-Kiền": "Thủy Thiên Nhu",
+        "Kiền-Cấn": "Thiên Sơn Độn", "Chấn-Kiền": "Lôi Thiên Đại Tráng", "Kiền-Khôn": "Thiên Địa Bĩ", "Khôn-Kiền": "Địa Thiên Thái",
+        "Đoài-Ly": "Trạch Hoả Cách", "Ly-Tốn": "Hoả Phong Đỉnh", "Đoài-Chấn": "Trạch Lôi Tùy", "Cấn-Tốn": "Sơn Phong Cổ",
+        "Đoài-Tốn": "Trạch Phong Đại Quá", "Cấn-Chấn": "Sơn Lôi Di", "Đoài-Khảm": "Trạch Thủy Khốn", "Khảm-Tốn": "Thủy Phong Tĩnh",
+        "Đoài-Cấn": "Trạch Sơn Hàm", "Chấn-Tốn": "Lôi Phong Hằng", "Đoài-Khôn": "Trạch Địa Tụy", "Khôn-Tốn": "Địa Phong Thăng",
+        "Đoài-Đoài": "Thuần Đoài", "Tốn-Tốn": "Thuần Tốn", "Ly-Chấn": "Hoả Lôi Phệ Hạp", "Cấn-Ly": "Sơn Hoả Bí",
+        "Ly-Khảm": "Hoả Thủy Vị Tế", "Khảm-Ly": "Thủy Hoả Ký Tế", "Ly-Cấn": "Hoả Sơn Lữ", "Chấn-Ly": "Lôi Hoả Phong",
+        "Ly-Khôn": "Hoả Địa Tấn", "Khôn-Ly": "Địa Hoả Minh Di", "Ly-Đoài": "Hoả Trạch Khuê", "Tốn-Ly": "Phong Hoả Gia Nhân",
+        "Ly-Ly": "Thuần Ly", "Khảm-Khảm": "Thuần Khảm", "Chấn-Khảm": "Lôi Thủy Giải", "Khảm-Cấn": "Thủy Sơn Kiển",
+        "Chấn-Cấn": "Lôi Sơn Tiểu Quá", "Tốn-Đoài": "Phong Trạch Trung Phu", "Chấn-Khôn": "Lôi Địa Dự", "Khôn-Cấn": "Địa Sơn Khiêm",
+        "Chấn-Đoài": "Lôi Trạch Quy Muội", "Tốn-Cấn": "Phong Sơn Tiệm", "Chấn-Chấn": "Thuần Chấn", "Cấn-Cấn": "Thuần Cấn",
+        "Tốn-Khảm": "Phong Thủy Hoán", "Khảm-Đoài": "Thủy Trạch Tiết", "Tốn-Khôn": "Phong Địa Quán", "Khôn-Đoài": "Địa Trạch Lâm",
+        "Tốn-Chấn": "Phong Lôi Ích", "Cấn-Đoài": "Sơn Trạch Tổn", "Khảm-Khôn": "Thủy Địa Tỷ", "Khôn-Khảm": "Địa Thủy Sư",
+        "Khảm-Chấn": "Thủy Lôi Truân", "Cấn-Khảm": "Sơn Thủy Mông", "Cấn-Khôn": "Sơn Địa Bác", "Khôn-Chấn": "Địa Lôi Phục"
     };
 
     // --- LOGIC CÁCH 1 (ĐỐI HÀO) ---
-    const DOI_HÀO = { "Kiền":"Khôn", "Khôn":"Kiền", "Đoài":"Cấn", "Cấn":"Đoài", "Ly":"Khảm", "Khảm":"Ly", "Chấn":"Tốn", "Tốn":"Chấn" };
+    const DOI_HÀO_QUAI = { "Kiền":"Khôn", "Khôn":"Kiền", "Đoài":"Cấn", "Cấn":"Đoài", "Ly":"Khảm", "Khảm":"Ly", "Chấn":"Tốn", "Tốn":"Chấn" };
     function logicC1() {
         const t = document.getElementById("c1_thuong").value;
         const h = document.getElementById("c1_ha").value;
-        const dT = DOI_HÀO[t]; const dH = DOI_HÀO[h];
-        const resName = DATA_64[`${dT}-${dH}`];
+        const dT = DOI_HÀO_QUAI[t]; const dH = DOI_HÀO_QUAI[h];
+        const resName = DATA_NAME[`${dT}-${dH}`] || "Chưa có tên";
         document.getElementById("c1_ten").innerText = resName;
-        document.getElementById("c1_mota").innerText = `${TUONG[dT]} ${TUONG[dH]} (Quẻ ${dT} trên ${dH})`;
+        document.getElementById("c1_mota").innerText = `Hào đảo: ${TUONG[dT]} ${TUONG[dH]} (${dT}/${dH})`;
         drawVach(dT, 'c1_vachT'); drawVach(dH, 'c1_vachH');
     }
 
-    // --- LOGIC CÁCH 2 (VIỆT DỊCH - ĐẢO HÌNH) ---
-    const DATA_C2 = {
-        "Lôi Địa Dự": { t: "Chấn", h: "Khôn", doi: "Địa Sơn Khiêm" },
-        "Địa Sơn Khiêm": { t: "Khôn", h: "Cấn", doi: "Lôi Địa Dự" },
-        "Trạch Hoả Cách": { t: "Đoài", h: "Ly", doi: "Hoả Phong Đỉnh" },
-        "Hoả Phong Đỉnh": { t: "Ly", h: "Tốn", doi: "Trạch Hoả Cách" },
-        "Phong Lôi Ích": { t: "Tốn", h: "Chấn", doi: "Sơn Trạch Tổn" },
-        "Sơn Trạch Tổn": { t: "Cấn", h: "Đoài", doi: "Phong Lôi Ích" },
-        "Lôi Phong Hằng": { t: "Chấn", h: "Tốn", doi: "Trạch Sơn Hàm" },
-        "Trạch Sơn Hàm": { t: "Đoài", h: "Cấn", doi: "Lôi Phong Hằng" },
-        "Thiên Trạch Lý": { t: "Kiền", h: "Đoài", doi: "Phong Thiên Tiểu Súc" },
-        "Phong Thiên Tiểu Súc": { t: "Tốn", h: "Kiền", doi: "Thiên Trạch Lý" },
-        "Thiên Hoả Đồng Nhân": { t: "Kiền", h: "Ly", doi: "Hoả Thiên Đại Hữu" },
-        "Hoả Thiên Đại Hữu": { t: "Ly", h: "Kiền", doi: "Thiên Hoả Đồng Nhân" },
-        "Thiên Lôi Vô Vọng": { t: "Kiền", h: "Chấn", doi: "Sơn Thiên Đại Súc" },
-        "Sơn Thiên Đại Súc": { t: "Cấn", h: "Kiền", doi: "Thiên Lôi Vô Vọng" },
-        "Thiên Phong Cấu": { t: "Kiền", h: "Tốn", doi: "Trạch Thiên Quải" },
-        "Trạch Thiên Quải": { t: "Đoài", h: "Kiền", doi: "Thiên Phong Cấu" },
-        "Thiên Thủy Tụng": { t: "Kiền", h: "Khảm", doi: "Thủy Thiên Nhu" },
-        "Thủy Thiên Nhu": { t: "Khảm", h: "Kiền", doi: "Thiên Thủy Tụng" },
-        "Thiên Sơn Độn": { t: "Kiền", h: "Cấn", doi: "Lôi Thiên Đại Tráng" },
-        "Lôi Thiên Đại Tráng": { t: "Chấn", h: "Kiền", doi: "Thiên Sơn Độn" },
-        "Thiên Địa Bĩ": { t: "Kiền", h: "Khôn", doi: "Địa Thiên Thái" },
-        "Địa Thiên Thái": { t: "Khôn", h: "Kiền", doi: "Thiên Địa Bĩ" },
-        "Thuần Kiền": { t: "Kiền", h: "Kiền", doi: "Thuần Khôn" },
-        "Thuần Khôn": { t: "Khôn", h: "Khôn", doi: "Thuần Kiền" },
-        "Trạch Lôi Tùy": { t: "Đoài", h: "Chấn", doi: "Sơn Phong Cổ" },
-        "Sơn Phong Cổ": { t: "Cấn", h: "Tốn", doi: "Trạch Lôi Tùy" },
-        "Trạch Phong Đại Quá": { t: "Đoài", h: "Tốn", doi: "Sơn Lôi Di" },
-        "Sơn Lôi Di": { t: "Cấn", h: "Chấn", doi: "Trạch Phong Đại Quá" },
-        "Trạch Thủy Khốn": { t: "Đoài", h: "Khảm", doi: "Thủy Phong Tĩnh" },
-        "Thủy Phong Tĩnh": { t: "Khảm", h: "Tốn", doi: "Trạch Thủy Khốn" },
-        "Trạch Địa Tụy": { t: "Đoài", h: "Khôn", doi: "Địa Phong Thăng" },
-        "Địa Phong Thăng": { t: "Khôn", h: "Tốn", doi: "Trạch Địa Tụy" },
-        "Thuần Đoài": { t: "Đoài", h: "Đoài", doi: "Thuần Tốn" },
-        "Thuần Tốn": { t: "Tốn", h: "Tốn", doi: "Thuần Đoài" },
-        "Hoả Lôi Phệ Hạp": { t: "Ly", h: "Chấn", doi: "Sơn Hoả Bí" },
-        "Sơn Hoả Bí": { t: "Cấn", h: "Ly", doi: "Hoả Lôi Phệ Hạp" },
-        "Hoả Thủy Vị Tế": { t: "Ly", h: "Khảm", doi: "Thủy Hoả Ký Tế" },
-        "Thủy Hoả Ký Tế": { t: "Khảm", h: "Ly", doi: "Hoả Thủy Vị Tế" },
-        "Hoả Sơn Lữ": { t: "Ly", h: "Cấn", doi: "Lôi Hoả Phong" },
-        "Lôi Hoả Phong": { t: "Chấn", h: "Ly", doi: "Hoả Sơn Lữ" },
-        "Hoả Địa Tấn": { t: "Ly", h: "Khôn", doi: "Địa Hoả Minh Di" },
-        "Địa Hoả Minh Di": { t: "Khôn", h: "Ly", doi: "Hoả Địa Tấn" },
-        "Hoả Trạch Khuê": { t: "Ly", h: "Đoài", doi: "Phong Hoả Gia Nhân" },
-        "Phong Hoả Gia Nhân": { t: "Tốn", h: "Ly", doi: "Hoả Trạch Khuê" },
-        "Thuần Ly": { t: "Ly", h: "Ly", doi: "Thuần Khảm" },
-        "Thuần Khảm": { t: "Khảm", h: "Khảm", doi: "Thuần Ly" },
-        "Lôi Thủy Giải": { t: "Chấn", h: "Khảm", doi: "Thủy Sơn Kiển" },
-        "Thủy Sơn Kiển": { t: "Khảm", h: "Cấn", doi: "Lôi Thủy Giải" },
-        "Lôi Sơn Tiểu Quá": { t: "Chấn", h: "Cấn", doi: "Phong Trạch Trung Phu" },
-        "Phong Trạch Trung Phu": { t: "Tốn", h: "Đoài", doi: "Lôi Sơn Tiểu Quá" },
-        "Lôi Trạch Quy Muội": { t: "Chấn", h: "Đoài", doi: "Phong Sơn Tiệm" },
-        "Phong Sơn Tiệm": { t: "Tốn", h: "Cấn", doi: "Lôi Trạch Quy Muội" },
-        "Thuần Chấn": { t: "Chấn", h: "Chấn", doi: "Thuần Cấn" },
-        "Thuần Cấn": { t: "Cấn", h: "Cấn", doi: "Thuần Chấn" },
-        "Phong Thủy Hoán": { t: "Tốn", h: "Khảm", doi: "Thủy Trạch Tiết" },
-        "Thủy Trạch Tiết": { t: "Khảm", h: "Đoài", doi: "Phong Thủy Hoán" },
-        "Phong Địa Quán": { t: "Tốn", h: "Khôn", doi: "Địa Trạch Lâm" },
-        "Địa Trạch Lâm": { t: "Khôn", h: "Đoài", doi: "Phong Địa Quán" },
-        "Phong Lôi Ích": { t: "Tốn", h: "Chấn", doi: "Sơn Trạch Tổn" },
-        "Sơn Trạch Tổn": { t: "Cấn", h: "Đoài", doi: "Phong Lôi Ích" },
-        "Thủy Địa Tỷ": { t: "Khảm", h: "Khôn", doi: "Địa Thủy Sư" },
-        "Địa Thủy Sư": { t: "Khôn", h: "Khảm", doi: "Thủy Địa Tỷ" },
-        "Thủy Lôi Truân": { t: "Khảm", h: "Chấn", doi: "Sơn Thủy Mông" },
-        "Sơn Thủy Mông": { t: "Cấn", h: "Khảm", doi: "Thủy Lôi Truân" },
-        "Sơn Địa Bác": { t: "Cấn", h: "Khôn", doi: "Địa Lôi Phục" },
-        "Địa Lôi Phục": { t: "Khôn", h: "Chấn", doi: "Sơn Địa Bác" }
+    // --- LOGIC CÁCH 2 (DATA 64 QUẺ ĐỐI) ---
+    const PAIR_DATA = {
+        "Thiên Trạch Lý": "Phong Thiên Tiểu Súc", "Phong Thiên Tiểu Súc": "Thiên Trạch Lý",
+        "Thiên Hoả Đồng Nhân": "Hoả Thiên Đại Hữu", "Hoả Thiên Đại Hữu": "Thiên Hoả Đồng Nhân",
+        "Thiên Lôi Vô Vọng": "Sơn Thiên Đại Súc", "Sơn Thiên Đại Súc": "Thiên Lôi Vô Vọng",
+        "Thiên Phong Cấu": "Trạch Thiên Quải", "Trạch Thiên Quải": "Thiên Phong Cấu",
+        "Thiên Thủy Tụng": "Thủy Thiên Nhu", "Thủy Thiên Nhu": "Thiên Thủy Tụng",
+        "Thiên Sơn Độn": "Lôi Thiên Đại Tráng", "Lôi Thiên Đại Tráng": "Thiên Sơn Độn",
+        "Thiên Địa Bĩ": "Địa Thiên Thái", "Địa Thiên Thái": "Thiên Địa Bĩ",
+        "Thuần Kiền": "Thuần Khôn", "Thuần Khôn": "Thuần Kiền",
+        "Trạch Hoả Cách": "Hoả Phong Đỉnh", "Hoả Phong Đỉnh": "Trạch Hoả Cách",
+        "Trạch Lôi Tùy": "Sơn Phong Cổ", "Sơn Phong Cổ": "Trạch Lôi Tùy",
+        "Trạch Phong Đại Quá": "Sơn Lôi Di", "Sơn Lôi Di": "Trạch Phong Đại Quá",
+        "Trạch Thủy Khốn": "Thủy Phong Tĩnh", "Thủy Phong Tĩnh": "Trạch Thủy Khốn",
+        "Trạch Sơn Hàm": "Lôi Phong Hằng", "Lôi Phong Hằng": "Trạch Sơn Hàm",
+        "Trạch Địa Tụy": "Địa Phong Thăng", "Địa Phong Thăng": "Trạch Địa Tụy",
+        "Thuần Đoài": "Thuần Tốn", "Thuần Tốn": "Thuần Đoài",
+        "Hoả Lôi Phệ Hạp": "Sơn Hoả Bí", "Sơn Hoả Bí": "Hoả Lôi Phệ Hạp",
+        "Hoả Thủy Vị Tế": "Thủy Hoả Ký Tế", "Thủy Hoả Ký Tế": "Hoả Thủy Vị Tế",
+        "Hoả Sơn Lữ": "Lôi Hoả Phong", "Lôi Hoả Phong": "Hoả Sơn Lữ",
+        "Hoả Địa Tấn": "Địa Hoả Minh Di", "Địa Hoả Minh Di": "Hoả Địa Tấn",
+        "Hoả Trạch Khuê": "Phong Hoả Gia Nhân", "Phong Hoả Gia Nhân": "Hoả Trạch Khuê",
+        "Thuần Ly": "Thuần Khảm", "Thuần Khảm": "Thuần Ly",
+        "Lôi Thủy Giải": "Thủy Sơn Kiển", "Thủy Sơn Kiển": "Lôi Thủy Giải",
+        "Lôi Sơn Tiểu Quá": "Phong Trạch Trung Phu", "Phong Trạch Trung Phu": "Lôi Sơn Tiểu Quá",
+        "Lôi Địa Dự": "Địa Sơn Khiêm", "Địa Sơn Khiêm": "Lôi Địa Dự",
+        "Lôi Trạch Quy Muội": "Phong Sơn Tiệm", "Phong Sơn Tiệm": "Lôi Trạch Quy Muội",
+        "Thuần Chấn": "Thuần Cấn", "Thuần Cấn": "Thuần Chấn",
+        "Phong Thuỷ Hoán": "Thủy Trạch Tiết", "Thủy Trạch Tiết": "Phong Thuỷ Hoán",
+        "Phong Địa Quán": "Địa Trạch Lâm", "Địa Trạch Lâm": "Phong Địa Quán",
+        "Phong Lôi Ích": "Sơn Trạch Tổn", "Sơn Trạch Tổn": "Phong Lôi Ích",
+        "Thủy Địa Tỷ": "Địa Thủy Sư", "Địa Thủy Sư": "Thủy Địa Tỷ",
+        "Thủy Lôi Truân": "Sơn Thủy Mông", "Sơn Thủy Mông": "Thủy Lôi Truân",
+        "Sơn Địa Bác": "Địa Lôi Phục", "Địa Lôi Phục": "Sơn Địa Bác"
     };
 
     function logicC2() {
-        const name = document.getElementById("c2_select").value;
-        const doiName = DATA_C2[name].doi;
-        const res = DATA_C2[doiName];
-        document.getElementById("c2_ten").innerText = doiName;
-        document.getElementById("c2_mota").innerText = `${TUONG[res.t]} ${TUONG[res.h]} (Tượng: ${res.t} trên ${res.h})`;
-        drawVach(res.t, 'c2_vachT'); drawVach(res.h, 'c2_vachH');
+        const selected = document.getElementById("c2_select").value;
+        const target = PAIR_DATA[selected];
+        
+        // Tách quái đơn để vẽ vạch
+        const parts = target.split(' ');
+        let th, ha;
+        if (parts[0] === "Thuần") {
+            th = ha = parts[1];
+        } else {
+            th = parts[0]; ha = parts[1];
+        }
+
+        document.getElementById("c2_ten").innerText = target;
+        document.getElementById("c2_mota").innerText = `Đối Việt Dịch: ${th} trên ${ha}`;
+        drawVach(th, 'c2_vachT'); drawVach(ha, 'c2_vachH');
     }
 
-    // --- TOOL VẼ VẠCH ---
     function drawVach(name, id) {
         const cont = document.getElementById(id); cont.innerHTML = '';
-        QUAI_V[name].forEach(v => {
+        const vachs = QUAI_V[name] || [0,0,0];
+        vachs.forEach(v => {
             const d = document.createElement('div');
             d.className = v === 1 ? 'vach duong' : 'vach am';
             cont.appendChild(d);
         });
     }
 
-    // --- KHỞI TẠO ---
+    // Khởi tạo
     const c2Sel = document.getElementById("c2_select");
-    Object.keys(DATA_C2).sort().forEach(n => {
+    Object.keys(PAIR_DATA).sort().forEach(n => {
         let o = document.createElement('option'); o.value = n; o.text = n; c2Sel.appendChild(o);
     });
 
