@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra Cứu Đối Quẻ - Việt Dịch Chánh Tông</title>
+    <style>
+        :root {
+            --primary: #c0392b;
+            --bg: #f4f1ea;
+            --card: #ffffff;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .container { background: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 800px; width: 100%; border-top: 5px solid var(--primary); }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 30px; }
+        
+        .main-ui { display: grid; grid-template-columns: 1fr 100px 1fr; gap: 20px; align-items: center; }
+        .side { display: flex; flex-direction: column; align-items: center; }
+        
+        select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 20px; font-size: 16px; cursor: pointer; }
+        
+        .que-display { border: 1px solid #eee; padding: 20px; border-radius: 8px; background: #fafafa; width: 120px; text-align: center; min-height: 180px; display: flex; flex-direction: column-reverse; justify-content: center; }
+        .vach { height: 12px; margin: 4px 0; border-radius: 2px; transition: all 0.3s; }
+        .vach.duong { background-color: #333; width: 100%; }
+        .vach.am { display: flex; justify-content: space-between; background: transparent; }
+        .vach.am::before, .vach.am::after { content: ''; background-color: #333; width: 42%; height: 100%; border-radius: 2px; }
+        
+        .arrow { font-size: 40px; color: var(--primary); text-align: center; }
+        .que-name { margin-top: 15px; font-weight: bold; color: #2c3e50; min-height: 40px; text-align: center; }
+        
+        @media (max-width: 600px) {
+            .main-ui { grid-template-columns: 1fr; }
+            .arrow { transform: rotate(90deg); margin: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Tra Cứu Đối Quẻ (Việt Dịch)</h2>
+    
+    <div class="main-ui">
+        <div class="side">
+            <select id="selectQue" onchange="updateDoiQue()">
+                </select>
+            <div class="que-display" id="displayGoc"></div>
+            <div class="que-name" id="nameGoc"></div>
+        </div>
+
+        <div class="arrow">⇄</div>
+
+        <div class="side">
+            <div style="margin-bottom: 20px; font-weight: bold; color: var(--primary);">Quẻ Đối</div>
+            <div class="que-display" id="displayDoi"></div>
+            <div class="que-name" id="nameDoi"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Data 64 quẻ và cấu trúc hào (1: Dương, 0: Âm - Tính từ hào 1 đến hào 6)
+const dataDich = {
+    "Thuần Kiền": { vach: [1,1,1,1,1,1], doi: "Thuần Khôn" },
+    "Thuần Khôn": { vach: [0,0,0,0,0,0], doi: "Thuần Kiền" },
+    "Thiên Trạch Lý": { vach: [1,1,0,1,1,1], doi: "Phong Thiên Tiểu Súc" },
+    "Phong Thiên Tiểu Súc": { vach: [1,1,1,0,1,1], doi: "Thiên Trạch Lý" },
+    "Thiên Hoả Đồng Nhân": { vach: [1,0,1,1,1,1], doi: "Hoả Thiên Đại Hữu" },
+    "Hoả Thiên Đại Hữu": { vach: [1,1,1,1,0,1], doi: "Thiên Hoả Đồng Nhân" },
+    "Thiên Lôi Vô Vọng": { vach: [1,0,0,1,1,1], doi: "Sơn Thiên Đại Súc" },
+    "Sơn Thiên Đại Súc": { vach: [1,1,1,0,0,1], doi: "Thiên Lôi Vô Vọng" },
+    "Thiên Phong Cấu": { vach: [0,1,1,1,1,1], doi: "Trạch Thiên Quải" },
+    "Trạch Thiên Quải": { vach: [1,1,1,1,1,0], doi: "Thiên Phong Cấu" },
+    "Thiên Thủy Tụng": { vach: [0,1,0,1,1,1], doi: "Thủy Thiên Nhu" },
+    "Thủy Thiên Nhu": { vach: [1,1,1,0,1,0], doi: "Thiên Thủy Tụng" },
+    "Thiên Sơn Độn": { vach: [0,0,1,1,1,1], doi: "Lôi Thiên Đại Tráng" },
+    "Lôi Thiên Đại Tráng": { vach: [1,1,1,1,0,0], doi: "Thiên Sơn Độn" },
+    "Thiên Địa Bĩ": { vach: [0,0,0,1,1,1], doi: "Địa Thiên Thái" },
+    "Địa Thiên Thái": { vach: [1,1,1,0,0,0], doi: "Thiên Địa Bĩ" },
+    "Trạch Hoả Cách": { vach: [1,0,1,1,1,0], doi: "Hoả Phong Đỉnh" },
+    "Hoả Phong Đỉnh": { vach: [0,1,1,1,0,1], doi: "Trạch Hoả Cách" },
+    "Trạch Lôi Tùy": { vach: [1,0,0,1,1,0], doi: "Sơn Phong Cổ" },
+    "Sơn Phong Cổ": { vach: [0,1,1,0,0,1], doi: "Trạch Lôi Tùy" },
+    "Trạch Phong Đại Quá": { vach: [0,1,1,1,1,0], doi: "Sơn Lôi Di" },
+    "Sơn Lôi Di": { vach: [1,0,0,0,0,1], doi: "Trạch Phong Đại Quá" },
+    "Trạch Thủy Khốn": { vach: [0,1,0,1,1,0], doi: "Thủy Phong Tĩnh" },
+    "Thủy Phong Tĩnh": { vach: [0,1,1,0,1,0], doi: "Trạch Thủy Khốn" },
+    "Trạch Sơn Hàm": { vach: [0,0,1,1,1,0], doi: "Lôi Phong Hằng" },
+    "Lôi Phong Hằng": { vach: [0,1,1,1,0,0], doi: "Trạch Sơn Hàm" },
+    "Trạch Địa Tụy": { vach: [0,0,0,1,1,0], doi: "Địa Phong Thăng" },
+    "Địa Phong Thăng": { vach: [0,1,1,0,0,0], doi: "Trạch Địa Tụy" },
+    "Thuần Đoài": { vach: [1,1,0,1,1,0], doi: "Thuần Tốn" },
+    "Thuần Tốn": { vach: [0,1,1,0,1,1], doi: "Thuần Đoài" },
+    "Hoả Lôi Phệ Hạp": { vach: [1,0,0,1,0,1], doi: "Sơn Hoả Bí" },
+    "Sơn Hoả Bí": { vach: [1,0,1,0,0,1], doi: "Hoả Lôi Phệ Hạp" },
+    "Hoả Thủy Vị Tế": { vach: [0,1,0,1,0,1], doi: "Thủy Hoả Ký Tế" },
+    "Thủy Hoả Ký Tế": { vach: [1,0,1,0,1,0], doi: "Hoả Thủy Vị Tế" },
+    "Hoả Sơn Lữ": { vach: [0,0,1,1,0,1], doi: "Lôi Hoả Phong" },
+    "Lôi Hoả Phong": { vach: [1,0,1,1,0,0], doi: "Hoả Sơn Lữ" },
+    "Hoả Địa Tấn": { vach: [0,0,0,1,0,1], doi: "Địa Hoả Minh Di" },
+    "Địa Hoả Minh Di": { vach: [1,0,1,0,0,0], doi: "Hoả Địa Tấn" },
+    "Hoả Trạch Khuê": { vach: [1,1,0,1,0,1], doi: "Phong Hoả Gia Nhân" },
+    "Phong Hoả Gia Nhân": { vach: [1,0,1,1,0,1], doi: "Hoả Trạch Khuê" },
+    "Thuần Ly": { vach: [1,0,1,1,0,1], doi: "Thuần Khảm" },
+    "Thuần Khảm": { vach: [0,1,0,0,1,0], doi: "Thuần Ly" },
+    "Lôi Thủy Giải": { vach: [0,1,0,0,0,1], doi: "Thủy Sơn Kiển" },
+    "Thủy Sơn Kiển": { vach: [0,0,1,0,1,0], doi: "Lôi Thủy Giải" },
+    "Lôi Sơn Tiểu Quá": { vach: [0,0,1,1,0,0], doi: "Phong Trạch Trung Phu" },
+    "Phong Trạch Trung Phu": { vach: [1,1,0,0,1,1], doi: "Lôi Sơn Tiểu Quá" },
+    "Lôi Địa Dự": { vach: [0,0,0,0,0,1], doi: "Địa Sơn Khiêm" },
+    "Địa Sơn Khiêm": { vach: [1,0,0,0,0,0], doi: "Lôi Địa Dự" },
+    "Lôi Trạch Quy Muội": { vach: [1,1,0,0,0,1], doi: "Phong Sơn Tiệm" },
+    "Phong Sơn Tiệm": { vach: [0,0,1,1,1,0], doi: "Lôi Trạch Quy Muội" },
+    "Thuần Chấn": { vach: [1,0,0,1,0,0], doi: "Thuần Cấn" },
+    "Thuần Cấn": { vach: [0,0,1,0,0,1], doi: "Thuần Chấn" },
+    "Phong Thủy Hoán": { vach: [0,1,0,0,1,1], doi: "Thủy Trạch Tiết" },
+    "Thủy Trạch Tiết": { vach: [1,1,0,1,0,0], doi: "Phong Thủy Hoán" },
+    "Phong Địa Quán": { vach: [0,0,0,0,1,1], doi: "Địa Trạch Lâm" },
+    "Địa Trạch Lâm": { vach: [1,1,0,0,0,0], doi: "Phong Địa Quán" },
+    "Phong Lôi Ích": { vach: [1,0,0,0,1,1], doi: "Sơn Trạch Tổn" },
+    "Sơn Trạch Tổn": { vach: [1,1,0,0,0,1], doi: "Phong Lôi Ích" },
+    "Thủy Địa Tỷ": { vach: [0,0,0,0,1,0], doi: "Địa Thủy Sư" },
+    "Địa Thủy Sư": { vach: [0,1,0,0,0,0], doi: "Thủy Địa Tỷ" },
+    "Thủy Lôi Truân": { vach: [1,0,0,0,1,0], doi: "Sơn Thủy Mông" },
+    "Sơn Thủy Mông": { vach: [0,1,0,0,0,1], doi: "Thủy Lôi Truân" },
+    "Sơn Địa Bác": { vach: [0,0,0,0,0,1], doi: "Địa Lôi Phục" },
+    "Địa Lôi Phục": { vach: [1,0,0,0,0,0], doi: "Sơn Địa Bác" }
+};
+
+// Khởi tạo Select box
+const selectQue = document.getElementById('selectQue');
+Object.keys(dataDich).sort().forEach(name => {
+    let option = document.createElement('option');
+    option.value = name;
+    option.text = name;
+    selectQue.appendChild(option);
+});
+
+function drawVach(vachArray, targetId) {
+    const container = document.getElementById(targetId);
+    container.innerHTML = '';
+    vachArray.forEach(v => {
+        const div = document.createElement('div');
+        div.className = v === 1 ? 'vach duong' : 'vach am';
+        container.appendChild(div);
+    });
+}
+
+function updateDoiQue() {
+    const nameGoc = selectQue.value;
+    const queGoc = dataDich[nameGoc];
+    const nameDoi = queGoc.doi;
+    const queDoi = dataDich[nameDoi];
+
+    // Vẽ quẻ gốc
+    document.getElementById('nameGoc').innerText = nameGoc;
+    drawVach(queGoc.vach, 'displayGoc');
+
+    // Vẽ quẻ đối
+    document.getElementById('nameDoi').innerText = nameDoi;
+    drawVach(queDoi.vach, 'displayDoi');
+}
+
+// Chạy lần đầu
+updateDoiQue();
+</script>
+
+</body>
+</html>
