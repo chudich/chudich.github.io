@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinh Dịch Utilities</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Tiêu đề đầu trang */
+        .header-title {
+            text-align: center;
+            font-size: 2.5rem; /* Chữ to */
+            font-weight: bold; /* Chữ đậm */
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        /* Bố cục lưới */
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cột như ảnh mẫu */
+            gap: 30px; /* Khoảng cách giữa các menu */
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* Từng ô menu */
+        .utility-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none; /* Bỏ gạch chân link */
+            color: #555;
+            transition: transform 0.2s;
+        }
+
+        .utility-item:hover {
+            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi di chuột */
+        }
+
+        /* Icon */
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            border-radius: 20px; /* Bo góc nhẹ như ảnh mẫu */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .icon-wrapper img {
+            width: 60%; /* Icon chiếm 60% không gian ô trắng */
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Text dưới icon */
+        .utility-name {
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Responsive cho điện thoại nhỏ */
+        @media (max-width: 400px) {
+            .utility-grid {
+                gap: 15px;
+            }
+            .icon-wrapper {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="header-title">Kinh Dịch Utilities</h1>
+
+    <div class="utility-grid">
+        <a href="link-cua-ban-1.html" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 1">
+            </div>
+            <span class="utility-name">Lập Quẻ</span>
+        </a>
+
+        <a href="link-cua-ban-2.html" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 2">
+            </div>
+            <span class="utility-name">Mai Hoa</span>
+        </a>
+
+        <a href="link-cua-ban-3.html" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 3">
+            </div>
+            <span class="utility-name">Liên Hoa Độn</span>
+        </a>
+
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 4">
+            </div>
+            <span class="utility-name">Việt Dịch</span>
+        </a>
+
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 5">
+            </div>
+            <span class="utility-name">Tra Cứu</span>
+        </a>
+
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper">
+                <img src="https://via.placeholder.com/80" alt="Icon 6">
+            </div>
+            <span class="utility-name">Cài Đặt</span>
+        </a>
+    </div>
+
+</body>
+</html>
