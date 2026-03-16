@@ -26,8 +26,8 @@
 
         .utility-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Giữ nguyên 3 cột như ảnh mẫu */
-            gap: 25px 15px; /* Khoảng cách dọc 25px, ngang 15px */
+            grid-template-columns: repeat(3, 1fr); /* 3 cột */
+            gap: 25px 15px;
             max-width: 500px;
             width: 100%;
         }
@@ -36,20 +36,24 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
-            color: #666;
+            text-decoration: none; /* Bỏ gạch chân */
+            color: #444;
+            transition: opacity 0.2s;
+        }
+
+        .utility-item:active {
+            opacity: 0.6; /* Hiệu ứng khi bấm trên điện thoại */
         }
 
         .icon-wrapper {
             width: 85px;
             height: 85px;
-            background-color: #f8f8f8; /* Màu nền nhẹ cho ô icon */
+            background-color: #f8f8f8;
             border-radius: 22px; 
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 8px;
-            /* Đổ bóng nhẹ để nổi bật trên nền trắng */
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
@@ -66,14 +70,10 @@
             line-height: 1.2;
         }
 
-        /* Tối ưu cho màn hình điện thoại nhỏ */
         @media (max-width: 380px) {
             .icon-wrapper {
-                width: 70px;
-                height: 70px;
-            }
-            .utility-name {
-                font-size: 13px;
+                width: 75px;
+                height: 75px;
             }
         }
     </style>
@@ -83,55 +83,63 @@
     <h1 class="header-title">Kinh Dịch Utilities</h1>
 
     <div class="utility-grid">
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 1</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 2</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 3</span>
         </a>
 
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 4</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 5</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 6</span>
         </a>
 
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 7</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 8</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 9</span>
         </a>
 
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
-            <span class="utility-name">Liên Hoa</span>
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 10</span>
         </a>
-        <a href="https://github.com/chudich/chudich.github.io/blob/main/lienhoa_update2026.html" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 11</span>
         </a>
-        <a href="#" class="utility-item">
-            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
             <span class="utility-name">Tiện ích 12</span>
         </a>
     </div>
