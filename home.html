@@ -6,8 +6,8 @@
     <title>Kinh Dịch Utilities</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -15,73 +15,65 @@
             align-items: center;
         }
 
-        /* Tiêu đề đầu trang */
         .header-title {
             text-align: center;
-            font-size: 2.5rem; /* Chữ to */
-            font-weight: bold; /* Chữ đậm */
+            font-size: 28px; 
+            font-weight: bold;
+            margin-top: 20px;
             margin-bottom: 40px;
-            color: #333;
+            color: #222;
         }
 
-        /* Bố cục lưới */
         .utility-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 cột như ảnh mẫu */
-            gap: 30px; /* Khoảng cách giữa các menu */
-            max-width: 600px;
+            grid-template-columns: repeat(3, 1fr); /* Giữ nguyên 3 cột như ảnh mẫu */
+            gap: 25px 15px; /* Khoảng cách dọc 25px, ngang 15px */
+            max-width: 500px;
             width: 100%;
         }
 
-        /* Từng ô menu */
         .utility-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none; /* Bỏ gạch chân link */
-            color: #555;
-            transition: transform 0.2s;
+            text-decoration: none;
+            color: #666;
         }
 
-        .utility-item:hover {
-            transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi di chuột */
-        }
-
-        /* Icon */
         .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            background-color: #fff;
-            border-radius: 20px; /* Bo góc nhẹ như ảnh mẫu */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 85px;
+            height: 85px;
+            background-color: #f8f8f8; /* Màu nền nhẹ cho ô icon */
+            border-radius: 22px; 
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 10px;
-            overflow: hidden;
+            margin-bottom: 8px;
+            /* Đổ bóng nhẹ để nổi bật trên nền trắng */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .icon-wrapper img {
-            width: 60%; /* Icon chiếm 60% không gian ô trắng */
+            width: 55%; 
             height: auto;
             object-fit: contain;
         }
 
-        /* Text dưới icon */
         .utility-name {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             text-align: center;
+            line-height: 1.2;
         }
 
-        /* Responsive cho điện thoại nhỏ */
-        @media (max-width: 400px) {
-            .utility-grid {
-                gap: 15px;
-            }
+        /* Tối ưu cho màn hình điện thoại nhỏ */
+        @media (max-width: 380px) {
             .icon-wrapper {
                 width: 70px;
                 height: 70px;
+            }
+            .utility-name {
+                font-size: 13px;
             }
         }
     </style>
@@ -91,46 +83,56 @@
     <h1 class="header-title">Kinh Dịch Utilities</h1>
 
     <div class="utility-grid">
-        <a href="link-cua-ban-1.html" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 1">
-            </div>
-            <span class="utility-name">Lập Quẻ</span>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 1</span>
         </a>
-
-        <a href="link-cua-ban-2.html" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 2">
-            </div>
-            <span class="utility-name">Mai Hoa</span>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 2</span>
         </a>
-
-        <a href="link-cua-ban-3.html" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 3">
-            </div>
-            <span class="utility-name">Liên Hoa Độn</span>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 3</span>
         </a>
 
         <a href="#" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 4">
-            </div>
-            <span class="utility-name">Việt Dịch</span>
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 4</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 5</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 6</span>
         </a>
 
         <a href="#" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 5">
-            </div>
-            <span class="utility-name">Tra Cứu</span>
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 7</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 8</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 9</span>
         </a>
 
         <a href="#" class="utility-item">
-            <div class="icon-wrapper">
-                <img src="https://via.placeholder.com/80" alt="Icon 6">
-            </div>
-            <span class="utility-name">Cài Đặt</span>
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 10</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 11</span>
+        </a>
+        <a href="#" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/100" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 12</span>
         </a>
     </div>
 
