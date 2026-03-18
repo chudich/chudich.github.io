@@ -3,120 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinh Dịch Utilities - Xin Quẻ Thổ Công</title>
+    <title>Kinh Dịch Utilities - Bản Phóng To</title>
     <style>
         :root {
             --primary-color: #6b4e31;
             --accent-color: #d4af37;
             --bg-color: #fcfaf2;
+            --text-main: #222;
         }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             text-align: center; 
-            padding: 20px; 
+            padding: 30px 10px; 
             background: var(--bg-color);
-            color: #333;
-            line-height: 1.6;
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 20px; /* Tăng size chữ cơ bản */
         }
         h2 {
             color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
             display: inline-block;
-            padding-bottom: 5px;
-            margin-top: 40px;
+            padding-bottom: 10px;
+            margin-top: 50px;
+            font-size: 1.8em; /* Chữ tiêu đề rất to */
         }
         .image-container img { 
-            width: 150px; 
+            width: 220px; /* Tăng kích thước ảnh thờ */
             border-radius: 50%;
-            border: 4px solid var(--accent-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 6px solid var(--accent-color);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
-        /* Khung chứa các ô kết quả */
+        /* Khung chứa các ô kết quả - To hơn */
         .container { 
             display: flex; 
             justify-content: center; 
-            gap: 15px; 
-            margin: 20px 0;
+            gap: 25px; 
+            margin: 30px 0;
             flex-wrap: wrap;
         }
         .box { 
-            width: 100px; 
-            height: 100px; 
-            border: 2px solid var(--primary-color); 
-            border-radius: 12px;
+            width: 150px; /* Tăng từ 100px lên 150px */
+            height: 150px; 
+            border: 4px solid var(--primary-color); 
+            border-radius: 20px;
             display: flex; 
             flex-direction: column;
             align-items: center; 
             justify-content: center; 
             background: #fff;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+            font-size: 1.5em;
+            font-weight: bold;
         }
 
-        /* Style cho miếng keo Âm Dương */
+        /* Miếng keo Âm Dương - To và rõ */
         .keo-item {
-            width: 60px;
-            height: 30px;
-            border-radius: 60px 60px 0 0;
+            width: 100px;
+            height: 50px;
+            border-radius: 100px 100px 0 0;
             transition: all 0.2s;
+            margin-bottom: 10px;
         }
-        .keo-yang { background: #e63946; border: 2px solid #9b1b26; } /* Ngửa - Đỏ */
-        .keo-yin { background: #333; border: 2px solid #000; transform: rotate(180deg); } /* Sấp - Đen */
+        .keo-yang { background: #e63946; border: 3px solid #9b1b26; } /* Ngửa */
+        .keo-yin { background: #333; border: 3px solid #000; transform: rotate(180deg); } /* Sấp */
         
-        /* Hiệu ứng rung khi gieo */
+        /* Hiệu ứng rung */
         .shaking { animation: shake 0.15s infinite; }
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            50% { transform: translate(-2px, -1px) rotate(2deg); }
-            100% { transform: translate(1px, 1px) rotate(0deg); }
+            0% { transform: translate(2px, 2px) rotate(0deg); }
+            50% { transform: translate(-3px, -2px) rotate(3deg); }
+            100% { transform: translate(2px, 2px) rotate(0deg); }
         }
 
-        /* Nút bấm */
+        /* Nút bấm to, dễ bấm */
         button { 
-            padding: 10px 20px; 
-            font-size: 15px; 
+            padding: 20px 40px; 
+            font-size: 22px; 
             font-weight: bold;
             cursor: pointer; 
             background: var(--primary-color);
             color: white; 
             border: none; 
-            border-radius: 8px;
+            border-radius: 50px;
             transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin: 10px;
         }
-        button:hover { background: #4a3622; transform: translateY(-2px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
+        button:hover { background: #4a3622; transform: scale(1.05); }
+        button:disabled { background: #ccc; transform: none; }
 
-        /* Kết quả */
         .result-box {
-            font-size: 1.2em;
+            font-size: 1.6em;
             font-weight: bold;
-            margin: 10px 0;
-            min-height: 30px;
+            margin: 20px 0;
+            min-height: 40px;
+            padding: 0 20px;
         }
 
         /* Coin */
         .coin {
-            width: 50px;
-            height: 50px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: #FFD700;
-            border: 2px solid #b8860b;
+            border: 4px solid #b8860b;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        select {
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
         }
 
         textarea { 
-            width: 90%; max-width: 500px; height: 80px; 
-            margin: 10px 0; border-radius: 8px; padding: 10px;
-            border: 1px solid #ccc;
+            width: 90%; max-width: 700px; height: 120px; 
+            margin: 20px 0; border-radius: 15px; padding: 15px;
+            border: 2px solid #ccc; font-size: 18px;
         }
         #history { 
-            max-width: 600px; margin: 20px auto; text-align: left;
-            background: #fff; padding: 15px; border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 800px; margin: 40px auto; text-align: left;
+            background: #fff; padding: 25px; border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
+        small { font-size: 0.7em; color: #666; }
     </style>
 </head>
 <body>
@@ -130,41 +147,45 @@
         <div class="box" id="keo1">?</div>
         <div class="box" id="keo2">?</div>
     </div>
-    <div class="result-box" id="keoText">Bấm để xin đại đức</div>
+    <div class="result-box" id="keoText">Thành tâm khấn nguyện</div>
     <button id="btnKeo" onclick="rollKeo()">Gieo Quẻ Keo</button>
 
-    <hr style="margin: 40px 20%; border: 0.5px solid #ddd;">
+    <hr style="margin: 60px 15%; border: 1px solid #ddd;">
 
-    <h2>Tung Xu (Yes/No)</h2>
+    <h2>Tung Xu (Có / Không)</h2>
     <div class="container">
         <div class="box" id="coinBox">?</div>
     </div>
-    <button id="btnCoin" onclick="flipCoin()">Tung Xu</button>
+    <button id="btnCoin" onclick="flipCoin()">Tung Đồng Xu</button>
 
-    <h2>Số Ngẫu Nhiên</h2>
-    <select id="range" style="padding: 5px; margin-bottom: 10px;">
-        <option value="100">0 - 99</option>
-        <option value="1000">100 - 999</option>
-        <option value="1000000">1000 - 999999</option>
+    <h2>Xin Số Ngẫu Nhiên</h2>
+    <select id="range">
+        <option value="100">Dãy số: 0 - 99</option>
+        <option value="1000">Dãy số: 100 - 999</option>
+        <option value="1000000">Dãy số: 1000 - 999999</option>
     </select>
     <div class="container">
-        <div class="box"><span id="leftNum">0</span><small>Trái</small></div>
-        <div class="box"><span id="rightNum">0</span><small>Phải</small></div>
+        <div class="box"><span id="leftNum" style="font-size: 1.2em;">0</span><small>Tay Trái</small></div>
+        <div class="box"><span id="rightNum" style="font-size: 1.2em;">0</span><small>Tay Phải</small></div>
     </div>
-    <button onclick="rollNumber('left')">Tay Trái</button>
-    <button onclick="rollNumber('right')">Tay Phải</button>
+    <div style="margin-bottom: 20px;">
+        <button onclick="rollNumber('left')">Xin Tay Trái</button>
+        <button onclick="rollNumber('right')">Xin Tay Phải</button>
+    </div>
 
-    <h2>Ghi chú & Lưu trữ</h2>
-    <textarea id="note" placeholder="Nhập lời khấn hoặc ý nguyện..."></textarea><br>
-    <button onclick="saveToHistory()">Lưu Kết Quả</button>
+    <h2>Ghi chú Lời khấn</h2>
+    <textarea id="note" placeholder="Nhập ý nguyện tại đây trước khi lưu..."></textarea><br>
+    <button onclick="saveToHistory()" style="background: #28a745;">Lưu Lịch Sử</button>
 
     <div id="history">
-        <strong>Lịch sử gần đây:</strong>
-        <div id="historyContent"></div>
+        <strong style="font-size: 1.2em;">📜 Lịch sử xin quẻ:</strong>
+        <div id="historyContent" style="margin-top: 15px;"></div>
     </div>
 
     <script>
-        // Hàm hiển thị hình ảnh miếng keo
+        // Thời gian chờ gieo quẻ (5000ms = 5 giây)
+        const WAITING_TIME = 5000;
+
         function drawKeo(divId, type) {
             const el = document.getElementById(divId);
             if (type === 'yang') {
@@ -174,7 +195,6 @@
             }
         }
 
-        // 1. Tối ưu tính năng Xin Keo
         function rollKeo() {
             const btn = document.getElementById('btnKeo');
             const resText = document.getElementById('keoText');
@@ -182,15 +202,13 @@
             const k2 = document.getElementById('keo2');
 
             btn.disabled = true;
-            resText.innerText = "Đang xin đại đức...";
+            resText.innerText = "Đang xin Đại Đức chứng giám...";
             k1.classList.add('shaking');
             k2.classList.add('shaking');
 
-            let count = 0;
             let timer = setInterval(() => {
                 drawKeo('keo1', Math.random() < 0.5 ? 'yin' : 'yang');
                 drawKeo('keo2', Math.random() < 0.5 ? 'yin' : 'yang');
-                count++;
             }, 100);
 
             setTimeout(() => {
@@ -205,17 +223,16 @@
                 drawKeo('keo2', r2);
 
                 if (r1 !== r2) {
-                    resText.innerHTML = "<span style='color:green'>ĐƯỢC KEO (ÂM DƯƠNG HÒA HỢP)</span>";
+                    resText.innerHTML = "<span style='color:green; font-size: 1.2em;'>🌿 ĐƯỢC KEO (ÂM DƯƠNG HÒA HỢP)</span>";
                 } else if (r1 === 'yang') {
-                    resText.innerHTML = "<span style='color:orange'>QUẺ CƯỜI (2 NGỬA)</span>";
+                    resText.innerHTML = "<span style='color:#d4a017'>😊 QUẺ CƯỜI (2 NGỬA)</span>";
                 } else {
-                    resText.innerHTML = "<span style='color:red'>QUẺ PHẠT (2 SẤP)</span>";
+                    resText.innerHTML = "<span style='color:red'>⚠️ QUẺ PHẠT (2 SẤP)</span>";
                 }
                 btn.disabled = false;
-            }, 2000); // Đợi 2 giây
+            }, WAITING_TIME);
         }
 
-        // 2. Tung xu
         function flipCoin() {
             const box = document.getElementById('coinBox');
             const btn = document.getElementById('btnCoin');
@@ -223,40 +240,41 @@
             box.classList.add('shaking');
 
             let timer = setInterval(() => {
-                box.innerHTML = `<div class="coin">${Math.random() < 0.5 ? 'H' : 'T'}</div>`;
+                box.innerHTML = `<div class="coin">${Math.random() < 0.5 ? '●' : '○'}</div>`;
             }, 100);
 
             setTimeout(() => {
                 clearInterval(timer);
                 box.classList.remove('shaking');
-                const final = Math.random() < 0.5 ? 'YES' : 'NO';
+                const final = Math.random() < 0.5 ? 'CÓ' : 'KHÔNG';
                 box.innerHTML = `<div class="coin" style="background:#fff7cc">${final}</div>`;
                 btn.disabled = false;
-            }, 1500);
+            }, WAITING_TIME);
         }
 
-        // 3. Số ngẫu nhiên
         function rollNumber(side) {
             const target = document.getElementById(side + 'Num');
             const max = parseInt(document.getElementById('range').value);
-            let count = 0;
             let timer = setInterval(() => {
                 target.innerText = Math.floor(Math.random() * max);
             }, 50);
-            setTimeout(() => clearInterval(timer), 1000);
+            setTimeout(() => clearInterval(timer), 2000); // Số ngẫu nhiên dừng sau 2 giây cho nhanh
         }
 
-        // 4. Lưu lịch sử
         function saveToHistory() {
             const note = document.getElementById('note').value;
-            if(!note) return alert("Hãy nhập lời khấn");
+            if(!note) return alert("Vui lòng ghi lại lời khấn/ý nguyện!");
             
             const history = document.getElementById('historyContent');
-            const now = new Date().toLocaleTimeString();
-            const entry = document.createElement('p');
-            entry.style.borderBottom = "1px dashed #ccc";
-            entry.innerHTML = `<small>${now}:</small> ${note} <br> 
-                               <small>Kết quả: ${document.getElementById('keoText').innerText}</small>`;
+            const now = new Date();
+            const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
+            const entry = document.createElement('div');
+            entry.style.padding = "15px";
+            entry.style.borderLeft = "5px solid var(--accent-color)";
+            entry.style.background = "#f9f9f9";
+            entry.style.marginBottom = "10px";
+            entry.innerHTML = `<strong>Lúc ${timeStr}:</strong> ${note} <br> 
+                               <span style="color:#666">Kết quả: ${document.getElementById('keoText').innerText}</span>`;
             history.prepend(entry);
             document.getElementById('note').value = "";
         }
