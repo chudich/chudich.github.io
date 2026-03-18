@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+               <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -34,7 +34,7 @@
             transform-origin: bottom center;
         }
 
-        /* FIX: Thẻ xăm rơi hẳn xuống khu vực nút bấm, không che mặt tượng Quán Âm */
+        /* THẺ XĂM RƠI THẤP: Tuyệt đối không che mặt tượng Quán Âm */
         #stick {
             width: 45px;
             height: 130px;
@@ -71,11 +71,11 @@
             100% { transform: rotate(0deg); }
         }
 
-        /* Ép tọa độ rơi xuống cực thấp (400px) để bảo vệ sự trang nghiêm của ảnh Phật */
+        /* Ép thẻ xăm rơi xuống vị trí 420px (dưới hẳn ảnh Quán Âm) */
         @keyframes fallDown {
             0% { top: 60%; opacity: 0; transform: translateX(-50%) scale(0.5); }
             20% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { top: 400px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
+            100% { top: 420px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
         }
 
         .button-container {
@@ -122,8 +122,10 @@
         #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.6); width: 85%; max-height: 80vh; overflow-y: auto; z-index: 2000; }
     </style>
 </head>
-<body onclick="initAudio()"> <audio id="shakeSound" preload="auto">
-        <source src="https://chudich.github.io/tieng_lac_xam.wav" type="audio/wav">
+<body>
+
+    <audio id="shakeSound" preload="auto">
+        <source src="https://chudich.github.io/tieng_lac_xam.mp3?v=1" type="audio/mpeg">
     </audio>
 
     <div class="image-container">
@@ -160,35 +162,28 @@
     </div>
 
     <script>
-        var isAudioInitialized = false;
-
-        // Hàm này để "mồi" âm thanh, giúp vượt qua rào cản Autoplay
-        function initAudio() {
-            if (!isAudioInitialized) {
-                const sound = document.getElementById('shakeSound');
-                sound.play().then(() => {
-                    sound.pause();
-                    sound.currentTime = 0;
-                    isAudioInitialized = true;
-                }).catch(() => {
-                    // Chờ tương tác thật sự
-                });
-            }
-        }
-
         function startShake() {
             const tubeImg = document.getElementById('tubeImg');
             const stick = document.getElementById('stick');
             const sound = document.getElementById('shakeSound');
 
-            // 1. Reset trạng thái cũ
+            // 1. Reset trạng thái
             stick.classList.remove('fall');
             stick.style.display = 'none';
 
-            // 2. Phát âm thanh quyết liệt
+            // 2. Kỹ thuật phát âm thanh cưỡng ép
             if (sound) {
+                sound.load(); // Buộc trình duyệt nạp lại file
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("Lỗi phát: ", e));
+                var playPromise = sound.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.error("Lỗi phát âm thanh: ", error);
+                        // Nếu vẫn lỗi, thử phát lại sau 0.1s
+                        setTimeout(() => sound.play(), 100);
+                    });
+                }
             }
 
             // 3. Hiệu ứng lắc
@@ -196,7 +191,7 @@
 
             setTimeout(() => {
                 tubeImg.classList.remove('shaking');
-                // Logic lấy quẻ
+                // Logic hiển thị quẻ xăm (giả định dùng số ngẫu nhiên)
                 stick.innerText = Math.floor(Math.random() * 100) + 1; 
                 stick.classList.add('fall');
             }, 3000); 
