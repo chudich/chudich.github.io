@@ -1,4 +1,6 @@
-  <!DOCTYPE html>
+  
+    <script>
+    <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +13,7 @@
             background: #f7f1e3;
         }
 
-        /* FIX: Tăng khung chứa để ống xăm không bị cắt khi lắc */
+        /* FIX: Khung chứa rộng rãi để hiện đủ ống xăm khi lắc */
         #tube {
             width: 150px; 
             height: 250px;
@@ -25,12 +27,10 @@
         #tube img {
             max-width: 100%;
             max-height: 100%;
-            /* FIX: Dùng contain để hiện đầy đủ đầu và chân ống xăm */
-            object-fit: contain; 
+            object-fit: contain; /* Hiện đầy đủ 100% ảnh */
             display: block;
-            /* FIX: Tạo hiệu ứng lắc từ đáy ống cho tự nhiên */
-            transform-origin: bottom center;
-            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.5));
+            transform-origin: bottom center; /* Lắc từ đáy ống */
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
         }
 
         /* Que xăm */
@@ -49,6 +49,7 @@
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
             display: none;
+            z-index: 5;
         }
 
         .shaking {
@@ -132,9 +133,9 @@
             max-height: 80vh;
             overflow-y: auto;
             text-align: left;
+            z-index: 100;
         }
 
-        /* Nút về trang chủ */
         .home-button {
             text-align: left;
             margin: 15px 0 30px 20px;
@@ -143,7 +144,7 @@
         .home-button a {
             display: inline-block;
             padding: 12px 24px;
-            background: #FFD700; /* vàng sáng */
+            background: #FFD700;
             color: #333;
             font-weight: bold;
             font-size: 18px;
@@ -154,7 +155,7 @@
         }
 
         .home-button a:hover {
-            background: #FFC300; /* vàng đậm hơn khi hover */
+            background: #FFC300;
             transform: translateY(-2px);
         }
     </style>
@@ -172,7 +173,7 @@
     </div>
 
     <div id="tube">
-        <img src="https://chudich.github.io/ongxam.png" alt="Ống Xăm">
+        <img src="https://chudich.github.io/ongxam.png" alt="Ống Xăm" id="tubeImg">
     </div>
 
     <div class="button-container">
@@ -199,6 +200,27 @@
     </div>
 
     <script>
+        // Tạo đối tượng âm thanh xột xạc
+        const shakeAudio = new Audio('https://www.soundjay.com/misc/sounds/shaking-ice-in-plastic-cup-1.mp3'); 
+
+        function startShake() {
+            const tube = document.getElementById('tubeImg');
+            
+            // Phát âm thanh
+            shakeAudio.currentTime = 0; // Chơi lại từ đầu mỗi lần bấm
+            shakeAudio.play();
+
+            // Thêm class lắc
+            tube.classList.add('shaking');
+
+            // Sau 2 giây dừng lắc và dừng âm thanh
+            setTimeout(() => {
+                tube.classList.remove('shaking');
+                shakeAudio.pause();
+                // Ở đây bạn có thể thêm logic làm rơi quẻ xăm nếu muốn
+            }, 3000);
+        }
+
         const xamList = [
             { number: 1, meaning: "QUẺ SỐ 1 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 1 - Xăm Quan Âm\nSỐ 001 - THƯỢNG\nThiên Thai địa tịch tác lương duyên,\nNhựt cát, thì luơng vạn vật tuyền.\nCầu đắc thử xăm phi tiểu khả,\nNhơn hành trung chánh đề hoàng tuyên.\nDỊCH NGHĨA\nTrời đất mở mang làm ra duyên ưa,\nNgày giờ tốt lành muôn vật toàn vẹn.\nDược quẻ Xăm này chẳng phải là điềm nhỏ,\nVì người trung chánh nên Trời xét soi.\nGIẢI RẰNG\nMau mau điểm mau,\nTrong năm chưa hết.\nQuán Âm giáng bút,\nBáo trước cho hay\nCUNG TÝ\nQuẻ này là tượng Trời Đất Mở Mang, là điềm việc gì cũng lợi vậy" },
             { number: 2, meaning: "QUẺ SỐ 2 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 2 - Xăm Quan Âm\nSỐ 002 - HẠ\nKình ngư vị biền thủ giang hà,\nBất khả thăng đằng cánh vọng xa.\nDị nhựt tranh danh thân biến hóa,\nHứa quân nhựt được vạn trùng ba.\nDỊCH NGHĨA\nCon cá kình chưa hóa phải giữ khúc sông,\nChẳng nên trông ra xa, chớ bay lên cao.\nNgày khác biến hóa thì trở nên thênh thang,\nSẽ cho ngươi nhảy qua muôn lớp sóng.\nGIẢI RẰNG\nNhịn được hãy nhịn,\nChịu được hãy chịu.\nChờ cho thời đến,\nSẽ có công danh.\nCUNG TÝ\nQuẻ này là tượng Cá Kình Chưa Hóa, phàm việc gì tới lui đều nên nhẫn nại." },
