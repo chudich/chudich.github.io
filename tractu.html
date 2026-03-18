@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Nhận Chữ Hán</title>
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --bg-color: #fdf5e6;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 { color: var(--primary-color); text-transform: uppercase; margin-bottom: 10px; }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .slot-box {
+            flex: 1;
+            background: white;
+            border: 4px solid var(--primary-color);
+            border-radius: 10px;
+            text-align: center;
+            padding: 20px 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .char-display {
+            font-size: 80px;
+            font-weight: bold;
+            height: 100px;
+            line-height: 100px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .btn-stop {
+            width: 100%;
+            padding: 10px;
+            background-color: #555;
+            color: white;
+            font-size: 16px;
+        }
+        .btn-stop:disabled { background-color: #ccc; cursor: not-allowed; }
+        .btn-stop.active { background-color: var(--primary-color); }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .main-btn {
+            padding: 15px;
+            font-size: 20px;
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .copy-btn {
+            padding: 12px;
+            background-color: #1976d2;
+            color: white;
+            display: none; /* Chỉ hiện khi cả 2 đã dừng */
+        }
+
+        #status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Ứng Dụng Nhận Chữ</h2>
+
+    <div class="container">
+        <div class="slot-box">
+            <div id="charL" class="char-display">?</div>
+            <button id="stopL" class="btn-stop" onclick="stopSlot('L')" disabled>Dừng Trái</button>
+        </div>
+        <div class="slot-box">
+            <div id="charR" class="char-display">?</div>
+            <button id="stopR" class="btn-stop" onclick="stopSlot('R')" disabled>Dừng Phải</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="startBtn" class="main-btn" onclick="startRolling()">NHẬN CHỮ</button>
+        <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">SAO CHÉP THÔNG TIN</button>
+    </div>
+
+    <p id="status">Bấm "Nhận Chữ" để bắt đầu</p>
+
+    <script>
+        // Dữ liệu 1111 chữ Hán (Rút gọn từ danh sách bạn gửi)
+        const rawData = `1 ; 一 ; 一 ; 1 ; một, khởi đầu
+2 ; 丁 ; 一 ; 2 ; đinh, người trưởng thành
+3 ; 七 ; 一 ; 2 ; bảy
+4 ; 三 ; 一 ; 3 ; ba
+5 ; 上 ; 一 ; 3 ; trên, đi lên
+6 ; 下 ; 一 ; 3 ; dưới, đi xuống
+7 ; 不 ; 一 ; 4 ; không
+8 ; 世 ; 一 ; 5 ; đời, thế gian
+9 ; 丘 ; 一 ; 5 ; gò đất
+10 ; 丙 ; 一 ; 5 ; bính (thiên can)
+11 ; 丞 ; 一 ; 6 ; trợ giúp, phụ tá
+12 ; 並 ; 一 ; 8 ; cùng nhau, đồng thời
+13 ; 中 ; 丨 ; 4 ; giữa, trung tâm
+14 ; 串 ; 丨 ; 7 ; chuỗi, xâu
+15 ; 丸 ; 丶 ; 3 ; viên tròn
+16 ; 丹 ; 丶 ; 4 ; đỏ son, đan dược
+17 ; 主 ; 丶 ; 5 ; chủ, người đứng đầu
+18 ; 久 ; 丿 ; 3 ; lâu dài
+19 ; 之 ; 丶 ; 3 ; của, đi đến
+20 ; 乍 ; 丿 ; 5 ; bỗng nhiên
+21 ; 乎 ; 丿 ; 5 ; ư, chăng
+22 ; 乏 ; 丿 ; 4 ; thiếu thốn
+23 ; 乖 ; 丿 ; 8 ; trái ngược
+24 ; 乘 ; 丿 ; 10 ; cưỡi, thừa
+25 ; 九 ; 乙 ; 2 ; chín
+26 ; 也 ; 乙 ; 3 ; cũng, vậy
+27 ; 乳 ; 乙 ; 8 ; sữa
+28 ; 乾 ; 乙 ; 11 ; trời, khô (quẻ Càn)
+29 ; 亂 ; 乙 ; 13 ; loạn
+30 ; 了 ; 亅 ; 2 ; xong, rồi
+31 ; 予 ; 亅 ; 4 ; cho
+32 ; 事 ; 亅 ; 8 ; việc, sự việc
+33 ; 二 ; 二 ; 2 ; hai
+34 ; 于 ; 二 ; 3 ; tại, ở
+35 ; 云 ; 二 ; 4 ; nói rằng, mây
+36 ; 互 ; 二 ; 4 ; lẫn nhau
+37 ; 五 ; 二 ; 4 ; năm
+38 ; 井 ; 二 ; 4 ; giếng
+39 ; 亞 ; 二 ; 8 ; thứ hai, á
+40 ; 些 ; 二 ; 8 ; một ít
+41 ; 亡 ; 亠 ; 3 ; mất, vong
+42 ; 交 ; 亠 ; 6 ; giao, trao đổi
+43 ; 亦 ; 亠 ; 6 ; cũng
+44 ; 亨 ; 亠 ; 7 ; hanh thông
+45 ; 京 ; 亠 ; 8 ; kinh đô
+46 ; 亮 ; 亠 ; 9 ; sáng
+47 ; 人 ; 人 ; 2 ; người
+48 ; 仁 ; 人 ; 4 ; nhân đức
+49 ; 仇 ; 人 ; 4 ; thù
+50 ; 今 ; 人 ; 4 ; nay
+51 ; 介 ; 人 ; 4 ; xen vào, trung gian
+52 ; 仔 ; 人 ; 5 ; con nhỏ
+53 ; 他 ; 人 ; 5 ; hắn, người kia
+54 ; 付 ; 人 ; 5 ; giao phó
+55 ; 仙 ; 人 ; 5 ; tiên
+56 ; 仰 ; 人 ; 6 ; ngước nhìn
+57 ; 仲 ; 人 ; 6 ; ở giữa
+58 ; 件 ; 人 ; 6 ; món, sự việc
+59 ; 任 ; 人 ; 6 ; đảm nhiệm
+60 ; 份 ; 人 ; 6 ; phần
+61 ; 仿 ; 人 ; 6 ; mô phỏng
+62 ; 企 ; 人 ; 6 ; mong cầu
+63 ; 伊 ; 人 ; 6 ; người ấy
+64 ; 伍 ; 人 ; 6 ; đội nhóm năm người
+65 ; 伏 ; 人 ; 6 ; phục, cúi
+66 ; 伐 ; 人 ; 6 ; đánh, chinh phạt
+67 ; 休 ; 人 ; 6 ; nghỉ
+68 ; 伙 ; 人 ; 6 ; nhóm
+69 ; 伯 ; 人 ; 7 ; anh cả
+70 ; 伴 ; 人 ; 7 ; bạn đồng hành
+71 ; 伸 ; 人 ; 7 ; vươn ra
+72 ; 伺 ; 人 ; 7 ; dò xét
+73 ; 似 ; 人 ; 7 ; giống như
+74 ; 位 ; 人 ; 7 ; vị trí
+75 ; 低 ; 人 ; 7 ; thấp
+76 ; 住 ; 人 ; 7 ; ở, cư trú
+77 ; 佐 ; 人 ; 7 ; trợ giúp
+78 ; 佑 ; 人 ; 7 ; phù hộ
+79 ; 何 ; 人 ; 7 ; gì
+80 ; 余 ; 人 ; 7 ; dư, ta
+81 ; 佛 ; 人 ; 7 ; Phật
+82 ; 作 ; 人 ; 7 ; làm
+83 ; 你 ; 人 ; 7 ; bạn
+84 ; 佩 ; 人 ; 8 ; đeo, khâm phục
+85 ; 佳 ; 人 ; 8 ; đẹp, tốt
+86 ; 使 ; 人 ; 8 ; sai khiến
+87 ; 來 ; 人 ; 8 ; đến
+88 ; 侍 ; 人 ; 8 ; hầu hạ
+89 ; 例 ; 人 ; 8 ; thí dụ
+90 ; 供 ; 人 ; 8 ; cung cấp
+91 ; 依 ; 人 ; 8 ; nương theo
+92 ; 兒 ; 儿 ; 8 ; trẻ con
+93 ; 兄 ; 儿 ; 5 ; anh
+94 ; 允 ; 儿 ; 4 ; cho phép
+95 ; 元 ; 儿 ; 4 ; nguyên, đầu
+96 ; 充 ; 儿 ; 6 ; đầy đủ
+97 ; 光 ; 儿 ; 6 ; ánh sáng
+98 ;兆 ; 儿 ; 6 ; điềm báo
+99 ; 先 ; 儿 ; 6 ; trước
+100 ; 兇 ; 儿 ; 6 ; hung dữ
+101 ; 入 ; 入 ; 2 ; vào
+102 ; 全 ; 入 ; 6 ; toàn bộ
+103 ; 兩 ; 入 ; 8 ; hai (cặp)
+104 ; 八 ; 八 ; 2 ; tám
+105 ; 公 ; 八 ; 4 ; công cộng
+106 ; 六 ; 八 ; 4 ; sáu
+107 ; 共 ; 八 ; 6 ; cùng
+108 ; 兵 ; 八 ; 7 ; binh lính
+109 ; 其 ; 八 ; 8 ; nó, ấy
+110 ; 具 ; 八 ; 8 ; đầy đủ, dụng cụ
+111 ; 典 ; 八 ; 8 ; điển, phép tắc
+112 ; 冊 ; 冂 ; 5 ; sách, quyển ghi chép
+113 ; 再 ; 冂 ; 6 ; lại, lần nữa
+114 ; 冑 ; 冂 ; 9 ; mũ giáp
+115 ; 冕 ; 冂 ; 11 ; mũ vua
+116 ; 冗 ; 冖 ; 4 ; rườm rà
+117 ; 冠 ; 冖 ; 9 ; mũ, đứng đầu
+118 ; 冥 ; 冖 ; 10 ; tối tăm, cõi âm
+119 ; 冬 ; 冫 ; 5 ; mùa đông
+120 ; 冰 ; 冫 ; 6 ; băng
+121 ; 冷 ; 冫 ; 7 ; lạnh
+122 ; 准 ; 冫 ; 10 ; chuẩn
+123 ; 凍 ; 冫 ; 10 ; đóng băng
+124 ; 凝 ; 冫 ; 16 ; ngưng tụ
+125 ; 凡 ; 几 ; 3 ; phàm, mọi
+126 ; 凰 ; 几 ; 11 ; chim hoàng
+127 ; 凱 ; 几 ; 12 ; khải hoàn
+128 ; 凳 ; 几 ; 14 ; ghế đẩu
+129 ; 凶 ; 凵 ; 4 ; hung
+130 ; 出 ; 凵 ; 5 ; ra
+131 ; 凸 ; 凵 ; 5 ; lồi
+132 ; 凹 ; 凵 ; 5 ; lõm
+133 ; 刀 ; 刀 ; 2 ; dao
+134 ; 刃 ; 刀 ; 3 ; lưỡi dao
+135 ; 分 ; 刀 ; 4 ; chia
+136 ; 切 ; 刀 ; 4 ; cắt
+137 ; 刊 ; 刀 ; 5 ; khắc in
+138 ; 刑 ; 刀 ; 6 ; hình phạt
+139 ; 列 ; 刀 ; 6 ; xếp hàng
+140 ; 初 ; 刀 ; 7 ; ban đầu
+141 ; 判 ; 刀 ; 7 ; phán xét
+142 ; 別 ; 刀 ; 7 ; khác, chia tay
+143 ; 利 ; 刀 ; 7 ; lợi
+144 ; 到 ; 刀 ; 8 ; đến nơi
+145 ; 制 ; 刀 ; 8 ; chế định
+146 ; 刷 ; 刀 ; 8 ; quét, chải
+147 ; 券 ; 刀 ; 8 ; vé, khế ước
+148 ; 刺 ; 刀 ; 8 ; đâm
+149 ; 刻 ; 刀 ; 8 ; khắc
+150 ; 則 ; 刀 ; 9 ; phép tắc
+151 ; 削 ; 刀 ; 9 ; gọt
+152 ; 前 ; 刀 ; 9 ; trước
+153 ; 剖 ; 刀 ; 10 ; mổ xẻ
+154 ; 剛 ; 刀 ; 10 ; cứng rắn
+155 ; 剩 ; 刀 ; 12 ; còn thừa
+156 ; 創 ; 刀 ; 12 ; sáng tạo, vết thương
+157 ; 劃 ; 刀 ; 14 ; vạch, hoạch định
+158 ; 劉 ; 刀 ; 15 ; họ Lưu
+159 ; 力 ; 力 ; 2 ; sức lực
+160 ; 功 ; 力 ; 5 ; công lao
+161 ; 加 ; 力 ; 5 ; thêm
+162 ; 劣 ; 力 ; 6 ; kém
+163 ; 助 ; 力 ; 7 ; giúp
+164 ; 努 ; 力 ; 7 ; cố gắng
+165 ; 劫 ; 力 ; 7 ; kiếp, cướp
+166 ; 効 ; 力 ; 8 ; hiệu quả
+167 ; 勇 ; 力 ; 9 ; dũng cảm
+168 ; 勉 ; 力 ; 9 ; cố gắng
+169 ; 動 ; 力 ; 11 ; chuyển động
+170 ; 務 ; 力 ; 11 ; công việc
+171 ; 勝 ; 力 ; 12 ; thắng
+172 ; 勞 ; 力 ; 12 ; lao động
+173 ; 勢 ; 力 ; 13 ; thế lực
+174 ; 勸 ; 力 ; 19 ; khuyên
+175 ; 勺 ; 勹 ; 3 ; muỗng
+176 ; 勻 ; 勹 ; 4 ; đều
+177 ; 包 ; 勹 ; 5 ; bao bọc
+178 ; 匆 ; 勹 ; 5 ; vội vàng
+179 ; 匈 ; 勹 ; 6 ; ngực
+180 ; 匍 ; 勹 ; 9 ; bò sát đất
+181 ; 匕 ; 匕 ; 2 ; thìa
+182 ; 化 ; 匕 ; 4 ; biến hóa
+183 ; 北 ; 匕 ; 5 ; phương bắc
+184 ; 匙 ; 匕 ; 11 ; chìa khóa
+185 ; 匠 ; 匚 ; 6 ; thợ khéo
+186 ; 匣 ; 匚 ; 7 ; hộp
+187 ; 匪 ; 匚 ; 10 ; cướp
+188 ; 匹 ; 匸 ; 4 ; tấm, đôi
+189 ; 區 ; 匸 ; 11 ; khu vực
+190 ; 十 ; 十 ; 2 ; mười
+191 ; 千 ; 十 ; 3 ; nghìn
+192 ; 升 ; 十 ; 4 ; thăng, lên
+193 ; 午 ; 十 ; 4 ; giờ ngọ
+194 ; 半 ; 十 ; 5 ; nửa
+195 ; 卑 ; 十 ; 8 ; thấp hèn
+196 ; 卒 ; 十 ; 8 ; lính, kết thúc
+197 ; 卓 ; 十 ; 8 ; xuất sắc
+198 ; 協 ; 十 ; 8 ; hợp tác
+199 ; 南 ; 十 ; 9 ; phương nam
+200 ; 博 ; 十 ; 12 ; rộng lớn, bác học
+201 ; 占 ; 卜 ; 5 ; chiêm, bói
+202 ; 卡 ; 卜 ; 5 ; kẹt, thẻ
+203 ; 卦 ; 卜 ; 8 ; quẻ (Kinh Dịch)
+204 ; 卯 ; 卩 ; 5 ; mão (địa chi)
+205 ; 印 ; 卩 ; 6 ; ấn
+206 ; 危 ; 卩 ; 6 ; nguy hiểm
+207 ; 即 ; 卩 ; 7 ; tức thì
+208 ; 卵 ; 卩 ; 7 ; trứng
+209 ; 卷 ; 卩 ; 8 ; cuộn, quyển
+210 ; 卸 ; 卩 ; 9 ; dỡ bỏ
+211 ; 卿 ; 卩 ; 10 ; khanh
+212 ; 厂 ; 厂 ; 2 ; vách đá
+213 ; 厄 ; 厂 ; 4 ; tai ách
+214 ; 厚 ; 厂 ; 9 ; dày, hậu
+215 ; 原 ; 厂 ; 10 ; nguyên, đồng bằng
+216 ; 厘 ; 厂 ; 9 ; ly, đơn vị nhỏ
+217 ; 厭 ; 厂 ; 14 ; chán ghét
+218 ; 去 ; 厶 ; 5 ; đi
+219 ; 參 ; 厶 ; 11 ; tham gia
+220 ; 又 ; 又 ; 2 ; lại nữa
+221 ; 友 ; 又 ; 4 ; bạn bè
+222 ; 反 ; 又 ; 4 ; ngược lại
+223 ; 叔 ; 又 ; 8 ; chú, em của cha
+224 ; 取 ; 又 ; 8 ; lấy
+225 ; 受 ; 又 ; 8 ; nhận
+226 ; 叛 ; 又 ; 9 ; phản bội
+227 ; 叟 ; 又 ; 9 ; ông già
+228 ; 叡 ; 又 ; 16 ; sáng suốt
+229 ; 口 ; 口 ; 3 ; miệng
+230 ; 古 ; 口 ; 5 ; xưa, cổ
+231 ; 句 ; 口 ; 5 ; câu văn
+232 ; 另 ; 口 ; 5 ; khác
+233 ; 只 ; 口 ; 5 ; chỉ
+234 ; 叫 ; 口 ; 5 ; gọi
+235 ; 召 ; 口 ; 5 ; triệu gọi
+236 ; 可 ; 口 ; 5 ; có thể
+237 ; 台 ; 口 ; 5 ; đài, bệ
+238 ; 史 ; 口 ; 5 ; sử
+239 ; 右 ; 口 ; 5 ; bên phải
+240 ;司 ; 口 ; 5 ; cai quản
+241 ; 吃 ; 口 ; 6 ; ăn
+242 ; 各 ; 口 ; 6 ; mỗi
+243 ; 合 ; 口 ; 6 ; hợp
+244 ; 吉 ; 口 ; 6 ; tốt lành
+245 ; 吊 ; 口 ; 6 ; treo, viếng
+246 ; 同 ; 口 ; 6 ; cùng
+247 ; 名 ; 口 ; 6 ; tên
+248 ; 后 ; 口 ; 6 ; hoàng hậu
+249 ; 向 ; 口 ; 6 ; hướng về
+250 ; 君 ; 口 ; 7 ; vua, người quân tử
+251 ; 否 ; 口 ; 7 ; không
+252 ; 含 ; 口 ; 7 ; chứa
+253 ; 吸 ; 口 ; 7 ; hút
+254 ; 吹 ; 口 ; 7 ; thổi
+255 ; 吻 ; 口 ; 7 ; hôn
+256 ; 吾 ; 口 ; 7 ; ta
+257 ; 呂 ; 口 ; 7 ; họ Lữ
+258 ; 呈 ; 口 ; 7 ; dâng lên
+259 ; 告 ; 口 ; 7 ; báo
+260 ; 命 ; 口 ; 8 ; mệnh, số phận
+261 ; 和 ; 口 ; 8 ; hòa
+262 ; 咒 ; 口 ; 8 ; chú thuật
+263 ; 咖 ; 口 ; 8 ; cà (âm dịch)
+264 ; 咬 ; 口 ; 9 ; cắn
+265 ; 咸 ; 口 ; 9 ; mặn, toàn bộ
+266 ; 哀 ; 口 ; 9 ; buồn thương
+267 ; 品 ; 口 ; 9 ; phẩm
+268 ; 哲 ; 口 ; 10 ; triết
+269 ; 員 ; 口 ; 10 ; thành viên
+270 ; 哭 ; 口 ; 10 ; khóc
+271 ; 哲 ; 口 ; 10 ; hiền triết
+272 ; 唇 ; 口 ; 10 ; môi
+273 ; 唐 ; 口 ; 10 ; nhà Đường
+274 ; 唯 ; 口 ; 11 ; duy
+275 ; 唱 ; 口 ; 11 ; hát
+276 ; 商 ; 口 ; 11 ; buôn bán
+277 ; 問 ; 口 ; 11 ; hỏi
+278 ; 啟 ; 口 ; 11 ; mở, khải
+279 ; 善 ; 口 ; 12 ; tốt, thiện
+280 ; 喜 ; 口 ; 12 ; vui
+281 ; 喝 ; 口 ; 12 ; uống, quát
+282 ; 喬 ; 口 ; 12 ; cao lớn
+283 ; 喪 ; 口 ; 12 ; tang, mất
+284 ; 單 ; 口 ; 12 ; đơn
+285 ; 嗣 ; 口 ; 13 ; nối dõi
+286 ; 嗚 ; 口 ; 13 ; than khóc
+287 ; 嗣 ; 口 ; 13 ; người kế tục
+288 ; 嗜 ; 口 ; 13 ; ham thích
+289 ; 嘆 ; 口 ; 14 ; than thở
+290 ; 嘉 ; 口 ; 14 ; tốt đẹp
+291 ; 嘗 ; 口 ; 14 ; nếm, từng
+292 ; 嘱 ; 口 ; 15 ; dặn dò
+293 ; 器 ; 口 ; 16 ; khí cụ, tài năng
+294 ; 噩 ; 口 ; 16 ; ác mộng
+295 ; 嚴 ; 口 ; 20 ; nghiêm
+296 ; 囗 ; 囗 ; 3 ; vây quanh
+297 ; 囚 ; 囗 ; 5 ; tù
+298 ; 四 ; 囗 ; 5 ; bốn
+299 ; 回 ; 囗 ; 6 ; quay lại
+300 ; 因 ; 囗 ; 6 ; nhân, nguyên do
+301 ; 困 ; 囗 ; 7 ; khốn
+302 ; 圍 ; 囗 ; 12 ; bao vây
+303 ; 園 ; 囗 ; 13 ; vườn
+304 ; 圓 ; 囗 ; 13 ; tròn
+305 ; 圖 ; 囗 ; 14 ; bản đồ, mưu đồ
+306 ; 土 ; 土 ; 3 ; đất
+307 ; 在 ; 土 ; 6 ; ở, tồn tại
+308 ; 圭 ; 土 ; 6 ; ngọc khuê
+309 ; 地 ; 土 ; 6 ; đất, địa
+310 ; 坂 ; 土 ; 7 ; dốc
+311 ; 均 ; 土 ; 7 ; đều
+312 ; 坐 ; 土 ; 7 ; ngồi
+313 ; 坤 ; 土 ; 8 ; đất (quẻ Khôn)
+314 ; 坦 ; 土 ; 8 ; bằng phẳng
+315 ; 坪 ; 土 ; 8 ; bãi đất
+316 ; 城 ; 土 ; 9 ; thành
+317 ; 域 ; 土 ; 11 ; vùng
+318 ; 培 ; 土 ; 11 ; bồi dưỡng
+319 ; 基 ; 土 ; 11 ; nền tảng
+320 ; 堂 ; 土 ; 11 ; nhà lớn
+321 ; 堅 ; 土 ; 11 ; kiên cố
+322 ; 報 ; 土 ; 12 ; báo đáp
+323 ; 場 ; 土 ; 12 ; nơi chốn
+324 ; 塔 ; 土 ; 12 ; tháp
+325 ; 塞 ; 土 ; 13 ; tắc nghẽn
+326 ; 塑 ; 土 ; 13 ; nặn, tạo hình
+327 ; 塵 ; 土 ; 14 ; bụi
+328 ; 境 ; 土 ; 14 ; cảnh giới
+329 ; 墓 ; 土 ; 13 ; mộ
+330 ; 增 ; 土 ; 15 ; tăng thêm
+331 ; 墨 ; 土 ; 15 ; mực
+332 ; 壁 ; 土 ; 16 ; tường
+333 ; 壇 ; 土 ; 16 ; đàn tế
+334 ; 士 ; 士 ; 3 ; sĩ, học trò
+335 ; 壯 ; 士 ; 7 ; mạnh mẽ
+336 ; 声 ; 士 ; 7 ; tiếng (âm thanh)
+337 ; 壽 ; 士 ; 14 ; thọ, sống lâu
+338 ; 夏 ; 夂 ; 10 ; mùa hạ
+339 ; 夕 ; 夕 ; 3 ; chiều tối
+340 ; 外 ; 夕 ; 5 ; bên ngoài
+341 ; 多 ; 夕 ; 6 ; nhiều
+342 ; 夜 ; 夕 ; 8 ; đêm
+343 ; 夢 ; 夕 ; 14 ; giấc mộng
+344 ; 大 ; 大 ; 3 ; lớn
+345 ; 天 ; 大 ; 4 ; trời
+346 ; 太 ; 大 ; 4 ; quá, rất
+347 ; 夫 ; 大 ; 4 ; chồng, người đàn ông
+348 ; 央 ; 大 ; 5 ; trung tâm
+349 ; 失 ; 大 ; 5 ; mất
+350 ; 夷 ; 大 ; 6 ; bằng phẳng, di
+351 ; 夾 ; 大 ; 7 ; kẹp giữa
+352 ; 奇 ; 大 ; 8 ; kỳ lạ
+353 ; 奈 ; 大 ; 8 ; làm sao
+354 ; 奉 ; 大 ; 8 ; phụng
+355 ; 奏 ; 大 ; 9 ; tấu trình
+356 ; 契 ; 大 ; 9 ; khế ước
+357 ; 奔 ; 大 ; 8 ; chạy nhanh
+358 ; 奢 ; 大 ; 11 ; xa hoa
+359 ; 奧 ; 大 ; 13 ; sâu xa
+360 ; 女 ; 女 ; 3 ; nữ
+361 ; 奴 ; 女 ; 5 ; nô lệ
+362 ; 好 ; 女 ; 6 ; tốt, thích
+363 ; 如 ; 女 ; 6 ; như
+364 ; 妄 ; 女 ; 6 ; vọng
+365 ; 妙 ; 女 ; 7 ; diệu
+366 ; 妻 ; 女 ; 8 ; vợ
+367 ; 始 ; 女 ; 8 ; bắt đầu
+368 ; 姓 ; 女 ; 8 ; họ
+369 ; 委 ; 女 ; 8 ; giao phó
+370 ; 姿 ; 女 ; 9 ; dáng vẻ
+371 ; 威 ; 女 ; 9 ; uy
+372 ; 娘 ; 女 ; 10 ; mẹ, cô gái
+373 ; 娛 ; 女 ; 10 ; vui chơi
+374 ; 婚 ; 女 ; 11 ; hôn nhân
+375 ; 婦 ; 女 ; 11 ; phụ nữ
+376 ; 婿 ; 女 ; 12 ; con rể
+377 ; 媒 ; 女 ; 12 ; mai mối
+378 ; 嫁 ; 女 ; 13 ; gả
+379 ; 嫌 ; 女 ; 13 ; nghi ngờ
+380 ; 嫩 ; 女 ; 14 ; non trẻ
+381 ; 子 ; 子 ; 3 ; con, con trai
+382 ; 孔 ; 子 ; 4 ; lỗ, họ Khổng
+383 ; 存 ; 子 ; 6 ; tồn tại
+384 ; 孝 ; 子 ; 7 ; hiếu
+385 ; 孟 ; 子 ; 8 ; trưởng
+386 ; 季 ; 子 ; 8 ; út
+387 ; 孤 ; 子 ; 8 ; cô độc
+388 ; 學 ; 子 ; 16 ; học
+389 ; 孫 ; 子 ; 10 ; cháu
+390 ; 宀 ; 宀 ; 3 ; mái nhà
+391 ; 守 ; 宀 ; 6 ; giữ
+392 ; 安 ; 宀 ; 6 ; yên
+393 ; 宇 ; 宀 ; 6 ; mái hiên, vũ trụ
+394 ; 宅 ; 宀 ; 6 ; nhà ở
+395 ; 宏 ; 宀 ; 7 ; rộng lớn
+396 ; 宗 ; 宀 ; 8 ; tông, dòng họ
+397 ; 官 ; 宀 ; 8 ; quan
+398 ; 定 ; 宀 ; 8 ; định
+399 ; 宜 ; 宀 ; 8 ; thích hợp
+400 ; 客 ; 宀 ; 9 ; khách
+401 ; 宣 ; 宀 ; 9 ; tuyên
+402 ; 室 ; 宀 ; 9 ; phòng
+403 ; 宮 ; 宀 ; 10 ; cung điện
+404 ; 宰 ; 宀 ; 10 ; tể, cai quản
+405 ; 害 ; 宀 ; 10 ; hại
+406 ; 宴 ; 宀 ; 10 ; yến tiệc
+407 ; 家 ; 宀 ; 10 ; nhà
+408 ; 容 ; 宀 ; 10 ; dung chứa
+409 ; 寂 ; 宀 ; 11 ; tĩnh lặng
+410 ; 寄 ; 宀 ; 11 ; gửi gắm
+411 ; 密 ; 宀 ; 11 ; kín
+412 ; 寒 ; 宀 ; 12 ; lạnh
+413 ; 富 ; 宀 ; 12 ; giàu
+414 ; 寓 ; 宀 ; 12 ; ngụ, ngụ ý
+415 ; 寧 ; 宀 ; 14 ; yên ổn
+416 ; 寶 ; 宀 ; 20 ; báu vật
+417 ; 寺 ; 寸 ; 6 ; chùa
+418 ; 封 ; 寸 ; 9 ; phong, niêm phong
+419 ; 射 ; 寸 ; 10 ; bắn
+420 ; 將 ; 寸 ; 11 ; tướng, sắp
+421 ; 尊 ; 寸 ; 12 ; tôn kính
+422 ; 小 ; 小 ; 3 ; nhỏ
+423 ; 少 ; 小 ; 4 ; ít
+424 ; 尖 ; 小 ; 6 ; nhọn
+425 ; 尚 ; 小 ; 8 ; còn, chuộng
+426 ; 尤 ; 尢 ; 4 ; đặc biệt
+427 ; 尹 ; 尸 ; 4 ; quan doãn
+428 ; 尺 ; 尸 ; 4 ; thước
+429 ; 尼 ; 尸 ; 5 ; ni cô
+430 ; 尾 ; 尸 ; 7 ; đuôi
+431 ; 居 ; 尸 ; 8 ; ở
+432 ; 屈 ; 尸 ; 8 ; khuất
+433 ; 屋 ; 尸 ; 9 ; nhà
+434 ; 屍 ; 尸 ; 9 ; xác chết
+435 ; 屏 ; 尸 ; 9 ; bình phong
+436 ; 層 ; 尸 ; 14 ; tầng
+437 ; 山 ; 山 ; 3 ; núi
+438 ; 岩 ; 山 ; 8 ; đá núi
+439 ; 岸 ; 山 ; 8 ; bờ
+440 ; 峰 ; 山 ; 10 ; đỉnh núi
+441 ; 島 ; 山 ; 10 ; đảo
+442 ; 崖 ; 山 ; 11 ; vách núi
+443 ; 崗 ; 山 ; 11 ; gò cao
+444 ; 嶺 ; 山 ; 17 ; dãy núi
+445 ; 工 ; 工 ; 3 ; công, thợ
+446 ; 巧 ; 工 ; 5 ; khéo
+447 ; 左 ; 工 ; 5 ; bên trái
+448 ; 巫 ; 工 ; 7 ; pháp sư
+449 ; 差 ; 工 ; 10 ; sai khác
+450 ; 己 ; 己 ; 3 ; bản thân
+451 ; 已 ; 己 ; 3 ; đã rồi
+452 ; 巳 ; 己 ; 3 ; tỵ (địa chi)
+453 ; 巴 ; 己 ; 4 ; bám, họ Ba
+454 ; 巷 ; 己 ; 9 ; hẻm
+455 ; 巾 ; 巾 ; 3 ; khăn
+456 ; 市 ; 巾 ; 5 ; chợ
+457 ; 布 ; 巾 ; 5 ; vải
+458 ; 帆 ; 巾 ; 6 ; buồm
+459 ; 師 ; 巾 ; 10 ; thầy
+460 ; 席 ; 巾 ; 10 ; chiếu, tiệc
+461 ; 帶 ; 巾 ; 11 ; dây đai
+462 ; 帽 ; 巾 ; 12 ; mũ
+463 ; 常 ; 巾 ; 11 ; thường
+464 ; 幕 ; 巾 ; 13 ; màn
+465 ; 幣 ; 巾 ; 15 ; tiền tệ
+466 ; 干 ; 干 ; 3 ; can, can dự
+467 ; 平 ; 干 ; 5 ; bằng phẳng
+468 ; 年 ; 干 ; 6 ; năm
+469 ; 幸 ; 干 ; 8 ; may mắn
+470 ; 幹 ; 干 ; 13 ; thân cây, cán bộ
+471 ; 幻 ; 幺 ; 4 ; ảo
+472 ; 幼 ; 幺 ; 5 ; nhỏ tuổi
+473 ; 幽 ; 幺 ; 9 ; u tĩnh
+474 ; 幾 ; 幺 ; 12 ; mấy, cơ hội
+475 ; 广 ; 广 ; 3 ; mái nhà rộng
+476 ; 庄 ; 广 ; 6 ; trang nghiêm
+477 ; 床 ; 广 ; 7 ; giường
+478 ; 序 ; 广 ; 7 ; thứ tự
+479 ; 底 ; 广 ; 8 ; đáy
+480 ; 店 ; 广 ; 8 ; tiệm
+481 ; 府 ; 广 ; 8 ; phủ
+482 ; 度 ; 广 ; 9 ; mức độ
+483 ; 座 ; 广 ; 10 ; chỗ ngồi
+484 ; 庭 ; 广 ; 10 ; sân đình
+485 ; 庫 ; 广 ; 10 ; kho
+486 ; 康 ; 广 ; 11 ; khỏe mạnh
+487 ; 庸 ; 广 ; 11 ; tầm thường
+488 ; 庶 ; 广 ; 11 ; nhiều, thứ dân
+489 ; 廉 ; 广 ; 13 ; liêm khiết
+490 ; 廣 ; 广 ; 15 ; rộng
+491 ; 延 ; 廴 ; 7 ; kéo dài
+492 ; 建 ; 廴 ; 9 ; xây dựng
+493 ; 廷 ; 廴 ; 7 ; triều đình
+494 ; 弄 ; 廾 ; 7 ; nghịch, đùa
+495 ; 式 ; 弋 ; 6 ; kiểu, nghi thức
+496 ; 弓 ; 弓 ; 3 ; cung
+497 ; 引 ; 弓 ; 4 ; kéo
+498 ; 弟 ; 弓 ; 7 ; em trai
+499 ; 張 ; 弓 ; 11 ; giương, họ Trương
+500 ; 強 ; 弓 ; 11 ; mạnh
+501 ; 彈 ; 弓 ; 15 ; bắn, đàn
+502 ; 彐 ; 彐 ; 3 ; đầu heo (bộ)
+503 ; 彗 ; 彐 ; 11 ; sao chổi
+504 ; 彙 ; 彐 ; 13 ; tập hợp
+505 ; 形 ; 彡 ; 7 ; hình dạng
+506 ; 彥 ; 彡 ; 9 ; người tài
+507 ; 彩 ; 彡 ; 11 ; màu sắc
+508 ; 彰 ; 彡 ; 14 ; rõ ràng
+509 ; 影 ; 彡 ; 15 ; bóng
+510 ; 彳 ; 彳 ; 3 ; bước chân
+511 ; 役 ; 彳 ; 7 ; phục dịch
+512 ; 往 ; 彳 ; 8 ; đi đến
+513 ; 征 ; 彳 ; 8 ; chinh phạt
+514 ; 待 ; 彳 ; 9 ; chờ
+515 ; 律 ; 彳 ; 9 ; luật
+516 ; 徑 ; 彳 ; 10 ; đường nhỏ
+517 ; 徒 ; 彳 ; 10 ; đồ đệ
+518 ; 得 ; 彳 ; 11 ; được
+519 ; 從 ; 彳 ; 11 ; theo
+520 ; 御 ; 彳 ; 12 ; điều khiển
+521 ; 復 ; 彳 ; 12 ; trở lại
+522 ; 微 ; 彳 ; 13 ; nhỏ bé
+523 ; 德 ; 彳 ; 15 ; đức
+524 ; 心 ; 心 ; 4 ; tâm
+525 ; 必 ; 心 ; 5 ; ắt
+526 ; 忍 ; 心 ; 7 ; nhẫn
+527 ; 志 ; 心 ; 7 ; chí
+528 ; 忠 ; 心 ; 8 ; trung
+529 ; 念 ; 心 ; 8 ; niệm
+530 ; 怒 ; 心 ; 9 ; giận
+531 ; 怖 ; 心 ; 8 ; sợ
+532 ; 思 ; 心 ; 9 ; suy nghĩ
+533 ; 急 ; 心 ; 9 ; gấp
+534 ; 性 ; 心 ; 8 ; tính
+535 ; 怨 ; 心 ; 9 ; oán
+536 ; 恩 ; 心 ; 10 ; ân
+537 ; 恭 ; 心 ; 10 ; cung kính
+538 ; 恐 ; 心 ; 10 ; sợ hãi
+539 ; 恢 ; 心 ; 9 ; khôi phục
+540 ; 恨 ; 心 ; 9 ; hận
+541 ; 息 ; 心 ; 10 ; nghỉ
+542 ; 悟 ; 心 ; 10 ; ngộ
+543 ; 悠 ; 心 ; 11 ; thong dong
+544 ; 患 ; 心 ; 11 ; hoạn nạn
+545 ; 悲 ; 心 ; 12 ; buồn
+546 ; 情 ; 心 ; 11 ; tình
+547 ; 惑 ; 心 ; 12 ; mê hoặc
+548 ; 惜 ; 心 ; 11 ; tiếc
+549 ; 想 ; 心 ; 13 ; tưởng
+550 ; 意 ; 心 ; 13 ; ý
+551 ; 愛 ; 心 ; 13 ; yêu
+552 ; 感 ; 心 ; 13 ; cảm
+553 ; 慈 ; 心 ; 13 ; từ bi
+554 ; 慧 ; 心 ; 15 ; trí tuệ
+555 ; 應 ; 心 ; 17 ; ứng, đáp ứng
+556 ; 手 ; 手 ; 4 ; tay
+557 ; 才 ; 手 ; 3 ; tài năng
+558 ; 打 ; 手 ; 5 ; đánh
+559 ; 托 ; 手 ; 6 ; nhờ cậy
+560 ; 扣 ; 手 ; 6 ; gõ
+561 ; 扮 ; 手 ; 7 ; hóa trang
+562 ; 扶 ; 手 ; 7 ; đỡ
+563 ; 批 ; 手 ; 7 ; phê, đánh
+564 ; 找 ; 手 ; 7 ; tìm
+565 ; 承 ; 手 ; 8 ; thừa nhận
+566 ; 技 ; 手 ; 7 ; kỹ thuật
+567 ; 把 ; 手 ; 7 ; nắm
+568 ; 抑 ; 手 ; 7 ; ức chế
+569 ; 投 ; 手 ; 7 ; ném
+570 ; 抗 ; 手 ; 7 ; chống
+571 ; 折 ; 手 ; 7 ; gãy
+572 ; 抱 ; 手 ; 8 ; ôm
+573 ; 抵 ; 手 ; 8 ; chống đỡ
+574 ; 押 ; 手 ; 8 ; áp giải
+575 ; 抽 ; 手 ; 8 ; rút ra
+576 ; 拂 ; 手 ; 8 ; phủi
+577 ; 担 ; 手 ; 8 ; gánh
+578 ; 拍 ; 手 ; 8 ; vỗ
+579 ; 拒 ; 手 ; 8 ; từ chối
+580 ; 拓 ; 手 ; 8 ; khai mở
+581 ; 拔 ; 手 ; 8 ; nhổ
+582 ; 拖 ; 手 ; 8 ; kéo
+583 ; 招 ; 手 ; 8 ; chiêu mộ
+584 ; 拜 ; 手 ; 9 ; lạy
+585 ; 拳 ; 手 ; 10 ; nắm tay
+586 ; 拿 ; 手 ; 10 ; cầm
+587 ; 持 ; 手 ; 9 ; giữ
+588 ; 指 ; 手 ; 9 ; ngón tay
+589 ; 按 ; 手 ; 9 ; ấn
+590 ; 挑 ; 手 ; 9 ; khiêu
+591 ; 挖 ; 手 ; 9 ; đào
+592 ; 振 ; 手 ; 10 ; chấn động
+593 ; 挪 ; 手 ; 10 ; di chuyển
+594 ; 捕 ; 手 ; 10 ; bắt
+595 ; 捉 ; 手 ; 10 ; bắt giữ
+596 ; 捐 ; 手 ; 10 ; quyên góp
+597 ; 掃 ; 手 ; 11 ; quét
+598 ; 授 ; 手 ; 11 ; trao
+599 ; 掌 ; 手 ; 12 ; bàn tay
+600 ; 探 ; 手 ; 11 ; thăm dò
+601 ; 水 ; 水 ; 4 ; nước
+602 ; 永 ; 水 ; 5 ; vĩnh viễn
+603 ; 汁 ; 水 ; 5 ; nước ép
+604 ; 求 ; 水 ; 7 ; cầu
+605 ; 汗 ; 水 ; 6 ; mồ hôi
+606 ; 池 ; 水 ; 6 ; ao
+607 ; 決 ; 水 ; 7 ; quyết định
+608 ; 沈 ; 水 ; 7 ; chìm
+609 ; 沉 ; 水 ; 7 ; chìm sâu
+610 ; 沖 ; 水 ; 7 ; xung
+611 ; 沙 ; 水 ; 7 ; cát
+612 ; 治 ; 水 ; 8 ; trị
+613 ; 沸 ; 水 ; 8 ; sôi
+614 ; 油 ; 水 ; 8 ; dầu
+615 ; 河 ; 水 ; 8 ; sông
+616 ; 沿 ; 水 ; 8 ; dọc theo
+617 ; 泉 ; 水 ; 9 ; suối
+618 ; 泊 ; 水 ; 8 ; đỗ thuyền
+619 ; 泥 ; 水 ; 8 ; bùn
+620 ; 注 ; 水 ; 8 ; rót
+621 ; 泳 ; 水 ; 8 ; bơi
+622 ; 洋 ; 水 ; 9 ; đại dương
+623 ; 洗 ; 水 ; 9 ; rửa
+624 ; 洞 ; 水 ; 9 ; hang
+625 ; 派 ; 水 ; 9 ; phái
+626 ; 流 ; 水 ; 10 ; dòng chảy
+627 ; 浪 ; 水 ; 10 ; sóng
+628 ; 浮 ; 水 ; 10 ; nổi
+629 ; 浴 ; 水 ; 10 ; tắm
+630 ; 海 ; 水 ; 10 ; biển
+631 ; 液 ; 水 ; 11 ; chất lỏng
+632 ; 涼 ; 水 ; 11 ; mát
+633 ; 淚 ; 水 ; 11 ; nước mắt
+634 ; 淡 ; 水 ; 11 ; nhạt
+635 ; 深 ; 水 ; 11 ; sâu
+636 ; 混 ; 水 ; 11 ; trộn
+637 ; 添 ; 水 ; 11 ; thêm
+638 ; 清 ; 水 ; 11 ; trong
+639 ; 減 ; 水 ; 12 ; giảm
+640 ; 渡 ; 水 ; 12 ; vượt qua
+641 ; 測 ; 水 ; 12 ; đo
+642 ; 港 ; 水 ; 12 ; cảng
+643 ;湖 ; 水 ; 12 ; hồ
+644 ; 湘 ; 水 ; 12 ; sông Tương
+645 ; 湧 ; 水 ; 12 ; trào
+646 ; 湯 ; 水 ; 12 ; canh
+647 ; 満 ; 水 ; 13 ; đầy
+648 ; 源 ; 水 ; 13 ; nguồn
+649 ; 準 ; 水 ; 13 ; chuẩn
+650 ; 溪 ; 水 ; 13 ; suối
+651 ; 火 ; 火 ; 4 ; lửa
+652 ; 灯 ; 火 ; 6 ; đèn
+653 ; 灰 ; 火 ; 6 ; tro
+654 ; 灶 ; 火 ; 7 ; bếp
+655 ; 災 ; 火 ; 7 ; tai họa
+656 ; 炎 ; 火 ; 8 ; viêm
+657 ; 炉 ; 火 ; 8 ; lò
+658 ; 炭 ; 火 ; 9 ; than
+659 ; 炸 ; 火 ; 9 ; nổ
+660 ; 為 ; 火 ; 9 ; làm
+661 ; 烈 ; 火 ; 10 ; mãnh liệt
+662 ; 烏 ; 火 ; 10 ; quạ
+663 ; 烤 ; 火 ; 10 ; nướng
+664 ; 烈 ; 火 ; 10 ; dữ dội
+665 ; 焚 ; 火 ; 12 ; thiêu
+666 ; 焦 ; 火 ; 12 ; cháy xém
+667 ; 然 ; 火 ; 12 ; vậy
+668 ; 焰 ; 火 ; 12 ; ngọn lửa
+669 ; 煉 ; 火 ; 13 ; luyện
+670 ; 照 ; 火 ; 13 ; chiếu
+671 ; 煙 ; 火 ; 13 ; khói
+672 ; 煮 ; 火 ; 12 ; nấu
+673 ; 熱 ; 火 ; 15 ; nóng
+674 ; 熙 ; 火 ; 14 ; hưng thịnh
+675 ; 燈 ; 火 ; 16 ; đèn
+676 ; 燃 ; 火 ; 16 ; cháy
+677 ; 燒 ; 火 ; 16 ; đốt
+678 ; 燥 ; 火 ; 17 ; khô
+679 ; 爆 ; 火 ; 19 ; nổ
+680 ; 爐 ; 火 ; 20 ; lò
+681 ; 木 ; 木 ; 4 ; cây
+682 ; 未 ; 木 ; 5 ; chưa
+683 ; 末 ; 木 ; 5 ; cuối
+684 ; 本 ; 木 ; 5 ; gốc
+685 ; 札 ; 木 ; 5 ; thẻ
+686 ; 朴 ; 木 ; 6 ; mộc mạc
+687 ; 机 ; 木 ; 6 ; bàn
+688 ; 朽 ; 木 ; 6 ; mục
+689 ; 村 ; 木 ; 7 ; làng
+690 ; 材 ; 木 ; 7 ; vật liệu
+691 ; 束 ; 木 ; 7 ; bó
+692 ; 杜 ; 木 ; 7 ; ngăn
+693 ; 板 ; 木 ; 8 ; tấm ván
+694 ; 析 ; 木 ; 8 ; phân tích
+695 ; 枕 ; 木 ; 8 ; gối
+696 ; 林 ; 木 ; 8 ; rừng
+697 ; 果 ; 木 ; 8 ; quả
+698 ; 枝 ; 木 ; 8 ; cành
+699 ; 枯 ; 木 ; 9 ; khô
+700 ; 架 ; 木 ; 9 ; giá đỡ
+701 ; 染 ; 木 ; 9 ; nhuộm
+702 ; 柔 ; 木 ; 9 ; mềm
+703 ; 柱 ; 木 ; 9 ; cột
+704 ; 柳 ; 木 ; 9 ; liễu
+705 ; 查 ; 木 ; 9 ; tra
+706 ; 柯 ; 木 ; 9 ; cán
+707 ; 柱 ; 木 ; 9 ; trụ
+708 ; 柴 ; 木 ; 10 ; củi
+709 ; 栗 ; 木 ; 10 ; hạt dẻ
+710 ; 校 ; 木 ; 10 ; trường
+711 ; 核 ; 木 ; 10 ; hạch
+712 ;根 ; 木 ; 10 ; rễ
+713 ; 格 ; 木 ; 10 ; cách
+714 ; 栽 ; 木 ; 10 ; trồng
+715 ; 案 ; 木 ; 10 ; bàn án
+716 ; 桌 ; 木 ; 10 ; bàn
+717 ; 桑 ; 木 ; 10 ; dâu
+718 ; 桶 ; 木 ; 11 ; thùng
+719 ; 梁 ; 木 ; 11 ; xà
+720 ; 械 ; 木 ; 11 ; máy
+721 ; 棄 ; 木 ; 12 ; bỏ
+722 ; 棒 ; 木 ; 12 ; gậy
+723 ; 棋 ; 木 ; 12 ; cờ
+724 ; 森 ; 木 ; 12 ; rừng rậm
+725 ; 棺 ; 木 ; 12 ; quan tài
+726 ; 植 ; 木 ; 12 ; trồng
+727 ; 椅 ; 木 ; 12 ; ghế
+728 ; 植 ; 木 ; 12 ; trồng
+729 ; 植 ; 木 ; 12 ; gieo
+730 ; 植 ; 木 ; 12 ; cây trồng
+731 ; 日 ; 日 ; 4 ; mặt trời
+732 ; 旦 ; 日 ; 5 ; sớm
+733 ; 旧 ; 日 ; 5 ; cũ
+734 ; 旨 ; 日 ; 6 ; ý chỉ
+735 ; 早 ; 日 ; 6 ; sớm
+736 ; 旬 ; 日 ; 6 ; tuần
+737 ; 旺 ; 日 ; 8 ; thịnh
+738 ; 昆 ; 日 ; 8 ; côn
+739 ; 昌 ; 日 ; 8 ; hưng thịnh
+740 ; 明 ; 日 ; 8 ; sáng
+741 ; 昏 ; 日 ; 8 ; hoàng hôn
+742 ; 易 ; 日 ; 8 ; dễ, Kinh Dịch
+743 ; 星 ; 日 ; 9 ; sao
+744 ; 映 ; 日 ; 9 ; chiếu
+745 ; 春 ; 日 ; 9 ; xuân
+746 ; 昨 ; 日 ; 9 ; hôm qua
+747 ; 昭 ; 日 ; 9 ; sáng rõ
+748 ; 是 ; 日 ; 9 ; đúng
+749 ; 晉 ; 日 ; 10 ; tiến
+750 ; 晚 ; 日 ; 11 ; tối
+751 ; 晨 ; 日 ; 11 ; sáng sớm
+752 ; 普 ; 日 ; 12 ; phổ biến
+753 ; 景 ; 日 ; 12 ; cảnh
+754 ; 晴 ; 日 ; 12 ; trời quang
+755 ; 智 ; 日 ; 12 ; trí
+756 ; 暗 ; 日 ; 13 ; tối
+757 ; 暖 ; 日 ; 13 ; ấm
+758 ; 暴 ; 日 ; 15 ; bạo
+759 ; 曉 ; 日 ; 16 ; bình minh
+760 ; 曜 ; 日 ; 18 ; sáng chói
+761 ; 月 ; 月 ; 4 ; mặt trăng
+762 ; 有 ; 月 ; 6 ; có
+763 ; 朋 ; 月 ; 8 ; bạn bè
+764 ; 服 ; 月 ; 8 ; phục tùng
+765 ; 朗 ; 月 ; 10 ; sáng
+766 ; 望 ; 月 ; 11 ; nhìn
+767 ; 朝 ; 月 ; 12 ; triều
+768 ; 期 ; 月 ; 12 ; kỳ hạn
+769 ; 朗 ; 月 ; 10 ; sáng sủa
+770 ; 朦 ; 月 ; 17 ; mờ ảo
+771 ; 金 ; 金 ; 8 ; kim loại
+772 ; 針 ; 金 ; 10 ; kim
+773 ; 釣 ; 金 ; 11 ; câu
+774 ; 針 ; 金 ; 10 ; kim nhọn
+775 ; 鈍 ; 金 ; 12 ; cùn
+776 ; 鈴 ; 金 ; 13 ; chuông
+777 ; 鉄 ; 金 ; 13 ; sắt
+778 ; 銀 ; 金 ; 14 ; bạc
+779 ; 銅 ; 金 ; 14 ; đồng
+780 ; 銘 ; 金 ; 14 ; khắc chữ
+781 ; 銳 ; 金 ; 15 ; sắc bén
+782 ; 鋒 ; 金 ; 15 ; mũi nhọn
+783 ; 鋼 ; 金 ; 16 ; thép
+784 ; 錄 ; 金 ; 16 ; ghi chép
+785 ; 錢 ; 金 ; 16 ; tiền
+786 ; 鍋 ; 金 ; 17 ; nồi
+787 ; 鍊 ; 金 ; 17 ; luyện
+788 ; 鍾 ; 金 ; 17 ; chuông
+789 ; 鎖 ; 金 ; 18 ; khóa
+790 ; 鏡 ; 金 ; 19 ; gương
+791 ; 長 ; 長 ; 8 ; dài
+792 ; 門 ; 門 ; 8 ; cửa
+793 ; 閃 ; 門 ; 10 ; lóe
+794 ; 閉 ; 門 ; 11 ; đóng
+795 ; 開 ; 門 ; 12 ; mở
+796 ; 間 ; 門 ; 12 ; khoảng
+797 ; 閑 ; 門 ; 12 ; nhàn
+798 ; 閣 ; 門 ; 14 ; gác
+799 ; 閥 ; 門 ; 14 ; phe phái
+800 ; 閱 ; 門 ; 15 ; đọc
+801 ; 言 ; 言 ; 7 ; lời nói
+802 ; 訂 ; 言 ; 9 ; đặt
+803 ; 計 ; 言 ; 9 ; kế hoạch
+804 ; 訊 ; 言 ; 10 ; tin
+805 ; 討 ; 言 ; 10 ; thảo luận
+806 ; 訓 ; 言 ; 10 ; dạy
+807 ; 記 ; 言 ; 10 ; ghi
+808 ; 訪 ; 言 ; 11 ; thăm
+809 ; 設 ; 言 ; 11 ; thiết lập
+810 ; 許 ; 言 ; 11 ; cho phép
+811 ; 証 ; 言 ; 12 ; chứng
+812 ; 評 ; 言 ; 12 ; bình luận
+813 ; 詞 ; 言 ; 12 ; lời
+814 ; 詠 ; 言 ; 12 ; ngâm
+815 ; 試 ; 言 ; 13 ; thử
+816 ; 詩 ; 言 ; 13 ; thơ
+817 ; 話 ; 言 ; 13 ; lời nói
+818 ; 該 ; 言 ; 13 ; nên
+819 ; 詳 ; 言 ; 13 ; chi tiết
+820 ; 誇 ; 言 ; 14 ; khoe
+821 ; 認 ; 言 ; 14 ; nhận
+822 ; 誓 ; 言 ; 14 ; thề
+823 ; 誠 ; 言 ; 14 ; thành
+824 ; 語 ; 言 ; 14 ; ngôn ngữ
+825 ; 誤 ; 言 ; 14 ; sai lầm
+826 ; 說 ; 言 ; 14 ; nói
+827 ; 読 ; 言 ; 14 ; đọc
+828 ; 請 ; 言 ; 15 ; mời
+829 ; 論 ; 言 ; 15 ; bàn luận
+830 ; 諾 ; 言 ; 16 ; hứa
+831 ; 謀 ; 言 ; 16 ; mưu
+832 ; 講 ; 言 ; 17 ; giảng
+833 ; 謝 ; 言 ; 17 ; cảm ơn
+834 ; 謹 ; 言 ; 18 ; kính cẩn
+835 ; 證 ; 言 ; 19 ; chứng minh
+836 ; 識 ; 言 ; 19 ; tri thức
+837 ; 警 ; 言 ; 19 ; cảnh
+838 ; 議 ; 言 ; 20 ; nghị
+839 ; 護 ; 言 ; 21 ; bảo vệ
+840 ; 讀 ; 言 ; 22 ; đọc
+841 ; 貝 ; 貝 ; 7 ; vỏ sò, tiền
+842 ; 負 ; 貝 ; 9 ; gánh
+843 ; 財 ; 貝 ; 10 ; tài sản
+844 ; 貢 ; 貝 ; 10 ; cống nạp
+845 ; 貨 ; 貝 ; 11 ; hàng hóa
+846 ; 貪 ; 貝 ; 11 ; tham
+847 ; 貧 ; 貝 ; 11 ; nghèo
+848 ; 責 ; 貝 ; 11 ; trách nhiệm
+849 ; 買 ; 貝 ; 12 ; mua
+850 ; 費 ; 貝 ; 12 ; phí
+851 ; 貴 ; 貝 ; 12 ; quý
+852 ; 貿 ; 貝 ; 12 ; buôn bán
+853 ; 賀 ; 貝 ; 12 ; chúc mừng
+854 ; 資 ; 貝 ; 13 ; tư liệu
+855 ; 賊 ; 貝 ; 13 ; giặc
+856 ; 賞 ; 貝 ; 15 ; thưởng
+857 ; 賢 ; 貝 ; 15 ; hiền
+858 ; 賣 ; 貝 ; 15 ; bán
+859 ; 質 ; 貝 ; 15 ; chất
+860 ; 賴 ; 貝 ; 16 ; nhờ cậy
+861 ; 購 ; 貝 ; 17 ; mua sắm
+862 ; 贈 ; 貝 ; 19 ; tặng
+863 ; 贊 ; 貝 ; 19 ; tán trợ
+864 ; 走 ; 走 ; 7 ; chạy
+865 ; 起 ; 走 ; 10 ; đứng dậy
+866 ; 超 ; 走 ; 12 ; vượt
+867 ; 越 ; 走 ; 12 ; vượt qua
+868 ; 趨 ; 走 ; 17 ; tiến tới
+869 ; 足 ; 足 ; 7 ; chân
+870 ; 距 ; 足 ; 11 ; khoảng cách
+871 ; 跑 ; 足 ; 12 ; chạy
+872 ; 路 ; 足 ; 13 ; đường
+873 ; 跳 ; 足 ; 13 ; nhảy
+874 ; 跪 ; 足 ; 13 ; quỳ
+875 ; 踏 ; 足 ; 15 ; giẫm
+876 ; 踴 ; 足 ; 16 ; nhảy lên
+877 ; 蹈 ; 足 ; 17 ; dẫm
+878 ; 蹤 ; 足 ; 18 ; dấu vết
+879 ; 蹲 ; 足 ; 19 ; ngồi xổm
+880 ; 蹴 ; 足 ; 19 ; đá
+881 ; 車 ; 車 ; 7 ; xe
+882 ; 軍 ; 車 ; 9 ; quân đội
+883 ; 軌 ; 車 ; 9 ; đường ray
+884 ; 軒 ; 車 ; 10 ; hiên xe
+885 ; 軟 ; 車 ; 11 ; mềm
+886 ; 軸 ; 車 ; 12 ; trục
+887 ; 軽 ; 車 ; 12 ; nhẹ
+888 ; 較 ; 車 ; 13 ; so sánh
+889 ; 輪 ; 車 ; 15 ; bánh xe
+890 ; 輸 ; 車 ; 16 ; thua
+891 ; 轉 ; 車 ; 18 ; xoay
+892 ; 農 ; 辰 ; 13 ; nông nghiệp
+893 ; 辯 ; 辛 ; 21 ; biện luận
+894 ; 辭 ; 辛 ; 19 ; từ chức
+895 ; 農 ; 辰 ; 13 ; nông
+896 ; 近 ; 辵 ; 7 ; gần
+897 ; 返 ; 辵 ; 7 ; trở lại
+898 ; 迫 ; 辵 ; 8 ; ép
+899 ; 述 ; 辵 ; 8 ; thuật lại
+900 ; 迷 ; 辵 ; 9 ; lạc
+901 ; 追 ; 辵 ; 9 ; đuổi
+902 ; 退 ; 辵 ; 9 ; lui
+903 ; 送 ; 辵 ; 9 ; tiễn
+904 ; 逃 ; 辵 ; 9 ; trốn
+905 ; 逆 ; 辵 ; 9 ; ngược
+906 ; 透 ; 辵 ; 10 ; thấu
+907 ; 逐 ; 辵 ; 10 ; đuổi theo
+908 ; 途 ; 辵 ; 10 ; đường
+909 ; 逢 ; 辵 ; 10 ; gặp
+910 ; 連 ; 辵 ; 10 ; liên kết
+911 ; 逮 ; 辵 ; 11 ; bắt
+912 ; 週 ; 辵 ; 11 ; tuần
+913 ; 進 ; 辵 ; 11 ; tiến
+914 ; 遊 ; 辵 ; 12 ; chơi
+915 ; 運 ; 辵 ; 12 ; vận chuyển
+916 ; 道 ; 辵 ; 12 ; đạo
+917 ; 達 ; 辵 ; 13 ; đạt
+918 ; 遠 ; 辵 ; 13 ; xa
+919 ; 違 ; 辵 ; 13 ; trái
+920 ; 適 ; 辵 ; 14 ; thích hợp
+921 ; 遭 ; 辵 ; 14 ; gặp
+922 ; 遮 ; 辵 ; 14 ; che
+923 ; 遵 ; 辵 ; 15 ; tuân theo
+924 ; 遷 ; 辵 ; 15 ; dời
+925 ; 選 ; 辵 ; 15 ; chọn
+926 ; 遺 ; 辵 ; 15 ; để lại
+927 ; 還 ; 辵 ; 16 ; trở về
+928 ; 邊 ; 辵 ; 18 ; bên
+929 ; 邏 ; 辵 ; 19 ; tuần tra
+930 ; 邁 ; 辵 ; 19 ; bước dài
+931 ; 邑 ; 邑 ; 7 ; ấp
+932 ; 那 ; 邑 ; 11 ; kia
+933 ; 邦 ; 邑 ; 7 ; nước
+934 ; 邪 ; 邑 ; 7 ; tà
+935 ; 邸 ; 邑 ; 8 ; dinh
+936 ; 郊 ; 邑 ; 9 ; ngoại ô
+937 ; 郎 ; 邑 ; 10 ; lang
+938 ; 郡 ; 邑 ; 10 ; quận
+939 ; 部 ; 邑 ; 11 ; bộ phận
+940 ; 郭 ; 邑 ; 11 ; thành ngoài
+941 ; 都 ; 邑 ; 11 ; đô
+942 ; 鄉 ; 邑 ; 13 ; làng
+943 ; 鄙 ; 邑 ; 14 ; quê mùa
+944 ; 鄭 ; 邑 ; 14 ; Trịnh
+945 ; 酉 ; 酉 ; 7 ; rượu
+946 ; 酒 ; 酉 ; 10 ; rượu
+947 ; 酌 ; 酉 ; 10 ; rót rượu
+948 ; 配 ; 酉 ; 10 ; phối
+949 ; 酷 ; 酉 ; 14 ; khắc nghiệt
+950 ; 酸 ; 酉 ; 14 ; chua
+951 ; 醉 ; 酉 ; 15 ; say
+952 ; 醜 ; 酉 ; 17 ; xấu
+953 ; 醫 ; 酉 ; 18 ; y
+954 ; 醬 ; 酉 ; 18 ; tương
+955 ; 釆 ; 釆 ; 7 ; phân biệt
+956 ; 采 ; 釆 ; 8 ; hái
+957 ; 釋 ; 釆 ; 20 ; giải thích
+958 ; 里 ; 里 ; 7 ; làng
+959 ; 重 ; 里 ; 9 ; nặng
+960 ; 野 ; 里 ; 11 ; đồng
+961 ; 量 ; 里 ; 12 ; lượng
+962 ; 金 ; 金 ; 8 ; vàng
+963 ; 針 ; 金 ; 10 ; kim
+964 ; 銀 ; 金 ; 14 ; bạc
+965 ; 鋪 ; 金 ; 15 ; cửa hàng
+966 ; 錯 ; 金 ; 16 ; sai
+967 ; 鍛 ; 金 ; 17 ; rèn
+968 ; 鎮 ; 金 ; 18 ; trấn
+969 ; 鏡 ; 金 ; 19 ; gương
+970 ; 鐘 ; 金 ; 20 ; chuông
+971 ; 鐵 ; 金 ; 21 ; sắt
+972 ; 長 ; 長 ; 8 ; dài
+973 ; 門 ; 門 ; 8 ; cửa
+974 ; 關 ; 門 ; 19 ; quan ải
+975 ; 關 ; 門 ; 19 ; đóng
+976 ; 關 ; 門 ; 19 ; liên quan
+977 ; 關 ; 門 ; 19 ; cửa ải
+978 ; 關 ; 門 ; 19 ; quan hệ
+979 ; 關 ; 門 ; 19 ; chốt
+980 ; 關 ; 門 ; 19 ; then
+981 ; 風 ; 風 ; 9 ; gió
+982 ; 飛 ; 飛 ; 9 ; bay
+983 ; 食 ; 食 ; 9 ; ăn
+984 ; 飯 ; 食 ; 12 ; cơm
+985 ; 飲 ; 食 ; 12 ; uống
+986 ; 養 ; 食 ; 15 ; nuôi
+987 ; 館 ; 食 ; 17 ; quán
+988 ; 首 ; 首 ; 9 ; đầu
+989 ; 香 ; 香 ; 9 ; thơm
+990 ; 馬 ; 馬 ; 10 ; ngựa
+991 ; 馬 ; 馬 ; 10 ; ngựa
+992 ; 馴 ; 馬 ; 13 ; thuần
+993 ; 駕 ; 馬 ; 15 ; lái xe
+994 ; 駿 ; 馬 ; 17 ; ngựa tốt
+995 ; 騎 ; 馬 ; 18 ; cưỡi
+996 ; 驅 ; 馬 ; 21 ; xua
+997 ; 魚 ; 魚 ; 11 ; cá
+998 ; 鮮 ; 魚 ; 17 ; tươi
+999 ; 鯉 ; 魚 ; 18 ; cá chép
+1000 ; 鯨 ; 魚 ; 19 ; cá voi
+1001 ; 鳥 ; 鳥 ; 11 ; chim
+1002 ; 鳳 ; 鳥 ; 14 ; phượng
+1003 ; 鴉 ; 鳥 ; 15 ; quạ
+1004 ; 鴻 ; 鳥 ; 17 ; chim lớn
+1005 ; 鵬 ; 鳥 ; 19 ; chim bằng
+1006 ; 鹿 ; 鹿 ; 11 ; hươu
+1007 ; 麗 ; 鹿 ; 19 ; đẹp
+1008 ; 麥 ; 麥 ; 11 ; lúa mì
+1009 ; 麻 ; 麻 ; 11 ; gai
+1010 ; 黃 ; 黃 ; 12 ; vàng
+1011 ; 黎 ; 黍 ; 15 ; đông đảo
+1012 ; 黑 ; 黑 ; 12 ; đen
+1013 ; 黛 ; 黑 ; 17 ; màu lam đen
+1014 ; 鼎 ; 鼎 ; 13 ; đỉnh
+1015 ; 鼓 ; 鼓 ; 13 ; trống
+1016 ; 鼠 ; 鼠 ; 13 ; chuột
+1017 ; 齊 ; 齊 ; 14 ; đều
+1018 ; 齋 ; 齊 ; 17 ; trai giới
+1019 ; 齒 ; 齒 ; 15 ; răng
+1020 ; 龍 ; 龍 ; 16 ; rồng
+1021 ; 龜 ; 龜 ; 16 ; rùa
+1022 ; 龠 ; 龠 ; 17 ; sáo cổ
+1023 ; 憂 ; 心 ; 15 ; lo buồn
+1024 ; 懷 ; 心 ; 19 ; hoài niệm
+1025 ; 懇 ; 心 ; 17 ; khẩn thiết
+1026 ; 懼 ; 心 ; 21 ; sợ hãi
+1027 ; 戀 ; 心 ; 23 ; luyến
+1028 ; 戒 ; 戈 ; 7 ; cảnh giới
+1029 ; 戰 ; 戈 ; 16 ; chiến đấu
+1030 ; 戲 ; 戈 ; 17 ; trò chơi
+1031 ; 房 ; 戶 ; 8 ; phòng
+1032 ; 扇 ; 戶 ; 10 ; quạt
+1033 ; 扉 ; 戶 ; 12 ; cửa
+1034 ; 所 ; 戶 ; 8 ; nơi
+1035 ; 承 ; 手 ; 8 ; tiếp nhận
+1036 ; 拜 ; 手 ; 9 ; lạy
+1037 ; 擁 ; 手 ; 16 ; ôm giữ
+1038 ; 擊 ; 手 ; 17 ; đánh
+1039 ; 改 ; 攴 ; 7 ; sửa đổi
+1040 ; 攻 ; 攴 ; 7 ; tấn công
+1041 ; 放 ; 攴 ; 8 ; thả
+1042 ; 政 ; 攴 ; 9 ; chính trị
+1043 ; 故 ; 攴 ; 9 ; nguyên do
+1044 ; 效 ; 攴 ; 10 ; hiệu quả
+1045 ; 敏 ; 攴 ; 11 ; nhanh nhạy
+1046 ; 救 ; 攴 ; 11 ; cứu
+1047 ;敬 ; 攴 ; 12 ; kính
+1048 ; 數 ; 攴 ; 15 ; số lượng
+1049 ; 文 ; 文 ; 4 ; văn
+1050 ; 斐 ; 文 ; 12 ; đẹp
+1051 ; 斗 ; 斗 ; 4 ; đấu
+1052 ; 料 ; 斗 ; 10 ; vật liệu
+1053 ; 斜 ; 斗 ; 11 ; nghiêng
+1054 ; 斤 ; 斤 ; 4 ; rìu
+1055 ; 斥 ; 斤 ; 5 ; quở trách
+1056 ; 斬 ; 斤 ; 11 ; chém
+1057 ; 斷 ; 斤 ; 18 ; cắt đứt
+1058 ; 方 ; 方 ; 4 ; phương
+1059 ; 於 ; 方 ; 8 ; ở tại
+1060 ; 旅 ; 方 ; 10 ; lữ hành
+1061 ; 旋 ; 方 ; 11 ; xoay
+1062 ; 族 ; 方 ; 11 ; bộ tộc
+1063 ; 旗 ; 方 ; 14 ; cờ
+1064 ; 既 ; 无 ; 11 ; đã
+1065 ; 旨 ; 日 ; 6 ; ý chỉ
+1066 ; 旭 ; 日 ; 6 ; mặt trời sớm
+1067 ; 旱 ; 日 ; 7 ; hạn hán
+1068 ; 旺 ; 日 ; 8 ; thịnh
+1069 ; 昇 ; 日 ; 8 ; lên cao
+1070 ; 昔 ; 日 ; 8 ; xưa
+1071 ; 昭 ; 日 ; 9 ; sáng rõ
+1072 ; 晃 ; 日 ; 10 ; sáng lóa
+1073 ; 晨 ; 日 ; 11 ; buổi sớm
+1074 ; 晶 ; 日 ; 12 ; tinh thể
+1075 ; 暇 ; 日 ; 13 ; rảnh
+1076 ; 暉 ; 日 ; 13 ; ánh sáng
+1077 ; 暮 ; 日 ; 14 ; hoàng hôn
+1078 ; 曆 ; 日 ; 16 ; lịch
+1079 ; 曙 ; 日 ; 17 ; bình minh
+1080 ; 曦 ; 日 ; 20 ; ánh mặt trời
+1081 ; 書 ; 曰 ; 10 ; sách
+1082 ; 曹 ; 曰 ; 11 ; quan lại
+1083 ; 替 ; 曰 ; 12 ; thay thế
+1084 ; 曾 ; 曰 ; 12 ; từng
+1085 ; 会 ; 曰 ; 13 ; hội
+1086 ; 最 ; 曰 ; 12 ; nhất
+1087 ; 月 ; 月 ; 4 ; trăng
+1088 ; 朋 ; 月 ; 8 ; bạn bè
+1089 ; 朗 ; 月 ; 10 ; sáng
+1090 ; 望 ; 月 ; 11 ; nhìn xa
+1091 ; 期 ; 月 ; 12 ; kỳ hạn
+1092 ; 朧 ; 月 ; 20 ; mờ ảo
+1093 ; 朴 ; 木 ; 6 ; mộc mạc
+1094 ; 杉 ; 木 ; 7 ; cây sam
+1095 ; 架 ; 木 ; 9 ; giá đỡ
+1096 ; 柔 ; 木 ; 9 ; mềm
+1097 ; 桂 ; 木 ; 10 ; cây quế
+1098 ; 桃 ; 木 ; 10 ; đào
+1099 ; 梨 ; 木 ; 11 ; lê
+1100 ; 棉 ; 木 ; 12 ; bông
+1101 ; 植 ; 木 ; 12 ; trồng
+1102 ; 楊 ; 木 ; 13 ; cây dương
+1103 ; 業 ; 木 ; 13 ; nghiệp
+1104 ; 極 ; 木 ; 13 ; cực
+1105 ; 楚 ; 木 ; 13 ; nước Sở
+1106 ; 榮 ; 木 ; 14 ; vinh
+1107 ; 榜 ; 木 ; 14 ; bảng
+1108 ; 榮 ; 木 ; 14 ; vinh hiển
+1109 ; 樂 ; 木 ; 15 ; vui
+1110 ; 樹 ; 木 ; 16 ; cây
+1111 ; 權 ; 木 ; 22 ; quyền lực`;
+
+        // Xử lý dữ liệu thô thành mảng đối tượng
+        const hanData = rawData.trim().split('\n').map(line => {
+            const parts = line.split(';').map(p => p.trim());
+            return {
+                id: parts[0],
+                char: parts[1],
+                radical: parts[2],
+                strokes: parts[3],
+                meaning: parts[4]
+            };
+        });
+
+        let timerL, timerR;
+        let indexL = 0, indexR = 0;
+        let isRollingL = false, isRollingR = false;
+        let resultL = null, resultR = null;
+
+        function startRolling() {
+            // Reset trạng thái
+            resultL = null; resultR = null;
+            document.getElementById('copyBtn').style.display = 'none';
+            document.getElementById('status').innerText = "Đang quay... Hãy bấm Dừng!";
+
+            // Kích hoạt nút Dừng
+            document.getElementById('stopL').disabled = false;
+            document.getElementById('stopR').disabled = false;
+            document.getElementById('stopL').classList.add('active');
+            document.getElementById('stopR').classList.add('active');
+            document.getElementById('startBtn').disabled = true;
+
+            // Bắt đầu quay ô Trái
+            isRollingL = true;
+            timerL = setInterval(() => {
+                indexL = Math.floor(Math.random() * hanData.length);
+                document.getElementById('charL').innerText = hanData[indexL].char;
+            }, 50);
+
+            // Bắt đầu quay ô Phải
+            isRollingR = true;
+            timerR = setInterval(() => {
+                indexR = Math.floor(Math.random() * hanData.length);
+                document.getElementById('charR').innerText = hanData[indexR].char;
+            }, 50);
+        }
+
+        function stopSlot(side) {
+            if (side === 'L' && isRollingL) {
+                clearInterval(timerL);
+                isRollingL = false;
+                resultL = hanData[indexL];
+                document.getElementById('stopL').disabled = true;
+                document.getElementById('stopL').classList.remove('active');
+            } else if (side === 'R' && isRollingR) {
+                clearInterval(timerR);
+                isRollingR = false;
+                resultR = hanData[indexR];
+                document.getElementById('stopR').disabled = true;
+                document.getElementById('stopR').classList.remove('active');
+            }
+
+            // Kiểm tra nếu cả 2 đã dừng
+            if (!isRollingL && !isRollingR) {
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('copyBtn').style.display = 'block';
+                document.getElementById('status').innerText = "Đã nhận chữ xong!";
+            }
+        }
+
+        function copyToClipboard() {
+            if (!resultL || !resultR) return;
+
+            const textToCopy = `THÔNG TIN CHỮ HÁN NHẬN ĐƯỢC:
+---
+Ô TRÁI:
+Vị trí: ${resultL.id}
+Chữ: ${resultL.char}
+Bộ: ${resultL.radical}
+Số nét: ${resultL.strokes}
+Ý nghĩa: ${resultL.meaning}
+---
+Ô PHẢI:
+Vị trí: ${resultR.id}
+Chữ: ${resultR.char}
+Bộ: ${resultR.radical}
+Số nét: ${resultR.strokes}
+Ý nghĩa: ${resultR.meaning}`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("Đã sao chép thông tin 2 chữ vào bộ nhớ tạm!");
+            }).catch(err => {
+                console.error('Lỗi khi sao chép: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
