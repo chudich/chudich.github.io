@@ -3,120 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xin Quẻ Thổ Công</title>
+    <title>Kinh Dịch Utilities - Xin Quẻ Thổ Công</title>
     <style>
+        :root {
+            --primary-color: #6b4e31;
+            --accent-color: #d4af37;
+            --bg-color: #fcfaf2;
+        }
         body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             text-align: center; 
             padding: 20px; 
-            background: linear-gradient(to bottom, #f5f5dc, #e6e6c2);
+            background: var(--bg-color);
             color: #333;
+            line-height: 1.6;
         }
         h2 {
-            color: #6b4e31;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 40px;
         }
-        .container, .button-container, .result-container { 
+        .image-container img { 
+            width: 150px; 
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Khung chứa các ô kết quả */
+        .container { 
             display: flex; 
             justify-content: center; 
-            gap: 20px; 
+            gap: 15px; 
             margin: 20px 0;
             flex-wrap: wrap;
         }
-        .box, .result-box { 
-            width: 120px; 
-            height: 120px; 
-            border: 3px solid #6b4e31; 
-            border-radius: 15px;
+        .box { 
+            width: 100px; 
+            height: 100px; 
+            border: 2px solid var(--primary-color); 
+            border-radius: 12px;
             display: flex; 
+            flex-direction: column;
             align-items: center; 
             justify-content: center; 
-            font-size: 24px; 
             background: #fff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
-        .box:hover, .result-box:hover {
-            transform: translateY(-5px);
+
+        /* Style cho miếng keo Âm Dương */
+        .keo-item {
+            width: 60px;
+            height: 30px;
+            border-radius: 60px 60px 0 0;
+            transition: all 0.2s;
         }
-        .random-btn, .save-btn, .toss-btn { 
-            padding: 12px 25px; 
-            font-size: 16px; 
+        .keo-yang { background: #e63946; border: 2px solid #9b1b26; } /* Ngửa - Đỏ */
+        .keo-yin { background: #333; border: 2px solid #000; transform: rotate(180deg); } /* Sấp - Đen */
+        
+        /* Hiệu ứng rung khi gieo */
+        .shaking { animation: shake 0.15s infinite; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-2px, -1px) rotate(2deg); }
+            100% { transform: translate(1px, 1px) rotate(0deg); }
+        }
+
+        /* Nút bấm */
+        button { 
+            padding: 10px 20px; 
+            font-size: 15px; 
+            font-weight: bold;
             cursor: pointer; 
-            background: linear-gradient(to right, #008CBA, #00a8cc);
+            background: var(--primary-color);
             color: white; 
             border: none; 
-            border-radius: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: all 0.3s;
+            border-radius: 8px;
+            transition: 0.3s;
         }
-        .random-btn:hover, .save-btn:hover, .toss-btn:hover {
-            background: linear-gradient(to right, #005f73, #007a8c);
-            transform: translateY(-2px);
-        }
-        .image-container img { 
-            width: 180px; 
-            border-radius: 50%;
-            border: 5px solid #6b4e31;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        select {
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 2px solid #6b4e31;
-            background: #fff;
-            font-size: 16px;
-        }
-        textarea { 
-            width: 80%; 
-            max-width: 500px;
-            height: 60px; 
-            margin: 15px 0;
-            border-radius: 10px;
-            border: 2px solid #6b4e31;
-            padding: 10px;
-            font-size: 14px;
-        }
-        #history { 
-            margin: 20px auto; 
-            text-align: left;
-            max-width: 600px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #history p {
+        button:hover { background: #4a3622; transform: translateY(-2px); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Kết quả */
+        .result-box {
+            font-size: 1.2em;
+            font-weight: bold;
             margin: 10px 0;
-            padding: 5px;
-            border-left: 4px solid #008CBA;
+            min-height: 30px;
         }
-        .taichi {
-            width: 60px;
-            height: 60px;
-            animation: spin 0.5s infinite linear;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
+
+        /* Coin */
         .coin {
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: #FFD700;
+            border: 2px solid #b8860b;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
             font-weight: bold;
-            color: #333;
-            animation: flip 0.5s infinite linear;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
-        @keyframes flip {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
+
+        textarea { 
+            width: 90%; max-width: 500px; height: 80px; 
+            margin: 10px 0; border-radius: 8px; padding: 10px;
+            border: 1px solid #ccc;
+        }
+        #history { 
+            max-width: 600px; margin: 20px auto; text-align: left;
+            background: #fff; padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
     </style>
 </head>
@@ -128,136 +127,139 @@
 
     <h2>Xin Keo Âm Dương</h2>
     <div class="container">
-        <div class="box" id="upperKeo">?</div>
-        <div class="box" id="lowerKeo">?</div>
-        <button class="random-btn" onclick="rollKeo()">Gieo</button>
+        <div class="box" id="keo1">?</div>
+        <div class="box" id="keo2">?</div>
     </div>
-    <div class="result-container">
-        <div class="result-box" id="keoResult">Kết Quả</div>
-    </div>
+    <div class="result-box" id="keoText">Bấm để xin đại đức</div>
+    <button id="btnKeo" onclick="rollKeo()">Gieo Quẻ Keo</button>
 
-    <h2>Tung Xu</h2>
+    <hr style="margin: 40px 20%; border: 0.5px solid #ddd;">
+
+    <h2>Tung Xu (Yes/No)</h2>
     <div class="container">
-        <div class="box" id="coinResult">Yes</div>
-        <button class="toss-btn" onclick="flipCoin()">Tung Xu</button>
+        <div class="box" id="coinBox">?</div>
     </div>
+    <button id="btnCoin" onclick="flipCoin()">Tung Xu</button>
 
-    <h2>Chọn phạm vi số ngẫu nhiên</h2>
-    <select id="range">
-        <option value="99">Từ 1 - 99</option>
-        <option value="999">Từ 100 - 999</option>
-        <option value="999999">Từ 1000 - 999999</option>
+    <h2>Số Ngẫu Nhiên</h2>
+    <select id="range" style="padding: 5px; margin-bottom: 10px;">
+        <option value="100">0 - 99</option>
+        <option value="1000">100 - 999</option>
+        <option value="1000000">1000 - 999999</option>
     </select>
-
     <div class="container">
-        <div class="box" id="leftBox">0</div>
-        <div class="box" id="rightBox">0</div>
+        <div class="box"><span id="leftNum">0</span><small>Trái</small></div>
+        <div class="box"><span id="rightNum">0</span><small>Phải</small></div>
     </div>
+    <button onclick="rollNumber('left')">Tay Trái</button>
+    <button onclick="rollNumber('right')">Tay Phải</button>
 
-    <div class="button-container">
-        <button class="random-btn" onclick="startRolling('left')">Xin quẻ tay trái</button>
-        <button class="random-btn" onclick="startRolling('right')">Xin quẻ tay phải</button>
+    <h2>Ghi chú & Lưu trữ</h2>
+    <textarea id="note" placeholder="Nhập lời khấn hoặc ý nguyện..."></textarea><br>
+    <button onclick="saveToHistory()">Lưu Kết Quả</button>
+
+    <div id="history">
+        <strong>Lịch sử gần đây:</strong>
+        <div id="historyContent"></div>
     </div>
-
-    <h2>Ghi chú lời khấn</h2>
-    <textarea id="note" placeholder="Nhập lời khấn..."></textarea>
-    <button class="save-btn" onclick="saveResult()">Lưu Kết Quả</button>
-
-    <h2>Lịch Sử</h2>
-    <div id="history"></div>
 
     <script>
-        const taichiIcons = {
-            // Nửa hình tròn hướng lên (dùng cho ô trên)
-            yinUp: `
-                <svg class="taichi" width="60" height="60" viewBox="0 0 100 100">
-                    <path d="M50,50 m-40,0 a40,40 0 1,1 80,0" fill="black" stroke="black" stroke-width="2"/>
-                </svg>
-            `,
-            yangUp: `
-                <svg class="taichi" width="60" height="60" viewBox="0 0 100 100">
-                    <path d="M50,50 m-40,0 a40,40 0 1,1 80,0" fill="red" stroke="red" stroke-width="2"/>
-                </svg>
-            `,
-            // Nửa hình tròn hướng xuống (dùng cho ô dưới)
-            yinDown: `
-                <svg class="taichi" width="60" height="60" viewBox="0 0 100 100">
-                    <path d="M50,50 m-40,0 a40,40 0 1,0 80,0" fill="black" stroke="black" stroke-width="2"/>
-                </svg>
-            `,
-            yangDown: `
-                <svg class="taichi" width="60" height="60" viewBox="0 0 100 100">
-                    <path d="M50,50 m-40,0 a40,40 0 1,0 80,0" fill="red" stroke="red" stroke-width="2"/>
-                </svg>
-            `
-        };
-
-        function startRolling(side) {
-            let max = parseInt(document.getElementById("range").value);
-            let box = document.getElementById(side === 'left' ? "leftBox" : "rightBox");
-            let interval = setInterval(() => {
-                box.innerText = Math.floor(Math.random() * max) + 1;
-            }, 50);
-            
-            setTimeout(() => {
-                clearInterval(interval);
-                box.innerText = Math.floor(Math.random() * max) + 1;
-            }, 5000);
-        }
-
-        function rollKeo() {
-            let upper = document.getElementById("upperKeo");
-            let lower = document.getElementById("lowerKeo");
-            let resultBox = document.getElementById("keoResult");
-
-            let interval1 = setInterval(() => {
-                upper.innerHTML = Math.random() < 0.5 ? taichiIcons.yinUp : taichiIcons.yangUp;
-            }, 50);
-            let interval2 = setInterval(() => {
-                lower.innerHTML = Math.random() < 0.5 ? taichiIcons.yinDown : taichiIcons.yangDown;
-            }, 50);
-
-            setTimeout(() => {
-                clearInterval(interval1);
-                clearInterval(interval2);
-                let finalUpper = Math.random() < 0.5 ? "yin" : "yang";
-                let finalLower = Math.random() < 0.5 ? "yin" : "yang";
-                // Ô trên luôn hướng lên
-                upper.innerHTML = taichiIcons[finalUpper + "Up"].replace('class="taichi"', 'class="taichi" style="animation: none;"');
-                // Ô dưới luôn hướng xuống
-                lower.innerHTML = taichiIcons[finalLower + "Down"].replace('class="taichi"', 'class="taichi" style="animation: none;"');
-                resultBox.innerText = finalUpper !== finalLower ? "Được Keo" : "Không được Keo";
-            }, 10000);
-        }
-
-        function flipCoin() {
-            let box = document.getElementById("coinResult");
-            let interval = setInterval(() => {
-                box.innerHTML = Math.random() < 0.5 ? '<div class="coin">Yes</div>' : '<div class="coin">No</div>';
-            }, 50);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                let result = Math.random() < 0.5 ? "Yes" : "No";
-                box.innerHTML = `<div class="coin" style="animation: none;">${result}</div>`;
-            }, 10000);
-        }
-
-        function saveResult() {
-            let leftNum = document.getElementById("leftBox").innerText;
-            let rightNum = document.getElementById("rightBox").innerText;
-            let note = document.getElementById("note").value.trim();
-            if (!note) {
-                alert("Vui lòng nhập lời khấn trước khi lưu!");
-                return;
+        // Hàm hiển thị hình ảnh miếng keo
+        function drawKeo(divId, type) {
+            const el = document.getElementById(divId);
+            if (type === 'yang') {
+                el.innerHTML = '<div class="keo-item keo-yang"></div><small>Ngửa (Dương)</small>';
+            } else {
+                el.innerHTML = '<div class="keo-item keo-yin"></div><small>Sấp (Âm)</small>';
             }
-            let history = document.getElementById("history");
-            let entry = document.createElement("p");
-            entry.innerText = `🌿 Tay Trái: ${leftNum} | Tay Phải: ${rightNum} | Lời Khấn: ${note}`;
-            history.appendChild(entry);
-            document.getElementById("note").value = "";
+        }
+
+        // 1. Tối ưu tính năng Xin Keo
+        function rollKeo() {
+            const btn = document.getElementById('btnKeo');
+            const resText = document.getElementById('keoText');
+            const k1 = document.getElementById('keo1');
+            const k2 = document.getElementById('keo2');
+
+            btn.disabled = true;
+            resText.innerText = "Đang xin đại đức...";
+            k1.classList.add('shaking');
+            k2.classList.add('shaking');
+
+            let count = 0;
+            let timer = setInterval(() => {
+                drawKeo('keo1', Math.random() < 0.5 ? 'yin' : 'yang');
+                drawKeo('keo2', Math.random() < 0.5 ? 'yin' : 'yang');
+                count++;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                k1.classList.remove('shaking');
+                k2.classList.remove('shaking');
+
+                const r1 = Math.random() < 0.5 ? 'yin' : 'yang';
+                const r2 = Math.random() < 0.5 ? 'yin' : 'yang';
+                
+                drawKeo('keo1', r1);
+                drawKeo('keo2', r2);
+
+                if (r1 !== r2) {
+                    resText.innerHTML = "<span style='color:green'>ĐƯỢC KEO (ÂM DƯƠNG HÒA HỢP)</span>";
+                } else if (r1 === 'yang') {
+                    resText.innerHTML = "<span style='color:orange'>QUẺ CƯỜI (2 NGỬA)</span>";
+                } else {
+                    resText.innerHTML = "<span style='color:red'>QUẺ PHẠT (2 SẤP)</span>";
+                }
+                btn.disabled = false;
+            }, 2000); // Đợi 2 giây
+        }
+
+        // 2. Tung xu
+        function flipCoin() {
+            const box = document.getElementById('coinBox');
+            const btn = document.getElementById('btnCoin');
+            btn.disabled = true;
+            box.classList.add('shaking');
+
+            let timer = setInterval(() => {
+                box.innerHTML = `<div class="coin">${Math.random() < 0.5 ? 'H' : 'T'}</div>`;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(timer);
+                box.classList.remove('shaking');
+                const final = Math.random() < 0.5 ? 'YES' : 'NO';
+                box.innerHTML = `<div class="coin" style="background:#fff7cc">${final}</div>`;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // 3. Số ngẫu nhiên
+        function rollNumber(side) {
+            const target = document.getElementById(side + 'Num');
+            const max = parseInt(document.getElementById('range').value);
+            let count = 0;
+            let timer = setInterval(() => {
+                target.innerText = Math.floor(Math.random() * max);
+            }, 50);
+            setTimeout(() => clearInterval(timer), 1000);
+        }
+
+        // 4. Lưu lịch sử
+        function saveToHistory() {
+            const note = document.getElementById('note').value;
+            if(!note) return alert("Hãy nhập lời khấn");
+            
+            const history = document.getElementById('historyContent');
+            const now = new Date().toLocaleTimeString();
+            const entry = document.createElement('p');
+            entry.style.borderBottom = "1px dashed #ccc";
+            entry.innerHTML = `<small>${now}:</small> ${note} <br> 
+                               <small>Kết quả: ${document.getElementById('keoText').innerText}</small>`;
+            history.prepend(entry);
+            document.getElementById('note').value = "";
         }
     </script>
-
 </body>
 </html>
