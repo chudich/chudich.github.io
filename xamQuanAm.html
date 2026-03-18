@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
             margin-top: 20px;
         }
 
-        /* Ống lắc xăm - Fix size hiển thị đủ 100% */
+        /* Ống lắc xăm - Hiển thị 100% không bị cắt */
         #tube {
             width: 160px;
             height: 240px;
@@ -34,24 +34,24 @@
             transform-origin: bottom center;
         }
 
-        /* FIX: Thẻ xăm rơi xuống hẳn bên dưới, không che mặt tượng */
+        /* FIX: Thẻ xăm rơi hẳn xuống khu vực nút bấm, không che mặt tượng Quán Âm */
         #stick {
-            width: 40px;
-            height: 120px;
+            width: 45px;
+            height: 130px;
             background: #f4c542;
             position: absolute;
             left: 50%;
             top: 60%; 
             transform: translateX(-50%);
-            font-size: 22px;
+            font-size: 24px;
             text-align: center;
             font-weight: bold;
             color: red;
-            line-height: 120px;
+            line-height: 130px;
             border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
             display: none;
-            z-index: 99;
+            z-index: 999;
         }
 
         .shaking {
@@ -71,20 +71,18 @@
             100% { transform: rotate(0deg); }
         }
 
-        /* FIX: Ép thẻ xăm rơi xuống thấp hơn để không che ảnh Quán Âm */
+        /* Ép tọa độ rơi xuống cực thấp (400px) để bảo vệ sự trang nghiêm của ảnh Phật */
         @keyframes fallDown {
             0% { top: 60%; opacity: 0; transform: translateX(-50%) scale(0.5); }
             20% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { top: 380px; opacity: 1; transform: translateX(-50%) rotate(15deg); }
+            100% { top: 400px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
         }
 
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin: 20px;
-            position: relative;
-            z-index: 5;
         }
 
         button {
@@ -119,14 +117,12 @@
             border-radius: 6px;
         }
 
-        #resultTable { display: none; width: 90%; margin: 20px auto; border-collapse: collapse; background: white; }
+        #resultTable { display: none; width: 95%; margin: 20px auto; border-collapse: collapse; background: white; }
         #resultTable th, #resultTable td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 80%; max-height: 80vh; overflow-y: auto; z-index: 1000; }
+        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.6); width: 85%; max-height: 80vh; overflow-y: auto; z-index: 2000; }
     </style>
 </head>
-<body>
-
-    <audio id="shakeSound" preload="auto">
+<body onclick="initAudio()"> <audio id="shakeSound" preload="auto">
         <source src="https://chudich.github.io/tieng_lac_xam.wav" type="audio/wav">
     </audio>
 
@@ -164,41 +160,49 @@
     </div>
 
     <script>
+        var isAudioInitialized = false;
+
+        // Hàm này để "mồi" âm thanh, giúp vượt qua rào cản Autoplay
+        function initAudio() {
+            if (!isAudioInitialized) {
+                const sound = document.getElementById('shakeSound');
+                sound.play().then(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                    isAudioInitialized = true;
+                }).catch(() => {
+                    // Chờ tương tác thật sự
+                });
+            }
+        }
+
         function startShake() {
             const tubeImg = document.getElementById('tubeImg');
             const stick = document.getElementById('stick');
             const sound = document.getElementById('shakeSound');
 
-            // Ẩn quẻ cũ
+            // 1. Reset trạng thái cũ
             stick.classList.remove('fall');
             stick.style.display = 'none';
 
-            // Xử lý âm thanh
+            // 2. Phát âm thanh quyết liệt
             if (sound) {
-                sound.pause();
                 sound.currentTime = 0;
-                // Gọi play() trong context của nút bấm để tránh bị browser chặn
-                let playPromise = sound.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log("Browser chặn âm thanh hoặc file lỗi:", error);
-                    });
-                }
+                sound.play().catch(e => console.log("Lỗi phát: ", e));
             }
 
-            // Hiệu ứng lắc
+            // 3. Hiệu ứng lắc
             tubeImg.classList.add('shaking');
 
             setTimeout(() => {
                 tubeImg.classList.remove('shaking');
-                // Logic lấy quẻ (giữ nguyên logic gốc của bạn nếu cần)
+                // Logic lấy quẻ
                 stick.innerText = Math.floor(Math.random() * 100) + 1; 
                 stick.classList.add('fall');
-            }, 3000); // Giảm xuống 3s để khớp với âm thanh lắc
+            }, 3000); 
         }
 
         const xamList = [
-
             { number: 1, meaning: "QUẺ SỐ 1 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 1 - Xăm Quan Âm\nSỐ 001 - THƯỢNG\nThiên Thai địa tịch tác lương duyên,\nNhựt cát, thì luơng vạn vật tuyền.\nCầu đắc thử xăm phi tiểu khả,\nNhơn hành trung chánh đề hoàng tuyên.\nDỊCH NGHĨA\nTrời đất mở mang làm ra duyên ưa,\nNgày giờ tốt lành muôn vật toàn vẹn.\nDược quẻ Xăm này chẳng phải là điềm nhỏ,\nVì người trung chánh nên Trời xét soi.\nGIẢI RẰNG\nMau mau điểm mau,\nTrong năm chưa hết.\nQuán Âm giáng bút,\nBáo trước cho hay\nCUNG TÝ\nQuẻ này là tượng Trời Đất Mở Mang, là điềm việc gì cũng lợi vậy" },
             { number: 2, meaning: "QUẺ SỐ 2 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 2 - Xăm Quan Âm\nSỐ 002 - HẠ\nKình ngư vị biền thủ giang hà,\nBất khả thăng đằng cánh vọng xa.\nDị nhựt tranh danh thân biến hóa,\nHứa quân nhựt được vạn trùng ba.\nDỊCH NGHĨA\nCon cá kình chưa hóa phải giữ khúc sông,\nChẳng nên trông ra xa, chớ bay lên cao.\nNgày khác biến hóa thì trở nên thênh thang,\nSẽ cho ngươi nhảy qua muôn lớp sóng.\nGIẢI RẰNG\nNhịn được hãy nhịn,\nChịu được hãy chịu.\nChờ cho thời đến,\nSẽ có công danh.\nCUNG TÝ\nQuẻ này là tượng Cá Kình Chưa Hóa, phàm việc gì tới lui đều nên nhẫn nại." },
             { number: 3, meaning: "QUẺ SỐ 3 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 3 - Xăm Quan Âm\nSỐ 003 - HẠ\nLâm phong mạo vũ khứ hoàn qui,\nChánh thị kỳ thân tự yến nhi.\nHàm đắc nệ lai dục tác lũy,\nÁo thì lũy hoại phục hoàn ni.\nDỊCH NGHĨA\nXông pha mưa gió đi lại về,\nCái thân chẳng khác gì con én.\nNgậm được bùn lại muốn đắp làm vách,\nTới chừng vách đổ trở lại thành bùn.\nGIẢI RẰNG\nTrăm bề dụng kế,\nSớm hôm chẳng ngừng.\nAi hay việc này,\nNhọc lòng cũng uổng.\nCUNG TÝ\nQuẻ này là tượng Con Én Ngậm Bùn, là cái triệu làm việc gì cũng hoài công vô ích." },
