@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -13,38 +13,37 @@
             padding: 0;
         }
 
-        /* Container cho ảnh Quán Âm */
         .image-container {
             margin-top: 20px;
         }
 
-        /* Ống lắc xăm - Đảm bảo không gian rộng để lắc */
+        /* Ống lắc xăm - Fix size hiển thị đủ 100% */
         #tube {
-            width: 150px;
-            height: 220px;
+            width: 160px;
+            height: 240px;
             margin: 10px auto;
             position: relative;
-            z-index: 2; /* Nằm dưới thẻ xăm khi rơi */
+            z-index: 2;
         }
 
         #tube img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Hiển thị đầy đủ không mất đầu/chân ống */
+            object-fit: contain; 
             display: block;
             transform-origin: bottom center;
         }
 
-        /* FIX: Thẻ xăm rơi xuống dưới, không che mặt tượng */
+        /* FIX: Thẻ xăm rơi xuống hẳn bên dưới, không che mặt tượng */
         #stick {
             width: 40px;
             height: 120px;
             background: #f4c542;
             position: absolute;
             left: 50%;
-            top: 50%; /* Xuất hiện từ giữa ống xăm */
+            top: 60%; 
             transform: translateX(-50%);
-            font-size: 20px;
+            font-size: 22px;
             text-align: center;
             font-weight: bold;
             color: red;
@@ -52,14 +51,13 @@
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
             display: none;
-            z-index: 10; /* Đảm bảo nằm trên các thành phần khác */
+            z-index: 99;
         }
 
         .shaking {
             animation: shake 0.5s infinite;
         }
 
-        /* Hiệu ứng rơi xuống phía dưới */
         .fall {
             display: block !important;
             animation: fallDown 1s ease-out forwards;
@@ -67,16 +65,17 @@
 
         @keyframes shake {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
+            25% { transform: rotate(12deg); }
             50% { transform: rotate(0deg); }
-            75% { transform: rotate(-10deg); }
+            75% { transform: rotate(-12deg); }
             100% { transform: rotate(0deg); }
         }
 
+        /* FIX: Ép thẻ xăm rơi xuống thấp hơn để không che ảnh Quán Âm */
         @keyframes fallDown {
-            0% { top: 50%; opacity: 0; transform: translateX(-50%) scale(0.5); }
+            0% { top: 60%; opacity: 0; transform: translateX(-50%) scale(0.5); }
             20% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { top: 250px; opacity: 1; transform: translateX(-50%) rotate(15deg); }
+            100% { top: 380px; opacity: 1; transform: translateX(-50%) rotate(15deg); }
         }
 
         .button-container {
@@ -92,7 +91,7 @@
             padding: 12px 24px;
             font-size: 18px;
             cursor: pointer;
-            background: #b32d2e; /* Màu đỏ thẫm trang trọng */
+            background: #b32d2e;
             color: white;
             border: none;
             border-radius: 5px;
@@ -105,7 +104,6 @@
             transform: translateY(2px);
         }
 
-        /* Nút về trang chủ */
         .home-button {
             text-align: left;
             margin: 10px 0 20px 20px;
@@ -121,13 +119,16 @@
             border-radius: 6px;
         }
 
-        /* Bảng kết quả và Popup giữ nguyên */
         #resultTable { display: none; width: 90%; margin: 20px auto; border-collapse: collapse; background: white; }
         #resultTable th, #resultTable td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 80%; max-height: 80vh; overflow-y: auto; z-index: 100; }
+        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 80%; max-height: 80vh; overflow-y: auto; z-index: 1000; }
     </style>
 </head>
 <body>
+
+    <audio id="shakeSound" preload="auto">
+        <source src="https://chudich.github.io/tieng_lac_xam.wav" type="audio/wav">
+    </audio>
 
     <div class="image-container">
         <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 0 auto; object-fit: cover; border-radius: 5px; border: 2px solid #d4af37;">
@@ -163,32 +164,37 @@
     </div>
 
     <script>
-        // Link âm thanh tiếng gõ gỗ/lắc xăm ổn định hơn
-        const shakeAudio = new Audio('https://chudich.github.io/tieng_lac_xam.wav'); 
-        // Nếu link trên chưa có file, tôi dùng link dự phòng này:
-        const backupAudio = new Audio('https://chudich.github.io/tieng_lac_xam.wav');
-
         function startShake() {
             const tubeImg = document.getElementById('tubeImg');
             const stick = document.getElementById('stick');
-            
-            // Ẩn thẻ xăm cũ nếu có
+            const sound = document.getElementById('shakeSound');
+
+            // Ẩn quẻ cũ
             stick.classList.remove('fall');
             stick.style.display = 'none';
 
-            // Phát âm thanh (thử link chính, nếu lỗi dùng link dự phòng)
-            shakeAudio.currentTime = 0;
-            shakeAudio.play().catch(() => backupAudio.play());
+            // Xử lý âm thanh
+            if (sound) {
+                sound.pause();
+                sound.currentTime = 0;
+                // Gọi play() trong context của nút bấm để tránh bị browser chặn
+                let playPromise = sound.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Browser chặn âm thanh hoặc file lỗi:", error);
+                    });
+                }
+            }
 
             // Hiệu ứng lắc
             tubeImg.classList.add('shaking');
 
             setTimeout(() => {
                 tubeImg.classList.remove('shaking');
-                // Cho thẻ xăm rơi ra sau khi lắc xong
-                stick.innerText = Math.floor(Math.random() * 100) + 1; // Ví dụ số quẻ
+                // Logic lấy quẻ (giữ nguyên logic gốc của bạn nếu cần)
+                stick.innerText = Math.floor(Math.random() * 100) + 1; 
                 stick.classList.add('fall');
-            }, 3000);
+            }, 3000); // Giảm xuống 3s để khớp với âm thanh lắc
         }
 
         const xamList = [
