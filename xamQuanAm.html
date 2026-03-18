@@ -9,58 +9,74 @@
             text-align: center;
             font-family: Arial, sans-serif;
             background: #f7f1e3;
+            margin: 0;
+            padding: 0;
         }
 
-        /* FIX: Khung chứa rộng rãi để hiện đủ ống xăm khi lắc */
+        /* Container cho ảnh Quán Âm */
+        .image-container {
+            margin-top: 20px;
+        }
+
+        /* Ống lắc xăm - Đảm bảo không gian rộng để lắc */
         #tube {
-            width: 180px; 
-            height: 280px;
-            margin: 20px auto;
+            width: 150px;
+            height: 220px;
+            margin: 10px auto;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 2; /* Nằm dưới thẻ xăm khi rơi */
         }
 
         #tube img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* Hiện đầy đủ 100% ảnh ống xăm */
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Hiển thị đầy đủ không mất đầu/chân ống */
             display: block;
-            transform-origin: bottom center; /* Lắc từ gốc ống */
-            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+            transform-origin: bottom center;
         }
 
-        /* Que xăm */
+        /* FIX: Thẻ xăm rơi xuống dưới, không che mặt tượng */
         #stick {
-            width: 50px;
-            height: 150px;
+            width: 40px;
+            height: 120px;
             background: #f4c542;
             position: absolute;
             left: 50%;
+            top: 50%; /* Xuất hiện từ giữa ống xăm */
             transform: translateX(-50%);
-            font-size: 25px;
+            font-size: 20px;
             text-align: center;
             font-weight: bold;
             color: red;
-            line-height: 150px;
+            line-height: 120px;
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
             display: none;
-            z-index: 5;
+            z-index: 10; /* Đảm bảo nằm trên các thành phần khác */
         }
 
-        /* Hiệu ứng lắc lư */
         .shaking {
             animation: shake 0.5s infinite;
         }
 
+        /* Hiệu ứng rơi xuống phía dưới */
+        .fall {
+            display: block !important;
+            animation: fallDown 1s ease-out forwards;
+        }
+
         @keyframes shake {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(12deg); }
+            25% { transform: rotate(10deg); }
             50% { transform: rotate(0deg); }
-            75% { transform: rotate(-12deg); }
+            75% { transform: rotate(-10deg); }
             100% { transform: rotate(0deg); }
+        }
+
+        @keyframes fallDown {
+            0% { top: 50%; opacity: 0; transform: translateX(-50%) scale(0.5); }
+            20% { opacity: 1; transform: translateX(-50%) scale(1); }
+            100% { top: 250px; opacity: 1; transform: translateX(-50%) rotate(15deg); }
         }
 
         .button-container {
@@ -68,37 +84,53 @@
             justify-content: center;
             gap: 10px;
             margin: 20px;
+            position: relative;
+            z-index: 5;
         }
 
         button {
-            padding: 10px 25px;
+            padding: 12px 24px;
             font-size: 18px;
             cursor: pointer;
-            background: #d9534f; /* Đổi sang màu đỏ tâm linh */
+            background: #b32d2e; /* Màu đỏ thẫm trang trọng */
             color: white;
             border: none;
             border-radius: 5px;
             font-weight: bold;
-            box-shadow: 0 4px #962d2d;
+            box-shadow: 0 4px #7a1d1e;
         }
 
         button:active {
-            box-shadow: 0 2px #962d2d;
+            box-shadow: 0 2px #7a1d1e;
             transform: translateY(2px);
         }
 
-        /* Các phần Table/Popup giữ nguyên như code cũ của bạn */
-        #resultTable { display: none; width: 80%; margin: 20px auto; border-collapse: collapse; background: white; }
+        /* Nút về trang chủ */
+        .home-button {
+            text-align: left;
+            margin: 10px 0 20px 20px;
+        }
+
+        .home-button a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #FFD700;
+            color: #333;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        /* Bảng kết quả và Popup giữ nguyên */
+        #resultTable { display: none; width: 90%; margin: 20px auto; border-collapse: collapse; background: white; }
         #resultTable th, #resultTable td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.5); width: 60%; max-height: 80vh; overflow-y: auto; z-index: 100; }
-        .home-button { text-align: left; margin: 15px 0 30px 20px; }
-        .home-button a { display: inline-block; padding: 12px 24px; background: #FFD700; color: #333; font-weight: bold; text-decoration: none; border-radius: 6px; }
+        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 80%; max-height: 80vh; overflow-y: auto; z-index: 100; }
     </style>
 </head>
 <body>
 
     <div class="image-container">
-        <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 20px auto; object-fit: cover;">
+        <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 0 auto; object-fit: cover; border-radius: 5px; border: 2px solid #d4af37;">
     </div>
 
     <h2>QUÁN ÂM LINH XĂM</h2>
@@ -109,14 +141,13 @@
 
     <div id="tube">
         <img src="https://chudich.github.io/ongxam.png" alt="Ống Xăm" id="tubeImg">
+        <div id="stick"></div>
     </div>
 
     <div class="button-container">
-        <button onclick="startShake()">LẮC XĂM</button>
+        <button onclick="startShake()">XIN XĂM</button>
         <button onclick="toggleTable()">XEM LỜI GIẢI</button>
     </div>
-
-    <div id="stick"></div>
 
     <table id="resultTable">
         <thead>
@@ -132,28 +163,36 @@
     </div>
 
     <script>
-        // Sử dụng link âm thanh khác ổn định hơn
-        const shakeAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/180/180-preview.mp3'); 
+        // Link âm thanh tiếng gõ gỗ/lắc xăm ổn định hơn
+        const shakeAudio = new Audio('https://raw.githubusercontent.com/Chudich/Chudich.github.io/main/sound-xam.mp3'); 
+        // Nếu link trên chưa có file, tôi dùng link dự phòng này:
+        const backupAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/180/180-preview.mp3');
 
         function startShake() {
             const tubeImg = document.getElementById('tubeImg');
+            const stick = document.getElementById('stick');
             
-            // 1. Phát âm thanh (Phải nằm trong hàm click này trình duyệt mới cho phép)
-            shakeAudio.currentTime = 0; 
-            shakeAudio.play().catch(error => console.log("Lỗi âm thanh:", error));
+            // Ẩn thẻ xăm cũ nếu có
+            stick.classList.remove('fall');
+            stick.style.display = 'none';
 
-            // 2. Thêm class để ảnh bắt đầu lắc
+            // Phát âm thanh (thử link chính, nếu lỗi dùng link dự phòng)
+            shakeAudio.currentTime = 0;
+            shakeAudio.play().catch(() => backupAudio.play());
+
+            // Hiệu ứng lắc
             tubeImg.classList.add('shaking');
 
-            // 3. Sau 3 giây thì dừng lắc và dừng tiếng
             setTimeout(() => {
                 tubeImg.classList.remove('shaking');
-                // Tùy chọn: Để âm thanh nhỏ dần hoặc dừng hẳn
-                // shakeAudio.pause(); 
-            }, 300);
+                // Cho thẻ xăm rơi ra sau khi lắc xong
+                stick.innerText = Math.floor(Math.random() * 100) + 1; // Ví dụ số quẻ
+                stick.classList.add('fall');
+            }, 3000);
         }
 
         const xamList = [
+
             { number: 1, meaning: "QUẺ SỐ 1 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 1 - Xăm Quan Âm\nSỐ 001 - THƯỢNG\nThiên Thai địa tịch tác lương duyên,\nNhựt cát, thì luơng vạn vật tuyền.\nCầu đắc thử xăm phi tiểu khả,\nNhơn hành trung chánh đề hoàng tuyên.\nDỊCH NGHĨA\nTrời đất mở mang làm ra duyên ưa,\nNgày giờ tốt lành muôn vật toàn vẹn.\nDược quẻ Xăm này chẳng phải là điềm nhỏ,\nVì người trung chánh nên Trời xét soi.\nGIẢI RẰNG\nMau mau điểm mau,\nTrong năm chưa hết.\nQuán Âm giáng bút,\nBáo trước cho hay\nCUNG TÝ\nQuẻ này là tượng Trời Đất Mở Mang, là điềm việc gì cũng lợi vậy" },
             { number: 2, meaning: "QUẺ SỐ 2 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 2 - Xăm Quan Âm\nSỐ 002 - HẠ\nKình ngư vị biền thủ giang hà,\nBất khả thăng đằng cánh vọng xa.\nDị nhựt tranh danh thân biến hóa,\nHứa quân nhựt được vạn trùng ba.\nDỊCH NGHĨA\nCon cá kình chưa hóa phải giữ khúc sông,\nChẳng nên trông ra xa, chớ bay lên cao.\nNgày khác biến hóa thì trở nên thênh thang,\nSẽ cho ngươi nhảy qua muôn lớp sóng.\nGIẢI RẰNG\nNhịn được hãy nhịn,\nChịu được hãy chịu.\nChờ cho thời đến,\nSẽ có công danh.\nCUNG TÝ\nQuẻ này là tượng Cá Kình Chưa Hóa, phàm việc gì tới lui đều nên nhẫn nại." },
             { number: 3, meaning: "QUẺ SỐ 3 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 3 - Xăm Quan Âm\nSỐ 003 - HẠ\nLâm phong mạo vũ khứ hoàn qui,\nChánh thị kỳ thân tự yến nhi.\nHàm đắc nệ lai dục tác lũy,\nÁo thì lũy hoại phục hoàn ni.\nDỊCH NGHĨA\nXông pha mưa gió đi lại về,\nCái thân chẳng khác gì con én.\nNgậm được bùn lại muốn đắp làm vách,\nTới chừng vách đổ trở lại thành bùn.\nGIẢI RẰNG\nTrăm bề dụng kế,\nSớm hôm chẳng ngừng.\nAi hay việc này,\nNhọc lòng cũng uổng.\nCUNG TÝ\nQuẻ này là tượng Con Én Ngậm Bùn, là cái triệu làm việc gì cũng hoài công vô ích." },
