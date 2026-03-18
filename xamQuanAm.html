@@ -1,79 +1,59 @@
-<!DOCTYPE html>
+
+
+         <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QUÁN ÂM LINH XĂM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Vietnamese:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             text-align: center;
-            font-family: 'Noto Serif Vietnamese', serif;
-            background: linear-gradient(135deg, #f7f1e3 0%, #e0d7b9 100%);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #f7f1e3;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-        }
-
-        .image-container img {
-            width: 150px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            margin: 20px auto;
-        }
-
-        h2 {
-            color: #4a2c0b;
-            font-size: 2.5rem;
-            margin: 20px 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
+        /* FIX: Khung chứa rộng rãi để hiện đủ ống xăm khi lắc */
         #tube {
-            width: 120px;
-            height: 240px;
+            width: 150px; 
+            height: 250px;
             margin: 30px auto;
             position: relative;
-            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #tube img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Hiện đầy đủ 100% ảnh */
+            display: block;
+            transform-origin: bottom center; /* Lắc từ đáy ống */
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
         }
 
+        /* Que xăm */
         #stick {
-            width: 60px;
-            height: 180px;
-            background: linear-gradient(#f4c542, #e0b00e);
+            width: 50px;
+            height: 150px;
+            background: #f4c542;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 30px;
+            font-size: 25px;
+            text-align: center;
             font-weight: bold;
-            color: #a30606;
-            line-height: 180px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: red;
+            line-height: 150px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
             display: none;
-            transition: top 1s ease-out;
+            z-index: 5;
         }
 
         .shaking {
-            animation: shake 0.4s ease-in-out infinite;
+            animation: shake 0.5s infinite;
         }
 
         .fall {
@@ -81,70 +61,61 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(8deg); }
-            75% { transform: rotate(-8deg); }
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
         }
 
         @keyframes fallDown {
-            0% { top: 0; opacity: 0.7; }
-            100% { top: 240px; opacity: 1; }
+            0% { top: 0px; opacity: 1; }
+            100% { top: 200px; opacity: 1; }
         }
 
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 20px;
         }
 
         button {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 10px 20px;
+            font-size: 18px;
             cursor: pointer;
-            background: linear-gradient(45deg, #d32f2f, #b71c1c);
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-weight: bold;
-            transition: transform 0.2s, background 0.3s;
         }
 
         button:hover {
-            background: linear-gradient(45deg, #b71c1c, #9a0007);
-            transform: scale(1.05);
+            background: #0056b3;
         }
 
         #resultTable {
             display: none;
-            width: 90%;
-            max-width: 700px;
+            width: 80%;
             margin: 20px auto;
             border-collapse: collapse;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: white;
         }
 
         #resultTable th, #resultTable td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 10px;
             text-align: left;
         }
 
         #resultTable th {
-            background: linear-gradient(#f4c542, #e0b00e);
-            color: #333;
-            font-weight: bold;
-        }
-
-        #resultTable tr {
-            transition: background 0.3s;
+            background: #f4c542;
+            color: black;
         }
 
         #resultTable tr:hover {
-            background: #f9e4b7;
+            background: #f0e68c;
             cursor: pointer;
         }
 
@@ -154,106 +125,102 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 60%;
             max-height: 80vh;
             overflow-y: auto;
             text-align: left;
-            z-index: 1000;
+            z-index: 100;
         }
 
-        #popup h3 {
-            color: #4a2c0b;
-            margin-top: 0;
+        .home-button {
+            text-align: left;
+            margin: 15px 0 30px 20px;
         }
 
-        #popup p {
-            line-height: 1.6;
+        .home-button a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #FFD700;
             color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+            transition: background 0.3s, transform 0.2s;
         }
 
-        #popup button {
-            background: linear-gradient(45deg, #d32f2f, #b71c1c);
-            margin-top: 15px;
-        }
-
-        @media (max-width: 600px) {
-            h2 {
-                font-size: 2rem;
-            }
-
-            #tube {
-                width: 100px;
-                height: 200px;
-            }
-
-            #stick {
-                width: 50px;
-                height: 150px;
-                font-size: 24px;
-                line-height: 150px;
-            }
-
-            button {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-
-            #resultTable {
-                width: 95%;
-            }
-
-            #popup {
-                width: 95%;
-                padding: 15px;
-            }
+        .home-button a:hover {
+            background: #FFC300;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="image-container">
-            <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm">
-        </div>
 
-        <h2>QUÁN ÂM LINH XĂM</h2>
-
-        <div id="tube">
-            <img src="https://sophiemeisam.github.io/ongtrexinxam.jpeg" alt="Ống Xăm">
-        </div>
-
-        <div class="button-container">
-            <button onclick="startShake()">LẮC XĂM</button>
-            <button onclick="toggleTable()">XEM LỜI GIẢI</button>
-        </div>
-
-        <div id="stick"></div>
-
-        <table id="resultTable">
-            <thead>
-                <tr>
-                    <th>Số Xăm</th>
-                    <th>Ý Nghĩa</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-
-        <div id="popup">
-            <h3 id="popupTitle"></h3>
-            <p id="popupContent"></p>
-            <button onclick="closePopup()">Đóng</button>
-        </div>
+    <div class="image-container">
+        <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 20px auto; object-fit: cover;">
     </div>
 
-    <audio id="shakeSound" src="https://www.soundjay.com/buttons/shake.wav"></audio>
-    <audio id="fallSound" src="https://www.soundjay.com/buttons/click.wav"></audio>
+    <h2>QUÁN ÂM LINH XĂM</h2>
+
+    <div class="home-button">
+        <a href="https://chudich.github.io/home.html">Về Trang Chủ</a>
+    </div>
+
+    <div id="tube">
+        <img src="https://chudich.github.io/ongxam.png" alt="Ống Xăm" id="tubeImg">
+    </div>
+
+    <div class="button-container">
+        <button onclick="startShake()">LẮC XĂM</button>
+        <button onclick="toggleTable()">XEM LỜI GIẢI</button>
+    </div>
+
+    <div id="stick"></div>
+
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>Số Xăm</th>
+                <th>Ý Nghĩa</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <div id="popup">
+        <h3 id="popupTitle"></h3>
+        <p id="popupContent"></p>
+        <button onclick="closePopup()">Đóng</button>
+    </div>
 
     <script>
+        // Tạo đối tượng âm thanh xột xạc
+        const shakeAudio = new Audio('https://www.soundjay.com/misc/sounds/shaking-ice-in-plastic-cup-1.mp3'); 
+
+        function startShake() {
+            const tube = document.getElementById('tubeImg');
+            
+            // Phát âm thanh
+            shakeAudio.currentTime = 0; // Chơi lại từ đầu mỗi lần bấm
+            shakeAudio.play();
+
+            // Thêm class lắc
+            tube.classList.add('shaking');
+
+            // Sau 2 giây dừng lắc và dừng âm thanh
+            setTimeout(() => {
+                tube.classList.remove('shaking');
+                shakeAudio.pause();
+                // Ở đây bạn có thể thêm logic làm rơi quẻ xăm nếu muốn
+            }, 3000);
+        }
+
         const xamList = [
             { number: 1, meaning: "QUẺ SỐ 1 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 1 - Xăm Quan Âm\nSỐ 001 - THƯỢNG\nThiên Thai địa tịch tác lương duyên,\nNhựt cát, thì luơng vạn vật tuyền.\nCầu đắc thử xăm phi tiểu khả,\nNhơn hành trung chánh đề hoàng tuyên.\nDỊCH NGHĨA\nTrời đất mở mang làm ra duyên ưa,\nNgày giờ tốt lành muôn vật toàn vẹn.\nDược quẻ Xăm này chẳng phải là điềm nhỏ,\nVì người trung chánh nên Trời xét soi.\nGIẢI RẰNG\nMau mau điểm mau,\nTrong năm chưa hết.\nQuán Âm giáng bút,\nBáo trước cho hay\nCUNG TÝ\nQuẻ này là tượng Trời Đất Mở Mang, là điềm việc gì cũng lợi vậy" },
             { number: 2, meaning: "QUẺ SỐ 2 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 2 - Xăm Quan Âm\nSỐ 002 - HẠ\nKình ngư vị biền thủ giang hà,\nBất khả thăng đằng cánh vọng xa.\nDị nhựt tranh danh thân biến hóa,\nHứa quân nhựt được vạn trùng ba.\nDỊCH NGHĨA\nCon cá kình chưa hóa phải giữ khúc sông,\nChẳng nên trông ra xa, chớ bay lên cao.\nNgày khác biến hóa thì trở nên thênh thang,\nSẽ cho ngươi nhảy qua muôn lớp sóng.\nGIẢI RẰNG\nNhịn được hãy nhịn,\nChịu được hãy chịu.\nChờ cho thời đến,\nSẽ có công danh.\nCUNG TÝ\nQuẻ này là tượng Cá Kình Chưa Hóa, phàm việc gì tới lui đều nên nhẫn nại." },
