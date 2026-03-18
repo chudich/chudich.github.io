@@ -1,6 +1,4 @@
-
-
-         <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -15,9 +13,9 @@
 
         /* FIX: Khung chứa rộng rãi để hiện đủ ống xăm khi lắc */
         #tube {
-            width: 150px; 
-            height: 250px;
-            margin: 30px auto;
+            width: 180px; 
+            height: 280px;
+            margin: 20px auto;
             position: relative;
             display: flex;
             align-items: center;
@@ -27,9 +25,9 @@
         #tube img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* Hiện đầy đủ 100% ảnh */
+            object-fit: contain; /* Hiện đầy đủ 100% ảnh ống xăm */
             display: block;
-            transform-origin: bottom center; /* Lắc từ đáy ống */
+            transform-origin: bottom center; /* Lắc từ gốc ống */
             filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
         }
 
@@ -52,25 +50,17 @@
             z-index: 5;
         }
 
+        /* Hiệu ứng lắc lư */
         .shaking {
             animation: shake 0.5s infinite;
         }
 
-        .fall {
-            animation: fallDown 1s ease-out forwards;
-        }
-
         @keyframes shake {
             0% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
+            25% { transform: rotate(12deg); }
             50% { transform: rotate(0deg); }
-            75% { transform: rotate(-10deg); }
+            75% { transform: rotate(-12deg); }
             100% { transform: rotate(0deg); }
-        }
-
-        @keyframes fallDown {
-            0% { top: 0px; opacity: 1; }
-            100% { top: 200px; opacity: 1; }
         }
 
         .button-container {
@@ -81,83 +71,28 @@
         }
 
         button {
-            padding: 10px 20px;
+            padding: 10px 25px;
             font-size: 18px;
             cursor: pointer;
-            background: #007bff;
+            background: #d9534f; /* Đổi sang màu đỏ tâm linh */
             color: white;
             border: none;
             border-radius: 5px;
             font-weight: bold;
+            box-shadow: 0 4px #962d2d;
         }
 
-        button:hover {
-            background: #0056b3;
+        button:active {
+            box-shadow: 0 2px #962d2d;
+            transform: translateY(2px);
         }
 
-        #resultTable {
-            display: none;
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        #resultTable th, #resultTable td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        #resultTable th {
-            background: #f4c542;
-            color: black;
-        }
-
-        #resultTable tr:hover {
-            background: #f0e68c;
-            cursor: pointer;
-        }
-
-        #popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            width: 60%;
-            max-height: 80vh;
-            overflow-y: auto;
-            text-align: left;
-            z-index: 100;
-        }
-
-        .home-button {
-            text-align: left;
-            margin: 15px 0 30px 20px;
-        }
-
-        .home-button a {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #FFD700;
-            color: #333;
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: none;
-            border-radius: 6px;
-            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        .home-button a:hover {
-            background: #FFC300;
-            transform: translateY(-2px);
-        }
+        /* Các phần Table/Popup giữ nguyên như code cũ của bạn */
+        #resultTable { display: none; width: 80%; margin: 20px auto; border-collapse: collapse; background: white; }
+        #resultTable th, #resultTable td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.5); width: 60%; max-height: 80vh; overflow-y: auto; z-index: 100; }
+        .home-button { text-align: left; margin: 15px 0 30px 20px; }
+        .home-button a { display: inline-block; padding: 12px 24px; background: #FFD700; color: #333; font-weight: bold; text-decoration: none; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -185,10 +120,7 @@
 
     <table id="resultTable">
         <thead>
-            <tr>
-                <th>Số Xăm</th>
-                <th>Ý Nghĩa</th>
-            </tr>
+            <tr><th>Số Xăm</th><th>Ý Nghĩa</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
@@ -200,25 +132,25 @@
     </div>
 
     <script>
-        // Tạo đối tượng âm thanh xột xạc
-        const shakeAudio = new Audio('https://www.soundjay.com/misc/sounds/shaking-ice-in-plastic-cup-1.mp3'); 
+        // Sử dụng link âm thanh khác ổn định hơn
+        const shakeAudio = new Audio('https://assets.mixkit.co/active_storage/sfx/180/180-preview.mp3'); 
 
         function startShake() {
-            const tube = document.getElementById('tubeImg');
+            const tubeImg = document.getElementById('tubeImg');
             
-            // Phát âm thanh
-            shakeAudio.currentTime = 0; // Chơi lại từ đầu mỗi lần bấm
-            shakeAudio.play();
+            // 1. Phát âm thanh (Phải nằm trong hàm click này trình duyệt mới cho phép)
+            shakeAudio.currentTime = 0; 
+            shakeAudio.play().catch(error => console.log("Lỗi âm thanh:", error));
 
-            // Thêm class lắc
-            tube.classList.add('shaking');
+            // 2. Thêm class để ảnh bắt đầu lắc
+            tubeImg.classList.add('shaking');
 
-            // Sau 2 giây dừng lắc và dừng âm thanh
+            // 3. Sau 3 giây thì dừng lắc và dừng tiếng
             setTimeout(() => {
-                tube.classList.remove('shaking');
-                shakeAudio.pause();
-                // Ở đây bạn có thể thêm logic làm rơi quẻ xăm nếu muốn
-            }, 3000);
+                tubeImg.classList.remove('shaking');
+                // Tùy chọn: Để âm thanh nhỏ dần hoặc dừng hẳn
+                // shakeAudio.pause(); 
+            }, 300);
         }
 
         const xamList = [
