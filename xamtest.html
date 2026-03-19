@@ -1,169 +1,66 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUÁN ÂM LINH XĂM</title>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; background: #f7f1e3; margin: 0; padding: 0; overflow-x: hidden; }
+<script>
+    // ====== AUDIO MP3 LẮC XĂM ======
+    const shakeAudio = new Audio("https://chudich.github.io/tieng_lac_xam.mp3");
+    shakeAudio.loop = true;
+    shakeAudio.volume = 0.6;
 
-        /* Container ảnh Quán Âm */
-        .image-container { margin-top: 15px; }
+    // ====== AUDIO GIẢ LẬP (GIỮ NGUYÊN) ======
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        /* Ống lắc - Fix hiển thị trọn vẹn */
-        #tube {
-            width: 160px;
-            height: 240px;
-            margin: 10px auto;
-            position: relative;
-            z-index: 2;
-        }
-        #tube img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-            display: block;
-            transform-origin: bottom center;
-        }
+    function playShakeSound() {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
-        /* THẺ XĂM RƠI THẤP: Tuyệt đối không che mặt tượng Quán Âm */
-        #stick {
-            width: 45px;
-            height: 130px;
-            background: #f4c542;
-            position: absolute;
-            left: 50%;
-            top: 60%; 
-            transform: translateX(-50%);
-            font-size: 24px;
-            text-align: center;
-            font-weight: bold;
-            color: red;
-            line-height: 130px;
-            border-radius: 5px;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-            display: none;
-            z-index: 999;
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.1);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function startShake() {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
         }
 
-        .shaking { animation: shake 0.5s infinite; }
-        .fall { display: block !important; animation: fallDown 0.8s ease-out forwards; }
+        const tubeImg = document.getElementById('tubeImg');
+        const stick = document.getElementById('stick');
 
-        @keyframes shake {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(12deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(-12deg); }
-            100% { transform: rotate(0deg); }
-        }
+        // Reset quẻ
+        stick.classList.remove('fall');
+        stick.style.display = 'none';
+        tubeImg.classList.add('shaking');
 
-        /* Tọa độ rơi 430px: Dưới hẳn tầm ảnh Quán Âm */
-        @keyframes fallDown {
-            0% { top: 60%; opacity: 0; transform: translateX(-50%) scale(0.5); }
-            20% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { top: 430px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
-        }
+        // ====== PHÁT AUDIO MP3 ======
+        shakeAudio.currentTime = 0;
+        shakeAudio.play().catch(() => {});
 
-        .button-container { display: flex; justify-content: center; gap: 15px; margin: 20px; }
-        button {
-            padding: 12px 24px; font-size: 18px; cursor: pointer;
-            background: #b32d2e; color: white; border: none; border-radius: 5px;
-            font-weight: bold; box-shadow: 0 4px #7a1d1e;
-        }
-        button:active { box-shadow: 0 2px #7a1d1e; transform: translateY(2px); }
+        // ====== ÂM GIẢ LẬP (có thể xoá nếu không cần) ======
+        const soundInterval = setInterval(playShakeSound, 150);
 
-        .home-button { text-align: left; margin: 10px 0 10px 20px; }
-        .home-button a { display: inline-block; padding: 10px 20px; background: #FFD700; color: #333; font-weight: bold; text-decoration: none; border-radius: 6px; }
+        setTimeout(function() {
+            clearInterval(soundInterval);
+            tubeImg.classList.remove('shaking');
 
-        #resultTable { display: none; width: 95%; margin: 20px auto; border-collapse: collapse; background: white; }
-        #resultTable th, #resultTable td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.6); width: 85%; max-height: 80vh; overflow-y: auto; z-index: 2000; }
-    </style>
-</head>
-<body>
+            // ====== DỪNG AUDIO ======
+            shakeAudio.pause();
+            shakeAudio.currentTime = 0;
 
-    <div class="image-container">
-        <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 0 auto; object-fit: cover; border-radius: 5px; border: 2px solid #d4af37;">
-    </div>
+            // Hiển thị số ngẫu nhiên
+            stick.innerText = Math.floor(Math.random() * 100) + 1;
+            stick.classList.add('fall');
 
-    <h2>QUÁN ÂM LINH XĂM</h2>
+        }, 2000);
+    }
 
-    <div class="home-button">
-        <a href="https://chudich.github.io/home.html">Về Trang Chủ</a>
-    </div>
-
-    <div id="tube">
-        <img src="https://chudich.github.io/ongxam.png" alt="Ống Xăm" id="tubeImg">
-        <div id="stick"></div>
-    </div>
-
-    <div class="button-container">
-        <button onclick="startShake()">XIN XĂM</button>
-        <button onclick="toggleTable()">XEM LỜI GIẢI</button>
-    </div>
-
-    <table id="resultTable">
-        <thead><tr><th>Số Xăm</th><th>Ý Nghĩa</th></tr></thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-
-    <div id="popup">
-        <h3 id="popupTitle"></h3><p id="popupContent"></p>
-        <button onclick="closePopup()">Đóng</button>
-    </div>
-
-    <script>
-        // NHÚNG TRỰC TIẾP ÂM THANH (Dạng Base64 để không bị chặn)
-        const shakeSoundBase64 = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFhYAAAAHAAAAGxhdmY1OC4yOS4xMDABYmFzZTY0LmpwZwD/4AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"; 
-        // Lưu ý: Chuỗi trên là ví dụ. Tôi sẽ dùng mã lệnh tạo âm thanh trực tiếp bằng Web Audio API bên dưới để chắc chắn phát ra tiếng.
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playShakeSound() {
-            // Tạo tiếng "cạch cạch" giả lập bằng mã code nếu file mp3 bị chặn
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.1);
-
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.1);
-        }
-
-        function startShake() {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            const tubeImg = document.getElementById('tubeImg');
-            const stick = document.getElementById('stick');
-
-            // Reset quẻ
-            stick.classList.remove('fall');
-            stick.style.display = 'none';
-            tubeImg.classList.add('shaking');
-
-            // Phát tiếng động lặp lại trong khi lắc
-            const soundInterval = setInterval(playShakeSound, 150);
-
-            setTimeout(function() {
-                clearInterval(soundInterval);
-                tubeImg.classList.remove('shaking');
-                // Hiển thị số ngẫu nhiên
-                stick.innerText = Math.floor(Math.random() * 100) + 1; 
-                stick.classList.add('fall');
-            }, 2000); 
-        }
-
-        const xamList = [
+    const xamList = [
             { number: 1, meaning: "QUẺ SỐ 1 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 1 - Xăm Quan Âm\nSỐ 001 - THƯỢNG\nThiên Thai địa tịch tác lương duyên,\nNhựt cát, thì luơng vạn vật tuyền.\nCầu đắc thử xăm phi tiểu khả,\nNhơn hành trung chánh đề hoàng tuyên.\nDỊCH NGHĨA\nTrời đất mở mang làm ra duyên ưa,\nNgày giờ tốt lành muôn vật toàn vẹn.\nDược quẻ Xăm này chẳng phải là điềm nhỏ,\nVì người trung chánh nên Trời xét soi.\nGIẢI RẰNG\nMau mau điểm mau,\nTrong năm chưa hết.\nQuán Âm giáng bút,\nBáo trước cho hay\nCUNG TÝ\nQuẻ này là tượng Trời Đất Mở Mang, là điềm việc gì cũng lợi vậy" },
             { number: 2, meaning: "QUẺ SỐ 2 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 2 - Xăm Quan Âm\nSỐ 002 - HẠ\nKình ngư vị biền thủ giang hà,\nBất khả thăng đằng cánh vọng xa.\nDị nhựt tranh danh thân biến hóa,\nHứa quân nhựt được vạn trùng ba.\nDỊCH NGHĨA\nCon cá kình chưa hóa phải giữ khúc sông,\nChẳng nên trông ra xa, chớ bay lên cao.\nNgày khác biến hóa thì trở nên thênh thang,\nSẽ cho ngươi nhảy qua muôn lớp sóng.\nGIẢI RẰNG\nNhịn được hãy nhịn,\nChịu được hãy chịu.\nChờ cho thời đến,\nSẽ có công danh.\nCUNG TÝ\nQuẻ này là tượng Cá Kình Chưa Hóa, phàm việc gì tới lui đều nên nhẫn nại." },
             { number: 3, meaning: "QUẺ SỐ 3 - XĂM QUAN ÂM\nDưới đây là lời giảng Quẻ số 3 - Xăm Quan Âm\nSỐ 003 - HẠ\nLâm phong mạo vũ khứ hoàn qui,\nChánh thị kỳ thân tự yến nhi.\nHàm đắc nệ lai dục tác lũy,\nÁo thì lũy hoại phục hoàn ni.\nDỊCH NGHĨA\nXông pha mưa gió đi lại về,\nCái thân chẳng khác gì con én.\nNgậm được bùn lại muốn đắp làm vách,\nTới chừng vách đổ trở lại thành bùn.\nGIẢI RẰNG\nTrăm bề dụng kế,\nSớm hôm chẳng ngừng.\nAi hay việc này,\nNhọc lòng cũng uổng.\nCUNG TÝ\nQuẻ này là tượng Con Én Ngậm Bùn, là cái triệu làm việc gì cũng hoài công vô ích." },
