@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Kinh Dịch Pro - Fix Text 100%</title>
+    <title>Kinh Dịch Pro - Bản Xuất Ảnh Canvas</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #993300; --bg: #f4f5f7; }
@@ -17,16 +17,16 @@
         .input-panel.active { display: block; }
         .btn-main { background: var(--primary); color: #fff; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
         .question-box { padding: 15px 20px; background: #fafafa; border-top: 1px solid #eee; }
-        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-family: inherit; resize: none; box-sizing: border-box; font-size: 15px; }
         .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; outline: 1px solid #ddd; }
+        .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ddd; }
         .dot.active { outline: 2px solid #000; }
-        .btn-dl { background: #007aff; color: #fff; padding: 10px 20px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-dl { background: #007aff; color: #fff; padding: 12px 25px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
         .canvas-wrapper { width: 100%; overflow-x: auto; background: #fff; padding: 20px 0; border-top: 1px solid #eee; }
         #canvas { display: inline-block; min-width: 100%; text-align: center; }
+        canvas#hiddenCanvas { display: none; } /* Canvas ẩn để xử lý ảnh */
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://sophiemeisam.github.io/saveSvgAsPng.js"></script>
     <script src="https://sophiemeisam.github.io/raphael.js"></script>
     <script src="https://sophiemeisam.github.io/khiet.js"></script>
 </head>
@@ -40,16 +40,20 @@
     <div class="input-section">
         <div id="tab-auto" class="input-panel active"><button class="btn-main" id="btn-auto">GIEO QUẺ</button></div>
         <div id="tab-don" class="input-panel">
-            <div style="display:flex; gap:10px; margin-bottom:10px;"><input type="text" id="dp" style="width:50%; padding:10px;" placeholder="P"><input type="text" id="dt" style="width:50%; padding:10px;" placeholder="T"></div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <input type="text" id="dp" style="width:50%; padding:10px; border-radius:8px; border:1px solid #ddd;" placeholder="Phải">
+                <input type="text" id="dt" style="width:50%; padding:10px; border-radius:8px; border:1px solid #ddd;" placeholder="Trái">
+            </div>
             <button class="btn-main" id="btn-don">ĐỘN QUẺ</button>
         </div>
     </div>
     <div class="question-box">
-        <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi..."></textarea>
+        <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi tại đây..."></textarea>
         <div class="dl-bar">
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:12px;">
                 <div class="dot active" style="background:#007aff" data-c="#007aff"></div>
                 <div class="dot" style="background:#dc3545" data-c="#dc3545"></div>
+                <div class="dot" style="background:#28a745" data-c="#28a745"></div>
             </div>
             <button class="btn-dl" id="btn-download">💾 TẢI ẢNH</button>
         </div>
@@ -57,62 +61,75 @@
     <div class="canvas-wrapper"><div id="canvas"></div></div>
 </div>
 
+<canvas id="hiddenCanvas"></canvas>
+
 <script>
 $(document).ready(function() {
     let selColor = "#007aff";
-    window.switchTab = (e, id) => { $('.tab-item').removeClass('active'); $(e.target).addClass('active'); $('.input-panel').removeClass('active'); $('#'+id).addClass('active'); };
-    $('.dot').click(function() { $('.dot').removeClass('active'); $(this).addClass('active'); selColor = $(this).data('c'); });
+    window.switchTab = (e, id) => { 
+        $('.tab-item').removeClass('active'); $(e.target).addClass('active'); 
+        $('.input-panel').removeClass('active'); $('#'+id).addClass('active'); 
+    };
+    $('.dot').click(function() { 
+        $('.dot').removeClass('active'); $(this).addClass('active'); 
+        selColor = $(this).data('c'); 
+    });
 
-    // Gieo quẻ
-    $('#btn-auto').click(() => { let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; Khiet.drawKhongThoi('canvas',p,t,d,180); });
-    $('#btn-don').click(() => { let p=$('#dp').val(), t=$('#dt').val(); Khiet.drawKhongThoi('canvas',p,t,null,180); });
+    $('#btn-auto').click(() => { 
+        let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; 
+        Khiet.drawKhongThoi('canvas',p,t,d,180); 
+    });
+    $('#btn-don').click(() => { 
+        let p=$('#dp').val(), t=$('#dt').val(); 
+        Khiet.drawKhongThoi('canvas',p,t,null,180); 
+    });
 
-    // HÀM TẢI ẢNH QUAN TRỌNG NHẤT
+    // HÀM TẢI ẢNH BẰNG CANVAS THUẦN (100% HIỆN CHỮ)
     $('#btn-download').click(function() {
-        const svg = document.querySelector('#canvas svg');
-        if(!svg) return alert("Chưa có quẻ!");
+        const svgElement = document.querySelector('#canvas svg');
+        if(!svgElement) return alert("Chưa có quẻ!");
         
-        const qText = $.trim($('#qTxt').val());
-        const filename = `QueDich_${Date.now()}.png`;
+        const qText = "HỎI: " + $.trim($('#qTxt').val());
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const canvas = document.getElementById('hiddenCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const img = new Image();
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const url = URL.createObjectURL(svgBlob);
 
-        saveSvgAsPng(svg, filename, {
-            scale: 2,
-            backgroundColor: "#ffffff",
-            prepareSvg: function(svgCopy) {
-                if (qText) {
-                    // Lấy BBox để xác định tọa độ thực của hình vẽ
-                    const bbox = svg.getBBox();
-                    const extra = 120; // Khoảng trống cho chữ
+        img.onload = function() {
+            // 1. Tính toán kích thước
+            const scale = 2; // Tăng độ nét
+            const extraH = 100; // Khoảng trống cho chữ
+            canvas.width = img.width * scale;
+            canvas.height = (img.height + extraH) * scale;
 
-                    // Ép lại ViewBox dựa trên nội dung thực tế để chữ không bị nằm ngoài
-                    // Chúng ta lấy bbox.y (điểm cao nhất) đến bbox.height (độ dài nội dung) + extra
-                    svgCopy.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height + extra}`);
-                    svgCopy.setAttribute('width', bbox.width);
-                    svgCopy.setAttribute('height', bbox.height + extra);
+            // 2. Vẽ nền trắng
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // Vẽ một hình chữ nhật trắng làm nền cho câu hỏi (tránh trùng lặp toạ độ)
-                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    rect.setAttribute("x", bbox.x);
-                    rect.setAttribute("y", bbox.y + bbox.height);
-                    rect.setAttribute("width", bbox.width);
-                    rect.setAttribute("height", extra);
-                    rect.setAttribute("fill", "#ffffff");
-                    svgCopy.appendChild(rect);
+            // 3. Vẽ bảng quẻ
+            ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
 
-                    // Vẽ Text câu hỏi ngay dưới đáy của BBox
-                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    text.setAttribute("x", bbox.x + (bbox.width / 2));
-                    text.setAttribute("y", bbox.y + bbox.height + 70); // Cách đáy 70 đơn vị
-                    text.setAttribute("text-anchor", "middle");
-                    text.setAttribute("font-family", "Arial, sans-serif");
-                    text.setAttribute("font-size", "36px");
-                    text.setAttribute("font-weight", "bold");
-                    text.setAttribute("fill", selColor);
-                    text.textContent = "HỎI: " + qText;
-                    svgCopy.appendChild(text);
-                }
-            }
-        });
+            // 4. Vẽ chữ câu hỏi (Dùng Canvas Text)
+            ctx.fillStyle = selColor;
+            ctx.font = `bold ${32 * scale}px Lexend, Arial`;
+            ctx.textAlign = "center";
+            ctx.fillText(qText, canvas.width / 2, (img.height + 60) * scale);
+
+            // 5. Xuất ảnh
+            const pngUrl = canvas.toDataURL("image/png");
+            const downloadLink = document.createElement("a");
+            downloadLink.href = pngUrl;
+            downloadLink.download = `QueDich_${Date.now()}.png`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            URL.revokeObjectURL(url);
+        };
+        img.src = url;
     });
 });
 </script>
