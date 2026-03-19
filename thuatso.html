@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật Số Utilities</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 28px; 
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: #222;
+        }
+
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px 15px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .utility-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #444;
+            transition: opacity 0.2s;
+        }
+
+        .utility-item:active {
+            opacity: 0.6;
+        }
+
+        .icon-wrapper {
+            width: 85px;
+            height: 85px;
+            background-color: #f8f8f8;
+            border-radius: 22px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .icon-wrapper img {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .utility-name {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.2;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 380px) {
+            .icon-wrapper {
+                width: 75px;
+                height: 75px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="header-title">Kinh Dịch Utilities</h1>
+
+    <div class="utility-grid">
+        <a href="https://chudich.github.io/tractu.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/tractu.png" alt="Icon"></div>
+            <span class="utility-name">Trắc Tự</span>
+        </a>
+
+        <a href="https://sophiemeisam.github.io/vankhanthinhchu.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/ThoCong.png" alt="Icon"></div>
+            <span class="utility-name">Thỉnh Chữ</span>
+        </a>
+
+        <a href="https://chudich.github.io/luchao.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/luchao.png" alt="Icon"></div>
+            <span class="utility-name">Quẻ Lục Hào</span>
+        </a>
+
+        <a href="https://chudich.github.io/xinkeo.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/xinkeo.png" alt="Icon"></div>
+            <span class="utility-name">Xin Keo</span>
+        </a>
+
+        <a href="https://chudich.github.io/xamQuanAm.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/xamQuanAm.png" alt="Icon"></div>
+            <span class="utility-name">Xăm Quán Âm</span>
+        </a>
+
+        <a href="https://chudich.github.io/tienthien_hauthien.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/2trangthai.png" alt="Icon"></div>
+            <span class="utility-name">2 Trạng Thái</span>
+        </a>
+
+        <a href="https://chudich.github.io/quetinhdanh_1n.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/tinhdanh.png" alt="Icon"></div>
+            <span class="utility-name">Quẻ Tính Danh 1</span>
+        </a>
+
+        <a href="https://chudich.github.io/tinhdanh_2n.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/tinhdanh.png" alt="Icon"></div>
+            <span class="utility-name">Quẻ Tính Danh 2</span>
+        </a>
+
+        <a href="https://chudich.github.io/quedoi_combine.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/quedoi.png" alt="Icon"></div>
+            <span class="utility-name">Quẻ Đối</span>
+        </a>
+
+        <a href="https://chudich.github.io/LienHoa_CamUng.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/LienHoa.png" alt="Icon"></div>
+            <span class="utility-name">Liên Hoa</span>
+        </a>
+
+        <a href="https://chudich.github.io/lucthan3.html" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://chudich.github.io/timlucthan.png" alt="Icon"></div>
+            <span class="utility-name">Tìm Lục Thân</span>
+        </a>
+
+        <a href="https://google.com" target="_blank" class="utility-item">
+            <div class="icon-wrapper"><img src="https://via.placeholder.com/128" alt="Icon"></div>
+            <span class="utility-name">Tiện ích 12</span>
+        </a>
+    </div>
+
+</body>
+</html>
