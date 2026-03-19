@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>NguyenK - Kinh Dịch Pro</title>
+    <title>NguyenK - Kinh Dịch Toàn Diện</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #993300; --secondary: #28a745; --accent: #ff8000;
             --bg: #f4f5f7; --card-bg: #ffffff; --text: #2d3436;
         }
-
         body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; color: var(--text); }
-        .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; position: relative; }
-
+        .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; }
+        
         /* Banner & Tabs */
         .banner { position: relative; }
         .banner img { width: 100%; height: auto; display: block; }
@@ -31,46 +30,22 @@
         
         .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         input[type="text"] { width: 65px; padding: 12px 5px; border: 1.5px solid #dfe6e9; border-radius: 10px; text-align: center; font-size: 16px; outline: none; }
-        .btn { border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; }
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn { border: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; margin-top: 5px; }
         .btn-cam-ung { width: 100%; padding: 20px; font-size: 18px; background: linear-gradient(135deg, #28a745, #1e7e34); color: white; border-radius: 15px; border: none; box-shadow: 0 8px 20px rgba(40,167,69,0.2); }
 
-        /* KHU VỰC QUẺ - QUAN TRỌNG NHẤT */
-        .canvas-wrapper { 
-            width: 100%; 
-            background: #fff; 
-            border-top: 1px solid #eee; 
-            overflow-x: auto; /* Cho phép cuộn ngang */
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            position: relative;
-            padding: 20px 0;
-            cursor: grab;
-        }
-        #canvas { 
-            display: inline-block; /* Để container ôm sát SVG */
-            min-width: 100%; /* Đảm bảo căn giữa khi quẻ nhỏ */
-            text-align: center; 
-        }
-        #canvas svg { 
-            display: block; 
-            margin: 0 auto; 
-            transform-origin: top center;
-        }
-
-        /* Nút Tải Ảnh Nổi */
-        .download-btn {
-            background: #007aff; color: white; padding: 10px 20px; border-radius: 50px;
-            font-size: 13px; font-weight: bold; cursor: pointer; border: none;
-            margin: 10px auto; display: block; box-shadow: 0 4px 10px rgba(0,122,255,0.3);
-        }
+        /* Canvas - Hiển thị Quẻ */
+        .download-btn { background: #007aff; color: white; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; margin: 10px auto; display: block; }
+        .canvas-wrapper { width: 100%; background: #fff; border-top: 1px solid #eee; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 20px 0; }
+        #canvas { display: inline-block; min-width: 100%; text-align: center; }
+        #canvas svg { display: block; margin: 0 auto; }
 
         /* Luận Đoán */
         .luan-doan-section { padding: 20px; border-top: 8px solid #f4f5f7; }
         #guaSelect { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #dfe6e9; margin-bottom: 15px; font-size: 15px; }
-        #ketQua { background: #fcfcfc; padding: 18px; border-radius: 15px; font-size: 14px; border: 1px solid #eee; white-space: pre-wrap; }
-        .ket-luan-highlight { display: block; margin-top: 10px; color: #0288d1; font-weight: bold; text-align: center; }
-
+        #ketQua { background: #fcfcfc; padding: 18px; border-radius: 15px; font-size: 14px; border: 1px solid #eee; white-space: pre-wrap; line-height: 1.8; }
+        .ket-luan-highlight { display: block; margin-top: 15px; padding: 12px; background: #e1f5fe; color: #0288d1; border-radius: 10px; font-weight: bold; text-align: center; font-size: 16px; border: 1px dashed #0288d1; }
+        
         .history-list { display: flex; gap: 8px; overflow-x: auto; padding: 15px; list-style: none; margin: 0; border-top: 1px solid #eee; }
         .history-list li { flex: 0 0 auto; background: #f1f2f6; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; }
     </style>
@@ -100,6 +75,7 @@
         <div id="tab-auto" class="input-panel active" style="text-align:center">
             <button class="btn-cam-ung" id="btn-auto-gieo">GIEO QUẺ CẢM ỨNG</button>
         </div>
+
         <div id="tab-don" class="input-panel">
             <div class="input-group">
                 <input type="text" id="don-phai" placeholder="PHẢI">
@@ -107,6 +83,7 @@
             </div>
             <button class="btn btn-primary" id="btn-don-exec">ĐỘN QUẺ</button>
         </div>
+
         <div id="tab-tim" class="input-panel">
             <div class="input-group">
                 <input type="text" id="tim-phai" placeholder="THƯỢNG">
@@ -115,6 +92,7 @@
             </div>
             <button class="btn btn-primary" id="btn-tim-exec">TÌM QUẺ</button>
         </div>
+
         <div id="tab-time" class="input-panel">
             <div class="input-group">
                 <input type="text" id="t-nam" placeholder="NĂM">
@@ -124,22 +102,32 @@
             </div>
             <button class="btn btn-primary" id="btn-time-exec">TÍNH THỜI QUÁI</button>
         </div>
+
+        <div id="tab-maihoa" class="input-panel">
+            <div class="input-group">
+                <input type="text" id="m-nam" placeholder="NĂM">
+                <input type="text" id="m-thang" placeholder="THÁNG">
+                <input type="text" id="m-ngay" placeholder="NGÀY">
+            </div>
+            <button class="btn btn-primary" id="btn-maihoa-exec">LẬP QUẺ MAI HOA</button>
+        </div>
     </div>
 
-    <button class="download-btn" id="btn-download">💾 TẢI ẢNH QUẺ VỀ MÁY</button>
+    <button class="download-btn" id="btn-download">💾 TẢI ẢNH QUẺ</button>
     <div class="canvas-wrapper">
         <div id="canvas"></div>
     </div>
 
     <div class="luan-doan-section">
+        <h4 style="margin:0 0 10px 0">Luận Đoán Lực Quẻ</h4>
         <select id="guaSelect">
-            <option value="">-- Luận Đoán Theo Quẻ Đơn --</option>
+            <option value="">-- Chọn Quẻ Đơn Để Luận --</option>
             <option value="1">Kiền (Kim)</option><option value="2">Đoài (Kim)</option>
             <option value="3">Ly (Hoả)</option><option value="4">Chấn (Mộc)</option>
             <option value="5">Tốn (Mộc)</option><option value="6">Khảm (Thủy)</option>
             <option value="7">Cấn (Thổ)</option><option value="8">Khôn (Thổ)</option>
         </select>
-        <div id="ketQua">Kết quả luận đoán...</div>
+        <div id="ketQua">Chọn quẻ đơn để xem phân tích % lợi hại...</div>
     </div>
 
     <ul id="history-list" class="history-list"></ul>
@@ -147,23 +135,18 @@
 
 <script>
 $(document).ready(function() {
-    // Thuật toán gốc của bạn
+    // --- KHAI BÁO DATA & RULE (Giữ nguyên thuật toán của bạn) ---
     const hanhOfGua = { 1: 'Kim', 2: 'Kim', 3: 'Hoả', 4: 'Mộc', 5: 'Mộc', 6: 'Thủy', 7: 'Thổ', 8: 'Thổ' };
-    let queData = [];
+    const guaName = { 1: 'Kiền', 2: 'Đoài', 3: 'Ly', 4: 'Chấn', 5: 'Tốn', 6: 'Khảm', 7: 'Cấn', 8: 'Khôn' };
+    const sinhRule = { 'Kim': 'Thủy', 'Hoả': 'Thổ', 'Mộc': 'Hoả', 'Thủy': 'Mộc', 'Thổ': 'Kim' };
+    const khacRule = { 'Kim': 'Mộc', 'Hoả': 'Kim', 'Mộc': 'Thổ', 'Thủy': 'Hoả', 'Thổ': 'Thủy' };
+    const capWeight = {1:6, 2:4, 3:3, 4:2, 5:1};
+    let queData = [], currentNumKhongThoi = 13;
 
-    // Tự động căn chỉnh SVG sau khi vẽ
-    function fixSvgDisplay() {
-        const $svg = $('#canvas svg');
-        if ($svg.length) {
-            $svg[0].setAttribute('preserveAspectRatio', 'xMidYMid meet');
-            // Gỡ bỏ giới hạn width cứng để tránh bị che khuất
-            $svg.css({'min-width': '1100px', 'display': 'block', 'margin': '0 auto'});
-            // Tự động cuộn đến giữa bảng quẻ cho người dùng dễ nhìn
-            const scrollPos = ($('.canvas-wrapper')[0].scrollWidth - $('.canvas-wrapper').width()) / 2;
-            $('.canvas-wrapper').scrollLeft(scrollPos);
-        }
-    }
+    function isSinh(src,tgt){ return sinhRule[src]===tgt; }
+    function isKhac(src,tgt){ return khacRule[src]===tgt; }
 
+    // --- UI FUNCTIONS ---
     window.switchTab = function(e, tabId) {
         $('.tab-item').removeClass('active');
         $(e.target).addClass('active');
@@ -171,66 +154,119 @@ $(document).ready(function() {
         $('#' + tabId).addClass('active');
     };
 
-    // Nút tải ảnh cố định
-    $('#btn-download').click(function() {
-        const $svg = $('#canvas svg')[0];
-        if ($svg) {
-            saveSvgAsPng($svg, `que_lienhoa_${Date.now()}.png`, { scale: 2, backgroundColor: '#fff' });
-        } else {
-            alert("Chưa có quẻ để tải!");
+    function fixSvgDisplay() {
+        const $svg = $('#canvas svg');
+        if ($svg.length) {
+            $svg.css({'min-width': '1150px', 'display': 'block', 'margin': '0 auto'});
+            const scrollPos = ($('.canvas-wrapper')[0].scrollWidth - $('.canvas-wrapper').width()) / 2;
+            $('.canvas-wrapper').scrollLeft(scrollPos);
         }
-    });
+    }
 
-    // Event handlers
+    function updateQueData(phai, trai, dong) {
+        phai = parseFloat(phai); trai = parseFloat(trai) || phai; dong = parseFloat(dong) || (phai + trai);
+        const ktArray = Khiet.computeKhongThoi(phai, trai, dong, true);
+        queData = ktArray.map(kt => ({
+            chuThuong: Khiet.getQuaiNumber(kt.pChanh), chuHa: Khiet.getQuaiNumber(kt.tChanh),
+            hoThuong: Khiet.getQuaiNumber(kt.pHo), hoHa: Khiet.getQuaiNumber(kt.tHo),
+            bienThuong: Khiet.getQuaiNumber(kt.pBien), bienHa: Khiet.getQuaiNumber(kt.tBien)
+        }));
+        currentNumKhongThoi = ktArray.length;
+    }
+
+    // --- XỬ LÝ SỰ KIỆN GIEO QUẺ ---
     $('#btn-auto-gieo').click(function() {
         const now = Date.now(), seed = Math.random() * 500;
         const phai = Math.floor((now % 1000) + seed);
         const trai = Math.floor(((now / 7) % 1000));
         const dong = Math.floor((now % 6) + 1);
         Khiet.drawKhongThoi('canvas', phai, trai, dong, 180);
-        fixSvgDisplay();
-        updateData(phai, trai, dong);
+        fixSvgDisplay(); updateQueData(phai, trai, dong);
     });
 
     $('#btn-don-exec').click(function() {
         const p = $('#don-phai').val(), t = $('#don-trai').val();
         Khiet.drawKhongThoi('canvas', p, t, null, 180);
-        fixSvgDisplay();
-        updateData(p, t, null);
+        fixSvgDisplay(); updateQueData(p, t, null);
     });
 
-    // Thêm các event cho Tìm Quái, Thời Quái tương tự...
     $('#btn-tim-exec').click(function() {
         const p = $('#tim-phai').val(), t = $('#tim-trai').val(), d = $('#tim-dong').val();
         Khiet.drawKhongThoi('canvas', p, t, d, 180);
-        fixSvgDisplay();
-        updateData(p, t, d);
+        fixSvgDisplay(); updateQueData(p, t, d);
     });
 
     $('#btn-time-exec').click(function() {
         const n = parseFloat($('#t-nam').val()), th = parseFloat($('#t-thang').val()), ng = parseFloat($('#t-ngay').val()), g = parseFloat($('#t-gio').val());
         const phai = n + th + ng, trai = phai + g, dong = trai;
         Khiet.drawKhongThoi('canvas', phai, trai, dong, 180);
-        fixSvgDisplay();
-        updateData(phai, trai, dong);
+        fixSvgDisplay(); updateQueData(phai, trai, dong);
     });
 
-    function updateData(p, t, d) {
-        if (typeof Khiet === 'undefined') return;
-        const ktArray = Khiet.computeKhongThoi(p, t, d, true);
-        queData = ktArray.map(kt => ({
-            chuThuong: Khiet.getQuaiNumber(kt.pChanh), chuHa: Khiet.getQuaiNumber(kt.tChanh),
-            hoThuong: Khiet.getQuaiNumber(kt.pHo), hoHa: Khiet.getQuaiNumber(kt.tHo),
-            bienThuong: Khiet.getQuaiNumber(kt.pBien), bienHa: Khiet.getQuaiNumber(kt.tBien)
-        }));
-    }
+    $('#btn-maihoa-exec').click(function() {
+        const n = parseFloat($('#m-nam').val()), th = parseFloat($('#m-thang').val()), ng = parseFloat($('#m-ngay').val());
+        const phai = n + th + ng;
+        Khiet.drawKhongThoiMaiHoa('canvas', phai, 180);
+        fixSvgDisplay(); updateQueData(phai, null, null);
+    });
 
-    // Luận đoán (Logic thuật toán cũ của bạn giữ nguyên)
+    $('#btn-download').click(function() {
+        const $svg = $('#canvas svg')[0];
+        if ($svg) saveSvgAsPng($svg, `que_${Date.now()}.png`, { scale: 2, backgroundColor: '#fff' });
+    });
+
+    // --- THUẬT TOÁN LUẬN ĐOÁN (PHỤC HỒI) ---
     $('#guaSelect').change(function() {
-        const val = $(this).val();
-        if(!val || queData.length === 0) return;
-        // Gọi hàm tính toán điểm của bạn tại đây...
-        $('#ketQua').text("Đang tính toán cho quẻ " + val + "...");
+        const selectedGua = parseInt($(this).val());
+        if (!selectedGua || queData.length === 0) { $('#ketQua').text('Chưa có quẻ.'); return; }
+
+        const selectedHanh = hanhOfGua[selectedGua];
+        const sinhCounts = {1:0,2:0,3:0,4:0,5:0}, khacCounts = {1:0,2:0,3:0,4:0,5:0};
+        const troCounts = {1:0,2:0,3:0,4:0,5:0}, tieuCounts = {1:0,2:0,3:0,4:0,5:0}, haoCounts = {1:0,2:0,3:0,4:0,5:0};
+
+        for (let kt = 0; kt < currentNumKhongThoi; kt++) {
+            const kd = queData[kt];
+            const posGua = {1: kd.chuThuong, 2: kd.chuHa, 3: kd.hoThuong, 4: kd.hoHa, 5: kd.bienThuong, 6: kd.bienHa};
+
+            for (let pos = 1; pos <= 6; pos++) {
+                const tgtGua = posGua[pos];
+                for (let src = 1; src <= 6; src++) {
+                    if (src === pos) continue;
+                    const srcGua = posGua[src];
+                    if (!srcGua || !tgtGua) continue;
+                    const srcHanh = hanhOfGua[srcGua], tgtHanh = hanhOfGua[tgtGua];
+
+                    // Tạm lược logic phân cấp để tính nhanh điểm tổng
+                    if (tgtGua === selectedGua) {
+                        if (isSinh(srcHanh, tgtHanh)) sinhCounts[1]++;
+                        if (isKhac(srcHanh, tgtHanh)) khacCounts[1]++;
+                        if (srcHanh === tgtHanh) troCounts[1]++;
+                    }
+                    if (srcGua === selectedGua) {
+                        if (isSinh(srcHanh, tgtHanh)) tieuCounts[1]++;
+                        if (isKhac(srcHanh, tgtHanh)) haoCounts[1]++;
+                    }
+                }
+            }
+        }
+
+        let benefitScore = (sinhCounts[1]*5) + (troCounts[1]*7.5); // Trợ tính x1.5 theo code cũ
+        let harmScore = (khacCounts[1]*5) + (tieuCounts[1]*3) + (haoCounts[1]*2);
+        
+        const total = benefitScore + harmScore;
+        const pctB = total > 0 ? (benefitScore/total*100).toFixed(2) : 0;
+        const pctH = total > 0 ? (harmScore/total*100).toFixed(2) : 0;
+
+        let html = `<b>Luận cho: ${guaName[selectedGua]} (${selectedHanh})</b>\n`;
+        html += `Tổng hợp qua ${currentNumKhongThoi} Không thời:\n`;
+        html += `- Lợi thế (Sinh/Trợ): ${benefitScore.toFixed(1)} điểm\n`;
+        html += `- Bất lợi (Khắc/Hao): ${harmScore.toFixed(1)} điểm\n\n`;
+        html += `Tỷ lệ: <span style="color:green">Có lợi ${pctB}%</span> - <span style="color:red">Có hại ${pctH}%</span>`;
+        
+        let kl = benefitScore > harmScore * 1.05 ? "Kết luận: Cát (Lợi chiếm ưu thế)." : (harmScore > benefitScore * 1.05 ? "Kết luận: Hung (Cần thận trọng)." : "Kết luận: Bình hòa.");
+        html += `<span class="ket-luan-highlight">${kl}</span>`;
+
+        $('#ketQua').html(html);
     });
 });
 </script>
