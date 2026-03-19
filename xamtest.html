@@ -116,6 +116,7 @@
 </div>
 
 <div class="button-container">
+    <button onclick="enableSound()" style="background:green;">BẬT ÂM THANH</button>
     <button onclick="startShake()">XIN XĂM</button>
     <button onclick="toggleTable()">XEM LỜI GIẢI</button>
 </div>
@@ -133,37 +134,38 @@
 
 <script>
     const shakeAudio = document.getElementById("shakeSound");
+    let audioReady = false;
+
+    function enableSound() {
+        shakeAudio.play().then(() => {
+            shakeAudio.pause();
+            shakeAudio.currentTime = 0;
+            audioReady = true;
+            alert("Âm thanh đã bật ✅");
+        }).catch(() => {
+            alert("Không bật được âm thanh ❌");
+        });
+    }
 
     function startShake() {
         const tubeImg = document.getElementById('tubeImg');
         const stick = document.getElementById('stick');
 
-        // Reset
         stick.classList.remove('fall');
         stick.style.display = 'none';
         tubeImg.classList.add('shaking');
 
-        // FORCE LOAD + PLAY
-        shakeAudio.load();
-        shakeAudio.currentTime = 0;
-
-        let playPromise = shakeAudio.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                // play ok
-            }).catch(() => {
-                console.log("Audio bị chặn, thử lại");
-            });
+        if (audioReady) {
+            shakeAudio.currentTime = 0;
+            shakeAudio.play().catch(()=>{});
         }
 
         setTimeout(function() {
             tubeImg.classList.remove('shaking');
 
-            // Stop audio
             shakeAudio.pause();
             shakeAudio.currentTime = 0;
 
-            // Ra quẻ
             stick.innerText = Math.floor(Math.random() * 100) + 1;
             stick.classList.add('fall');
 
