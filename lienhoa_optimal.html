@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>NguyenK - Kinh Dịch Toàn Năng (Fix 100% Text)</title>
+    <title>NguyenK - Kinh Dịch Toàn Năng (Fix Triệt Để Text)</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #993300; --secondary: #007aff; --bg: #f4f5f7; }
@@ -18,11 +18,11 @@
         .input-panel { display: none; }
         .input-panel.active { display: block; }
         
-        /* FIX: Tăng width lên 100px và dùng box-sizing để gõ thoải mái */
-        .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        /* FIX: Tăng kích thước ô nhập để không bị che khuất chữ */
+        .input-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
         input { 
-            width: 100px; 
-            padding: 12px 5px; 
+            width: 110px; 
+            padding: 12px; 
             border: 1.5px solid #dfe6e9; 
             border-radius: 12px; 
             text-align: center; 
@@ -30,31 +30,31 @@
             outline: none; 
             box-sizing: border-box; 
         }
-        input::placeholder { color: #aaa; font-size: 13px; font-weight: 400; }
+        input::placeholder { color: #bbb; font-weight: 400; font-size: 14px; }
 
         .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; }
 
-        .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-        /* FIX: Đảm bảo Textarea không giới hạn hiển thị khi gõ 18 ký tự */
+        .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
+        /* FIX: Bỏ maxlength cứng để tránh lỗi bộ gõ tiếng Việt, xử lý bằng JS phía dưới */
         textarea { 
             width: 100%; 
             padding: 15px; 
             border: 1.5px solid #ddd; 
             border-radius: 12px; 
             font-family: inherit; 
-            font-size: 16px; 
+            font-size: 17px; 
             resize: none; 
             box-sizing: border-box; 
             outline: none;
-            overflow: hidden;
+            min-height: 80px;
         }
 
         .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+        .btn-dl { background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
         .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ccc; }
         .dot.active { outline: 2px solid #000; transform: scale(1.1); }
-        .btn-dl { background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
 
-        .canvas-wrapper { width: 100%; background: #fff; overflow-x: auto; padding: 25px 0; text-align: center; }
+        .canvas-wrapper { width: 100%; background: #fff; overflow-x: auto; padding: 20px 0; text-align: center; }
         #canvas { display: inline-block; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -113,7 +113,8 @@
     </div>
 
     <div class="question-box">
-        <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi (Tối đa 18 chữ)..." maxlength="18"></textarea>
+        <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi (Tự ngắt 9 ký tự/hàng)..."></textarea>
+        <div id="charCounter" style="font-size: 11px; color: #888; margin-top: 5px;">0/18 ký tự</div>
         <div class="dl-bar">
             <div style="display:flex; gap:10px;">
                 <div class="dot active" style="background:#007aff" data-c="#007aff"></div>
@@ -135,7 +136,16 @@ $(document).ready(function() {
     window.switchTab = (e, id) => { $('.tab-item').removeClass('active'); $(e.target).addClass('active'); $('.input-panel').removeClass('active'); $('#'+id).addClass('active'); };
     $('.dot').click(function() { $('.dot').removeClass('active'); $(this).addClass('active'); selColor = $(this).data('c'); });
 
-    // Các hàm lập quẻ giữ nguyên logic của bạn
+    // FIX LỖI GÕ: Sử dụng sự kiện input để chặn thủ công thay vì maxlength
+    $('#qTxt').on('input', function() {
+        let val = $(this).val();
+        if (val.length > 18) {
+            $(this).val(val.substring(0, 18));
+        }
+        $('#charCounter').text($(this).val().length + "/18 ký tự");
+    });
+
+    // Các hàm lập quẻ giữ nguyên
     $('#btn-auto').click(() => { let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; Khiet.drawKhongThoi('canvas',p,t,d,180); });
     $('#btn-don').click(() => { Khiet.drawKhongThoi('canvas',$('#dp').val(),$('#dt').val(),null,180); });
     $('#btn-mai').click(() => { let p=parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0); Khiet.drawKhongThoiMaiHoa('canvas',p,180); });
@@ -146,15 +156,15 @@ $(document).ready(function() {
     });
     $('#btn-tim').click(() => { Khiet.drawKhongThoi('canvas',$('#tp').val(),$('#tt').val(),$('#td').val(),180); });
 
-    // --- FIX XUẤT ẢNH CHIA 9-9 ---
+    // --- XUẤT ẢNH CHIA DÒNG 9-9 ---
     $('#btn-dl').click(function() {
         const svg = document.querySelector('#canvas svg');
         if(!svg) return alert("Chưa có quẻ!");
         
-        // Lấy nội dung và cắt đúng 9-9
-        let fullText = $('#qTxt').val() || "";
-        let line1 = fullText.substring(0, 9);
-        let line2 = fullText.substring(9, 18);
+        let text = $('#qTxt').val() || "";
+        // Cắt đúng 9 ký tự đầu và 9 ký tự sau
+        let row1 = text.substring(0, 9);
+        let row2 = text.substring(9, 18);
 
         const svgData = new XMLSerializer().serializeToString(svg);
         const canvas = document.getElementById('hiddenCanvas');
@@ -164,7 +174,7 @@ $(document).ready(function() {
 
         img.onload = function() {
             const sc = 2; 
-            const extraH = 140; 
+            const extraH = 150; 
             canvas.width = img.width * sc;
             canvas.height = (img.height + extraH) * sc;
             
@@ -173,19 +183,17 @@ $(document).ready(function() {
             ctx.drawImage(img, 0, 0, img.width * sc, img.height * sc);
             
             ctx.fillStyle = selColor;
-            ctx.font = `bold ${28 * sc}px Arial`;
+            ctx.font = `bold ${28 * sc}px Arial`; // Dùng Arial để hiển thị dấu tiếng Việt tốt nhất trên ảnh
             ctx.textAlign = "center";
             
-            // Vẽ hàng 1
-            ctx.fillText(line1, canvas.width/2, (img.height + 50) * sc);
-            // Vẽ hàng 2 (nếu có)
-            if(line2.length > 0) {
-                ctx.fillText(line2, canvas.width/2, (img.height + 95) * sc);
+            ctx.fillText(row1, canvas.width/2, (img.height + 55) * sc);
+            if(row2) {
+                ctx.fillText(row2, canvas.width/2, (img.height + 105) * sc);
             }
 
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
-            a.download = `NguyenK_${Date.now()}.png`;
+            a.download = `QueDich_${Date.now()}.png`;
             a.click();
             URL.revokeObjectURL(url);
         };
