@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Kinh Dịch Pro - Bản Sửa Lỗi Chữ 2026</title>
+    <title>Kinh Dịch Pro - Fix Text 100%</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #993300; --secondary: #007aff; --bg: #f4f5f7; }
+        :root { --primary: #993300; --bg: #f4f5f7; }
         body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; }
-        .container { max-width: 850px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
-        .tabs { display: flex; background: #f1f2f6; padding: 5px; overflow-x: auto; }
-        .tab-item { flex: 1; min-width: 85px; padding: 12px 5px; text-align: center; cursor: pointer; border-radius: 12px; font-size: 11px; font-weight: 600; color: #636e72; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .tabs { display: flex; background: #eee; padding: 5px; }
+        .tab-item { flex: 1; padding: 12px; text-align: center; cursor: pointer; border-radius: 10px; font-size: 12px; font-weight: 600; color: #636e72; }
         .tab-item.active { background: #fff; color: var(--primary); }
         .input-section { padding: 20px; }
         .input-panel { display: none; }
         .input-panel.active { display: block; }
-        .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
-        input { width: 60px; padding: 12px; border: 1.5px solid #dfe6e9; border-radius: 12px; text-align: center; font-size: 16px; outline: none; }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; font-size: 16px; }
-        .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
-        textarea { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 12px; font-family: inherit; font-size: 14px; resize: none; box-sizing: border-box; outline: none; }
-        .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-        .color-selector { display: flex; gap: 12px; }
-        .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ccc; }
-        .dot.active { outline: 2px solid #000; transform: scale(1.1); }
-        .btn-dl { background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
-        .canvas-wrapper { width: 100%; background: #fff; overflow-x: auto; padding: 25px 0; }
+        .btn-main { background: var(--primary); color: #fff; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .question-box { padding: 15px 20px; background: #fafafa; border-top: 1px solid #eee; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-family: inherit; resize: none; box-sizing: border-box; }
+        .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .dot { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; outline: 1px solid #ddd; }
+        .dot.active { outline: 2px solid #000; }
+        .btn-dl { background: #007aff; color: #fff; padding: 10px 20px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
+        .canvas-wrapper { width: 100%; overflow-x: auto; background: #fff; padding: 20px 0; border-top: 1px solid #eee; }
         #canvas { display: inline-block; min-width: 100%; text-align: center; }
-        .luan-doan { padding: 20px; border-top: 8px solid #f4f5f7; }
-        #guaSelect { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #ddd; margin-bottom: 15px; }
-        #ketQua { background: #fafafa; padding: 20px; border-radius: 18px; font-size: 14px; border: 1px solid #eee; white-space: pre-wrap; line-height: 1.8; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://sophiemeisam.github.io/saveSvgAsPng.js"></script>
@@ -42,102 +36,73 @@
     <div class="tabs">
         <div class="tab-item active" onclick="switchTab(event, 'tab-auto')">CẢM ỨNG</div>
         <div class="tab-item" onclick="switchTab(event, 'tab-don')">ĐỘN</div>
-        <div class="tab-item" onclick="switchTab(event, 'tab-mai')">MAI HOA</div>
-        <div class="tab-item" onclick="switchTab(event, 'tab-time')">THỜI</div>
     </div>
-
     <div class="input-section">
-        <div id="tab-auto" class="input-panel active"><button class="btn-main" id="btn-auto">GIEO CẢM ỨNG</button></div>
+        <div id="tab-auto" class="input-panel active"><button class="btn-main" id="btn-auto">GIEO QUẺ</button></div>
         <div id="tab-don" class="input-panel">
-            <div class="input-group"><input type="text" id="dp" placeholder="P"><input type="text" id="dt" placeholder="T"></div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;"><input type="text" id="dp" style="width:50%; padding:10px;" placeholder="P"><input type="text" id="dt" style="width:50%; padding:10px;" placeholder="T"></div>
             <button class="btn-main" id="btn-don">ĐỘN QUẺ</button>
         </div>
-        <div id="tab-mai" class="input-panel">
-            <div class="input-group"><input type="text" id="mn" placeholder="N"><input type="text" id="mth" placeholder="Th"><input type="text" id="mng" placeholder="Ng"></div>
-            <button class="btn-main" id="btn-mai">LẬP MAI HOA</button>
-        </div>
-        <div id="tab-time" class="input-panel">
-            <div class="input-group"><input type="text" id="tn"><input type="text" id="tth"><input type="text" id="tng"><input type="text" id="tg"></div>
-            <button class="btn-main" id="btn-time">TÍNH THỜI QUÁI</button>
-        </div>
     </div>
-
     <div class="question-box">
-        <textarea id="qTxt" rows="2" placeholder="Gõ câu hỏi vào đây..."></textarea>
+        <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi..."></textarea>
         <div class="dl-bar">
-            <div class="color-selector">
+            <div style="display:flex; gap:10px;">
                 <div class="dot active" style="background:#007aff" data-c="#007aff"></div>
-                <div class="dot" style="background:#28a745" data-c="#28a745"></div>
                 <div class="dot" style="background:#dc3545" data-c="#dc3545"></div>
             </div>
             <button class="btn-dl" id="btn-download">💾 TẢI ẢNH</button>
         </div>
     </div>
-
     <div class="canvas-wrapper"><div id="canvas"></div></div>
-
-    <div class="luan-doan">
-        <select id="guaSelect">
-            <option value="">-- Luận Lực Quẻ --</option>
-            <option value="1">Kiền</option><option value="2">Đoài</option><option value="3">Ly</option><option value="4">Chấn</option>
-            <option value="5">Tốn</option><option value="6">Khảm</option><option value="7">Cấn</option><option value="8">Khôn</option>
-        </select>
-        <div id="ketQua">Hãy gieo quẻ trước.</div>
-    </div>
 </div>
 
 <script>
 $(document).ready(function() {
-    let qData = [], selColor = "#007aff";
-    const nG = {1:'Kiền',2:'Đoài',3:'Ly',4:'Chấn',5:'Tốn',6:'Khảm',7:'Cấn',8:'Khôn'};
-
+    let selColor = "#007aff";
     window.switchTab = (e, id) => { $('.tab-item').removeClass('active'); $(e.target).addClass('active'); $('.input-panel').removeClass('active'); $('#'+id).addClass('active'); };
     $('.dot').click(function() { $('.dot').removeClass('active'); $(this).addClass('active'); selColor = $(this).data('c'); });
 
-    function upData(p,t,d) {
-        if(typeof Khiet === 'undefined') return;
-        const kt = Khiet.computeKhongThoi(p,t,d,true);
-        qData = kt.map(x => ({ct:Khiet.getQuaiNumber(x.pChanh),ch:Khiet.getQuaiNumber(x.tChanh),ht:Khiet.getQuaiNumber(x.pHo),hh:Khiet.getQuaiNumber(x.tHo),bt:Khiet.getQuaiNumber(x.pBien),bh:Khiet.getQuaiNumber(x.tBien)}));
-    }
+    // Gieo quẻ
+    $('#btn-auto').click(() => { let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; Khiet.drawKhongThoi('canvas',p,t,d,180); });
+    $('#btn-don').click(() => { let p=$('#dp').val(), t=$('#dt').val(); Khiet.drawKhongThoi('canvas',p,t,null,180); });
 
-    $('#btn-auto').click(() => { let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; Khiet.drawKhongThoi('canvas',p,t,d,180); upData(p,t,d); });
-    $('#btn-don').click(() => { let p=$('#dp').val(), t=$('#dt').val(); Khiet.drawKhongThoi('canvas',p,t,null,180); upData(p,t,null); });
-
-    // HÀM TẢI ẢNH - SỬA LỖI TỌA ĐỘ TUYỆT ĐỐI
+    // HÀM TẢI ẢNH QUAN TRỌNG NHẤT
     $('#btn-download').click(function() {
         const svg = document.querySelector('#canvas svg');
         if(!svg) return alert("Chưa có quẻ!");
         
         const qText = $.trim($('#qTxt').val());
-        const filename = `Que_Dich_${Date.now()}.png`;
+        const filename = `QueDich_${Date.now()}.png`;
 
         saveSvgAsPng(svg, filename, {
             scale: 2,
             backgroundColor: "#ffffff",
             prepareSvg: function(svgCopy) {
                 if (qText) {
-                    // Lấy kích thước thực tế của các phần tử bên trong SVG
+                    // Lấy BBox để xác định tọa độ thực của hình vẽ
                     const bbox = svg.getBBox();
-                    const padding = 100;
-                    
-                    // Thiết lập lại ViewBox để bao phủ toàn bộ nội dung + khoảng trống cho chữ
-                    svgCopy.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height + padding}`);
-                    svgCopy.setAttribute('width', bbox.width);
-                    svgCopy.setAttribute('height', bbox.height + padding);
+                    const extra = 120; // Khoảng trống cho chữ
 
-                    // Tạo nền trắng cho phần chữ
+                    // Ép lại ViewBox dựa trên nội dung thực tế để chữ không bị nằm ngoài
+                    // Chúng ta lấy bbox.y (điểm cao nhất) đến bbox.height (độ dài nội dung) + extra
+                    svgCopy.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height + extra}`);
+                    svgCopy.setAttribute('width', bbox.width);
+                    svgCopy.setAttribute('height', bbox.height + extra);
+
+                    // Vẽ một hình chữ nhật trắng làm nền cho câu hỏi (tránh trùng lặp toạ độ)
                     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                     rect.setAttribute("x", bbox.x);
                     rect.setAttribute("y", bbox.y + bbox.height);
                     rect.setAttribute("width", bbox.width);
-                    rect.setAttribute("height", padding);
+                    rect.setAttribute("height", extra);
                     rect.setAttribute("fill", "#ffffff");
                     svgCopy.appendChild(rect);
 
-                    // Vẽ chữ dựa trên tọa độ Y của BBox (Đáy của bảng quẻ)
+                    // Vẽ Text câu hỏi ngay dưới đáy của BBox
                     const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
                     text.setAttribute("x", bbox.x + (bbox.width / 2));
-                    text.setAttribute("y", bbox.y + bbox.height + 60); 
+                    text.setAttribute("y", bbox.y + bbox.height + 70); // Cách đáy 70 đơn vị
                     text.setAttribute("text-anchor", "middle");
                     text.setAttribute("font-family", "Arial, sans-serif");
                     text.setAttribute("font-size", "36px");
@@ -148,14 +113,6 @@ $(document).ready(function() {
                 }
             }
         });
-    });
-
-    $('#guaSelect').change(function() {
-        const sG = parseInt($(this).val());
-        if(!sG || qData.length === 0) return;
-        let count = 0;
-        qData.forEach(d => { if(d.ct===sG || d.ch===sG) count+=2; if(d.ht===sG || d.hh===sG) count+=1; });
-        $('#ketQua').html(`Quẻ <b>${nG[sG]}</b>: Điểm lực tương tác là ${count}. ${count > 10 ? "Lực quẻ cực vượng." : "Lực quẻ ổn định."}`);
     });
 });
 </script>
