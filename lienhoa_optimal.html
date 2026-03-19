@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>NguyenK - Liên Hoa Độn Full Version</title>
+    <title>NguyenK - Liên Hoa Độn Pro 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #993300; --secondary: #007aff; --bg: #f4f5f7; }
         body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; }
         .container { max-width: 850px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
 
-        /* Tabs */
+        /* Giao diện nhập liệu */
         .tabs { display: flex; background: #f1f2f6; padding: 5px; overflow-x: auto; }
         .tab-item { flex: 1; min-width: 80px; padding: 12px 5px; text-align: center; cursor: pointer; border-radius: 12px; font-size: 11px; font-weight: 600; color: #636e72; }
         .tab-item.active { background: #fff; color: var(--primary); }
-
-        /* Inputs */
         .input-section { padding: 20px; }
         .input-panel { display: none; }
         .input-panel.active { display: block; }
@@ -25,36 +23,20 @@
 
         /* Câu hỏi */
         .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
-        textarea { width: 100%; min-height: 70px; padding: 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; font-family: inherit; resize: none; }
+        textarea { width: 100%; min-height: 80px; padding: 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; font-family: inherit; resize: none; outline: none; }
         
-        /* Điều khiển tải ảnh */
         .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
         .btn-dl { background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
         .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ccc; }
         .dot.active { outline: 2px solid #000; transform: scale(1.1); }
 
-        /* FIX LỖI CHE QUẺ: Cho phép cuộn ngang để xem toàn bộ bảng quẻ */
-        .canvas-wrapper { 
-            width: 100%; 
-            background: #fff; 
-            padding: 20px 0; 
-            text-align: center; 
-            overflow-x: auto; /* Cho phép lướt ngang */
-            -webkit-overflow-scrolling: touch;
-            border-bottom: 1px solid #eee;
-        }
-        #canvas { display: inline-block; min-width: 600px; } /* Đảm bảo quẻ không bị co rúm */
+        /* Hiển thị quẻ */
+        .canvas-wrapper { width: 100%; background: #fff; padding: 20px 0; text-align: center; overflow-x: auto; border-bottom: 1px solid #eee; }
+        #canvas { display: inline-block; min-width: 550px; }
 
-        /* KHÔI PHỤC PHẦN TÍNH LỰC */
-        #ketQua { 
-            padding: 20px; 
-            background: #fff; 
-            font-size: 14px; 
-            line-height: 1.8; 
-            color: #2d3436; 
-            white-space: pre-wrap; 
-            border-top: 1px dashed #ccc;
-        }
+        /* KHU VỰC TÍNH LỰC */
+        #ketQua { padding: 20px; background: #fff; font-size: 15px; line-height: 1.6; color: #333; min-height: 100px; border-top: 2px dashed #993300; margin-top: 10px; }
+        .bold-blue { color: #007aff; font-weight: bold; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://sophiemeisam.github.io/raphael.js"></script>
@@ -92,7 +74,7 @@
     </div>
 
     <div class="question-box">
-        <textarea id="qTxt" placeholder="Nhập câu hỏi tại đây..."></textarea>
+        <textarea id="qTxt" placeholder="Gõ câu hỏi tại đây..."></textarea>
         <div class="dl-bar">
             <div style="display:flex; gap:10px;">
                 <div class="dot active" style="background:#007aff" data-c="#007aff"></div>
@@ -103,11 +85,8 @@
         </div>
     </div>
 
-    <div class="canvas-wrapper">
-        <div id="canvas"></div>
-    </div>
-
-    <div id="ketQua">Bấm lập quẻ để xem tính lực...</div>
+    <div class="canvas-wrapper"><div id="canvas"></div></div>
+    <div id="ketQua">Kết quả tính lực sẽ hiện ở đây sau khi lập quẻ...</div>
 </div>
 
 <canvas id="hiddenCanvas" style="display:none;"></canvas>
@@ -118,51 +97,41 @@ $(document).ready(function() {
     window.switchTab = (e, id) => { $('.tab-item').removeClass('active'); $(e.target).addClass('active'); $('.input-panel').removeClass('active'); $('#'+id).addClass('active'); };
     $('.dot').click(function() { $('.dot').removeClass('active'); $(this).addClass('active'); selColor = $(this).data('c'); });
 
-    // Hàm gọi vẽ quẻ và hiện kết quả tính lực
-    function runKhiet(type, p1, p2, p3) {
+    // Hàm gọi vẽ và bắt kết quả text từ thư viện
+    function executeDraw(type, v1, v2, v3) {
         $('#canvas').empty();
-        $('#ketQua').html("Đang tính toán...");
+        let resultText = "";
+        if(type === 'mai') resultText = Khiet.drawKhongThoiMaiHoa('canvas', v1, 180);
+        else resultText = Khiet.drawKhongThoi('canvas', v1, v2, v3, 180);
         
-        let res = "";
-        if(type === 'auto') res = Khiet.drawKhongThoi('canvas', p1, p2, p3, 180);
-        else if(type === 'mai') res = Khiet.drawKhongThoiMaiHoa('canvas', p1, 180);
-        else res = Khiet.drawKhongThoi('canvas', p1, p2, p3, 180);
-        
-        // Hiển thị phần tính lực (nếu thư viện khiet.js trả về text kết quả)
-        if(res) $('#ketQua').html(res);
-        else $('#ketQua').html("Đã lập quẻ thành công.");
+        // Cập nhật vùng tính lực
+        if (resultText && resultText !== "") {
+            $('#ketQua').html(resultText);
+        } else {
+            // Nếu hàm không trả về text, thử tìm trong đối tượng window hoặc thông báo
+            $('#ketQua').html("<span class='bold-blue'>Đã lập quẻ xong. Xem chi tiết lực quẻ trên bảng.</span>");
+        }
     }
 
-    $('#btn-auto').click(() => { 
-        let p = Math.floor(Math.random()*899)+100, t = Math.floor(Math.random()*899)+100, d = Math.floor(Math.random()*6)+1;
-        runKhiet('auto', p, t, d);
-    });
+    $('#btn-auto').click(() => executeDraw('auto', Math.floor(Math.random()*999), Math.floor(Math.random()*999), Math.floor(Math.random()*6)+1));
+    $('#btn-don').click(() => executeDraw('don', $('#dp').val(), $('#dt').val(), null));
+    $('#btn-mai').click(() => executeDraw('mai', parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0)));
+    $('#btn-time').click(() => { let p=parseFloat($('#tn').val()||0)+parseFloat($('#tth').val()||0)+parseFloat($('#tng').val()||0); executeDraw('time', p, p+parseFloat($('#tg').val()||0), p+parseFloat($('#tg').val()||0)); });
+    $('#btn-tim').click(() => executeDraw('tim', $('#tp').val(), $('#tt').val(), $('#td').val()));
 
-    $('#btn-don').click(() => runKhiet('don', $('#dp').val(), $('#dt').val(), null));
-    $('#btn-mai').click(() => {
-        let p = parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0);
-        runKhiet('mai', p);
-    });
-    $('#btn-time').click(() => {
-        let p = parseFloat($('#tn').val()||0)+parseFloat($('#tth').val()||0)+parseFloat($('#tng').val()||0);
-        runKhiet('time', p, p+parseFloat($('#tg').val()||0), p+parseFloat($('#tg').val()||0));
-    });
-    $('#btn-tim').click(() => runKhiet('tim', $('#tp').val(), $('#tt').val(), $('#td').val()));
-
-    // Xuất ảnh thông minh
+    // XUẤT ẢNH: CHIA DÒNG CÂN BẰNG
     $('#btn-dl').click(function() {
         const svg = document.querySelector('#canvas svg');
         if(!svg) return alert("Chưa có quẻ!");
         
-        let text = $('#qTxt').val().trim() || "LIÊN HOA ĐỘN";
-        let words = text.split(' ');
+        let fullText = $('#qTxt').val().trim() || "LIÊN HOA ĐỘN";
+        let words = fullText.split(/\s+/); // Tách theo khoảng trắng
         let line1 = "", line2 = "";
 
-        // Phân bổ chữ vào 2 dòng (ưu tiên dòng 1 cân đối)
-        for (let w of words) {
-            if ((line1 + w).length < 20) line1 += (line1===""?"":" ")+w;
-            else line2 += (line2===""?"":" ")+w;
-        }
+        // Thuật toán chia đôi số từ để cân bằng 2 dòng
+        let half = Math.ceil(words.length / 2);
+        line1 = words.slice(0, half).join(" ");
+        line2 = words.slice(half).join(" ");
 
         const svgData = new XMLSerializer().serializeToString(svg);
         const canvas = document.getElementById('hiddenCanvas');
@@ -171,20 +140,30 @@ $(document).ready(function() {
         const url = URL.createObjectURL(new Blob([svgData], {type:'image/svg+xml;charset=utf-8'}));
 
         img.onload = function() {
-            const sc = 2, extra = 160; 
+            const sc = 2, extraSpace = 180; 
             canvas.width = img.width * sc;
-            canvas.height = (img.height + extra) * sc;
-            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            canvas.height = (img.height + extraSpace) * sc;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, img.width * sc, img.height * sc);
-            ctx.fillStyle = selColor; ctx.textAlign = "center";
-            ctx.font = `bold ${text.length > 25 ? 20 : 25}px Arial`;
             
-            ctx.fillText(line1, canvas.width/2, (img.height + 70) * sc);
-            if(line2) ctx.fillText(line2, canvas.width/2, (img.height + 115) * sc);
+            ctx.fillStyle = selColor;
+            ctx.textAlign = "center";
+            
+            // Cỡ chữ tự thích ứng
+            let dynamicSize = fullText.length > 40 ? 18 : 24;
+            ctx.font = `bold ${dynamicSize * sc}px Arial`;
+            
+            if (!line2) {
+                ctx.fillText(line1, canvas.width/2, (img.height + 90) * sc);
+            } else {
+                ctx.fillText(line1, canvas.width/2, (img.height + 70) * sc);
+                ctx.fillText(line2, canvas.width/2, (img.height + 120) * sc);
+            }
 
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
-            a.download = `QueDich_${Date.now()}.png`;
+            a.download = `QueDich_Update.png`;
             a.click();
             URL.revokeObjectURL(url);
         };
