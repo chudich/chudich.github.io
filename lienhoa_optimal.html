@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>NguyenK - Final Fix 2026</title>
+    <title>NguyenK - Final Pro 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #993300; --secondary: #007aff; --bg: #f4f5f7; }
@@ -18,10 +18,9 @@
         .input-panel { display: none; }
         .input-panel.active { display: block; }
         
-        /* Đảm bảo ô nhập rộng rãi và hiện Placeholder */
         .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
         input { 
-            width: 100px !important; 
+            width: 95px !important; 
             padding: 12px 5px !important; 
             border: 1.5px solid #dfe6e9 !important; 
             border-radius: 12px !important; 
@@ -31,11 +30,12 @@
         }
         input::placeholder { color: #999 !important; opacity: 1 !important; }
 
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; }
+        /* Hiệu ứng bấm nút Cảm Ứng */
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); opacity: 0.8; }
 
-        /* Vùng nhập câu hỏi: KHÔNG CHẶN GÕ */
         .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
-        #qTxt_Final { 
+        textarea { 
             width: 100% !important; 
             min-height: 90px !important;
             padding: 15px !important; 
@@ -44,7 +44,6 @@
             font-size: 18px !important; 
             box-sizing: border-box !important;
             display: block !important;
-            line-height: 1.5;
         }
 
         .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
@@ -52,7 +51,7 @@
         .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ccc; }
         .dot.active { outline: 2px solid #000; transform: scale(1.1); }
 
-        .canvas-wrapper { width: 100%; background: #fff; padding: 20px 0; text-align: center; }
+        .canvas-wrapper { width: 100%; background: #fff; padding: 20px 0; text-align: center; min-height: 200px; }
         #canvas { display: inline-block; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -71,7 +70,9 @@
     </div>
 
     <div class="input-section">
-        <div id="tab-auto" class="input-panel active"><button class="btn-main" id="btn-auto">GIEO QUẺ CẢM ỨNG</button></div>
+        <div id="tab-auto" class="input-panel active">
+            <button class="btn-main" id="btn-auto">GIEO QUẺ CẢM ỨNG</button>
+        </div>
         
         <div id="tab-don" class="input-panel">
             <div class="input-group">
@@ -111,9 +112,7 @@
     </div>
 
     <div class="question-box">
-        <textarea id="qTxt_Final" rows="2" placeholder="Gõ câu hỏi tại đây (Tối đa 18 chữ hiện trên ảnh)..."></textarea>
-        <p style="font-size: 11px; color: #666; margin-top: 5px;">* Gõ thoải mái, ảnh sẽ tự lấy 18 ký tự và chia 9-9.</p>
-        
+        <textarea id="qTxt_Final" rows="2" placeholder="Nhập nội dung cần xem..."></textarea>
         <div class="dl-bar">
             <div style="display:flex; gap:10px;">
                 <div class="dot active" style="background:#007aff" data-c="#007aff"></div>
@@ -146,31 +145,46 @@ $(document).ready(function() {
         selColor = $(this).data('c'); 
     });
 
-    // Lập quẻ
-    $('#btn-auto').click(() => { let n=Date.now(), p=n%1000, t=(n/7)%1000, d=n%6+1; Khiet.drawKhongThoi('canvas',p,t,d,180); });
-    $('#btn-don').click(() => { Khiet.drawKhongThoi('canvas',$('#dp').val(),$('#dt').val(),null,180); });
-    $('#btn-mai').click(() => { let p=parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0); Khiet.drawKhongThoiMaiHoa('canvas',p,180); });
+    // --- FIX NÚT CẢM ỨNG: Dùng thêm số ngẫu nhiên thực sự (Math.random) ---
+    $('#btn-auto').click(function() {
+        // Tạo biến số dựa trên thời gian VÀ số ngẫu nhiên để bấm là có quẻ ngay
+        let p = Math.floor(Math.random() * 1000) + (Date.now() % 100);
+        let t = Math.floor(Math.random() * 1000) + (Date.now() % 70);
+        let d = (Date.now() % 6) + 1;
+        
+        // Xóa quẻ cũ trước khi vẽ mới để tránh chồng chéo
+        $('#canvas').empty();
+        Khiet.drawKhongThoi('canvas', p, t, d, 180);
+    });
+
+    // Các nút khác giữ nguyên
+    $('#btn-don').click(() => { $('#canvas').empty(); Khiet.drawKhongThoi('canvas',$('#dp').val(),$('#dt').val(),null,180); });
+    $('#btn-mai').click(() => { $('#canvas').empty(); let p=parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0); Khiet.drawKhongThoiMaiHoa('canvas',p,180); });
     $('#btn-time').click(() => { 
+        $('#canvas').empty();
         let p=parseFloat($('#tn').val()||0)+parseFloat($('#tth').val()||0)+parseFloat($('#tng').val()||0); 
         let t=p+parseFloat($('#tg').val()||0); 
         Khiet.drawKhongThoi('canvas',p,t,t,180); 
     });
-    $('#btn-tim').click(() => { Khiet.drawKhongThoi('canvas',$('#tp').val(),$('#tt').val(),$('#td').val(),180); });
+    $('#btn-tim').click(() => { $('#canvas').empty(); Khiet.drawKhongThoi('canvas',$('#tp').val(),$('#tt').val(),$('#td').val(),180); });
 
-    // --- XUẤT ẢNH: CHIA DÒNG THÔNG MINH ---
+    // --- FIX CHIA DÒNG THÔNG MINH KHI TẢI ẢNH ---
     $('#btn-dl').click(function() {
         const svg = document.querySelector('#canvas svg');
-        if(!svg) return alert("Chưa có quẻ!");
+        if(!svg) return alert("Bấm nút Lập Quẻ trước khi tải ảnh!");
         
-        // Lấy nội dung thô và bắt đầu xử lý cắt gọt ở đây thay vì lúc gõ
-        let rawContent = $('#qTxt_Final').val().trim() || "";
-        
-        // Cắt tối đa 18 ký tự để đảm bảo ảnh đẹp
-        let safeContent = rawContent.substring(0, 18);
-        
-        // Chia 9-9
-        let row1 = safeContent.substring(0, 9);
-        let row2 = safeContent.substring(9, 18);
+        let fullText = $('#qTxt_Final').val().trim();
+        let words = fullText.split(' '); // Chia nội dung theo khoảng trắng
+        let line1 = "", line2 = "";
+
+        // Tự động phân phối từ vào 2 dòng (ưu tiên dòng 1 tối đa 10 ký tự)
+        for (let word of words) {
+            if ((line1 + word).length <= 11) {
+                line1 += (line1 === "" ? "" : " ") + word;
+            } else if ((line2 + word).length <= 11) {
+                line2 += (line2 === "" ? "" : " ") + word;
+            }
+        }
 
         const svgData = new XMLSerializer().serializeToString(svg);
         const canvas = document.getElementById('hiddenCanvas');
@@ -190,16 +204,12 @@ $(document).ready(function() {
             ctx.font = `bold ${28 * sc}px Arial`;
             ctx.textAlign = "center";
             
-            // Vẽ dòng 1
-            ctx.fillText(row1, canvas.width/2, (img.height + 60) * sc);
-            // Vẽ dòng 2
-            if(row2.length > 0) {
-                ctx.fillText(row2, canvas.width/2, (img.height + 105) * sc);
-            }
+            ctx.fillText(line1, canvas.width/2, (img.height + 60) * sc);
+            if(line2) ctx.fillText(line2, canvas.width/2, (img.height + 110) * sc);
 
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
-            a.download = `NguyenK_PhanQue.png`;
+            a.download = `NguyenK_QueDich.png`;
             a.click();
             URL.revokeObjectURL(url);
         };
