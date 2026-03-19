@@ -94,6 +94,11 @@
 
 <body>
 
+<!-- AUDIO -->
+<audio id="shakeSound" preload="auto">
+    <source src="https://chudich.github.io/tieng_lac_xam.mp3" type="audio/mpeg">
+</audio>
+
 <div class="image-container">
     <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm"
     style="width: 6cm; height: 8cm; display: block; margin: 0 auto; object-fit: cover; border-radius: 5px; border: 2px solid #d4af37;">
@@ -125,21 +130,9 @@
     <p id="popupContent"></p>
     <button onclick="closePopup()">Đóng</button>
 </div>
-<script>
-    // ====== AUDIO MP3 ======
-    const shakeAudio = new Audio("https://chudich.github.io/tieng_lac_xam.mp3");
-    shakeAudio.loop = true;
-    shakeAudio.volume = 1;
-    shakeAudio.preload = "auto";
 
-    // ====== UNLOCK AUDIO CHO MOBILE ======
-    document.addEventListener("click", function unlockAudio() {
-        shakeAudio.play().then(() => {
-            shakeAudio.pause();
-            shakeAudio.currentTime = 0;
-        }).catch(() => {});
-        document.removeEventListener("click", unlockAudio);
-    });
+<script>
+    const shakeAudio = document.getElementById("shakeSound");
 
     function startShake() {
         const tubeImg = document.getElementById('tubeImg');
@@ -150,20 +143,23 @@
         stick.style.display = 'none';
         tubeImg.classList.add('shaking');
 
-        // ====== PHÁT ÂM THANH ======
+        // FORCE LOAD + PLAY
+        shakeAudio.load();
         shakeAudio.currentTime = 0;
 
-        const playPromise = shakeAudio.play();
+        let playPromise = shakeAudio.play();
         if (playPromise !== undefined) {
-            playPromise.catch(() => {
-                console.log("Audio bị chặn");
+            playPromise.then(() => {
+                // play ok
+            }).catch(() => {
+                console.log("Audio bị chặn, thử lại");
             });
         }
 
         setTimeout(function() {
             tubeImg.classList.remove('shaking');
 
-            // ====== DỪNG ÂM ======
+            // Stop audio
             shakeAudio.pause();
             shakeAudio.currentTime = 0;
 
