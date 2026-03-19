@@ -125,39 +125,23 @@
     <p id="popupContent"></p>
     <button onclick="closePopup()">Đóng</button>
 </div>
-
 <script>
-    // ====== AUDIO MP3 LẮC XĂM ======
+    // ====== AUDIO MP3 ======
     const shakeAudio = new Audio("https://chudich.github.io/tieng_lac_xam.mp3");
     shakeAudio.loop = true;
-    shakeAudio.volume = 0.6;
+    shakeAudio.volume = 1;
+    shakeAudio.preload = "auto";
 
-    // ====== AUDIO GIẢ LẬP (fallback) ======
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playShakeSound() {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.1);
-
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.1);
-    }
+    // ====== UNLOCK AUDIO CHO MOBILE ======
+    document.addEventListener("click", function unlockAudio() {
+        shakeAudio.play().then(() => {
+            shakeAudio.pause();
+            shakeAudio.currentTime = 0;
+        }).catch(() => {});
+        document.removeEventListener("click", unlockAudio);
+    });
 
     function startShake() {
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
         const tubeImg = document.getElementById('tubeImg');
         const stick = document.getElementById('stick');
 
@@ -166,20 +150,24 @@
         stick.style.display = 'none';
         tubeImg.classList.add('shaking');
 
-        // ====== PHÁT AUDIO ======
+        // ====== PHÁT ÂM THANH ======
         shakeAudio.currentTime = 0;
-        shakeAudio.play().catch(() => {});
 
-        const soundInterval = setInterval(playShakeSound, 150);
+        const playPromise = shakeAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                console.log("Audio bị chặn");
+            });
+        }
 
         setTimeout(function() {
-            clearInterval(soundInterval);
             tubeImg.classList.remove('shaking');
 
-            // ====== DỪNG AUDIO ======
+            // ====== DỪNG ÂM ======
             shakeAudio.pause();
             shakeAudio.currentTime = 0;
 
+            // Ra quẻ
             stick.innerText = Math.floor(Math.random() * 100) + 1;
             stick.classList.add('fall');
 
