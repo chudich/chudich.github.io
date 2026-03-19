@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QUÁN ÂM LINH XĂM</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; background: #f7f1e3; margin: 0; padding: 0; }
-        .image-container { margin-top: 20px; }
+        body { text-align: center; font-family: Arial, sans-serif; background: #f7f1e3; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Ống lắc - Đảm bảo hiện đầy đủ 100% */
+        /* Container ảnh Quán Âm */
+        .image-container { margin-top: 15px; }
+        
+        /* Ống lắc - Fix hiển thị trọn vẹn */
         #tube {
             width: 160px;
             height: 240px;
@@ -45,7 +47,7 @@
         }
 
         .shaking { animation: shake 0.5s infinite; }
-        .fall { display: block !important; animation: fallDown 1s ease-out forwards; }
+        .fall { display: block !important; animation: fallDown 0.8s ease-out forwards; }
 
         @keyframes shake {
             0% { transform: rotate(0deg); }
@@ -55,11 +57,11 @@
             100% { transform: rotate(0deg); }
         }
 
-        /* Vị trí rơi 420px: Rơi xuống hẳn dưới ảnh Quán Âm */
+        /* Tọa độ rơi 430px: Dưới hẳn tầm ảnh Quán Âm */
         @keyframes fallDown {
             0% { top: 60%; opacity: 0; transform: translateX(-50%) scale(0.5); }
             20% { opacity: 1; transform: translateX(-50%) scale(1); }
-            100% { top: 420px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
+            100% { top: 430px; opacity: 1; transform: translateX(-50%) rotate(10deg); }
         }
 
         .button-container { display: flex; justify-content: center; gap: 15px; margin: 20px; }
@@ -70,7 +72,7 @@
         }
         button:active { box-shadow: 0 2px #7a1d1e; transform: translateY(2px); }
 
-        .home-button { text-align: left; margin: 10px 0 20px 20px; }
+        .home-button { text-align: left; margin: 10px 0 10px 20px; }
         .home-button a { display: inline-block; padding: 10px 20px; background: #FFD700; color: #333; font-weight: bold; text-decoration: none; border-radius: 6px; }
 
         #resultTable { display: none; width: 95%; margin: 20px auto; border-collapse: collapse; background: white; }
@@ -79,10 +81,6 @@
     </style>
 </head>
 <body>
-
-    <audio id="shakeSound">
-        <source src="https://chudich.github.io/tieng_lac_xam.mp3" type="audio/mpeg">
-    </audio>
 
     <div class="image-container">
         <img src="https://i.imgur.com/H8zjFlB.jpeg" alt="Quán Âm" style="width: 6cm; height: 8cm; display: block; margin: 0 auto; object-fit: cover; border-radius: 5px; border: 2px solid #d4af37;">
@@ -100,7 +98,7 @@
     </div>
 
     <div class="button-container">
-        <button onclick="startShake(event)">XIN XĂM</button>
+        <button onclick="startShake()">XIN XĂM</button>
         <button onclick="toggleTable()">XEM LỜI GIẢI</button>
     </div>
 
@@ -115,28 +113,54 @@
     </div>
 
     <script>
-        function startShake(e) {
-            // LỆNH PHÁT NHẠC PHẢI ƯU TIÊN HÀNG ĐẦU
-            var sound = document.getElementById('shakeSound');
-            sound.currentTime = 0;
-            sound.play();
+        // NHÚNG TRỰC TIẾP ÂM THANH (Dạng Base64 để không bị chặn)
+        const shakeSoundBase64 = "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFhYAAAAHAAAAGxhdmY1OC4yOS4xMDABYmFzZTY0LmpwZwD/4AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"; 
+        // Lưu ý: Chuỗi trên là ví dụ. Tôi sẽ dùng mã lệnh tạo âm thanh trực tiếp bằng Web Audio API bên dưới để chắc chắn phát ra tiếng.
 
-            var tubeImg = document.getElementById('tubeImg');
-            var stick = document.getElementById('stick');
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playShakeSound() {
+            // Tạo tiếng "cạch cạch" giả lập bằng mã code nếu file mp3 bị chặn
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.1);
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function startShake() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const tubeImg = document.getElementById('tubeImg');
+            const stick = document.getElementById('stick');
 
             // Reset quẻ
             stick.classList.remove('fall');
             stick.style.display = 'none';
-
-            // Lắc ống
             tubeImg.classList.add('shaking');
 
+            // Phát tiếng động lặp lại trong khi lắc
+            const soundInterval = setInterval(playShakeSound, 150);
+
             setTimeout(function() {
+                clearInterval(soundInterval);
                 tubeImg.classList.remove('shaking');
                 // Hiển thị số ngẫu nhiên
                 stick.innerText = Math.floor(Math.random() * 100) + 1; 
                 stick.classList.add('fall');
-            }, 2500); 
+            }, 2000); 
         }
 
         const xamList = [
