@@ -3,35 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Liên Hoa - Quẻ Thời Gian (New Gen)</title>
+    <title>Liên Hoa - Quẻ Thời Gian & Nhị Phân</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #993300; --bg: #f4f5f7; }
-        body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px; }
+        :root { --primary: #993300; --secondary: #007aff; --bg: #f0f2f5; }
+        body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 500px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
         
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 18px; }
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 1.2rem; }
         
-        .clock-display { text-align: center; padding: 30px 20px; background: #fffaf0; border-bottom: 1px solid #eee; }
-        #currentTime { font-size: 48px; font-weight: bold; color: #2d3436; letter-spacing: 2px; }
-        .date-text { color: #636e72; font-size: 14px; margin-top: 5px; }
+        .clock-section { text-align: center; padding: 25px; background: #fffaf0; border-bottom: 1px solid #eee; }
+        #currentTime { font-size: 3.5rem; font-weight: bold; color: #2d3436; margin: 0; }
+        .date-text { color: #636e72; font-size: 0.9rem; }
 
-        .action-section { padding: 20px; text-align: center; }
-        .btn-time { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(153,51,0,0.3); }
-        .btn-time:active { transform: scale(0.98); }
+        .action-area { padding: 20px; }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(153,51,0,0.3); }
+        .btn-main:active { transform: scale(0.98); }
 
-        .result-panel { padding: 15px; display: none; }
-        .que-box { display: flex; justify-content: space-around; margin-top: 20px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
-        .que-item { text-align: center; flex: 1; }
-        .que-name { font-weight: bold; color: var(--primary); font-size: 16px; margin-bottom: 10px; display: block; }
-        .que-info { font-size: 13px; color: #555; line-height: 1.6; }
+        /* Kết quả quẻ */
+        .result-panel { padding: 0 20px 20px 20px; display: none; }
+        .card { background: white; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .card-label { font-size: 0.75rem; font-weight: bold; color: #888; text-transform: uppercase; display: block; margin-bottom: 10px; }
+        .que-name { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 5px 0; }
         
-        .formula-tag { display: inline-block; background: #eee; padding: 4px 12px; border-radius: 20px; font-size: 11px; margin-top: 10px; color: #777; }
+        /* Vẽ vạch quẻ */
+        .hexagram { display: flex; flex-direction: column; gap: 6px; align-items: center; margin: 15px 0; }
+        .line { width: 100px; height: 8px; background-color: var(--primary); border-radius: 2px; }
+        .line.broken { background-color: transparent; display: flex; justify-content: space-between; }
+        .line.broken::before, .line.broken::after { content: ""; width: 42%; height: 100%; background-color: var(--primary); border-radius: 2px; }
+        
+        .binary-tag { font-family: monospace; font-size: 0.8rem; background: #eee; padding: 3px 10px; border-radius: 10px; color: #555; }
 
-        /* Question input for Export */
-        .q-input { margin: 20px; padding: 10px; border-top: 1px dashed #ccc; }
-        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; resize: none; box-sizing: border-box; }
-        .btn-dl { margin-top: 10px; background: #007aff; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; }
+        .export-section { margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 15px; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: none; }
+        .btn-download { background: var(--secondary); color: white; width: 100%; padding: 12px; border: none; border-radius: 50px; font-weight: bold; margin-top: 10px; cursor: pointer; }
 
         canvas#hiddenCanvas { display: none; }
     </style>
@@ -41,33 +46,33 @@
 <div class="container">
     <div class="header">LIÊN HOA - LẬP QUẺ THỜI GIAN</div>
 
-    <div class="clock-display">
+    <div class="clock-section">
         <div id="currentTime">00:00</div>
-        <div id="currentDate" class="date-text">--/--/----</div>
+        <div id="currentDate" class="date-text">Thứ ..., ngày ...</div>
     </div>
 
-    <div class="action-section">
-        <button class="btn-time" id="btnLapQue">LẬP QUẺ THỜI GIAN</button>
+    <div class="action-area">
+        <button class="btn-main" onclick="lapQue()">LẬP QUẺ THEO GIỜ</button>
     </div>
 
     <div class="result-panel" id="resultPanel">
-        <div class="que-box">
-            <div class="que-item">
-                <span class="que-name" id="nameChu">Quẻ Chủ</span>
-                <div class="que-info" id="infoChu">--</div>
-                <div class="formula-tag" id="formChu">Số: X/Y</div>
-            </div>
-            <div style="display: flex; align-items: center; color: #ccc;">➔</div>
-            <div class="que-item">
-                <span class="que-name" id="nameBien">Quẻ Biến</span>
-                <div class="que-info" id="infoBien">--</div>
-                <div class="formula-tag" id="formBien">Số: X'/Y'</div>
-            </div>
+        <div class="card">
+            <span class="card-label">Quẻ Chủ (X/Y)</span>
+            <div id="nameChu" class="que-name">---</div>
+            <div id="visualChu" class="hexagram"></div>
+            <div id="codeChu" class="binary-tag">---</div>
         </div>
 
-        <div class="q-input">
-            <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi để tải ảnh..."></textarea>
-            <button class="btn-dl" id="btnDownload">💾 TẢI ẢNH QUẺ</button>
+        <div class="card">
+            <span class="card-label">Quẻ Biến (X'/Y')</span>
+            <div id="nameBien" class="que-name">---</div>
+            <div id="visualBien" class="hexagram"></div>
+            <div id="codeBien" class="binary-tag">---</div>
+        </div>
+
+        <div class="export-section">
+            <textarea id="qTxt" rows="2" placeholder="Gõ câu hỏi tại đây..."></textarea>
+            <button class="btn-download" onclick="exportImage()">💾 TẢI ẢNH KẾT QUẢ</button>
         </div>
     </div>
 </div>
@@ -75,134 +80,131 @@
 <canvas id="hiddenCanvas"></canvas>
 
 <script>
-    const quai = {
-        1: "Kiền (Thiên)", 2: "Đoài (Trạch)", 3: "Ly (Hỏa)", 4: "Chấn (Lôi)",
-        5: "Tốn (Phong)", 6: "Khảm (Thủy)", 7: "Cấn (Sơn)", 8: "Khôn (Địa)"
+    // DỮ LIỆU BÁT QUÁI NHỊ PHÂN
+    const batQuai = {
+        1: { name: "Kiền", code: "111", sym: "Thiên" },
+        2: { name: "Đoài", code: "011", sym: "Trạch" },
+        3: { name: "Ly",    code: "101", sym: "Hỏa" },
+        4: { name: "Chấn",  code: "001", sym: "Lôi" },
+        5: { name: "Tốn",   code: "110", sym: "Phong" },
+        6: { name: "Khảm",  code: "010", sym: "Thủy" },
+        7: { name: "Cấn",   code: "100", sym: "Sơn" },
+        8: { name: "Khôn",  code: "000", sym: "Địa" }
     };
 
-    const ten64Que = {
-        "11": "Thuần Kiền", "12": "Thiên Trạch Lý", "13": "Thiên Hỏa Đồng Nhân", "14": "Thiên Lôi Vô Vọng",
-        "88": "Thuần Khôn", "82": "Địa Trạch Lâm", "61": "Thủy Thiên Nhu", "63": "Thủy Hỏa Ký Tế"
-        // Thêm các quẻ khác vào đây theo logic của bạn
+    // DỮ LIỆU 64 QUẺ (NHỊ PHÂN)
+    const data64Que = {
+        "111111": "Thuần Càn", "000000": "Thuần Khôn", "010001": "Thủy Lôi Truân", "100010": "Sơn Thủy Mông",
+        "010111": "Thủy Thiên Nhu", "111010": "Thiên Thủy Tụng", "000010": "Địa Thủy Sư", "010000": "Thủy Địa Tỷ",
+        "110111": "Phong Thiên Tiểu Súc", "111011": "Thiên Trạch Lý", "000111": "Địa Thiên Thái", "111000": "Thiên Địa Bĩ",
+        "111101": "Thiên Hỏa Đồng Nhân", "101111": "Hỏa Thiên Đại Hữu", "000100": "Địa Sơn Khiêm", "001000": "Lôi Địa Dự",
+        "011001": "Trạch Lôi Tùy", "100110": "Sơn Phong Cổ", "000011": "Địa Trạch Lâm", "110000": "Phong Địa Quán",
+        "101001": "Hỏa Lôi Phệ Hạp", "100101": "Sơn Hỏa Bí", "100000": "Sơn Địa Bác", "000001": "Địa Lôi Phục",
+        "111001": "Thiên Lôi Vô Vọng", "100111": "Sơn Thiên Đại Súc", "100001": "Sơn Lôi Di", "011110": "Trạch Phong Đại Quá",
+        "010010": "Thuần Khảm", "101101": "Thuần Ly", "011100": "Trạch Sơn Hàm", "001110": "Lôi Phong Hằng",
+        "111100": "Thiên Sơn Độn", "001111": "Lôi Thiên Đại Tráng", "101000": "Hỏa Địa Tấn", "000101": "Địa Hỏa Minh Di",
+        "110101": "Phong Hỏa Gia Nhân", "101011": "Hỏa Trạch Khuê", "010100": "Thủy Sơn Kiển", "001010": "Lôi Thủy Giải",
+        "100011": "Sơn Trạch Tổn", "110001": "Phong Lôi Ích", "011111": "Trạch Thiên Quải", "111110": "Thiên Phong Cấu",
+        "011000": "Trạch Địa Tụy", "000110": "Địa Phong Thăng", "011010": "Trạch Thủy Khốn", "010110": "Thủy Phong Tỉnh",
+        "011101": "Trạch Hỏa Cách", "101110": "Hỏa Phong Đỉnh", "001001": "Thuần Chấn", "100100": "Thuần Cấn",
+        "110100": "Phong Sơn Tiệm", "001011": "Lôi Trạch Quy Muội", "001101": "Lôi Hỏa Phong", "101100": "Hỏa Sơn Lữ",
+        "110110": "Thuần Tốn", "011011": "Thuần Đoài", "110010": "Phong Thủy Hoán", "010011": "Thủy Trạch Tiết",
+        "110011": "Phong Trạch Trung Phu", "001100": "Lôi Sơn Tiểu Quá", "010101": "Thủy Hỏa Ký Tế", "101010": "Hỏa Thủy Vị Tế"
     };
 
-    function getTenQue(t, h) {
-        let key = `${t}${h}`;
-        return ten64Que[key] || "Quẻ số " + key;
-    }
-
-    function tinhQuai(num) {
-        let n = parseInt(num);
+    // LOGIC TÍNH TOÁN
+    function convertToQuaiNumber(val) {
+        let n = parseInt(val);
         if (n === 0) return 8;
         let r = n % 8;
         return r === 0 ? 8 : r;
     }
 
-    // Cập nhật đồng hồ thời gian thực
+    function drawHex(containerId, code) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        for (let char of code) {
+            const line = document.createElement('div');
+            line.className = (char === '1') ? "line" : "line broken";
+            container.appendChild(line);
+        }
+    }
+
     function updateClock() {
         const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const d = now.toLocaleDateString('vi-VN');
-        document.getElementById('currentTime').innerText = `${h}:${m}`;
-        document.getElementById('currentDate').innerText = d;
+        document.getElementById('currentTime').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('currentDate').innerText = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    let currentResult = {};
+    let saveMeta = {};
 
-    document.getElementById('btnLapQue').addEventListener('click', function() {
+    function lapQue() {
         const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0'); // xx
-        const mm = String(now.getMinutes()).padStart(2, '0'); // yy
+        const hh = now.getHours().toString().padStart(2, '0');
+        const mm = now.getMinutes().toString().padStart(2, '0');
 
-        // Logic tách số: X X' : Y Y'
-        const X = hh[0];
-        const X_prime = hh[1];
-        const Y = mm[0];
-        const Y_prime = mm[1];
+        // Tách số theo logic yêu cầu
+        const X = hh[0], Xp = hh[1];
+        const Y = mm[0], Yp = mm[1];
 
-        // Tính quẻ
-        const qChuT = tinhQuai(X);
-        const qChuH = tinhQuai(Y);
-        const qBienT = tinhQuai(X_prime);
-        const qBienH = tinhQuai(Y_prime);
+        const chuT = convertToQuaiNumber(X), chuH = convertToQuaiNumber(Y);
+        const bienT = convertToQuaiNumber(Xp), bienH = convertToQuaiNumber(Yp);
 
-        currentResult = {
-            time: `${hh}:${mm}`,
-            chu: { t: qChuT, h: qChuH, name: getTenQue(qChuT, qChuH) },
-            bien: { t: qBienT, h: qBienH, name: getTenQue(qBienT, qBienH) }
-        };
+        const codeChu = batQuai[chuT].code + batQuai[chuH].code;
+        const codeBien = batQuai[bienT].code + batQuai[bienH].code;
 
-        // Hiển thị UI
+        // Cập nhật UI
         document.getElementById('resultPanel').style.display = 'block';
-        
-        document.getElementById('nameChu').innerText = currentResult.chu.name;
-        document.getElementById('infoChu').innerHTML = `${quai[qChuT]}<br>trên<br>${quai[qChuH]}`;
-        document.getElementById('formChu').innerText = `Số: ${X}/${Y}`;
+        document.getElementById('nameChu').innerText = data64Que[codeChu];
+        document.getElementById('codeChu').innerText = `${batQuai[chuT].name}/${batQuai[chuH].name} (${codeChu})`;
+        drawHex('visualChu', codeChu);
 
-        document.getElementById('nameBien').innerText = currentResult.bien.name;
-        document.getElementById('infoBien').innerHTML = `${quai[qBienT]}<br>trên<br>${quai[qBienH]}`;
-        document.getElementById('formBien').innerText = `Số: ${X_prime}/${Y_prime}`;
+        document.getElementById('nameBien').innerText = data64Que[codeBien];
+        document.getElementById('codeBien').innerText = `${batQuai[bienT].name}/${batQuai[bienH].name} (${codeBien})`;
+        drawHex('visualBien', codeBien);
 
+        saveMeta = { time: `${hh}:${hh}`, q1: data64Que[codeChu], q2: data64Que[codeBien], s1: `${X}/${Y}`, s2: `${Xp}/${Yp}` };
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    });
+    }
 
-    // Xuất ảnh Canvas
-    document.getElementById('btnDownload').addEventListener('click', function() {
+    // XUẤT ẢNH CANVAS
+    function exportImage() {
         const canvas = document.getElementById('hiddenCanvas');
         const ctx = canvas.getContext('2d');
-        const qText = document.getElementById('qTxt').value || "Không có câu hỏi";
-
-        canvas.width = 600;
-        canvas.height = 500;
-
-        // Nền
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+        const qTxt = document.getElementById('qTxt').value || "Không có câu hỏi";
+        
+        canvas.width = 600; canvas.height = 550;
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 600, 550);
+        
         // Header
-        ctx.fillStyle = "#993300";
-        ctx.fillRect(0, 0, 600, 80);
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px Arial";
-        ctx.textAlign = "center";
+        ctx.fillStyle = "#993300"; ctx.fillRect(0, 0, 600, 80);
+        ctx.fillStyle = "#ffffff"; ctx.font = "bold 24px Arial"; ctx.textAlign = "center";
         ctx.fillText("LIÊN HOA - QUẺ THỜI GIAN", 300, 50);
 
-        // Nội dung quẻ
-        ctx.fillStyle = "#333";
-        ctx.font = "bold 20px Arial";
-        ctx.fillText(`Thời gian: ${currentResult.time}`, 300, 130);
+        // Nội dung
+        ctx.fillStyle = "#333"; ctx.font = "bold 22px Arial";
+        ctx.fillText(`Thời gian lập: ${saveMeta.time}`, 300, 130);
 
-        ctx.fillStyle = "#993300";
-        ctx.font = "bold 22px Arial";
-        ctx.fillText(currentResult.chu.name, 150, 200);
-        ctx.fillText(currentResult.bien.name, 450, 200);
-
-        ctx.fillStyle = "#666";
-        ctx.font = "18px Arial";
-        ctx.fillText(`${quai[currentResult.chu.t]} / ${quai[currentResult.chu.h]}`, 150, 240);
-        ctx.fillText(`${quai[currentResult.bien.t]} / ${quai[currentResult.bien.h]}`, 450, 240);
+        // Vẽ 2 quẻ
+        ctx.fillStyle = "#993300"; ctx.font = "bold 26px Arial";
+        ctx.fillText(saveMeta.q1, 150, 200); ctx.fillText(saveMeta.q2, 450, 200);
+        
+        ctx.fillStyle = "#666"; ctx.font = "16px Arial";
+        ctx.fillText(`(Chủ: ${saveMeta.s1})`, 150, 230); ctx.fillText(`(Biến: ${saveMeta.s2})`, 450, 230);
 
         // Câu hỏi
-        ctx.fillStyle = "#f4f5f7";
-        ctx.fillRect(20, 320, 560, 100);
-        ctx.fillStyle = "#007aff";
-        ctx.font = "bold 20px Arial";
-        ctx.fillText("HỎI: " + qText, 300, 375);
+        ctx.fillStyle = "#f8f9fa"; ctx.fillRect(30, 320, 540, 120);
+        ctx.fillStyle = "#007aff"; ctx.font = "bold 20px Arial";
+        ctx.fillText("HỎI: " + qTxt, 300, 385);
 
-        // Footer
-        ctx.fillStyle = "#ccc";
-        ctx.font = "14px Arial";
-        ctx.fillText("Ứng dụng Liên Hoa - " + new Date().toLocaleDateString(), 300, 470);
-
+        // Link tải
         const link = document.createElement('a');
-        link.download = `QueThoiGian_${currentResult.time}.png`;
+        link.download = `LienHoa_${Date.now()}.png`;
         link.href = canvas.toDataURL();
         link.click();
-    });
+    }
 </script>
-
 </body>
 </html>
