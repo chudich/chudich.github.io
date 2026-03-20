@@ -12,13 +12,19 @@
         
         .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 1.2rem; }
         
-        .clock-section { text-align: center; padding: 25px; background: #fffaf0; border-bottom: 1px solid #eee; }
-        #currentTime { font-size: 3.5rem; font-weight: bold; color: #2d3436; margin: 0; }
-        .date-text { color: #636e72; font-size: 0.9rem; }
+        .clock-section { text-align: center; padding: 20px; background: #fffaf0; border-bottom: 1px solid #eee; }
+        #currentTime { font-size: 3.2rem; font-weight: bold; color: #2d3436; margin: 0; }
+        .date-text { color: #636e72; font-size: 0.85rem; }
 
-        .action-area { padding: 20px; }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(153,51,0,0.3); }
+        .action-area { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(153,51,0,0.2); }
         .btn-main:active { transform: scale(0.98); }
+
+        /* Nhập thủ công */
+        .manual-input { background: #f9f9f9; padding: 15px; border-radius: 15px; border: 1px dashed #ccc; text-align: center; }
+        .input-group { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .input-group select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; font-size: 1rem; cursor: pointer; }
+        .btn-sub { background: #636e72; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
 
         /* Kết quả quẻ */
         .result-panel { padding: 0 20px 20px 20px; display: none; }
@@ -48,11 +54,19 @@
 
     <div class="clock-section">
         <div id="currentTime">00:00</div>
-        <div id="currentDate" class="date-text">Thứ ..., ngày ...</div>
+        <div id="currentDate" class="date-text">--</div>
     </div>
 
     <div class="action-area">
-        <button class="btn-main" onclick="lapQue()">LẬP QUẺ THEO GIỜ</button>
+        <button class="btn-main" onclick="lapQue(true)">LẬP QUẺ THEO GIỜ THỰC</button>
+        
+        <div class="manual-input">
+            <div class="input-group">
+                <select id="manHH"></select> <span>:</span>
+                <select id="manMM"></select>
+            </div>
+            <button class="btn-sub" onclick="lapQue(false)">LẬP QUẺ THỦ CÔNG</button>
+        </div>
     </div>
 
     <div class="result-panel" id="resultPanel">
@@ -112,6 +126,12 @@
         "110011": "Phong Trạch Trung Phu", "001100": "Lôi Sơn Tiểu Quá", "010101": "Thủy Hỏa Ký Tế", "101010": "Hỏa Thủy Vị Tế"
     };
 
+    // Khởi tạo menu chọn thời gian thủ công
+    const manHH = document.getElementById('manHH');
+    const manMM = document.getElementById('manMM');
+    for(let i=0; i<24; i++) manHH.innerHTML += `<option value="${i.toString().padStart(2,'0')}">${i.toString().padStart(2,'0')}</option>`;
+    for(let i=0; i<60; i++) manMM.innerHTML += `<option value="${i.toString().padStart(2,'0')}">${i.toString().padStart(2,'0')}</option>`;
+
     // LOGIC TÍNH TOÁN
     function convertToQuaiNumber(val) {
         let n = parseInt(val);
@@ -140,10 +160,16 @@
 
     let saveMeta = {};
 
-    function lapQue() {
-        const now = new Date();
-        const hh = now.getHours().toString().padStart(2, '0');
-        const mm = now.getMinutes().toString().padStart(2, '0');
+    function lapQue(isRealTime) {
+        let hh, mm;
+        if (isRealTime) {
+            const now = new Date();
+            hh = now.getHours().toString().padStart(2, '0');
+            mm = now.getMinutes().toString().padStart(2, '0');
+        } else {
+            hh = manHH.value;
+            mm = manMM.value;
+        }
 
         // Tách số theo logic yêu cầu
         const X = hh[0], Xp = hh[1];
@@ -165,7 +191,14 @@
         document.getElementById('codeBien').innerText = `${batQuai[bienT].name}/${batQuai[bienH].name} (${codeBien})`;
         drawHex('visualBien', codeBien);
 
-        saveMeta = { time: `${hh}:${hh}`, q1: data64Que[codeChu], q2: data64Que[codeBien], s1: `${X}/${Y}`, s2: `${Xp}/${Yp}` };
+        saveMeta = { 
+            time: `${hh}:${mm}`, 
+            q1: data64Que[codeChu], 
+            q2: data64Que[codeBien], 
+            s1: `${X}/${Y}`, 
+            s2: `${Xp}/${Yp}`,
+            type: isRealTime ? "Giờ thực" : "Thủ công"
+        };
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
@@ -185,7 +218,7 @@
 
         // Nội dung
         ctx.fillStyle = "#333"; ctx.font = "bold 22px Arial";
-        ctx.fillText(`Thời gian lập: ${saveMeta.time}`, 300, 130);
+        ctx.fillText(`Thời gian (${saveMeta.type}): ${saveMeta.time}`, 300, 130);
 
         // Vẽ 2 quẻ
         ctx.fillStyle = "#993300"; ctx.font = "bold 26px Arial";
@@ -199,9 +232,13 @@
         ctx.fillStyle = "#007aff"; ctx.font = "bold 20px Arial";
         ctx.fillText("HỎI: " + qTxt, 300, 385);
 
+        // Footer ghi ngày tháng năm lập
+        ctx.fillStyle = "#888"; ctx.font = "14px Arial";
+        ctx.fillText(new Date().toLocaleDateString('vi-VN'), 300, 520);
+
         // Link tải
         const link = document.createElement('a');
-        link.download = `LienHoa_${Date.now()}.png`;
+        link.download = `LienHoa_${saveMeta.time}.png`;
         link.href = canvas.toDataURL();
         link.click();
     }
