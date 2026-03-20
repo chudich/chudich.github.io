@@ -3,52 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dịch Học - Nguyên Lý Chủ Vị</title>
+    <title>Liên Hoa - Chủ Vị & Xuất Ảnh</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #004a99; --secondary: #28a745; --bg: #f4f7f6; }
+        :root { --primary: #004a99; --accent: #ff4757; --bg: #f4f7f6; }
         body { font-family: 'Lexend', sans-serif; background: var(--bg); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 550px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px; }
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; }
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 1.2rem; }
         
         .input-section { padding: 20px; border-bottom: 1px solid #eee; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
-        textarea { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 1rem; box-sizing: border-box; resize: vertical; min-height: 100px; }
-        textarea:focus { border-color: var(--primary); outline: none; }
+        textarea { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 1rem; box-sizing: border-box; resize: none; min-height: 100px; font-family: inherit; }
         
-        .btn-main { background: var(--primary); color: white; width: calc(100% - 40px); margin: 20px; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
-        .btn-main:active { transform: scale(0.98); }
-
+        .btn-main { background: var(--primary); color: white; width: calc(100% - 40px); margin: 20px; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        
         .result-panel { padding: 0 20px; display: none; }
-        .analysis-box { background: #eef2f7; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6; }
+        .analysis-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.85rem; border-left: 4px solid var(--primary); }
         
         .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .label-tag { font-size: 0.75rem; font-weight: bold; color: #888; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .que-name { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; background: #fff; position: relative; }
+        .label-tag { font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .que-name { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin: 8px 0; min-height: 2.4em; display: flex; align-items: center; justify-content: center; }
         
-        /* Vẽ vạch quẻ */
         .hexagram { display: flex; flex-direction: column-reverse; gap: 6px; align-items: center; margin: 10px 0; }
-        .line { width: 80px; height: 8px; background-color: var(--primary); border-radius: 2px; }
+        .line { width: 70px; height: 8px; background-color: var(--primary); border-radius: 2px; }
         .line.broken { background-color: transparent; display: flex; justify-content: space-between; }
         .line.broken::before, .line.broken::after { content: ""; width: 42%; height: 100%; background-color: var(--primary); border-radius: 2px; }
-        .line.moving { background-color: #ff4757; } /* Màu đỏ cho vạch động */
-        .line.broken.moving::before, .line.broken.moving::after { background-color: #ff4757; }
+        .line.moving { background-color: var(--accent); }
+        .line.broken.moving::before, .line.broken.moving::after { background-color: var(--accent); }
 
-        .binary-tag { font-family: monospace; font-size: 0.8rem; color: #666; background: #f0f0f0; padding: 2px 8px; border-radius: 5px; }
+        .btn-download { background: #28a745; color: white; width: 100%; padding: 15px; border: none; border-radius: 50px; font-weight: bold; margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        canvas#exportCanvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">LẬP QUẺ THEO NGUYÊN LÝ CHỦ VỊ</div>
+    <div class="header">LIÊN HOA - DỊCH LÝ CHỦ VỊ</div>
 
     <div class="input-section">
-        <label>Nhập câu hỏi của bạn:</label>
-        <textarea id="questionInput" placeholder="Ví dụ: Tôi muốn thuê mặt bằng để mở cửa hiệu mini spa , làm đẹp không biết dự định này có thành công hay không ?"></textarea>
+        <textarea id="questionInput" placeholder="Nhập câu hỏi tại đây để đếm thành tố lập quẻ..."></textarea>
     </div>
 
-    <button class="btn-main" onclick="lapQueChuVi()">LẬP QUẺ NGAY</button>
+    <button class="btn-main" onclick="lapQueChuVi()">LẬP QUẺ & PHÂN TÍCH</button>
 
     <div class="result-panel" id="resultPanel">
         <div class="analysis-box" id="analysisText"></div>
@@ -58,24 +55,26 @@
                 <span class="label-tag">Quẻ Chủ</span>
                 <div id="nameChu" class="que-name">---</div>
                 <div id="visualChu" class="hexagram"></div>
-                <div id="codeChu" class="binary-tag">---</div>
             </div>
             <div class="card">
                 <span class="label-tag">Quẻ Biến</span>
                 <div id="nameBien" class="que-name">---</div>
                 <div id="visualBien" class="hexagram"></div>
-                <div id="codeBien" class="binary-tag">---</div>
             </div>
         </div>
+
+        <button class="btn-download" onclick="exportImage()">💾 TẢI ẢNH KẾT QUẢ</button>
     </div>
 </div>
 
+<canvas id="exportCanvas"></canvas>
+
 <script>
     const batQuai = {
-        1: { name: "Kiền", code: "111" }, 2: { name: "Đoài", code: "011" },
-        3: { name: "Ly",    code: "101" }, 4: { name: "Chấn",  code: "001" },
-        5: { name: "Tốn",   code: "110" }, 6: { name: "Khảm",  code: "010" },
-        7: { name: "Cấn",   code: "100" }, 8: { name: "Khôn",  code: "000" }
+        1: { name: "Kiền", code: "111", sym: "Thiên" }, 2: { name: "Đoài", code: "011", sym: "Trạch" },
+        3: { name: "Ly",    code: "101", sym: "Hỏa" },   4: { name: "Chấn",  code: "001", sym: "Lôi" },
+        5: { name: "Tốn",   code: "110", sym: "Phong" }, 6: { name: "Khảm",  code: "010", sym: "Thủy" },
+        7: { name: "Cấn",   code: "100", sym: "Sơn" },   8: { name: "Khôn",  code: "000", sym: "Địa" }
     };
 
     const data64Que = {
@@ -97,32 +96,26 @@
         "110011": "Phong Trạch Trung Phu", "001100": "Lôi Sơn Tiểu Quá", "010101": "Thủy Hỏa Ký Tế", "101010": "Hỏa Thủy Vị Tế"
     };
 
+    let globalData = {};
+
     function getGioChi() {
         const h = new Date().getHours();
-        if (h >= 23 || h < 1) return 1; // Tý
-        if (h >= 1 && h < 3) return 2;  // Sửu
-        if (h >= 3 && h < 5) return 3;  // Dần
-        if (h >= 5 && h < 7) return 4;  // Mão
-        if (h >= 7 && h < 9) return 5;  // Thìn
-        if (h >= 9 && h < 11) return 6; // Tị
-        if (h >= 11 && h < 13) return 7;// Ngọ
-        if (h >= 13 && h < 15) return 8;// Mùi
-        if (h >= 15 && h < 17) return 9;// Thân
-        if (h >= 17 && h < 19) return 10;// Dậu
-        if (h >= 19 && h < 21) return 11;// Tuất
-        return 12; // Hợi
+        const chi = ["Hợi","Tý","Sửu","Dần","Mão","Thìn","Tị","Ngọ","Mùi","Thân","Dậu","Tuất"];
+        // Tý bắt đầu từ 23h
+        let idx = Math.floor((h + 1) / 2) % 12;
+        if (idx === 0) idx = 1; else if (idx === 1) idx = 2; // Cần map chính xác Tý=1
+        // Cách đơn giản cho lập quẻ:
+        const mapGio = [1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,1];
+        return mapGio[h];
     }
 
     function drawHex(containerId, code, movingLine = -1) {
         const container = document.getElementById(containerId);
         container.innerHTML = "";
-        // Vẽ từ trên xuống (Hào 6 ở trên cùng, Hào 1 ở dưới cùng)
-        // Lưu ý: Logic nhị phân code là Thượng (1-3) + Hạ (4-6)
         for (let i = 0; i < 6; i++) {
             const line = document.createElement('div');
             const isBroken = code[i] === '0';
             const isMoving = (6 - i) === movingLine;
-            
             line.className = isBroken ? "line broken" : "line";
             if (isMoving) line.classList.add("moving");
             container.appendChild(line);
@@ -131,60 +124,106 @@
 
     function lapQueChuVi() {
         const input = document.getElementById('questionInput').value.trim();
-        if (!input) { alert("Vui lòng nhập câu hỏi!"); return; }
+        if (!input) { alert("Hãy nhập câu hỏi!"); return; }
 
-        // 1. Đếm thành tố (tách từ và dấu câu)
         const components = input.match(/[\wà-ỹĐđ]+|[^\w\s]/gi) || [];
         const total = components.length;
+        const trai = Math.floor(total / 2);
+        const phai = total - trai;
 
-        // 2. Chia Chủ Vị
-        let trai, phai;
-        if (total % 2 === 0) {
-            trai = total / 2;
-            phai = total / 2;
-        } else {
-            trai = (total - 1) / 2;
-            phai = trai + 1;
+        const thSố = trai % 8 || 8;
+        const haSố = phai % 8 || 8;
+        const gioSố = getGioChi();
+        const động = (trai + phai + gioSố) % 6 || 6;
+
+        const cTh = batQuai[thSố].code;
+        const cHa = batQuai[haSố].code;
+        const codeChu = cTh + cHa;
+
+        let bArr = codeChu.split('');
+        bArr[6-động] = bArr[6-động] === '1' ? '0' : '1';
+        const codeBien = bArr.join('');
+
+        globalData = {
+            total, trai, phai, động, 
+            nameChu: data64Que[codeChu],
+            nameBien: data64Que[codeBien],
+            codeChu, codeBien,
+            question: input,
+            time: new Date().toLocaleString('vi-VN')
+        };
+
+        document.getElementById('resultPanel').style.display = 'block';
+        document.getElementById('analysisText').innerHTML = `<b>Tổng:</b> ${total} ký tự (${trai} Chủ / ${phai} Vị) | <b>Động:</b> Hào ${động}`;
+        document.getElementById('nameChu').innerText = globalData.nameChu;
+        document.getElementById('nameBien').innerText = globalData.nameBien;
+        
+        drawHex('visualChu', codeChu, động);
+        drawHex('visualBien', codeBien);
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function exportImage() {
+        const canvas = document.getElementById('exportCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 600; canvas.height = 750;
+
+        // Nền
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 600, 750);
+        
+        // Header
+        ctx.fillStyle = "#004a99"; ctx.fillRect(0, 0, 600, 100);
+        ctx.fillStyle = "#ffffff"; ctx.font = "bold 28px Arial"; ctx.textAlign = "center";
+        ctx.fillText("KẾT QUẢ DỊCH LÝ CHỦ VỊ", 300, 60);
+
+        // Câu hỏi
+        ctx.fillStyle = "#f4f7f6"; ctx.fillRect(30, 120, 540, 100);
+        ctx.fillStyle = "#333333"; ctx.font = "italic 18px Arial";
+        const words = globalData.question.split(' ');
+        let line = '', y = 155;
+        for(let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' ';
+            if (ctx.measureText(testLine).width > 500 && n > 0) {
+                ctx.fillText(line, 300, y); line = words[n] + ' '; y += 25;
+            } else { line = testLine; }
+        }
+        ctx.fillText(line, 300, y);
+
+        // Thông tin hào động
+        ctx.fillStyle = "#ff4757"; ctx.font = "bold 20px Arial";
+        ctx.fillText(`Tổng: ${globalData.total} thành tố | Hào ${globalData.động} Động`, 300, 260);
+
+        // Vẽ Quẻ
+        function drawCanvasHex(x, y, code, isChu) {
+            ctx.fillStyle = "#004a99"; ctx.font = "bold 24px Arial";
+            ctx.fillText(isChu ? "QUẺ CHỦ" : "QUẺ BIẾN", x + 65, y - 40);
+            ctx.font = "bold 22px Arial";
+            ctx.fillText(isChu ? globalData.nameChu : globalData.nameBien, x + 65, y - 10);
+
+            for (let i = 0; i < 6; i++) {
+                const isBroken = code[i] === '0';
+                const isMoving = (6 - i) === globalData.động;
+                ctx.fillStyle = isMoving ? "#ff4757" : "#004a99";
+                if (isBroken) {
+                    ctx.fillRect(x, y + (i * 18), 55, 12);
+                    ctx.fillRect(x + 75, y + (i * 18), 55, 12);
+                } else {
+                    ctx.fillRect(x, y + (i * 18), 130, 12);
+                }
+            }
         }
 
-        // 3. Tính Quái
-        const thượngQuáiSố = trai % 8 === 0 ? 8 : trai % 8;
-        const hạQuáiSố = phai % 8 === 0 ? 8 : phai % 8;
-        const giờSố = getGioChi();
+        drawCanvasHex(100, 360, globalData.codeChu, true);
+        drawCanvasHex(370, 360, globalData.codeBien, false);
 
-        // 4. Tìm hào động
-        const sum = trai + phai + giờSố;
-        const hàoĐộng = sum % 6 === 0 ? 6 : sum % 6;
+        // Footer
+        ctx.fillStyle = "#888888"; ctx.font = "14px Arial";
+        ctx.fillText("Thời gian: " + globalData.time, 300, 720);
 
-        // 5. Tính mã nhị phân
-        const codeThượng = batQuai[thượngQuáiSố].code;
-        const codeHạ = batQuai[hạQuáiSố].code;
-        const codeChu = codeThượng + codeHạ;
-
-        // Tính code biến
-        let codeBienArr = codeChu.split('');
-        const idx = 6 - hàoĐộng; // Chuyển từ số hào sang index mảng
-        codeBienArr[idx] = codeBienArr[idx] === '1' ? '0' : '1';
-        const codeBien = codeBienArr.join('');
-
-        // Hiển thị
-        document.getElementById('resultPanel').style.display = 'block';
-        document.getElementById('analysisText').innerHTML = `
-            <b>Phân tích:</b><br>
-            - Tổng thành tố: ${total} (${trai} Chủ / ${phai} Vị)<br>
-            - Giờ lập: ${giờSố} (Chi hiện tại)<br>
-            - Hào động: ${hàoĐộng} (Tổng: ${sum})
-        `;
-
-        document.getElementById('nameChu').innerText = data64Que[codeChu];
-        document.getElementById('codeChu').innerText = `${batQuai[thượngQuáiSố].name}/${batQuai[hạQuáiSố].name}`;
-        drawHex('visualChu', codeChu, hàoĐộng);
-
-        document.getElementById('nameBien').innerText = data64Que[codeBien];
-        document.getElementById('codeBien').innerText = "Hào " + hàoĐộng + " biến";
-        drawHex('visualBien', codeBien);
-
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        const link = document.createElement('a');
+        link.download = `QueChuVi_${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
     }
 </script>
 </body>
