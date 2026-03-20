@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Liên Hoa - Quẻ Thời Gian (New Gen)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #993300; --bg: #f4f5f7; }
+        body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px; }
+        
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 18px; }
+        
+        .clock-display { text-align: center; padding: 30px 20px; background: #fffaf0; border-bottom: 1px solid #eee; }
+        #currentTime { font-size: 48px; font-weight: bold; color: #2d3436; letter-spacing: 2px; }
+        .date-text { color: #636e72; font-size: 14px; margin-top: 5px; }
+
+        .action-section { padding: 20px; text-align: center; }
+        .btn-time { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(153,51,0,0.3); }
+        .btn-time:active { transform: scale(0.98); }
+
+        .result-panel { padding: 15px; display: none; }
+        .que-box { display: flex; justify-content: space-around; margin-top: 20px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        .que-item { text-align: center; flex: 1; }
+        .que-name { font-weight: bold; color: var(--primary); font-size: 16px; margin-bottom: 10px; display: block; }
+        .que-info { font-size: 13px; color: #555; line-height: 1.6; }
+        
+        .formula-tag { display: inline-block; background: #eee; padding: 4px 12px; border-radius: 20px; font-size: 11px; margin-top: 10px; color: #777; }
+
+        /* Question input for Export */
+        .q-input { margin: 20px; padding: 10px; border-top: 1px dashed #ccc; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; resize: none; box-sizing: border-box; }
+        .btn-dl { margin-top: 10px; background: #007aff; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; }
+
+        canvas#hiddenCanvas { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">LIÊN HOA - LẬP QUẺ THỜI GIAN</div>
+
+    <div class="clock-display">
+        <div id="currentTime">00:00</div>
+        <div id="currentDate" class="date-text">--/--/----</div>
+    </div>
+
+    <div class="action-section">
+        <button class="btn-time" id="btnLapQue">LẬP QUẺ THỜI GIAN</button>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+        <div class="que-box">
+            <div class="que-item">
+                <span class="que-name" id="nameChu">Quẻ Chủ</span>
+                <div class="que-info" id="infoChu">--</div>
+                <div class="formula-tag" id="formChu">Số: X/Y</div>
+            </div>
+            <div style="display: flex; align-items: center; color: #ccc;">➔</div>
+            <div class="que-item">
+                <span class="que-name" id="nameBien">Quẻ Biến</span>
+                <div class="que-info" id="infoBien">--</div>
+                <div class="formula-tag" id="formBien">Số: X'/Y'</div>
+            </div>
+        </div>
+
+        <div class="q-input">
+            <textarea id="qTxt" rows="2" placeholder="Nhập câu hỏi để tải ảnh..."></textarea>
+            <button class="btn-dl" id="btnDownload">💾 TẢI ẢNH QUẺ</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="hiddenCanvas"></canvas>
+
+<script>
+    const quai = {
+        1: "Kiền (Thiên)", 2: "Đoài (Trạch)", 3: "Ly (Hỏa)", 4: "Chấn (Lôi)",
+        5: "Tốn (Phong)", 6: "Khảm (Thủy)", 7: "Cấn (Sơn)", 8: "Khôn (Địa)"
+    };
+
+    const ten64Que = {
+        "11": "Thuần Kiền", "12": "Thiên Trạch Lý", "13": "Thiên Hỏa Đồng Nhân", "14": "Thiên Lôi Vô Vọng",
+        "88": "Thuần Khôn", "82": "Địa Trạch Lâm", "61": "Thủy Thiên Nhu", "63": "Thủy Hỏa Ký Tế"
+        // Thêm các quẻ khác vào đây theo logic của bạn
+    };
+
+    function getTenQue(t, h) {
+        let key = `${t}${h}`;
+        return ten64Que[key] || "Quẻ số " + key;
+    }
+
+    function tinhQuai(num) {
+        let n = parseInt(num);
+        if (n === 0) return 8;
+        let r = n % 8;
+        return r === 0 ? 8 : r;
+    }
+
+    // Cập nhật đồng hồ thời gian thực
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const d = now.toLocaleDateString('vi-VN');
+        document.getElementById('currentTime').innerText = `${h}:${m}`;
+        document.getElementById('currentDate').innerText = d;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    let currentResult = {};
+
+    document.getElementById('btnLapQue').addEventListener('click', function() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0'); // xx
+        const mm = String(now.getMinutes()).padStart(2, '0'); // yy
+
+        // Logic tách số: X X' : Y Y'
+        const X = hh[0];
+        const X_prime = hh[1];
+        const Y = mm[0];
+        const Y_prime = mm[1];
+
+        // Tính quẻ
+        const qChuT = tinhQuai(X);
+        const qChuH = tinhQuai(Y);
+        const qBienT = tinhQuai(X_prime);
+        const qBienH = tinhQuai(Y_prime);
+
+        currentResult = {
+            time: `${hh}:${mm}`,
+            chu: { t: qChuT, h: qChuH, name: getTenQue(qChuT, qChuH) },
+            bien: { t: qBienT, h: qBienH, name: getTenQue(qBienT, qBienH) }
+        };
+
+        // Hiển thị UI
+        document.getElementById('resultPanel').style.display = 'block';
+        
+        document.getElementById('nameChu').innerText = currentResult.chu.name;
+        document.getElementById('infoChu').innerHTML = `${quai[qChuT]}<br>trên<br>${quai[qChuH]}`;
+        document.getElementById('formChu').innerText = `Số: ${X}/${Y}`;
+
+        document.getElementById('nameBien').innerText = currentResult.bien.name;
+        document.getElementById('infoBien').innerHTML = `${quai[qBienT]}<br>trên<br>${quai[qBienH]}`;
+        document.getElementById('formBien').innerText = `Số: ${X_prime}/${Y_prime}`;
+
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+
+    // Xuất ảnh Canvas
+    document.getElementById('btnDownload').addEventListener('click', function() {
+        const canvas = document.getElementById('hiddenCanvas');
+        const ctx = canvas.getContext('2d');
+        const qText = document.getElementById('qTxt').value || "Không có câu hỏi";
+
+        canvas.width = 600;
+        canvas.height = 500;
+
+        // Nền
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Header
+        ctx.fillStyle = "#993300";
+        ctx.fillRect(0, 0, 600, 80);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 24px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("LIÊN HOA - QUẺ THỜI GIAN", 300, 50);
+
+        // Nội dung quẻ
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText(`Thời gian: ${currentResult.time}`, 300, 130);
+
+        ctx.fillStyle = "#993300";
+        ctx.font = "bold 22px Arial";
+        ctx.fillText(currentResult.chu.name, 150, 200);
+        ctx.fillText(currentResult.bien.name, 450, 200);
+
+        ctx.fillStyle = "#666";
+        ctx.font = "18px Arial";
+        ctx.fillText(`${quai[currentResult.chu.t]} / ${quai[currentResult.chu.h]}`, 150, 240);
+        ctx.fillText(`${quai[currentResult.bien.t]} / ${quai[currentResult.bien.h]}`, 450, 240);
+
+        // Câu hỏi
+        ctx.fillStyle = "#f4f5f7";
+        ctx.fillRect(20, 320, 560, 100);
+        ctx.fillStyle = "#007aff";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("HỎI: " + qText, 300, 375);
+
+        // Footer
+        ctx.fillStyle = "#ccc";
+        ctx.font = "14px Arial";
+        ctx.fillText("Ứng dụng Liên Hoa - " + new Date().toLocaleDateString(), 300, 470);
+
+        const link = document.createElement('a');
+        link.download = `QueThoiGian_${currentResult.time}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+</script>
+
+</body>
+</html>
