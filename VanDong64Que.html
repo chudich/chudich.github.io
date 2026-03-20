@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>64 Xu Hướng Vận Động - Khoa Học Dịch Lý</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-box:focus { border-color: var(--accent); }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border-left: 5px solid var(--primary);
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .card .trend-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .card .desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>BẢN ĐỒ 64 XU HƯỚNG VẬN ĐỘNG</h1>
+        <p>Góc nhìn khoa học về quy luật và thế năng trong Dịch Lý</p>
+    </header>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Tìm tên quẻ hoặc xu hướng (ví dụ: Thăng, Tiết, Khó khăn...)...">
+
+    <div class="grid" id="mainGrid">
+        </div>
+
+    <div class="footer">
+        Dữ liệu cộng đồng - Không giữ bản quyền - Phi thương mại
+    </div>
+</div>
+
+<script>
+    const data = [
+        {id: 1, name: "THUẦN CÀN", trend: "Sức mạnh sáng tạo", desc: "Khởi đầu mạnh mẽ, nguyên lý dương cực đại."},
+        {id: 2, name: "THUẦN KHÔN", trend: "Sự tiếp nhận", desc: "Thuận tòng, nuôi dưỡng, đức nhu mỳ hòa hợp."},
+        {id: 3, name: "THỦY LÔI TRUÂN", trend: "Gian nan buổi đầu", desc: "Tích lũy nội lực trong tình thế khó khăn."},
+        {id: 4, name: "SƠN THỦY MÔNG", trend: "Sự non nớt", desc: "Cần được khai sáng, giáo dục và học hỏi."},
+        {id: 5, name: "THỦY THIÊN NHU", trend: "Chờ đợi thời cơ", desc: "Kiên nhẫn tích tụ, không nên nôn nóng."},
+        {id: 6, name: "THIÊN THỦY TỤNG", trend: "Sự tranh chấp", desc: "Bất đồng quan điểm, kiện cáo, đối kháng."},
+        {id: 7, name: "ĐỊA THỦY SƯ", trend: "Tổ chức lực lượng", desc: "Kỷ luật, sức mạnh tập thể, chính nghĩa."},
+        {id: 8, name: "THỦY ĐỊA TỶ", trend: "Sự đoàn kết", desc: "Chọn lọc đối tác gắn kết, tương trợ lẫn nhau."},
+        {id: 9, name: "THIÊN PHONG TIỂU SÚC", trend: "Tích lũy nhỏ", desc: "Tạm thời bị ngăn trở, chờ đợi mây tan."},
+        {id: 10, name: "THIÊN TRẠCH LÝ", trend: "Sự hành xử", desc: "Dấn thân vào nơi nguy hiểm một cách thận trọng."},
+        {id: 11, name: "ĐỊA THIÊN THÁI", trend: "Sự giao hòa", desc: "Thông suốt, thái bình, thời kỳ hưng thịnh."},
+        {id: 12, name: "THIÊN ĐỊA BĨ", trend: "Sự bế tắc", desc: "Không giao thông, đình trệ, thời kỳ suy thoái."},
+        {id: 13, name: "THIÊN HỎA ĐỒNG NHÂN", trend: "Hợp tác cộng đồng", desc: "Tìm điểm tương đồng để cùng tiến bước."},
+        {id: 14, name: "HỎA THIÊN ĐẠI HỮU", trend: "Sở hữu lớn", desc: "Sự giàu có, hiển hiện và ánh sáng rực rỡ."},
+        {id: 15, name: "ĐỊA SƠN KHIÊM", trend: "Thái độ khiêm tốn", desc: "Giữ gìn sự cân bằng, lùi một bước tiến ba bước."},
+        {id: 16, name: "LÔI ĐỊA DỰ", trend: "Sự dự phòng", desc: "Nhiệt huyết, chuẩn bị kỹ lưỡng cho tương lai."},
+        {id: 17, name: "TRẠCH LÔI TÙY", trend: "Thích nghi hoàn cảnh", desc: "Đi theo xu thế, không chống lại quy luật."},
+        {id: 18, name: "SƠN PHONG CỔ", trend: "Sửa chữa sai lầm", desc: "Cải tổ cái cũ mục nát, đổi mới tư duy."},
+        {id: 19, name: "ĐỊA TRẠCH LÂM", trend: "Sự tiếp cận", desc: "Giám sát, quản lý, vận may đang lớn dần."},
+        {id: 20, name: "PHONG ĐỊA QUAN", trend: "Quan sát, xem xét", desc: "Soi xét kỹ lưỡng trước khi hành động."},
+        {id: 21, name: "HỎA LÔI PHỆ HẠP", trend: "Vượt qua rào cản", desc: "Thực thi quy luật, cắn phá những vật cản."},
+        {id: 22, name: "SƠN HỎA BÍ", trend: "Trình bày hình thức", desc: "Tô điểm bên ngoài, nghệ thuật trang trí."},
+        {id: 23, name: "SƠN ĐỊA BÁC", trend: "Sự bào mòn", desc: "Tan rã, rơi rụng, yếu tố tiêu cực xâm lấn."},
+        {id: 24, name: "ĐỊA LÔI PHỤC", trend: "Sự trở lại", desc: "Phục hồi điểm bắt đầu, chu kỳ mới nhen nhóm."},
+        {id: 25, name: "THIÊN LÔI VÔ VỌNG", trend: "Hành động chân thực", desc: "Không vọng tưởng, làm đúng theo quy luật tự nhiên."},
+        {id: 26, name: "SƠN THIÊN ĐẠI SÚC", trend: "Tích lũy lớn", desc: "Ngăn chặn hành động nhỏ để nuôi dưỡng chí lớn."},
+        {id: 27, name: "SƠN LÔI DI", trend: "Nuôi dưỡng", desc: "Tự lực cánh sinh, chăm sóc bản thân và người khác."},
+        {id: 28, name: "TRẠCH PHONG ĐẠI QUÁ", trend: "Quá tải, áp lực cực độ", desc: "Điểm gãy của hệ thống, cần sự đột phá."},
+        {id: 29, name: "THUẦN KHẢM", trend: "Nguy hiểm trùng điệp", desc: "Rèn luyện bản lĩnh qua thử thách chông gai."},
+        {id: 30, name: "THUẦN LY", trend: "Sự bám dựa, tỏa sáng", desc: "Dựa vào chính đạo để rực rỡ như lửa."},
+        {id: 31, name: "TRẠCH SƠN HÀM", trend: "Sự cảm ứng", desc: "Thu hút tự nhiên, tình cảm chân thành."},
+        {id: 32, name: "LÔI PHONG HẰNG", trend: "Sự ổn định", desc: "Kiên trì bền vững trên con đường đã chọn."},
+        {id: 33, name: "THIÊN SƠN ĐỘN", trend: "Sự rút lui", desc: "Ẩn tránh để bảo toàn lực lượng, tránh đối đầu."},
+        {id: 34, name: "LÔI THIÊN ĐẠI TRÁNG", trend: "Sức mạnh bộc phát", desc: "Cần kiểm soát lực, tránh sự thô bạo."},
+        {id: 35, name: "HỎA ĐỊA TẤN", trend: "Tiến lên rực rỡ", desc: "Thăng tiến nhanh chóng, được trọng dụng."},
+        {id: 36, name: "ĐỊA HỎA MINH DI", trend: "Ánh sáng bị che lấp", desc: "Ẩn mình trong tối để tránh tai họa."},
+        {id: 37, name: "PHONG HỎA GIA NHÂN", trend: "Quản lý nội bộ", desc: "Nền tảng gia đình, nề nếp tổ chức."},
+        {id: 38, name: "HỎA TRẠCH KHUÊ", trend: "Sự mâu thuẫn", desc: "Khác biệt, chia rẽ, đồng sàng dị mộng."},
+        {id: 39, name: "THỦY SƠN KIỂN", trend: "Khó khăn trước mắt", desc: "Nên dừng lại suy tính, tìm đường vòng."},
+        {id: 40, name: "LÔI THỦY GIẢI", trend: "Sự giải tỏa", desc: "Tháo gỡ nút thắt, trút bỏ gánh nặng."},
+        {id: 41, name: "SƠN TRẠCH TỔN", trend: "Biết hy sinh", desc: "Bớt cái nhỏ được cái lớn, bớt dưới bồi trên."},
+        {id: 42, name: "PHONG LÔI ÍCH", trend: "Sự tăng trưởng", desc: "Đem lại lợi ích chung cho cộng đồng."},
+        {id: 43, name: "TRẠCH THIÊN QUẢI", trend: "Sự quyết đoán", desc: "Dứt khoát loại bỏ yếu tố xấu, thâm nhập."},
+        {id: 44, name: "THIÊN PHONG CẤU", trend: "Gặp gỡ bất ngờ", desc: "Sự cám dỗ, liên kết cần thận trọng."},
+        {id: 45, name: "TRẠCH ĐỊA TỤY", trend: "Tụ họp đông đảo", desc: "Đoàn kết lực lượng, nhóm họp thuận tình."},
+        {id: 46, name: "ĐỊA PHONG THĂNG", trend: "Tiến lên dần dần", desc: "Nảy mầm vững chắc, tích lũy tài sản."},
+        {id: 47, name: "TRẠCH THỦY KHỐN", trend: "Vây hãm khốn cùng", desc: "Cảnh khánh tận, cần nhẫn nại đợi thời."},
+        {id: 48, name: "THỦY PHONG TỈNH", trend: "Giá trị tiềm năng", desc: "Giếng nước bền vững, nuôi dưỡng không ngừng."},
+        {id: 49, name: "TRẠCH HỎA CÁCH", trend: "Cải cách, lột xác", desc: "Thay đổi toàn diện, cuộc cách mạng mới."},
+        {id: 50, name: "HỎA PHONG ĐỈNH", trend: "Rèn luyện, tu dưỡng", desc: "Thiết lập vững chắc, nung nấu thành tài."},
+        {id: 51, name: "THUẦN CHẤN", trend: "Chấn động, dấy khởi", desc: "Sấm sét vang rền, bản năng sinh tồn trỗi dậy."},
+        {id: 52, name: "THUẦN CẤN", trend: "Sự ngưng nghỉ", desc: "Bất động như núi, giữ vững vị trí."},
+        {id: 53, name: "PHONG SƠN TIỆM", trend: "Tiến bộ tuần tự", desc: "Phát triển theo quy trình, thăng tiến bền."},
+        {id: 54, name: "LÔI TRẠCH QUI MUỘI", trend: "Sai lệch vị thế", desc: "Hành động cảm tính, kết quả không bền."},
+        {id: 55, name: "LÔI HỎA PHONG", trend: "Thịnh vượng cực đỉnh", desc: "Đỉnh cao phong độ, cần lo lúc suy tàn."},
+        {id: 56, name: "HỎA SƠN LỮ", trend: "Lưu lạc, tạm bợ", desc: "Trạng thái người lữ khách, thiếu ổn định."},
+        {id: 57, name: "THUẦN TỐN", trend: "Dịu dàng, thâm nhập", desc: "Thuận theo quy luật tự nhiên, khéo léo."},
+        {id: 58, name: "THUẦN ĐOÀI", trend: "Vui vẻ, biểu đạt", desc: "Hài lòng, niềm vui lan tỏa ra bên ngoài."},
+        {id: 59, name: "PHONG THỦY HOÁN", trend: "Sự ly tán", desc: "Tan rã để chuyển hóa, gió thổi tan băng."},
+        {id: 60, name: "THỦY TRẠCH TIẾT", trend: "Tiết chế, chừng mực", desc: "Giới hạn biên giới, quy tắc kiềm chế."},
+        {id: 61, name: "PHONG TRẠCH TRUNG PHU", trend: "Đức tin, uy tín", desc: "Trung thực tuyệt đối từ trong lòng."},
+        {id: 62, name: "LÔI SƠN TIỂU QUÁ", trend: "Vượt mức nhẹ", desc: "Ưu thế của kẻ yếu, tin tức nhỏ nhặt."},
+        {id: 63, name: "THỦY HỎA KÝ TẾ", trend: "Đã hoàn thành", desc: "Trật tự vãn hồi, thành công viên mãn."},
+        {id: 64, name: "HỎA THỦY VỊ TẾ", trend: "Chưa kết thúc", desc: "Chu kỳ mới đang nhen nhóm, cần nỗ lực thêm."}
+    ];
+
+    const grid = document.getElementById('mainGrid');
+    const searchInput = document.getElementById('searchInput');
+
+    function displayData(filter = "") {
+        grid.innerHTML = "";
+        const filtered = data.filter(item => 
+            item.name.toLowerCase().includes(filter.toLowerCase()) || 
+            item.trend.toLowerCase().includes(filter.toLowerCase()) ||
+            item.desc.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>${item.id}. ${item.name}</h3>
+                <span class="trend-text">Xu hướng: ${item.trend}</span>
+                <p class="desc">${item.desc}</p>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    searchInput.addEventListener('input', (e) => displayData(e.target.value));
+    displayData();
+</script>
+
+</body>
+</html>
