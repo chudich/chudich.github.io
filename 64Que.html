@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>64 QUẺ DỊCH - BẢN GỐC CHI TIẾT</title>
+    <style>
+        body { font-family: "Segoe UI", Tahoma, sans-serif; background: #fdfaf0; padding: 20px; line-height: 1.8; color: #222; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 30px; border: 2px solid #d1c4a9; }
+        .search-bar { position: sticky; top: 0; background: #fff; padding: 15px; border-bottom: 3px solid #8e2424; margin-bottom: 20px; display: flex; gap: 10px; z-index: 100; }
+        input { flex: 1; padding: 12px; border: 1px solid #ccc; font-size: 16px; }
+        button { padding: 10px 25px; background: #8e2424; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .que-block { margin-bottom: 50px; border-bottom: 1px double #ccc; padding-bottom: 30px; white-space: pre-wrap; }
+        h2 { color: #8e2424; margin-top: 0; border-left: 5px solid #8e2424; padding-left: 15px; }
+        .red { color: red; font-weight: bold; }
+        .blue { color: blue; font-weight: bold; }
+        .green { color: green; font-weight: bold; }
+        .brown { color: brown; font-weight: bold; }
+        b { color: #000; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<div class="search-bar">
+    <input type="text" id="findInput" placeholder="Nhập số quẻ hoặc tên quẻ để tìm nhanh...">
+    <button onclick="searchQue()">TÌM QUẺ</button>
+    <button onclick="showAll()" style="background:#555">XEM TẤT CẢ</button>
+</div>
+
+<div class="container" id="mainBody"></div>
+
+<script>
+const fullData = [
+    {
+        title: "1. <span class='red'>Thuần KIỀN</span> : Quẻ Số 1",
+        content: `<b>Đấng Sáng Tạo : Sáng tạo, thành công, sức mạnh, quyền lực</b>
+
+Kiện dã. Chính yếu. Cứng mạnh, khô, lớn, khỏe mạnh, đức không nghỉ. Tượng vạn vật có khởi đầu, lớn lên, toại chí, hóa thành. Càn tượng trưng cho trời và năng lực sáng tạo. Tất cả các vạch đều là vạch liền, tức vạch dương, ý nghĩa là tất cả các đơn quái liên kết để hợp thành trùng quái này, cả quẻ chủ lẫn quẻ hỗ, đều là Càn. Đó là tột đỉnh của dương lực. Càn là ánh sáng, sự mạnh mẽ, tích cực, đồng thời còn mang hàm ý sự hành động và sự bền gan, trì chí. Nói rộng ra, Càn đại diện cho vũ trụ đang biến dịch không ngừng. Do đó, Càn cũng hàm ý sự mô phỏng con đường của trời, con đường cần cù trong suốt cả ngày, và con đường của sự nỗ lực không ngừng lẫn sự chăm chỉ, siêng năng. Kinh Dịch tìm cách áp dụng các nguyên lý của trời đất vào công việc và hành xử đạo đức của con người. Càn thay cho con đường của trời, còn quẻ kế tiếp, Khôn, giải thích con đường của đất. Cả hai, trời và đất, đứng đầu trong Kinh Dịch. Càn tượng trưng cho sự sung thịnh của vạn vật, khỏe mạnh, tráng kiện và sum suê. Nhưng đang giữa sự cực dương thì âm tất sẽ nảy sinh. Do đó, lời khuyên là nên thật cẩn thận. Biết lưu ý sẽ tránh được điều bất ngờ và sự cố. 
+
+<span class='blue'>Thiên Vi Càn : là Khán Long Hữu Hối</span> 
+
+Con rồng bay quá cao chỉ còn một nước là rơi xuống. Làm chính trị không nên thành công quá mức.
+Cứng mạnh, khô, lớn, khỏe mạnh, đức không nghỉ
+
+Kiện dã là mạnh mẽ.
+Ta bị sức mạnh. Ta được lớn mạnh.
+Ta hùng mạnh cho kẻ khác. Ta cường bạo với kẻ khác.`
+    },
+    {
+        title: "2. <span class='brown'>KHÔN</span> : Quẻ Số 2",
+        content: `<b>Người Thọ Cảm : Thụ động, mềm mỏng, ngoại giao</b>
+
+Thuận tòng, mềm dẻo, theo đường mà được lợi, hòa theo lẽ, chịu lấy. 
+Quẻ Khôn tượng trưng cho đất và đại diện cho ý tưởng sản sinh, dịu hiền, phục tùng và vâng lời. Quẻ tượng trưng cho bóng tối và thuộc về người mẹ ,thuận dã là mềm mỏng.
+
+<span class='green'>Quẻ Nhu Thuận Tần Mã</span>
+
+Ngược với con rồng là con tần mã (ngựa cái ) tượng trưng cho người chính trực đang ở vào cái thế cực khó, chỉ có thể hết sức giữ gìn nhượng bộ mới khỏi nguy  : Thuận tòng, mềm dẻo, theo đường mà được lợi, hòa theo lẽ, chịu lấy.
+
+Ta bị nhu nhược. Ta được sự nhu thuận.
+Ta mềm mỏng với kẻ khác. Ta nhu nhược với kẻ khác.`
+    },
+    {
+        title: "3. <span class='red'>THỦY LÔI TRUÂN</span> : Quẻ Số 3",
+        content: `<b>Sự Khó Khăn Ban Đầu : Gian lao, khó khăn ban đầu, nguy hiểm</b>
+
+Nạn dã. Gian lao. Yếu đuối, chưa đủ sức, ngần ngại, do dự, vất vả, phải nhờ sự giúp đỡ. Tiền hung hậu kiết chi tượng: trước dữ sau lành.
+Trên là nước, dưới là sấm nổi dậy, vạn vật sinh nở (đầu mùa xuân sấm dậy). Dương có đầy đủ 2 quẻ trên dưới, nhưng ở dưới thì mới sinh, ở trên thì bị kẹt, ở giữa nên còn non dại và gian khổ.
+Truân tượng trưng cho sự bắt đầu của vạn sự vạn vật. Cũng giống như những mầm chồi non yếu ớt và không thể chống chọi được với mưa rào và gió mạnh. Tình huống mới bắt đầu đầy gian khổ, khó khăn và trở ngại.
+
+<span class='red'>Thủy Lôi Truân : là Tuyết sinh Mộc Mầm</span>
+
+Trời sắp giông bão thì không khí uất kết. Chính trị sắp có biến chuyển lớn tật tình trạng ngột ngạt. Ở vào thế này tuy đầy hy vọng nhưng cũng 
+tràn ngập nguy nan. Sa chân nhỡ bước một có thể gây nên thất bại lớn lao. (Kinh Dịch Gọi Quẻ Này Là Một Trong Bốn Quẻ Khó Khăn Nhất).
+Yếu đuối, chưa đủ sức, ngần ngại, do dự, vất vả, phải nhờ sự giúp đỡ.
+
+Nạn dã là khó khăn, trở ngại. 
+Ta bị gian nan. Ta được cứu khổ.
+Ta truân chuyên vì kẻ khác. Ta gây gian truân kẻ khác.`
+    },
+    {
+        title: "4. <span class='red'>SƠN THỦY MÔNG</span> : Quẻ Số 4",
+        content: `<b>Sự Điên Cuồng Của Tuổi Trẻ : Điên cuồng, tuổi trẻ, mù quáng, liều lĩnh</b>
+
+Muội dã. Bất minh. Tối tăm, mờ ám, không minh bạch, che lấp, bao trùm, phủ chụp, ngu dại, ngờ nghệch. Thiên võng tứ trương chi tượng: tượng lưới trời giăng bốn mặt. Mông tượng trưng cho tuổi trẻ thiếu kinh nghiệm với những cách nhìn chưa thấu suốt, và trí khôn hoặc hiểu biết hãy còn non kém. Tuy nhiên, những thanh niên này thu thập được sự nhạy bén, trí khôn và kiến thức thông qua sự chỉ bảo và dẫn dắt. Khi khảo sát hình tượng của quẻ này, chúng ta sẽ thấy rằng phần nửa trên, đơn quái Cấn tượng trưng cho những ngọn núi, còn nửa dưới, đơn quái Khảm, tiêu biểu cho nước. Nước trở thành sương hay giá khi bốc hơi, bao phủ hoặc che lấp mất núi, làm cho người ta không thể phân biệt được diện mạo hay hình dáng đích thực của núi. Do đó, Mông hàm ý sự dốt nát, ngu muội, vô tâm, mơ hồ, và thậm chí vô ý thức. Vạn vật đều đang ở trong một bức màn sương mù dày đặc, đầy dẫy sự dò dẫm và kém phát triển. Bạn phải hết sức nỗ lực và biết lắng nghe cũng như tuân theo sự chỉ dạy, dẫn dắt của người khôn ngoan, thông thái và đạo đức. Nếu được như vậy, tất cả sẽ dần dần chuyển biến tốt đẹp hơn.
+
+<span class='red'>Sơn Thủy Mông : là Quẻ Cậu Bé Ngồi Trong Căn Nhà Tối</span>
+
+Lúc khởi thủy không có gì to lớn ngay. Phải học tập, phải khinh thường đầu tranh, đi từ nhỏ đến lớn, đi từ không đến có. Kiên nhẫn và bền chỉ là hai điều kiện cơ bản. 
+
+Tối tăm, mờ ám, không minh bạch, che lấp, bao trùm, phủ chụp, ngu dại, ngờ nghệch
+
+Muội dã là mờ mịt, tối tăm.
+Ta bị ám muội. Ta được sự ám muội.
+Ta che đậy mờ ám cho kẻ khác. Ta bất minh với kẻ khác.`
+    },
+    {
+        title: "5. <span class='red'>THỦY THIÊN NHU</span> : Quẻ số 5",
+        content: `<b>Sự Chờ Đợi : Chờ đợi, nhẫn nại, sự kiên nhẫn, dẻo dai</b>
+
+Thuận dã. Tương hội. Chờ đợi vì hiểm đằng trước, thuận theo, quây quần, tụ hội, vui hội, cứu xét, chầu về. Quân tử hoan hội chi tượng: quân tử vui vẻ hội họp, ăn uống chờ thời.
+Nhu có nghĩa là chờ đợi. Hạ quái (quẻ dưới) là Càn, tượng trưng cho sự khang kiện, tích cực và năng nổ. Thượng quái (quẻ trên) là Khảm, tiêu biểu cho sự nguy hiểm, do đó gây cản trở cho sự hoạt động, hoạt bát, sôi nổi và hành sự của Càn. Càn là Trời, bầu trời to lớn thế, chứa cả vạn vật mà lại chịu nằm ở dưới Thủy, ấy chính là sự Nhu ( mềm lại, khiêm lại).
+
+Quẻ Nhu hàm ý người ta cần tránh sự nguy hiểm gây ra bởi tinh thần cấp tiến cực đoan và thái độ quá chăm chăm tiến về phía trước, bằng cách chờ đợi nhẫn nại bằng lòng tự trọng và kỷ luật tự giác cho đến khi thời cơ may mắn hơn, tốt đẹp hơn xảy đến trước khi tiến bước về phía trước. Ý nghĩa chung là hãy chờ đợi hoặc chờ đến thời của mình.
+Đợi đò , có thực lực rồi nhưng phải chờ đúng lúc mới phát huy thực lực. Muốn qua sông thì hoặc phải tìm chỗ nông, hoặc phải đến nơi nước đóng thành băng, hoặc phải đợi sóng bớt dữ, hoặc phải chờ đò ngang.
+Chờ đợi vì hiểm đằng trước, thuận theo, quây quần, tụ hội, vui hội, cứu xét, chầu về
+
+Thuận dã : là chờ đợi nhu cầu.
+Ta bị nghiệm xét. Ta được cứu xét.
+Ta nghiên cứu cho kẻ khác. Ta nghiệm xét kẻ khác.`
+    },
+    {
+        title: "6. <span class='red'>THIÊN THỦY TỤNG</span> : Quẻ Số 6",
+        content: `<b>Sự Tranh Chấp : Tranh chấp, nghi ngờ, bất đồng, kiện cáo</b>
+
+Luận dã. Bất hòa. Bàn cãi, kiện tụng, bàn tính, cãi vã, tranh luận, bàn luận. Đại tiểu bất hòa chi tượng: lớn nhỏ không hòa. Tụng có nghĩa là sự kiện tụng, tranh chấp, mang việc gì đó ra tòa, và cãi cọ. Đơn quái trên là Càn, tượng trưng cho sự cường tráng của dương, và hàm ý sự tiến bộ cũng như vận động đi lên. Đơn quái dưới là Khảm, tiêu biểu cho nước. Nước chảy từ cao xuống thấp. Do đó, hai đơn quái này đôi nghịch lẫn nhau. Thêm nữa, Càn cai quản hoặc chỉ dẫn cho người dưới thông qua quyền hạn. Trong khi Khảm, chống đối lại bên trên thông qua những phương tiện ranh ma, vòng vèo. Do đó, quẻ này có ý nói rằng mọi việc thật là phức tạp, đầy những tranh chấp, trở ngại và xung đột.
+
+<span class='red'>Thiên Thủy Tụng : là Quẻ Gặp Kẻ Ưa Tranh Kiện</span>
+
+Va chạm vô ích là điều tối kị của chính trị. Phải giảm bớt chủ trương cứng rắn để đạt thắng lợi. Thái độ chính trị cần chuyển biến luôn cho hợp với tình thể thực tiễn.
+
+Bàn cãi, kiện tụng, bàn tính, cãi vã, tranh luận, bàn luận.
+
+Luận dã là luận bàn, kiện cáo.
+Ta bị tranh tụng. Ta được sự biện minh.
+Ta biện luận cho kẻ khác. Ta gây gỗ kiện tụng kẻ khác.`
+    },
+    {
+        title: "7. <span class='red'>ĐỊA THỦY SƯ</span> : Quẻ Số 7",
+        content: `<b>Quân Đội : Quân đội, chỉ huy, bạo loạn, đau khổ</b>
+
+Chúng dã. Chúng trợ. Đông chúng, vừa làm thầy, vừa làm bạn, học hỏi lẫn nhau, nắm tay nhau qua truông, nâng đỡ. Sĩ chúng ủng tòng chi tượng: tượng quần chúng ủng hộ nhau.
+Sư tượng trưng cho đạo quân binh và đám đông, và được gắn liền với ý tưởng chiến tranh hay đấu tranh. Vạch thứ hai tính từ dưới lên là vạch liền, tức hào dương, tiêu biểu cho vị đại tướng đang chỉ huy hay dẫn dắt năm hào âm. Thượng quái là Khôn, đất; hạ quái là Khảm, tượng trưng cho nước. Khi nước nằm trên đất, nó gây ẩm ướt và làm phong phú cho vạn vật, nhưng ở quẻ này vị trí thích hợp đó đã bị đảo lộn. Đất nằm trên nước. Cả hai không thể song hành hòa hợp với nhau được.
+Trong đoán quẻ, quẻ này có nghĩa là sự đấu tranh, tranh cãi, bất hòa, khó khăn, rắc rối và hỗn loạn.
+
+<span class='red'>Địa Thủy Sư : là Quẻ Nỗi Tân Khổ Của Kẻ Lãnh Đạo</span>
+
+Cái thể không thể lùi được nữa, phải phát động chiến tranh, phải quyết liệt chỉ có một con đường duy nhất là chiến thắng. Đó là lúc lãnh đạo tham mưu sáng suốt, cần quân đội thiện chiến, cần những chỉ huy tinh thông. Thiếu những điều kiện này làm cơ sở khai vận tất phải thất bại.
+Đông chúng, vừa làm thầy, vừa làm bạn, học hỏi lẫn nhau, nắm tay nhau qua truông, nâng đỡ
+
+Chúng dã, ủng hộ nhau, nhiều người.
+Ta bị áp chúng. Ta được chúng ủng hộ.
+Ta ủng hộ kẻ khác. Ta được chúng ủng hộ.`
+    },
+    {
+        title: "8. <span class='red'>THỦY ĐỊA TỶ</span> : Quẻ Số 8",
+        content: `<b>Sự Tương Trợ : Tương trợ, hòa thuận, tập hợp, thống nhất</b>
+
+Tư dã. Chọn lọc. Thân liền, gạn lọc, mật thiết, tư hữu riêng, trưởng đoàn, trưởng toán, chọn lựa. Khứ xàm nhiệm hiền chi tượng: bỏ nịnh dụng trung. Tỷ tượng trưng cho sự gần gũi, thân thiết. Hào thứ năm đếm từ dưới lên, hào chủ, là hào dương. 
+Hào dương này khẳng định mình trước tất cả các hào âm (vạch đứt) khác. Thượng quái Khảm tượng trưng cho nước và hạ quái Khôn tượng trưng cho đất. Khi nước chảy tràn khắp mặt đất, nó thấm vào trong đất và trở thành một với bùn đất, đồng thời cồn trộn lẫn và liên kết với nhau. Đó là dấu hiệu cát tường của việc trời yêu thương và nuôi dưỡng con người, khi trên và dưới hòa hợp, thân thiết và giúp đỡ cho nhau.
+Trong đoán quẻ, điều này có nghĩa là việc tiếp xúc với người khác sẽ diễn ra tốt đẹp và mọi việc sẽ được thực hiện suôn sẻ.
+
+<span class='red'>Tỷ : là Quẻ Nước Làm Tràn Ngập Ruộng Đồng</span>
+
+Khi nước tràn ngập vào ruộng thì lúa thi nhau mọc, hoàn cảnh của xã hội sau thời gian xơ xác vì chiến tranh, mọi người vui vẻ thuận hòa để mừng rỡ vận hội mới. Nhưng coi chừng bên trong vẫn có những mầm mống đấu tranh gay gắt. Người chính trị đừng quên cuộc giải phóng nước Pháp chẳng được mấy ngày hoan lạc, liền đấy là những cuộc tranh giành.
+Thân liền, gạn lọc, mật thiết, tư hữu riêng, trưởng đoàn, trưởng toán, chọn lựa, về một mối
+
+Thân dã, tư dã là hân hoan, thân liền.
+Ta bị tư thân. Ta được tư thân.
+Ta cầu thân với kẻ khác. Ta cởi bỏ mọi người.`
+    },
+    {
+        title: "9. <span class='red'>PHONG THIÊN TIỂU SÚC</span> : Quẻ Số 9",
+        content: `<b>Sức Ngăn Trở Còn Nhỏ : Ngăn trở nhỏ, ngưng trệ, kìm hãm</b>
+Tắc dã. Dị đồng. Lúc bế tắc, không đồng ý nhau, cô quả, súc oán, chứa mọi oán giận, có ý trái lại, không hòa hợp, nhỏ nhen. Cầm sắt bất điệu chi tượng: tiếng đàn không hòa điệu.
+Tượng của quẻ này là thời tiết, lúc những đám mây dày đặc đã xuất hiện nhưng chưa có mưa. Quẻ thượng là Tốn, tượng trưng cho gió và mây. Quẻ hạ là Càn, tức bầu trời. Khi gió và mây ngự trị trên bầu trời, thời tiết thật oi ả, u ám, như thể trời sắp mưa nhưng chưa thật sự mưa. Nhìn một bầu trời như vậy người ta cảm thấy lo lắng, không an tâm.
+
+<span class='red'>Phong Thiên Tiểu Súc : là Quẻ Mây U Ám Mà Không Mưa</span>
+
+Chưa có gì rõ rệt, lòng người muốn lắm mong lắm, nhưng vẫn còn giữ thái độ trông và chờ ví như kẻ lữ hành trú vào quán bên đường, nếu vắng thì tiếp tục đi, mưa thì dừng chân hẳn. 
+Người chính trị ở trường hợp này đủ có thực lực chăng nữa mà hành động, chưa chắc đã thành. Quyết định lúc mây u ám chưa mưa là quyết 
+định "dậy non”
+Lúc bế tắc, không đồng ý nhau, cô quả, súc oán, chứa mọi oán giận, có ý trái lại, không hòa hợp, nhỏ nhen
+
+Tắc dã : là chứa góp ít.
+Ta bị cô đơn. Ta được riêng ý.
+Ta độc đáo vì kẻ khác. Ta cô lập hay là bất điệu với kẻ khác`
+    },
+    {
+        title: "10. <span class='red'>THIÊN TRẠCH LÝ</span> : Quẻ Số 10",
+        content: `<b>Dẫm Lên Đuôi Cọp Mà Cọp Không Cắn : Chọn lựa lối đi, cách xử lý nhẹ nhàng tế nhị</b>
+
+Lễ dã. Lộ hành. Nghi lễ, có chừng mực, khuôn phép, dẫm lên, không cho đi sai, có ý chặn đường thái quá, hệ thống, pháp lý. Hổ lang đang đạo chi tượng: tượng hổ lang đón đường.
+Lý tượng trưng cho việc bước sau đuôi con hổ nhưng không gặp bất kỳ nguy hiểm nào. Quẻ thượng là Càn và quẻ hạ là Đoài. Quẻ này thể hiện bức tranh một người đàn ông tráng kiện và khỏe mạnh Càn đang đi trước, có người phụ nữ yếu đuối, thanh nhã Đoài đang bước theo sau. Thật khó cho cô ấy để không bị rơi lại phía sau. Lý cũng có nghĩa là lễ độ hay lịch sự. Đơn quái Đoài với đức tính hiền lành và nhu mì, đang nhận được sức mạnh và sự tráng kiện của Càn.
+Vì lẽ đó, dù có sự nguy hiểm trong việc bước đi sau đuôi một con hổ, nhưng vẫn an toàn. Ý nghĩa của quẻ này là dù có những khó khăn và trở ngại, nhưng với thái độ hòa nhã, mềm mỏng và nhân hậu sẽ giúp bạn an toàn vượt qua được trở ngại và gặp điều tốt lành.
+
+<span class='red'>Thiên Trạch Lý : là Quẻ Dẫm Lên Đuôi Hổ</span>
+
+Lúc cực nguy nan sống chết treo bằng sợi tóc. Tài trí quyền biến được thử thách đến mức tối đa, Quyết định chậm là thua, quyết định sai là 
+chết. Nghi lễ, có chừng mực, khuôn phép, dẫm lên, không cho đi sai, có ý chặn đường thái quá, hệ thống, pháp lý
+
+Lễ dã là lễ phép, hệ thống qui : Giữ thái độ đúng mực để vận hành trôi chảy trong một hệ thống đầy rủi ro
+Ta bị theo phép. Ta được lễ kính.
+Ta lễ kính kẻ khác. Ta bắt lỗi kẻ khác.`
+    },
+    {
+        title: "11. <span class='red'>ĐỊA THIÊN THÁI</span> : Quẻ Số 11",
+        content: `<b>Thái Bình : Thái bình, phồn vinh, hòa hợp, cân bằng</b>
+
+Thông dã. Điều hòa. Thông hiểu, am tường, hiểu biết, thông suốt, quen biết, quen thuộc. Thiên địa hòa xướng chi tượng: tượng trời đất giao hòa. Thái tượng trưng cho sự bình an và hòa hợp. Đơn quái trên là Khôn tượng trưng cho đất, còn đơn quái dưới tượng trưng cho trời. Lực âm của Khôn thì thấm xuống còn lực dương của Càn thì đi lên. 
+Điều này có nghĩa rằng các lực của trời và đất, âm và dương đang quân bình, xứng hợp và hòa hợp – thống nhất với nhau. Kết quả là vạn vật phát triển và sinh sôi nảy nở sung thịnh.
+Trong đoán quẻ, Thái là quẻ cát tường, nói lên sự bình an và vận may.
+
+<span class='red'>Thái : Quẻ Thuận Buồm Xuôi Gió</span>
+
+Thông dã. Điều hòa, Thông hiểu, am tường, hiểu biết, thông suốt, quen biết, quen thuộc. Thiên địa hòa xướng chỉ tượng: tượng trời đất 
+giao hòa. Thông hiểu, am tường, hiểu biết, thông suốt, quen biết, quen thuộc
+
+Thông dã : là hanh thông.
+Ta bị thông tri. Ta được thông hiểu.
+Ta khai thông cho kẻ khác. Ta thông thạo hơn người.`
+    },
+    {
+        title: "12. <span class='red'>THIÊN ĐỊA BĨ</span> : Quẻ Số 12",
+        content: `<b>Bế Tắc - Đình Trệ : Bế tắc, đình trệ, suy thoái, tan rã, bất động</b>
+
+Tắc dã. Gián cách. Bế tắc, không thông, không tương cảm nhau, xui xẻo, dèm pha, chê bai lẫn nhau, mạnh ai nấy theo ý riêng. Thượng hạ tiếm loạn chi tượng: trên dưới lôi thôi. Bĩ tượng trưng cho sự trở ngại hay bế tắc. Đây là quẻ đối của quẻ trên (quẻ Thái). Đơn quái trên là Càn, tức trời, và lực dương cường kiện của nó đang bị đẩy đi lên. Đơn quái dưới, Khôn, tức đất, và lực âm của nó đang bị đè hướng xuống dưới. Các lực của trời và đất, âm và dương, đang bị cách trở và ngăn chặn. Giữa hai lực chẳng có sự chuyển động giao hòa với nhau. Trong đoán quẻ, Bĩ tượng trưng cho sự gian nan, vất vả và cam go. Thêm nữa, bạn sẽ chẳng nhận được sự giúp đỡ nào của người khác. Trong quản lý, Bĩ có nghĩa là không có sự thống nhất hay đồng cảm giữa cấp trên và cấp dưới. Cảm nghĩ của cấp dưới đã không được cấp trên thấu hiểu, và các chính sách của cấp trên không nhận được sự ủng hộ của cấp dưới. 
+
+<span class='red'>Thiên Địa Bĩ : là Quẻ Bước Vào Ngõ Bí</span>
+
+Tắc dã. Gián cách. Bề tắc, không thông, không tương cảm nhau, xui xẻo, dèm pha, chê bai lẫn nhau, mạnh ai nấy theo ý riêng. Thượng hạ tiếm loạn chỉ tượng: trên đưới lôi thôi 
+
+Bế tắc, không thông, không tương cảm nhau, xui xẻo, dèm pha, chê bai lẫn nhau, mạnh ai nấy theo ý riêng.
+
+Tắc dã là bế tắc.
+Ta bị bế tắc. Ta được sự bế tắc.
+Ta bế tắc cho kẻ khác. Ta tắc nghẽn kẻ khác.`
+    },
+    {
+        title: "13. <span class='red'>THIÊN HỎA ĐỒNG NHÂN</span> : Quẻ Số 13",
+        content: `<b>Cộng Đồng : Cộng đồng, liên kết, gắn bó, đồng tâm hợp lực</b>
+
+Thân dã. Thân thiện. Trên dưới cùng lòng, cùng người ưa thích, cùng một bọn người. Hiệp lực đồng tâm chi tượng: tượng cùng người hiệp lực. Đồng nhân tượng trưng cho sự cùng một khuynh hướng, hòa hợp, đồng lòng, tình bằng hữu, và tình huynh đệ. Nó có nghĩa rằng người ta có thể vững kết đồng tâm với người khác – hợp tác và hòa hợp trong các nỗ lực. Cũng có nghĩa là bằng hữu, đồng chí, đồng nghiệp, đồng sự hay bạn đồng hành. Đơn quái trên là Càn, tức trời, trong khi đơn quái dưới là Ly, tức lửa. Cả hai đều có đặc tính là vận động đi lên. Các hào hai, ba và bốn từ dưới đếm lên tạo thành hỗ quái đơn là Tốn, tượng trưng cho gió. Nhờ có thêm gió thổi, lửa sẽ bốc cao mạnh mẽ, tiến sát đến trời ở trên cao và tỏa ra sự rực rỡ. Quẻ tiêu biểu cho các mối quan hệ với người khác, và tượng trưng cho việc sẽ thành công nhờ sự giúp đỡ hay hợp tác với người khác.
+
+<span class='red'>Thiên Hỏa Đồng Nhân : là Quẻ Lúa Chiêm Gặp Sấm</span>
+
+Thế Thiên Hỏa Đồng Nhân là thế mặc dầu có lực sẵn nhưng phải cần sự giúp đỡ bên ngoài, tuy nhiên đấy chỉ là chuyện mượn sức thôi, không thể bị hóa
+Trên dưới cùng lòng, cùng người ưa thích, cùng một bọn người.
+
+Thân dã là gần gũi, cùng chung với người khác.
+Ta bị yêu chuộng. Ta được sự đồng ý.
+Ta biểu đồng tình với kẻ khác. Ta ngang hàng thất kính kẻ khác.`
+    },
+    {
+        title: "14. <span class='red'>HỎA THIÊN ĐẠI HỮU</span> : Quẻ Số 14",
+        content: `<b>Có Nhiều - Sung Túc : Có nhiều, sung túc, giàu có, nổi tiếng</b>
+
+Khoan dã. Cả có. Thong dong, dung dưỡng nhiều, độ lượng rộng, có đức dầy, chiếu sáng lớn. Kim ngọc mãn đường chi tượng: vàng bạc đầy nhà. Đại hữu tiêu biểu cho sự dồi dào, phong phú, giàu sang, phú dật. Đơn quái trên là Ly, tượng trưng cho mặt trời. Đơn quái dưới là Càn, tức trời. Mặt trời nằm trên cao, tỏa ánh sáng xuống vạn vật. Quẻ Ly cũng tượng trưng cho mùa hè, lúc vạn vật đang sung thịnh. Quẻ dưới tượng trưng cho mùa thu, lúc vạn vật đã đạt đến mức viên mãn và thời gian thu hoạch đã đến, ám chỉ sự dồi dào, phong phú và thịnh vượng. Trong đoán quẻ, điều này có nghĩa rằng bạn đang ở vào lúc cực kỳ may mắn. Nhưng sau khi đạt đến đỉnh thịnh thì sự suy tàn sẽ đến. Do đó, phải cẩn thận, khôn khéo, và biết dè chừng. Không nên kiêu mãn.
+
+<span class='red'>Hỏa Thiên Đại Hữu : là Quẻ Mặt Trời Giữa Đỉnh Trời</span>
+
+Tập trung vào mục đích và làm tới không để thời cơ. Nhưng hãy cần trọng vì mặt trời đi lên đỉnh trời là tới tuần đi xuống, Nếu không tiếp tục duy trì thì cán bộ sinh kiêu sa, lười biếng trong khi kẻ thù đang quyết chí tổ chức phá hoại. 
+
+Thong dong, dung dưỡng nhiều, độ lượng rộng, có đức dầy, chiếu sáng lớn.
+
+Khoan dã : là cả có.
+Ta bị trùng điệp. Ta có được nhiều.
+Ta phong phú cho kẻ khác. Ta đa sự với kẻ khác.`
+    },
+    {
+        title: "15. <span class='red'>ĐỊA SƠN KHIÊM</span> : Quẻ Số 15",
+        content: `<b>Sự Khiêm Nhường : Khiêm nhường, mềm mỏng, giản dị</b>
+
+Thoái dã. Cáo thoái. Khiêm tốn, nhún nhường, khiêm từ, cáo thoái, từ giã, lui vào trong, giữ gìn, nhốt vào trong, đóng cửa. Thượng hạ mông lung chi tượng: tượng trên dưới hoang mang. Khiêm nghĩa là nhún nhường và khiêm tốn. Đơn quái trên là Khôn, tượng đất. Đơn quái dưới là Cấn, tượng núi. Dãy núi cao khom mình và trú ngụ bên dưới dồng bằng mênh mông, tiêu biểu cho đức hạnh khiêm tốn và nhún nhường. Khiêm cũng có nghĩa là tặng phần dư dả của mình cho người thiếu thốn. Ý tưởng chính là chuyển đất tơi của một ngọn núi cao đến lấp chỗ trũng thấp. Trong đoán quẻ, nó có nghĩa rằng vận may và sự thịnh đạt sẽ đến nếu biết giữ gìn sự khiêm tốn và chân thật trong hành động
+
+<span class='red'>Địa Sơn Khiêm : là Quẻ Trong Kho Lúa Đầy Thóc Tốt</span>
+
+Lực thiệt mạnh mà thái độ rất khiêm hư để tranh thắng: Lấy bề cao của núi lớn mà đối với mức thấp của thung lùng. Ở địa vị lớn mà sử dụng kẻ dưới thì thái độ khiêm hư lúc nào cũng là kế đáng áp dụng nhất. 
+
+Khiêm tốn, nhún nhường, khiêm từ, cáo thoái, từ giã, lui vào trong, giữ gìn, nhốt vào trong, đóng cửa. 
+
+Thoái dã là lui lại, nhún nhường.
+Ta bị miệt thị. Ta được nhún nhường.
+Ta khiêm tốn với kẻ khác. Ta miệt thị kẻ khác.`
+    },
+    {
+        title: "16. <span class='red'>LÔI ĐỊA DỰ</span> : Quẻ Số 16",
+        content: `<b>Sự Hân Hoan : Hân hoan, chiến thắng, nhiệt tâm</b>
+Duyệt dã. Thuận động. Dự bị, dự phòng, canh chừng, sớm, vui vầy. Thượng hạ duyệt dịch chi tượng: tượng trên dưới vui vẻ.
+Dự có nghĩa là trước hay sớm, và ẩn chứa những ý như sự báo trước, biết trước và sự chuẩn bị. 
+Đơn quái trên là Chấn, tượng sấm chớp, còn đơn quái dưới là Khôn, tức đất. Sau cơn sấm chớp, mùa xuân hiện ra trên trái đất, mặt trời sẽ chiếu ánh nắng xuống vạn vật. Cây, cỏ và hoa sẽ được ban cho sức sống, và chúng sẽ đâm chồi, nảy lộc. Cảnh tượng thật hạnh phúc và vui vẻ. Đối với con người, đó cũng là lúc để chuẩn bị cho công việc mới, hành động mới.
+Trong đoán quẻ, điều này có nghĩa là niềm vui và sự lạc quan đang đến. Nhưng cũng phải có những sự chuẩn bị trước thật cẩn thận, và thận trọng đi tới, không bao giờ được phép lơ là. Bằng cách này, sẽ giữ vững được vận may; bằng không, tai họa sẽ ập đến.
+
+<span class='red'>Dự : là Quẻ Đắp Thành Lũy Đào Hào</span>
+
+Mùa xuân tuy sấm chưa động lớn nhưng lộc cây có đã nảy ra trong lòng đất, giấc ngủ triền miên của mùa đông sắp hết, đó là lúc đòi hỏi sự chuẩn bị trên mọi mặt, những điều dự đoán, dự ngôn suy tính rất cần thiết. Lúc vừa thắng giặc, mải vui với chiến thắng người ta thường tự cho mình là tài giỏi hơn người nên quên mọi nguy hiểm có thể đưa đến đại bại
+Đã Đại hữu mà lại Khiêm thì tất nhiên là vui vẻ, sung sướng, cho nên sau quẻ Khiêm, tới quẻ Dự (vui, sướng).
+
+Duyệt dã : là phòng bị, vui vẻ.
+Ta bị múa rối. Ta được vui động.
+Ta động vui cho kẻ khác. Ta múa rối, rộn tan kẻ khác.`
+    },
+    {
+        title: "17. <span class='red'>TRẠCH LÔI TÙY</span> : Quẻ Số 17",
+        content: `<b>Sự Duy Trì – Sự Nối Tiếp : Kế thừa, nối tiếp, gia nhập tự nguyện</b>
+
+Thuận dã. Di động. Cùng theo, mặc lòng, không có chí hướng, chỉ chiều theo, đại thể chủ việc di động, thuyên chuyển như chiếc xe. Phản phúc bất định chi tượng: loại không ở cố định bao giờ. Tùy có nghĩa là đi theo, vâng lời, đồng nhất, và tháp tùng. Sự việc sẽ tuân theo sắp đặt, khi ta chủ động – phương án mình đưa ra được người khác hưởng ứng, khi ta đang bị động – ta phải theo sách lược của người, không nên chống chế. Quẻ cũng hàm ý sự vâng theo những thăng trầm của số phận và những biến dịch do thời gian mang đến. Đơn quái trên là Đoài, tiêu biểu cho các cô gái trẻ, trong khi đơn quái là Chấn dưới tượng trưng cho những nam nhân tráng kiện. Toàn quẻ ám chỉ người đàn ông tráng kiện đó đang cung phụng và chiều chuộng cô gái trẻ. Cùng theo, mặc lòng, không có chí hướng, chỉ chiều theo, đại thể chủ việc di động, thuyên chuyển như chiếc xe. Trong đoán quẻ, Tùy tượng trưng cho cái cương kiện đang phục tùng theo cái âm nhu, do đó giành được sự sẵn lòng phục tùng của mọi người và thành công trong công việc. 
+
+<span class='red'>Trạch Lôi Tùy : là Quẻ Sấm Dậy Lỗi Thời</span>
+
+Đang ở thể chủ động, bị dồn vào thế bị động, muốn tự điều khiển cũng không được nữa, chẳng khác gì tiếng sắm giữa mùa thu, sấm vẫn lớn, nhưng cây lúa không cần nó nữa. Đấy là hoàn cảnh của các lực lượng chính trị tại các nước nhỏ, yếu trước những biến chuyển chính trị do các nước đại cường thao túng. Tắt cả mọi hoạt động đều phải tùy thuộc một thế khác.
+Cùng theo, mặc lòng, không có chí hướng, chỉ chiều theo, đại thể chủ việc di động, thuyên chuyển như chiếc xe 
+
+Thuận dã là theo.
+Ta bị lệ thuộc. Ta được tùy nghi.
+Ta chiều chuộng kẻ khác. Ta lệ thuộc hóa kẻ khác.`
+    },
+    {
+        title: "18. <span class='red'>SƠN PHONG CỔ</span> : Quẻ Số 18",
+        content: `<b>Sửa Sang Những Gì Đã Đổ Nát : Sửa sai, cải tiến, suy tính, lo toan</b>
+Sự dã. Sự biến. Có sự không yên trong lòng, làm ngờ vực, khua, đánh, mua chuốc lấy cái hại, đánh trống, làm cho sợ sệt, sửa lại cái lỗi trước đã làm. Âm hại tương liên chi tượng: điều hại cùng có liên hệ.
+Cổ tượng trưng cho thức ăn nằm trên đĩa, đã bị hư thối, và trở thành nơi sinh sống của dòi bọ. Quẻ ám chỉ sự hỗn độn, thối rữa, mục nát, hoang tưởng, phế thải và hỏng hóc. Đơn quái trên Cấn tiêu biểu những ngọn núi, trong khi đơn quái dưới Tốn tượng trưng cho gió. Gió đang nằm bên dưới núi – bị ngăn chặn bởi núi, gió không thể lưu chuyển được. Nếu không khí không thể lưu thông và di chuyển, mọi vật sẽ bắt đầu thối rữa và làm mồi cho sâu.
+Trong đoán quẻ, điều này có nghĩa rằng tình hình chung quanh cực kỳ rối loạn và phức tạp. Phải dụng công để dọn dẹp ngănắp hay duy trì trật tự – bằng không bạn sẽ gặp thất bại. Việc dọn sạch sự thối rữa có thể dẫn đến thành công trong việc thay đổi vận hạn của mình.
+
+<span class='red'>Sơn Phong Cổ : là Quẻ Con Dòi Nằm Trong Ruột</span>
+Bên ngoài được che đậy bằng nước sơn tốt đẹp, bên trong đã bị mối ăn ruỗng. Có sự không yên trong lòng, làm ngờ vực, khua, đánh, mua chuốc lấy cái hại, đánh trống, làm cho sợ sệt, sửa lại cái lỗi trước đã làm
+
+Sự dã là cớ sự, việc.
+Ta bị cớ sự. Ta được cớ sự.
+Ta chịu cớ sự cho kẻ khác. Ta gây cớ sự với kẻ khác.`
+    },
+    {
+        title: "19. <span class='red'>ĐỊA TRẠCH LÂM</span> : Quẻ Số 19",
+        content: `<b>Trưởng Thành Từng Bước (Lớn Dần) : Trưởng thành từng bước, thành công lớn</b>
+
+Đại dã. Bao quản. Việc lớn, người lớn, cha nuôi, vú nuôi, giáo học, nhà sư, kẻ cả, dạy dân, nhà
+thầu. Quân tử dĩ giáo tư chi tượng: người quân tử dạy dân, che chở, bảo bọc cho dân vô bờ bến.
+Lâm có nghĩa là mở rộng, gia tăng, tiến bộ. Hai hào dưới cùng của quẻ này là những hào dương và 
+có nghĩa rằng lực dương đang tăng trưởng, bành trướng, mở rộng, trong khi lực âm đang từ từ
+thoái lui hay nhường bước. Quẻ này cũng hàm ý sự giúp đỡ hay tin tưởng vào kỳ vọng của nhau.
+Trong đoán quẻ, điều này có nghĩa rằng nếu xử lý mọi việc với thái độ nhường nhịn và hợp tác, cư 
+xử với người khác phù hợp với qui tắc đạo đức đúng đắn, bạn sẽ hưởng được rất nhiều vận may.
+
+<span class='red'>Địa Trạch Lâm : là Quẻ Lâm Cơ Ứng Biến</span>
+
+Đường lối mượn gió bẻ măng. Có một chủ trương nhất định nhưng cũng có một sách lược khôn khéo lựa theo thực tiễn trước.
+Việc lớn, người lớn, cha nuôi, vú nuôi, giáo học, nhà sư, kẻ cả, dạy dân, nhà thầu
+Đại dã : là lớn ở trên soi xuống.
+Ta bị giáo hoá. Ta được giáo dục.
+Ta giáo tư, dung chở cho kẻ khác. Ta tự đại với kẻ khác.`
+    },
+    {
+        title: "20. <span class='red'>PHONG ĐỊA QUÁN</span>: Quẻ Số 20",
+        content: `<b>Trầm Tư Mặc Tưởng Suy Tư : Suy tư, quan sát, thấy xa, khả năng tiên tri</b>
+
+Quan dã. Quan sát. Xem xét, trông coi, cảnh tượng xem thấy, thanh tra, lướt qua, sơ qua, sơn phết, quét nhà. Vân bình tụ tán chi tượng: tượng bèo mây tan hợp. Quán nghĩa là quan sát, suy xét, trầm tư suy nghĩ, ngẫm nghĩ và tự kiểm thảo. Đơn quái trên là Tốn (gió) và đơn quái dưới là Khôn (đất). Toàn quẻ tượng trưng cho cơn gió lớn đang thổi trên mặt đất. Do đó, đây là thời điểm cho sự vận động – lúc lắc và run rẩy – và cho sự tiến tới cẩn thận. Trong chiêm quái, quẻ gợi ý nên giữ gìn tình trạng hiện tại một cách bình tĩnh và khách quan. Có thể đạt được biến chuyển thông qua suy ngẫm, quán xét và tự kiểm thảo
+
+<span class='red'>Phong Địa Quán : là Quẻ Nhìn Cơn Gió Lớn</span>
+
+Cơn gió lớn thổi mạnh làm mù trời mù đất, đó là lúc vạn sự nan hành, dấn thân hoạt động sẽ đem đến nhầm lẫn bước hụt. Tốt hơn hãy bình tâm tĩnh khí, kiên thủ cương vị cho qua cơn mù bụi. Nhìn tức là quan, ý nói chẳng những phải yên lặng còn phải kiểm thảo toàn bộ chính sách.
+
+Quan dã. Quan sát. Xem xét, trông coi, cảnh tượng xem thấy, thanh tra, lướt qua, sơ qua, sơn phết, quét nhà
+
+Quán dã : là xem xét, quan sát.
+Ta bị quan sát. Ta được xem xét.
+Ta trông nom cho kẻ khác. Ta quan sát kẻ khác`
+    },
+    {
+        title: "21. <span class='red'>HỎA LÔI PHÊ HẠP</span> : Quẻ Số 21",
+        content: `<b>Phá Hủy Chướng Ngại Để Đi Đến Hòa Hợp : Phá hủy chướng ngại, trừng trị, tiêu diệt</b>
+
+Khiết dã. Cấn hợp. Cẩu hợp, bấu víu, bấu quào, dày xéo, đay nghiến, phỏng vấn, hỏi han (học hỏi). 
+Ủy mị bất chấn chi tượng: tượng yếu đuối không chạy được.
+Phệ hạp có nghĩa là đôi môi khép trở lại với nhau sau khi cắn hay nhai cái gì đó. Các hào dương ở dưới cùng và trên cùng tượng trưng cho đôi môi. Các hào âm hai, ba và năm là răng. Hào bốn, hào dương, bị kẹp ở giữa giống như nó là vật gì đó đang bị nhai hay cắn. Sau khi vật đó đã được cắn xong, đôi môi khép vào nhau trở lại.
+Trong chiêm quái, quẻ hàm ý các trở ngại đang chắn trên đường, nhưng có thể đạt được mục tiêu nếu trở ngại đó được gỡ bỏ hay vượt qua – bị phá hủy giống như việc nhai nhỏ cái gì đó thành nhiều mảnh.
+
+<span class='red'>Hỏa Lôi Phệ Hạp : là Có Một Vật Cần Đập Vỡ</span>
+
+Đây là một thế chính trị gặp chướng ngại vật len vào 
+giữa và cần phải đập vỡ thì mới tiến đến mục tiêu. Tỷ dụ minh ước hợp tung của sáu nước khiến Tần không thôn tính được lục quốc, phải phá vỡ minh ước hợp tung mới mong xâm lấn thống nhất
+Khiết dã. Cấn hợp. Cấu hợp, bấu víu, bấu quào, dày xéo, đay nghiến, 
+phỏng vấn, hỏi han (học hỏi)
+
+Khiết dã : là cần hợp, hỏi han.
+Ta bị đay nghiến. Ta được cắn hợp.
+Ta chịu sự dày xéo. Ta đay nghiến kẻ khác.`
+    },
+    {
+        title: "22. <span class='red'>SƠN HỎA BÍ</span> : Quẻ Số 22",
+        content: `<b>Sắc Đẹp : Sắc đẹp, xinh xắn, hình thức, nghệ thuật</b>
+
+Sức dã. Quang minh. Trang sức, sửa sang, trang điểm, thấu suốt, rõ ràng. Quang minh thông đạt chi tượng: quang minh, sáng sủa, thấu suốt. Bí nghĩa là trang trí, trang sức, những màu sắc đẹp, diện mạo hay phong thái đẹp, lịch sự, những đồ trang sức, trang hoàng và trang điểm. Tượng của đơn quái Cấn ở trên là ngọn núi. Tượng của đơn quái Ly ở dưới là mặt trời. Do đó, quẻ này tượng trưng cảnh mặt trời đang khuất sau rặng núi phía tây. Toàn bộ là một cảnh tượng hết sức thi vị và đầy hoan hỉ của lúc mặt trời lặn.
+Trong đoán quẻ, Bí có nghĩa là lúc tàn phai của thời kỳ tươi đẹp. Cái đẹp ở bề ngoài sẽ nhanh chóng tàn phai. Khi mặt trời khuất sau ngọn núi, sức mạnh của các tia nắng bị hạn chế, hàm ý những gì người ta thấy và biết chỉ là thiển cận, ở trước mắt – chẳng có sự nhìn xa trông rộng hay suy nghĩ sâu xa. Do đó, những sơ suất trong hoạch định và các lầm lẫn trong phán đoán sẽ trở nên phổ biến. Phải đặc biệt cẩn thận để tránh bị đánh lừa.
+
+<span class='red'>Bí : là Quẻ Huy Hoàng Của Ngọn Đèn Tàn</span>
+
+Thu sơn hồng diệp ánh tà dương, buổi chiều nắng xế rực rỡ nơi chân trời và sau đấy là đêm tối.Trang sức, sửa sang, trang điểm, thấu suốt, rõ
+ràng.
+
+Sức dã : là trang sức, thông suốt.
+Ta bị thấu suốt. Ta được sáng suốt.
+Ta sáng tỏ cho kẻ khác. Ta đả thông kẻ khác.`
+    },
+    {
+        title: "23. <span class='red'>SƠN ĐỊA BÁC</span> : Quẻ Số 23",
+        content: `<b>Sự Bùng Nổ: Bùng nổ, sụp đổ, suy thoái, phá sản</b>
+
+Lạc dã. Tiêu điều. Đẽo gọt, lột cướp đi, không có lợi, rụng rớt, đến rồi lại đi, tản lạc, lạt lẽo nhau, xa lìa nhau, hoang vắng, buồn thảm. Lục thân băng thán chi tượng: tượng bà con thân thích xa lìa nhau. Bác có nghĩa là đốn hạ, tách chẻ, tước, bào mòn hay róc, lột. Nếu nhìn vào quẻ, chúng ta sẽ thấy các hào âm đang chi phối sự đi lên, với chỉ còn lại có một hào dương. Có vẻ như lực dương đang lung lay và sắp đổ. Đơn quái trên, Cấn, tượng trưng cho các ngọn núi, còn đơn quái dưới, Khôn, tượng trưng cho đất. Ngọn núi cao sừng sững không thể nào chống đỡ nỗi sự xâm thực của gió và mưa, đang dần dần tiêu mòn và sụp đổ, rồi trở thành bình địa (đất bằng). Trong đoán quẻ, Bác mang ý nghĩa là vận may của bạn đang đến hồi sa sút nhất. Hành động duy nhất là nhẫn nại chịu đựng và chờ đến lúc thích hợp hơn.
+
+<span class='red'>Sơn Địa Bác : là Quẻ Núi Sập</span>
+
+Lạc dã. Tiêu điều. Đẽo gọt, lột cướp đi, không có lợi, rụng rớt, đến rồi lại đi, tản lạc, lạt lẽo nhau, xa lìa nhau, hoang vắng, buồn thảm. Lục thân băng thán chỉ tượng: tượng bà con thân thích xa lìa nhau. 
+
+Đẽo gọt, lột cướp đi, không có lợi, rụng rớt, đến rồi lại đi, tản lạc, lạt lẽo nhau, xa lìa nhau, hoang vắng, buồn thảm
+
+Lạc dã là bớt, lột mất.
+Ta bị lột xác. Ta được xóa mờ.
+Ta xóa nhòa cho kẻ khác. Ta lột xác kẻ khác.`
+    },
+    {
+        title: "24. <span class='red'>ĐỊA LÔI PHỤC</span> : Quẻ Số 24",
+        content: `<b>Sự Trở Về : Trở về, sự đổi mới, chấm dứt đen tối</b>
+
+Tái hồi. Lại có, trở về, bên ngoài, phản phục. Sơn ngoại thanh sơn chi tượng: tượng ngoài 
+núi lại còn có núi nữa.
+Phục nghĩa là quay về chỗ gốc, chỗ ban đầu và bắt đầu một chu kỳ mới. Lực dương, tiêu biểu qua vạch liền dưới cùng, đang di chuyển đi lên từ đáy. Như vậy, lực dương đang bắt đầu vận động và vạn vật đang nhận được sức sống từ lực này, đồng thời dần dần thu được sức mạnh. Trong đoán quẻ, Phục hàm ý mọi việc đang chuyển biến tốt đẹp hơn – như thể mùa xuân sắp đến. Mọi sự sẽ trở nên dần dần sáng sủa hơn.
+
+<span class='red'>Địa Lôi Phục : là Quẻ Đợi Mùa Xuân Đến</span>
+
+Lạc dã. Tiêu điều. Đẽo gọt, lột cướp đi, không có lợi , rụng rớt, đến rồi lại đi, tản lạc, lạt lẽo , nhau, xa lìa nhau, hoang vắng, buồn thảm. Lục thân băng thán chỉ tượng: tượng bà con thân thích xa lìa nhau. Lại có, trở về, bên ngoài, phản phục
+
+Phản dã : là trở lại, tái hồi.
+Ta bị phản hồi. Ta được sự trở về.
+Ta phục hưng cho kẻ khác. Ta phản bội kẻ khác.`
+    }
+];
+
+const body = document.getElementById('mainBody');
+
+function showAll() {
+    body.innerHTML = fullData.map(q => `<div class="que-block"><h2>${q.title}</h2>${q.content}</div>`).join('');
+}
+
+function searchQue() {
+    const txt = document.getElementById('findInput').value.toLowerCase();
+    const filtered = fullData.filter(q => q.title.toLowerCase().includes(txt) || q.content.toLowerCase().includes(txt));
+    body.innerHTML = filtered.length > 0 ? filtered.map(q => `<div class="que-block"><h2>${q.title}</h2>${q.content}</div>`).join('') : '<p style="text-align:center">Không tìm thấy kết quả</p>';
+}
+
+showAll();
+</script>
+</body>
+</html>
