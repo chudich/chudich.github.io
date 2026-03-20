@@ -6,7 +6,7 @@
     <title>Liên Hoa - Quẻ Thời Gian & Xuất Ảnh</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #993300; --secondary: #007aff; --accent: #ff4757; --bg: #f0f2f5; }
+        :root { --primary: #993300; --secondary: #007aff; --bg: #f0f2f5; }
         body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 500px; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
         .header { background: var(--primary); color: white; padding: 20px; text-align: center; font-weight: 600; font-size: 1.2rem; }
@@ -31,8 +31,6 @@
         .line { width: 100px; height: 10px; background-color: var(--primary); border-radius: 2px; }
         .line.broken { background-color: transparent; display: flex; justify-content: space-between; }
         .line.broken::before, .line.broken::after { content: ""; width: 42%; height: 100%; background-color: var(--primary); border-radius: 2px; }
-        .line.moving { background-color: var(--accent) !important; }
-        .line.moving::before, .line.moving::after { background-color: var(--accent) !important; }
 
         .binary-tag { font-family: monospace; font-size: 0.8rem; background: #eee; padding: 3px 10px; border-radius: 10px; color: #555; }
         .export-section { margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 15px; }
@@ -117,15 +115,13 @@
         return n % 8 === 0 ? 8 : n % 8;
     }
 
-    function drawHex(containerId, code, movingLine = -1) {
+    function drawHex(containerId, code) {
         const container = document.getElementById(containerId);
         container.innerHTML = "";
         for (let i = 0; i < 6; i++) {
             const line = document.createElement('div');
             const isBroken = code[i] === '0';
-            const isMoving = (6 - i) === movingLine;
             line.className = isBroken ? "line broken" : "line";
-            if (isMoving) line.classList.add("moving");
             container.appendChild(line);
         }
     }
@@ -158,19 +154,16 @@
         const codeChu = batQuai[chuT].code + batQuai[chuH].code;
         const codeBien = batQuai[bienT].code + batQuai[bienH].code;
         
-        // Hào động tính theo tổng Giờ + Phút
-        const dong = (parseInt(hh) + parseInt(mm)) % 6 || 6;
-
         document.getElementById('resultPanel').style.display = 'block';
         document.getElementById('nameChu').innerText = data64Que[codeChu];
-        document.getElementById('codeChu').innerText = `${batQuai[chuT].name}/${batQuai[chuH].name} (Động: ${dong})`;
-        drawHex('visualChu', codeChu, dong);
+        document.getElementById('codeChu').innerText = `${batQuai[chuT].name}/${batQuai[chuH].name}`;
+        drawHex('visualChu', codeChu);
 
         document.getElementById('nameBien').innerText = data64Que[codeBien];
         document.getElementById('codeBien').innerText = `${batQuai[bienT].name}/${batQuai[bienH].name}`;
         drawHex('visualBien', codeBien);
 
-        saveMeta = { time: `${hh}:${mm}`, q1: data64Que[codeChu], q2: data64Que[codeBien], cChu: codeChu, cBien: codeBien, dong: dong, date: document.getElementById('currentDate').innerText };
+        saveMeta = { time: `${hh}:${mm}`, q1: data64Que[codeChu], q2: data64Que[codeBien], cChu: codeChu, cBien: codeBien, date: document.getElementById('currentDate').innerText };
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
@@ -201,8 +194,7 @@
 
             for (let i = 0; i < 6; i++) {
                 const isBroken = code[i] === '0';
-                const isMoving = isChu && (6 - i) === saveMeta.dong;
-                ctx.fillStyle = isMoving ? "#ff4757" : "#993300";
+                ctx.fillStyle = "#993300";
                 
                 if (isBroken) {
                     ctx.fillRect(x, y + (i * 20), 55, 12);
