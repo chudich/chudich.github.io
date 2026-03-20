@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Liên Hoa Độn - Fix Cảm Ứng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #993300; --secondary: #007aff; --bg: #f4f5f7; }
+        body { background: var(--bg); font-family: 'Lexend', sans-serif; margin: 0; padding: 10px; }
+        .container { max-width: 850px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
+        .tabs { display: flex; background: #f1f2f6; padding: 5px; overflow-x: auto; }
+        .tab-item { flex: 1; min-width: 80px; padding: 12px 5px; text-align: center; cursor: pointer; border-radius: 12px; font-size: 11px; font-weight: 600; color: #636e72; }
+        .tab-item.active { background: #fff; color: var(--primary); }
+        .input-section { padding: 20px; }
+        .input-panel { display: none; }
+        .input-panel.active { display: block; }
+        .input-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        input { width: 90px; padding: 12px 5px; border: 1.5px solid #dfe6e9; border-radius: 12px; text-align: center; font-size: 16px; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; }
+        .question-box { padding: 15px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
+        textarea { width: 100%; min-height: 80px; padding: 15px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; font-family: inherit; resize: none; }
+        .dl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+        .btn-dl { background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; }
+        .dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; outline: 1px solid #ccc; }
+        .dot.active { outline: 2px solid #000; transform: scale(1.1); }
+        /* Giữ vùng hiển thị rộng rãi để không che bảng quẻ */
+        .canvas-wrapper { width: 100%; background: #fff; padding: 20px 0; text-align: center; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        #canvas { display: inline-block; min-width: 550px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="tabs">
+        <div class="tab-item active" onclick="switchTab(event, 'tab-auto')">CẢM ỨNG</div>
+        <div class="tab-item" onclick="switchTab(event, 'tab-don')">ĐỘN</div>
+        <div class="tab-item" onclick="switchTab(event, 'tab-mai')">MAI HOA</div>
+        <div class="tab-item" onclick="switchTab(event, 'tab-time')">THỜI</div>
+        <div class="tab-item" onclick="switchTab(event, 'tab-tim')">TÌM</div>
+    </div>
+
+    <div class="input-section">
+        <div id="tab-auto" class="input-panel active"><button class="btn-main" id="btn-auto-trigger">GIEO QUẺ CẢM ỨNG</button></div>
+        <div id="tab-don" class="input-panel"><div class="input-group"><input type="text" id="dp" placeholder="Thượng"><input type="text" id="dt" placeholder="Hạ"></div><button class="btn-main" id="btn-don-trigger">ĐỘN QUẺ</button></div>
+        <div id="tab-mai" class="input-panel"><div class="input-group"><input type="text" id="mn" placeholder="Năm"><input type="text" id="mth" placeholder="Tháng"><input type="text" id="mng" placeholder="Ngày"></div><button class="btn-main" id="btn-mai-trigger">LẬP MAI HOA</button></div>
+        <div id="tab-time" class="input-panel"><div class="input-group"><input type="text" id="tn" placeholder="Năm"><input type="text" id="tth" placeholder="Tháng"><input type="text" id="tng" placeholder="Ngày"><input type="text" id="tg" placeholder="Giờ"></div><button class="btn-main" id="btn-time-trigger">TÍNH THỜI QUÁI</button></div>
+        <div id="tab-tim" class="input-panel"><div class="input-group"><input type="text" id="tp" placeholder="Thượng"><input type="text" id="tt" placeholder="Hạ"><input type="text" id="td" placeholder="Động"></div><button class="btn-main" id="btn-tim-trigger">TÌM QUẺ</button></div>
+    </div>
+
+    <div class="question-box">
+        <textarea id="qTxt" placeholder="Nhập câu hỏi..."></textarea>
+        <div class="dl-bar">
+            <div style="display:flex; gap:10px;"><div class="dot active" style="background:#007aff" data-c="#007aff"></div><div class="dot" style="background:#dc3545" data-c="#dc3545"></div><div class="dot" style="background:#28a745" data-c="#28a745"></div></div>
+            <button class="btn-dl" id="btn-dl">💾 TẢI ẢNH</button>
+        </div>
+    </div>
+
+    <div class="canvas-wrapper"><div id="canvas"></div></div>
+</div>
+
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://sophiemeisam.github.io/raphael.js"></script>
+<script src="https://sophiemeisam.github.io/khiet.js"></script>
+<script>
+$(document).ready(function() {
+    let selColor = "#007aff";
+
+    // Chuyển tab
+    window.switchTab = function(e, id) {
+        $('.tab-item').removeClass('active');
+        $(e.target).addClass('active');
+        $('.input-panel').removeClass('active');
+        $('#' + id).addClass('active');
+    };
+
+    $('.dot').click(function() { $('.dot').removeClass('active'); $(this).addClass('active'); selColor = $(this).data('c'); });
+
+    // FIX CẢM ỨNG: Sử dụng trigger trực tiếp từ jQuery
+    $('#btn-auto-trigger').click(function() {
+        $('#canvas').empty();
+        let p = Math.floor(Math.random() * 899) + 100;
+        let t = Math.floor(Math.random() * 899) + 100;
+        let d = Math.floor(Math.random() * 6) + 1;
+        Khiet.drawKhongThoi('canvas', p, t, d, 180);
+    });
+
+    // Các tính năng khác
+    $('#btn-don-trigger').click(() => { $('#canvas').empty(); Khiet.drawKhongThoi('canvas',$('#dp').val(),$('#dt').val(),null,180); });
+    $('#btn-mai-trigger').click(() => { $('#canvas').empty(); let p=parseFloat($('#mn').val()||0)+parseFloat($('#mth').val()||0)+parseFloat($('#mng').val()||0); Khiet.drawKhongThoiMaiHoa('canvas',p,180); });
+    $('#btn-time-trigger').click(() => { $('#canvas').empty(); let p=parseFloat($('#tn').val()||0)+parseFloat($('#tth').val()||0)+parseFloat($('#tng').val()||0); let t=p+parseFloat($('#tg').val()||0); Khiet.drawKhongThoi('canvas',p,t,t,180); });
+    $('#btn-tim-trigger').click(() => { $('#canvas').empty(); Khiet.drawKhongThoi('canvas',$('#tp').val(),$('#tt').val(),$('#td').val(),180); });
+
+    // Xuất ảnh - Giữ nguyên logic chia dòng cân đối 50/50 của bạn
+    $('#btn-dl').click(function() {
+        const svg = document.querySelector('#canvas svg');
+        if(!svg) return alert("Chưa có quẻ!");
+        
+        let text = $('#qTxt').val().trim() || "QUẺ DỊCH";
+        let words = text.split(/\s+/);
+        let mid = Math.ceil(words.length / 2);
+        let line1 = words.slice(0, mid).join(" ");
+        let line2 = words.slice(mid).join(" ");
+
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const canvas = document.getElementById('hiddenCanvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        const url = URL.createObjectURL(new Blob([svgData], {type:'image/svg+xml;charset=utf-8'}));
+
+        img.onload = function() {
+            const sc = 2;
+            canvas.width = img.width * sc;
+            canvas.height = (img.height + 170) * sc;
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, img.width * sc, img.height * sc);
+            ctx.fillStyle = selColor; ctx.textAlign = "center";
+            ctx.font = `bold ${text.length > 35 ? 19*sc : 24*sc}px Arial`;
+            
+            ctx.fillText(line1, canvas.width/2, (img.height + 75) * sc);
+            if(line2) ctx.fillText(line2, canvas.width/2, (img.height + 125) * sc);
+
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = `NguyenK_LHD.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+        img.src = url;
+    });
+});
+</script>
+</body>
+</html>
