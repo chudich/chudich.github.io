@@ -3,65 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STM - Tân Thời Dịch Số</title>
+    <title>STM - TÂN THỜI DỊCH SỐ</title>
     <style>
-        :root { --primary-blue: #007bff; --dark-blue: #004a99; --bg-gray: #f0f2f5; --accent: #d32f2f; }
-        body { font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; background: var(--bg-gray); color: #1c1e21; }
-        h2 { font-size: 1.4rem; margin: 15px 0; color: #333; text-align: center; }
-
-        .action-container { width: 95%; max-width: 500px; margin-bottom: 20px; }
-        .main-btn { 
-            width: 100%; padding: 20px; background: var(--dark-blue); color: white; 
-            border: none; border-radius: 15px; font-size: 1.2rem; font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,74,153,0.3); cursor: pointer;
+        :root { 
+            --primary-blue: #007bff; 
+            --dark-blue: #004a99; 
+            --bg-gray: #f0f2f5; 
+            --accent: #ff3b30; /* Màu đỏ của hào động */
+            --white: #ffffff;
         }
-        .main-btn:active { transform: scale(0.98); }
 
-        .result-wrapper { width: 95%; max-width: 500px; display: none; flex-direction: column; gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid var(--dark-blue); }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 15px; 
+            margin: 0; 
+            background: var(--bg-gray); 
+            color: #1c1e21; 
+        }
+
+        h2 { font-size: 1.5rem; margin: 20px 0; color: #333; font-weight: 800; letter-spacing: 1px; }
+
+        /* Nút bấm chính */
+        .btn-container { width: 100%; max-width: 450px; margin-bottom: 25px; }
+        .main-btn { 
+            width: 100%; 
+            padding: 20px; 
+            background: var(--dark-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 18px; 
+            font-size: 1.25rem; 
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,74,153,0.3); 
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .main-btn:active { transform: scale(0.96); background: #003366; }
+
+        /* Khu vực hiển thị kết quả */
+        .result-wrapper { width: 100%; max-width: 450px; display: none; flex-direction: column; animation: fadeIn 0.4s ease; }
         
-        .label-tag { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: #888; margin-bottom: 10px; display: block; }
-        .que-name { font-size: 26px; font-weight: 800; color: var(--dark-blue); margin: 10px 0; }
-        .time-stamp { font-family: monospace; font-size: 1.1rem; color: #555; margin-bottom: 10px; }
-
-        .hexagram { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 20px 0; }
-        .line { width: 140px; height: 12px; background-color: var(--dark-blue); border-radius: 3px; position: relative; }
-        .line.broken { background-color: transparent; display: flex; justify-content: space-between; }
-        .line.broken::before, .line.broken::after { content: ""; width: 44%; height: 100%; background-color: var(--dark-blue); border-radius: 3px; }
+        .card { 
+            background: var(--white); 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            text-align: center; 
+            border-top: 6px solid var(--dark-blue); 
+        }
         
-        /* Đánh dấu hào động */
-        .line.moving::after { content: "●"; position: absolute; right: -25px; color: var(--accent); font-size: 18px; top: -5px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .info-box { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 0.9rem; text-align: left; }
-        .moving-text { color: var(--accent); font-weight: bold; }
-        .binary-info { font-family: monospace; background: #eee; padding: 2px 8px; border-radius: 4px; }
+        .label-tag { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #999; margin-bottom: 8px; display: block; }
+        .time-stamp { font-family: "Courier New", monospace; font-size: 1.3rem; font-weight: bold; color: #555; margin-bottom: 5px; }
+        .que-name { font-size: 32px; font-weight: 900; color: var(--dark-blue); margin: 15px 0; letter-spacing: -0.5px; }
+
+        /* VẼ VẠCH QUẺ - KHÔNG XÔ LỆCH */
+        .hexagram { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            align-items: center; 
+            margin: 30px 0; 
+        }
+
+        .line { 
+            width: 180px; 
+            height: 15px; 
+            background-color: var(--dark-blue); 
+            border-radius: 2px; 
+            position: relative; 
+        }
+
+        /* Vạch Âm (Broken Line) dùng Linear Gradient để đảm bảo thẳng hàng tuyệt đối */
+        .line.broken { 
+            background: linear-gradient(to right, 
+                var(--dark-blue) 0%, var(--dark-blue) 43%, 
+                transparent 43%, transparent 57%, 
+                var(--dark-blue) 57%, var(--dark-blue) 100%);
+        }
+
+        /* Dấu chấm đỏ hào động */
+        .line.moving::after { 
+            content: "●"; 
+            position: absolute; 
+            right: -35px; 
+            color: var(--accent); 
+            font-size: 18px; 
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Thông tin phụ trợ */
+        .info-panel { 
+            background: #fdfdfd; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-top: 15px; 
+            font-size: 0.95rem; 
+            text-align: left; 
+            border: 1px solid #eee;
+        }
+        .moving-lines { color: var(--accent); font-weight: 700; }
+        .bin-code { font-family: monospace; background: #ececec; padding: 3px 8px; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h2>STM - LẬP QUẺ TÂN THỜI</h2>
+    <h2>STM - TÂN THỜI DỊCH</h2>
 
-    <div class="action-container">
+    <div class="btn-container">
         <button class="main-btn" onclick="lapQueSTM()">CHẠM ĐỂ LẬP QUẺ</button>
     </div>
 
     <div id="resultArea" class="result-wrapper">
         <div class="card">
-            <span class="label-tag">Kết quả thời gian thực</span>
+            <span class="label-tag">Thời gian hiển thị giây ẩn</span>
             <div id="res-time" class="time-stamp">00:00:00</div>
             <div id="res-name" class="que-name">---</div>
             
             <div id="visual-que" class="hexagram"></div>
             
-            <div class="info-box">
-                <div>Mã nhị phân: <span id="res-bin" class="binary-info">---</span></div>
-                <div style="margin-top:5px;">Hào động: <span id="res-moving" class="moving-text">Không có</span></div>
+            <div class="info-panel">
+                <div>Nhị phân: <span id="res-bin" class="bin-code">---</span></div>
+                <div style="margin-top:8px;">Biến động: <span id="res-moving" class="moving-lines">Không có</span></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Bát quái theo thứ tự số dư (0-7), 0=8=Khôn
+        // Bát quái hệ thống (0=8=Khôn)
         const batQuai = {
             "1": { name: "Kiền", code: "111" },
             "2": { name: "Đoài", code: "011" },
@@ -93,36 +168,38 @@
         };
 
         function lapQueSTM() {
+            // Rung phản hồi (nếu thiết bị hỗ trợ)
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
+
             const now = new Date();
             const hh = now.getHours().toString().padStart(2, '0');
             const mm = now.getMinutes().toString().padStart(2, '0');
             const ss = now.getSeconds().toString().padStart(2, '0');
             
-            // 1. Lấy dữ liệu thô 6 chữ số
-            const digits = (hh + mm + ss).split('').map(Number);
+            // Lấy 6 chữ số: H1 H2 M1 M2 S1 S2
+            const d = (hh + mm + ss).split('').map(Number);
             
-            // 2. Tính Quẻ Thượng/Hạ theo tổng chia 8
-            const sumUp = (digits[0] + digits[1]) % 8;
-            const sumLow = (digits[2] + digits[3]) % 8;
+            // Logic lập quẻ chính (Dựa trên tổng các cặp số chia 8)
+            const sumUp = (d[0] + d[1]) % 8;
+            const sumLow = (d[2] + d[3]) % 8;
             
-            const codeUp = batQuai[sumUp].code; // Nhị phân 3 hào trên
-            const codeLow = batQuai[sumLow].code; // Nhị phân 3 hào dưới
-            const fullBinary = codeUp + codeLow; // Chuỗi 6 bit
+            const binUp = batQuai[sumUp].code; 
+            const binLow = batQuai[sumLow].code;
+            const finalBin = binUp + binLow;
 
-            // 3. Xác định hào động (Lẻ = Động)
-            // Hào 1 ứng với digits[0] ... Hào 6 ứng với digits[5]
-            let movingLines = [];
-            digits.forEach((d, index) => {
-                if (d % 2 !== 0) movingLines.push(index + 1);
+            // Xác định hào động: Chữ số lẻ = Động
+            let moving = [];
+            d.forEach((val, idx) => {
+                if (val % 2 !== 0) moving.push(idx + 1);
             });
 
-            // 4. Hiển thị kết quả
+            // Cập nhật giao diện
             document.getElementById('res-time').innerText = `${hh}:${mm}:${ss}`;
-            document.getElementById('res-name').innerText = data64Que[fullBinary] || "Không xác định";
-            document.getElementById('res-bin').innerText = `${codeUp} ${codeLow}`;
-            document.getElementById('res-moving').innerText = movingLines.length > 0 ? "Hào " + movingLines.join(', ') : "Tĩnh";
+            document.getElementById('res-name').innerText = data64Que[finalBin] || "Quẻ Lạ";
+            document.getElementById('res-bin').innerText = `${binUp} ${binLow}`;
+            document.getElementById('res-moving').innerText = moving.length > 0 ? "Hào " + moving.join(', ') : "Quẻ Tĩnh";
             
-            renderHexagram(fullBinary, movingLines);
+            renderHexagram(finalBin, moving);
             document.getElementById('resultArea').style.display = 'flex';
         }
 
@@ -130,17 +207,14 @@
             const container = document.getElementById('visual-que');
             container.innerHTML = "";
             
-            // Vẽ từ trên xuống dưới (Hào 6 -> Hào 1)
-            // bit 0 -> Hào 6, bit 1 -> Hào 5... bit 5 -> Hào 1
+            // Vẽ từ trên xuống (Hào 6 ở trên cùng - tương ứng bit đầu tiên)
             for (let i = 0; i < 6; i++) {
                 const line = document.createElement('div');
                 const isYang = bin[i] === '1';
-                const lineIndex = 6 - i; // Chuyển đổi chỉ số hiển thị (Hào 6, 5, 4, 3, 2, 1)
                 
                 line.className = isYang ? "line" : "line broken";
                 
-                // Kiểm tra xem hào này có động không (STM logic: vị trí số lẻ)
-                // Theo logic bạn: Hào 6 ứng với số đầu tiên (index 0)
+                // Đánh dấu hào động (Dựa trên vị trí số lẻ trong 6 chữ số thời gian)
                 if (moving.includes(i + 1)) {
                     line.classList.add('moving');
                 }
