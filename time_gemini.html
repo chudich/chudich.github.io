@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STM - Tân Thời Dịch Số</title>
+    <style>
+        :root { --primary: #673ab7; --bg: #f5f5f5; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .time-display { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-bottom: 20px; border: 2px dashed #ddd; padding: 10px; border-radius: 10px; }
+        button { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; }
+        button:active { transform: scale(0.95); }
+        .result { margin-top: 25px; text-align: left; border-top: 2px solid #eee; padding-top: 20px; display: none; }
+        .hexagram-box { background: #fffde7; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #fbc02d; }
+        .moving-lines { color: #d32f2f; font-weight: bold; }
+        .note { font-size: 0.85rem; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>STM - Tân Thời Dịch</h2>
+    <p>Phương pháp Ma Trận Thời Không</p>
+    
+    <div id="clock" class="time-display">Đang chờ lệnh...</div>
+    
+    <button onclick="lapQue()">CHẠM ĐỂ LẬP QUẺ</button>
+
+    <div id="result" class="result">
+        <div class="hexagram-box">
+            <strong>Thời điểm:</strong> <span id="res-time"></span><br>
+            <strong>Quẻ Chủ:</strong> <span id="res-main"></span><br>
+            <strong>Hào Động:</strong> <span id="res-moving" class="moving-lines"></span>
+        </div>
+        <div class="note">
+            * Số lẻ: Hào biến (Động) | Số chẵn/0: Hào tĩnh.
+        </div>
+    </div>
+</div>
+
+<script>
+    const cung = ["Khôn", "Kiền", "Đoài", "Ly", "Chấn", "Tốn", "Khảm", "Cấn", "Khôn"];
+
+    function getQueName(n) {
+        let du = n % 8;
+        return cung[du === 0 ? 8 : du];
+    }
+
+    function lapQue() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getHours()).padStart(2, '0'); // Sửa thành mm cho đúng logic phút
+        const realMm = String(now.getMinutes()).padStart(2, '0'); 
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        
+        const fullTime = `${hh}${realMm}${ss}`; // Chuỗi 6 chữ số: X X' Y Y' Z Z'
+        
+        // 1. Tính Quẻ Thượng (Giờ) & Hạ (Phút)
+        const totalH = parseInt(hh[0]) + parseInt(hh[1]);
+        const totalM = parseInt(realMm[0]) + parseInt(realMm[1]);
+        
+        const thuong = getQueName(totalH);
+        const ha = getQueName(totalM);
+
+        // 2. Xét Hào Động (6 vị trí từ dưới lên: Hào 1 là hh[0], Hào 6 là ss[1])
+        let dong = [];
+        for(let i = 0; i < 6; i++) {
+            let num = parseInt(fullTime[i]);
+            // Quy ước: Lẻ là Động, Chẵn/0 là Tĩnh
+            if (num % 2 !== 0) {
+                dong.push(i + 1); // Lưu vị trí hào động (1-6)
+            }
+        }
+
+        // 3. Hiển thị
+        document.getElementById('clock').innerText = `${hh}:${realMm}:${ss}`;
+        document.getElementById('res-time').innerText = `${hh}:${realMm}:${ss}`;
+        document.getElementById('res-main').innerText = `${thuong} trên ${ha}`;
+        document.getElementById('res-moving').innerText = dong.length > 0 ? `Hào ${dong.join(', ')}` : "Tĩnh (Không hào động)";
+        document.getElementById('result').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
