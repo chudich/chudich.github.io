@@ -2,85 +2,152 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STM - Tân Thời Dịch Số</title>
     <style>
-        :root { --primary: #673ab7; --bg: #f5f5f5; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .time-display { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-bottom: 20px; border: 2px dashed #ddd; padding: 10px; border-radius: 10px; }
-        button { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%; }
-        button:active { transform: scale(0.95); }
-        .result { margin-top: 25px; text-align: left; border-top: 2px solid #eee; padding-top: 20px; display: none; }
-        .hexagram-box { background: #fffde7; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #fbc02d; }
-        .moving-lines { color: #d32f2f; font-weight: bold; }
-        .note { font-size: 0.85rem; color: #666; margin-top: 10px; }
+        :root { --primary-blue: #007bff; --dark-blue: #004a99; --bg-gray: #f0f2f5; --accent: #d32f2f; }
+        body { font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; background: var(--bg-gray); color: #1c1e21; }
+        h2 { font-size: 1.4rem; margin: 15px 0; color: #333; text-align: center; }
+
+        .action-container { width: 95%; max-width: 500px; margin-bottom: 20px; }
+        .main-btn { 
+            width: 100%; padding: 20px; background: var(--dark-blue); color: white; 
+            border: none; border-radius: 15px; font-size: 1.2rem; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,74,153,0.3); cursor: pointer;
+        }
+        .main-btn:active { transform: scale(0.98); }
+
+        .result-wrapper { width: 95%; max-width: 500px; display: none; flex-direction: column; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid var(--dark-blue); }
+        
+        .label-tag { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: #888; margin-bottom: 10px; display: block; }
+        .que-name { font-size: 26px; font-weight: 800; color: var(--dark-blue); margin: 10px 0; }
+        .time-stamp { font-family: monospace; font-size: 1.1rem; color: #555; margin-bottom: 10px; }
+
+        .hexagram { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 20px 0; }
+        .line { width: 140px; height: 12px; background-color: var(--dark-blue); border-radius: 3px; position: relative; }
+        .line.broken { background-color: transparent; display: flex; justify-content: space-between; }
+        .line.broken::before, .line.broken::after { content: ""; width: 44%; height: 100%; background-color: var(--dark-blue); border-radius: 3px; }
+        
+        /* Đánh dấu hào động */
+        .line.moving::after { content: "●"; position: absolute; right: -25px; color: var(--accent); font-size: 18px; top: -5px; }
+
+        .info-box { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 0.9rem; text-align: left; }
+        .moving-text { color: var(--accent); font-weight: bold; }
+        .binary-info { font-family: monospace; background: #eee; padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>STM - Tân Thời Dịch</h2>
-    <p>Phương pháp Ma Trận Thời Không</p>
-    
-    <div id="clock" class="time-display">Đang chờ lệnh...</div>
-    
-    <button onclick="lapQue()">CHẠM ĐỂ LẬP QUẺ</button>
+    <h2>STM - LẬP QUẺ TÂN THỜI</h2>
 
-    <div id="result" class="result">
-        <div class="hexagram-box">
-            <strong>Thời điểm:</strong> <span id="res-time"></span><br>
-            <strong>Quẻ Chủ:</strong> <span id="res-main"></span><br>
-            <strong>Hào Động:</strong> <span id="res-moving" class="moving-lines"></span>
-        </div>
-        <div class="note">
-            * Số lẻ: Hào biến (Động) | Số chẵn/0: Hào tĩnh.
+    <div class="action-container">
+        <button class="main-btn" onclick="lapQueSTM()">CHẠM ĐỂ LẬP QUẺ</button>
+    </div>
+
+    <div id="resultArea" class="result-wrapper">
+        <div class="card">
+            <span class="label-tag">Kết quả thời gian thực</span>
+            <div id="res-time" class="time-stamp">00:00:00</div>
+            <div id="res-name" class="que-name">---</div>
+            
+            <div id="visual-que" class="hexagram"></div>
+            
+            <div class="info-box">
+                <div>Mã nhị phân: <span id="res-bin" class="binary-info">---</span></div>
+                <div style="margin-top:5px;">Hào động: <span id="res-moving" class="moving-text">Không có</span></div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    const cung = ["Khôn", "Kiền", "Đoài", "Ly", "Chấn", "Tốn", "Khảm", "Cấn", "Khôn"];
+    <script>
+        // Bát quái theo thứ tự số dư (0-7), 0=8=Khôn
+        const batQuai = {
+            "1": { name: "Kiền", code: "111" },
+            "2": { name: "Đoài", code: "011" },
+            "3": { name: "Ly",   code: "101" },
+            "4": { name: "Chấn", code: "001" },
+            "5": { name: "Tốn",  code: "110" },
+            "6": { name: "Khảm", code: "010" },
+            "7": { name: "Cấn",  code: "100" },
+            "0": { name: "Khôn", code: "000" }
+        };
 
-    function getQueName(n) {
-        let du = n % 8;
-        return cung[du === 0 ? 8 : du];
-    }
+        const data64Que = {
+            "111111": "Thuần Càn", "000000": "Thuần Khôn", "010001": "Thủy Lôi Truân", "100010": "Sơn Thủy Mông",
+            "010111": "Thủy Thiên Nhu", "111010": "Thiên Thủy Tụng", "000010": "Địa Thủy Sư", "010000": "Thủy Địa Tỷ",
+            "110111": "Phong Thiên Tiểu Súc", "111011": "Thiên Trạch Lý", "000111": "Địa Thiên Thái", "111000": "Thiên Địa Bĩ",
+            "111101": "Thiên Hỏa Đồng Nhân", "101111": "Hỏa Thiên Đại Hữu", "000100": "Địa Sơn Khiêm", "001000": "Lôi Địa Dự",
+            "011001": "Trạch Lôi Tùy", "100110": "Sơn Phong Cổ", "000011": "Địa Trạch Lâm", "110000": "Phong Địa Quán",
+            "101001": "Hỏa Lôi Phệ Hạp", "100101": "Sơn Hỏa Bí", "100000": "Sơn Địa Bác", "000001": "Địa Lôi Phục",
+            "111001": "Thiên Lôi Vô Vọng", "100111": "Sơn Thiên Đại Súc", "100001": "Sơn Lôi Di", "011110": "Trạch Phong Đại Quá",
+            "010010": "Thuần Khảm", "101101": "Thuần Ly", "011100": "Trạch Sơn Hàm", "001110": "Lôi Phong Hằng",
+            "111100": "Thiên Sơn Độn", "001111": "Lôi Thiên Đại Tráng", "101000": "Hỏa Địa Tấn", "000101": "Địa Hỏa Minh Di",
+            "110101": "Phong Hỏa Gia Nhân", "101011": "Hỏa Trạch Khuê", "010100": "Thủy Sơn Kiển", "001010": "Lôi Thủy Giải",
+            "100011": "Sơn Trạch Tổn", "110001": "Phong Lôi Ích", "011111": "Trạch Thiên Quải", "111110": "Thiên Phong Cấu",
+            "011000": "Trạch Địa Tụy", "000110": "Địa Phong Thăng", "011010": "Trạch Thủy Khốn", "010110": "Thủy Phong Tỉnh",
+            "011101": "Trạch Hỏa Cách", "101110": "Hỏa Phong Đỉnh", "001001": "Thuần Chấn", "100100": "Thuần Cấn",
+            "110100": "Phong Sơn Tiệm", "001011": "Lôi Trạch Quy Muội", "001101": "Lôi Hỏa Phong", "101100": "Hỏa Sơn Lữ",
+            "110110": "Thuần Tốn", "011011": "Thuần Đoài", "110010": "Phong Thủy Hoán", "010011": "Thủy Trạch Tiết",
+            "110011": "Phong Trạch Trung Phu", "001100": "Lôi Sơn Tiểu Quá", "010101": "Thủy Hỏa Ký Tế", "101010": "Hỏa Thủy Vị Tế"
+        };
 
-    function lapQue() {
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getHours()).padStart(2, '0'); // Sửa thành mm cho đúng logic phút
-        const realMm = String(now.getMinutes()).padStart(2, '0'); 
-        const ss = String(now.getSeconds()).padStart(2, '0');
-        
-        const fullTime = `${hh}${realMm}${ss}`; // Chuỗi 6 chữ số: X X' Y Y' Z Z'
-        
-        // 1. Tính Quẻ Thượng (Giờ) & Hạ (Phút)
-        const totalH = parseInt(hh[0]) + parseInt(hh[1]);
-        const totalM = parseInt(realMm[0]) + parseInt(realMm[1]);
-        
-        const thuong = getQueName(totalH);
-        const ha = getQueName(totalM);
+        function lapQueSTM() {
+            const now = new Date();
+            const hh = now.getHours().toString().padStart(2, '0');
+            const mm = now.getMinutes().toString().padStart(2, '0');
+            const ss = now.getSeconds().toString().padStart(2, '0');
+            
+            // 1. Lấy dữ liệu thô 6 chữ số
+            const digits = (hh + mm + ss).split('').map(Number);
+            
+            // 2. Tính Quẻ Thượng/Hạ theo tổng chia 8
+            const sumUp = (digits[0] + digits[1]) % 8;
+            const sumLow = (digits[2] + digits[3]) % 8;
+            
+            const codeUp = batQuai[sumUp].code; // Nhị phân 3 hào trên
+            const codeLow = batQuai[sumLow].code; // Nhị phân 3 hào dưới
+            const fullBinary = codeUp + codeLow; // Chuỗi 6 bit
 
-        // 2. Xét Hào Động (6 vị trí từ dưới lên: Hào 1 là hh[0], Hào 6 là ss[1])
-        let dong = [];
-        for(let i = 0; i < 6; i++) {
-            let num = parseInt(fullTime[i]);
-            // Quy ước: Lẻ là Động, Chẵn/0 là Tĩnh
-            if (num % 2 !== 0) {
-                dong.push(i + 1); // Lưu vị trí hào động (1-6)
-            }
+            // 3. Xác định hào động (Lẻ = Động)
+            // Hào 1 ứng với digits[0] ... Hào 6 ứng với digits[5]
+            let movingLines = [];
+            digits.forEach((d, index) => {
+                if (d % 2 !== 0) movingLines.push(index + 1);
+            });
+
+            // 4. Hiển thị kết quả
+            document.getElementById('res-time').innerText = `${hh}:${mm}:${ss}`;
+            document.getElementById('res-name').innerText = data64Que[fullBinary] || "Không xác định";
+            document.getElementById('res-bin').innerText = `${codeUp} ${codeLow}`;
+            document.getElementById('res-moving').innerText = movingLines.length > 0 ? "Hào " + movingLines.join(', ') : "Tĩnh";
+            
+            renderHexagram(fullBinary, movingLines);
+            document.getElementById('resultArea').style.display = 'flex';
         }
 
-        // 3. Hiển thị
-        document.getElementById('clock').innerText = `${hh}:${realMm}:${ss}`;
-        document.getElementById('res-time').innerText = `${hh}:${realMm}:${ss}`;
-        document.getElementById('res-main').innerText = `${thuong} trên ${ha}`;
-        document.getElementById('res-moving').innerText = dong.length > 0 ? `Hào ${dong.join(', ')}` : "Tĩnh (Không hào động)";
-        document.getElementById('result').style.display = 'block';
-    }
-</script>
-
+        function renderHexagram(bin, moving) {
+            const container = document.getElementById('visual-que');
+            container.innerHTML = "";
+            
+            // Vẽ từ trên xuống dưới (Hào 6 -> Hào 1)
+            // bit 0 -> Hào 6, bit 1 -> Hào 5... bit 5 -> Hào 1
+            for (let i = 0; i < 6; i++) {
+                const line = document.createElement('div');
+                const isYang = bin[i] === '1';
+                const lineIndex = 6 - i; // Chuyển đổi chỉ số hiển thị (Hào 6, 5, 4, 3, 2, 1)
+                
+                line.className = isYang ? "line" : "line broken";
+                
+                // Kiểm tra xem hào này có động không (STM logic: vị trí số lẻ)
+                // Theo logic bạn: Hào 6 ứng với số đầu tiên (index 0)
+                if (moving.includes(i + 1)) {
+                    line.classList.add('moving');
+                }
+                
+                container.appendChild(line);
+            }
+        }
+    </script>
 </body>
 </html>
