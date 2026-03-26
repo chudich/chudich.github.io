@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tính Trực + Sao</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f5f5f5; }
+.container { display: flex; gap: 20px; }
+.box { background: white; padding: 15px; border-radius: 10px; width: 45%; }
+h2 { text-align:center; }
+select, button { margin: 5px 0; padding: 5px; width:100%; }
+.result { margin-top: 10px; padding:10px; background:#eef; border-radius:6px;}
+</style>
+</head>
+
+<body>
+
+<h1>Tính Trực (Trung Hoa vs Việt Nam)</h1>
+
+<div class="container">
+
+<!-- TQ -->
+<div class="box" id="tqBox">
+<h2>Trung Hoa (Tiết Khí)</h2>
+
+<select id="tqMonth"></select>
+<select id="tqDay"></select>
+
+<button onclick="calc('tq')">Tìm Trực</button>
+
+<div class="result" id="tqResult"></div>
+</div>
+
+<!-- VN -->
+<div class="box" id="vnBox">
+<h2>Việt Nam (Tháng Sóc)</h2>
+
+<select id="vnMonth"></select>
+<select id="vnDay"></select>
+
+<button onclick="calc('vn')">Tìm Trực</button>
+
+<div class="result" id="vnResult"></div>
+</div>
+
+</div>
+
+<br>
+<button onclick="downloadImage()">📸 Tải ảnh kết quả</button>
+
+<script>
+
+// ===== DATA =====
+const chi = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+
+const truc = [
+"Kiến","Trừ","Mãn","Bình","Định","Chấp",
+"Phá","Nguy","Thành","Thu","Khai","Bế"
+];
+
+// 28 sao (đơn giản hóa tên VN)
+const sao28 = [
+"Giác (Nai)","Cang (Rồng)","Đê","Phòng","Tâm","Vĩ","Cơ",
+"Đẩu","Ngưu","Nữ","Hư","Nguy","Thất","Bích",
+"Khuê","Lâu","Vị","Mão","Tất","Chủy","Sâm",
+"Tỉnh","Quỷ","Liễu","Tinh","Trương","Dực","Chẩn"
+];
+
+// ===== INIT SELECT =====
+function initSelect(id){
+    const el = document.getElementById(id);
+    chi.forEach(c=>{
+        let opt = document.createElement("option");
+        opt.value = c;
+        opt.text = c;
+        el.appendChild(opt);
+    });
+}
+
+initSelect("tqMonth");
+initSelect("tqDay");
+initSelect("vnMonth");
+initSelect("vnDay");
+
+// ===== CORE FUNCTION =====
+function calc(type){
+
+    let m = document.getElementById(type+"Month").value;
+    let d = document.getElementById(type+"Day").value;
+
+    let mIndex = chi.indexOf(m);
+    let dIndex = chi.indexOf(d);
+
+    let index = (dIndex - mIndex + 12) % 12;
+    let trucName = truc[index];
+
+    // sao 28 (giả lập đơn giản theo ngày chi)
+    let sao = sao28[dIndex % 28];
+
+    let result = `
+    Tháng: ${m} <br>
+    Ngày: ${d} <br><br>
+    👉 Trực: <b>${trucName}</b><br>
+    ⭐ Sao: ${sao}
+    `;
+
+    document.getElementById(type+"Result").innerHTML = result;
+}
+
+// ===== DOWNLOAD IMAGE =====
+function downloadImage(){
+    html2canvas(document.body).then(canvas=>{
+        let link = document.createElement("a");
+        link.download = "truc_result.png";
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+}
+
+</script>
+
+<!-- thư viện chụp ảnh -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+</body>
+</html>
