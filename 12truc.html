@@ -2,14 +2,108 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+
+<!-- QUAN TRỌNG: mobile scale -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Tính Trực + Sao</title>
+
 <style>
-body { font-family: Arial; padding: 20px; background:#f5f5f5; }
-.container { display: flex; gap: 20px; }
-.box { background: white; padding: 15px; border-radius: 10px; width: 45%; }
-h2 { text-align:center; }
-select, button { margin: 5px 0; padding: 5px; width:100%; }
-.result { margin-top: 10px; padding:10px; background:#eef; border-radius:6px;}
+
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* ===== BASE ===== */
+html {
+  font-size: clamp(16px, 2.8vw, 20px);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 12px;
+  background: #f5f5f5;
+}
+
+/* ===== TITLE ===== */
+h1 {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+/* ===== LAYOUT ===== */
+.container {
+  display: flex;
+  flex-direction: column; /* mobile: xếp dọc */
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row; /* tablet trở lên: ngang */
+    justify-content: center;
+  }
+}
+
+/* ===== BOX ===== */
+.box {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+/* ===== INPUT ===== */
+select, button {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== BUTTON ===== */
+button {
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+button:active {
+  opacity: 0.8;
+}
+
+/* ===== RESULT ===== */
+.result {
+  margin-top: 10px;
+  padding: 12px;
+  background: #eef;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+/* ===== DOWNLOAD BUTTON ===== */
+.download-btn {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  background: #2196F3;
+}
+
 </style>
 </head>
 
@@ -20,7 +114,7 @@ select, button { margin: 5px 0; padding: 5px; width:100%; }
 <div class="container">
 
 <!-- TQ -->
-<div class="box" id="tqBox">
+<div class="box">
 <h2>Trung Hoa (Tiết Khí)</h2>
 
 <select id="tqMonth"></select>
@@ -32,7 +126,7 @@ select, button { margin: 5px 0; padding: 5px; width:100%; }
 </div>
 
 <!-- VN -->
-<div class="box" id="vnBox">
+<div class="box">
 <h2>Việt Nam (Tháng Sóc)</h2>
 
 <select id="vnMonth"></select>
@@ -45,8 +139,7 @@ select, button { margin: 5px 0; padding: 5px; width:100%; }
 
 </div>
 
-<br>
-<button onclick="downloadImage()">📸 Tải ảnh kết quả</button>
+<button class="download-btn" onclick="downloadImage()">📸 Tải ảnh kết quả</button>
 
 <script>
 
@@ -58,7 +151,6 @@ const truc = [
 "Phá","Nguy","Thành","Thu","Khai","Bế"
 ];
 
-// 28 sao (đơn giản hóa tên VN)
 const sao28 = [
 "Giác (Nai)","Cang (Rồng)","Đê","Phòng","Tâm","Vĩ","Cơ",
 "Đẩu","Ngưu","Nữ","Hư","Nguy","Thất","Bích",
@@ -66,7 +158,7 @@ const sao28 = [
 "Tỉnh","Quỷ","Liễu","Tinh","Trương","Dực","Chẩn"
 ];
 
-// ===== INIT SELECT =====
+// ===== INIT =====
 function initSelect(id){
     const el = document.getElementById(id);
     chi.forEach(c=>{
@@ -77,12 +169,9 @@ function initSelect(id){
     });
 }
 
-initSelect("tqMonth");
-initSelect("tqDay");
-initSelect("vnMonth");
-initSelect("vnDay");
+["tqMonth","tqDay","vnMonth","vnDay"].forEach(initSelect);
 
-// ===== CORE FUNCTION =====
+// ===== CORE =====
 function calc(type){
 
     let m = document.getElementById(type+"Month").value;
@@ -94,20 +183,19 @@ function calc(type){
     let index = (dIndex - mIndex + 12) % 12;
     let trucName = truc[index];
 
-    // sao 28 (giả lập đơn giản theo ngày chi)
     let sao = sao28[dIndex % 28];
 
     let result = `
-    Tháng: ${m} <br>
-    Ngày: ${d} <br><br>
-    👉 Trực: <b>${trucName}</b><br>
-    ⭐ Sao: ${sao}
+    <b>Tháng:</b> ${m} <br>
+    <b>Ngày:</b> ${d} <br><br>
+    👉 <b>Trực:</b> ${trucName}<br>
+    ⭐ <b>Sao:</b> ${sao}
     `;
 
     document.getElementById(type+"Result").innerHTML = result;
 }
 
-// ===== DOWNLOAD IMAGE =====
+// ===== DOWNLOAD =====
 function downloadImage(){
     html2canvas(document.body).then(canvas=>{
         let link = document.createElement("a");
@@ -119,7 +207,6 @@ function downloadImage(){
 
 </script>
 
-<!-- thư viện chụp ảnh -->
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 </body>
