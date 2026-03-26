@@ -2,212 +2,180 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-
-<!-- QUAN TRỌNG: mobile scale -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Tính Trực + Sao</title>
+<title>Kinh Dịch Utilities - Tính Trực & Sao</title>
 
 <style>
+/* ===== RESET & BASE ===== */
+* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+html { font-size: clamp(14px, 3vw, 18px); }
+body { margin: 0; padding: 15px; background: #f0f2f5; color: #333; }
 
-/* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
-
-/* ===== BASE ===== */
-html {
-  font-size: clamp(16px, 2.8vw, 20px);
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 12px;
-  background: #f5f5f5;
-}
-
-/* ===== TITLE ===== */
-h1 {
-  text-align: center;
-  font-size: 1.4rem;
-  margin-bottom: 12px;
-}
+h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 1.5rem; }
 
 /* ===== LAYOUT ===== */
-.container {
-  display: flex;
-  flex-direction: column; /* mobile: xếp dọc */
-  gap: 12px;
+.container { max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 15px; }
+
+.box { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
 }
 
-@media (min-width: 768px) {
-  .container {
-    flex-direction: row; /* tablet trở lên: ngang */
-    justify-content: center;
-  }
-}
+h2 { font-size: 1.1rem; color: #d35400; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 0; }
 
-/* ===== BOX ===== */
-.box {
-  background: white;
-  padding: 14px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  margin: auto;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+/* ===== FORM ELEMENTS ===== */
+.form-group { margin-bottom: 12px; }
+label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+select, input, button { 
+    width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; outline: none;
 }
+input:focus, select:focus { border-color: #3498db; }
 
-h2 {
-  text-align: center;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
+button { 
+    background: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s;
+    margin-top: 10px;
 }
-
-/* ===== INPUT ===== */
-select, button {
-  width: 100%;
-  font-size: 1.1rem;
-  padding: 12px;
-  margin: 6px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-/* ===== BUTTON ===== */
-button {
-  background: #4CAF50;
-  color: white;
-  font-weight: bold;
-  border: none;
-}
-
-button:active {
-  opacity: 0.8;
-}
+button:hover { background: #219150; }
+button:active { transform: scale(0.98); }
 
 /* ===== RESULT ===== */
-.result {
-  margin-top: 10px;
-  padding: 12px;
-  background: #eef;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  line-height: 1.5;
+.result { 
+    margin-top: 15px; padding: 15px; background: #f8f9fa; border-left: 5px solid #27ae60; 
+    border-radius: 4px; line-height: 1.6; display: none;
 }
+.result b { color: #2c3e50; }
+.highlight { color: #e74c3c; font-weight: bold; }
 
-/* ===== DOWNLOAD BUTTON ===== */
-.download-btn {
-  margin-top: 12px;
-  font-size: 1.1rem;
-  background: #2196F3;
-}
-
+.download-btn { background: #3498db; margin-top: 20px; }
 </style>
 </head>
-
 <body>
 
-<h1>Tính Trực (Trung Hoa - Việt Nam)</h1>
+<div id="capture-area">
+    <h1>Công Cụ Tính Trực & Sao</h1>
+
+    <div class="container">
+        <div class="box">
+            <h2>1. Tính Thập Nhị Trực</h2>
+            <div class="form-group">
+                <label>Tháng (Chi của tháng):</label>
+                <select id="selMonth"></select>
+            </div>
+            <div class="form-group">
+                <label>Ngày (Chi của ngày):</label>
+                <select id="selDay"></select>
+            </div>
+            <button onclick="calcTruc()">Xem Trực</button>
+            <div class="result" id="trucResult"></div>
+        </div>
+
+        <div class="box">
+            <h2>2. Tính Nhị Thập Bát Tú</h2>
+            <div class="form-group">
+                <label>Chọn ngày Dương lịch:</label>
+                <input type="date" id="solarDate">
+            </div>
+            <button onclick="calcSao()">Xem Sao</button>
+            <div class="result" id="saoResult"></div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
-
-<!-- TQ -->
-<div class="box">
-<h2>Trung Hoa (Tiết Khí)</h2>
-
-<select id="tqMonth"></select>
-<select id="tqDay"></select>
-
-<button onclick="calc('tq')">Tìm Trực</button>
-
-<div class="result" id="tqResult"></div>
+    <button class="download-btn" onclick="downloadImage()">📸 Tải ảnh kết quả</button>
 </div>
 
-<!-- VN -->
-<div class="box">
-<h2>Việt Nam (Tháng Sóc)</h2>
-
-<select id="vnMonth"></select>
-<select id="vnDay"></select>
-
-<button onclick="calc('vn')">Tìm Trực</button>
-
-<div class="result" id="vnResult"></div>
-</div>
-
-</div>
-
-<button class="download-btn" onclick="downloadImage()">📸 Tải ảnh kết quả</button>
-
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-
 // ===== DATA =====
 const chi = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
 
 const truc = [
-"Kiến","Trừ","Mãn","Bình","Định","Chấp",
-"Phá","Nguy","Thành","Thu","Khai","Bế"
+    "Kiến (Tốt)","Trừ (Phụ)","Mãn (Tốt)","Bình (Tốt)","Định (Tốt)","Chấp (Bình)",
+    "Phá (Xấu)","Nguy (Xấu)","Thành (Tốt)","Thu (Tốt)","Khai (Tốt)","Bế (Xấu)"
 ];
 
 const sao28 = [
-"Giác (Nai)","Cang (Rồng)","Đê","Phòng","Tâm","Vĩ","Cơ",
-"Đẩu","Ngưu","Nữ","Hư","Nguy","Thất","Bích",
-"Khuê","Lâu","Vị","Mão","Tất","Chủy","Sâm",
-"Tỉnh","Quỷ","Liễu","Tinh","Trương","Dực","Chẩn"
+    "Giác (Mộc Giao)","Cang (Kim Long)","Đê (Thổ Lạc)","Phòng (Thái Nhật)","Tâm (Thái Nguyệt)","Vĩ (Hỏa Hổ)","Cơ (Thủy Báo)",
+    "Đẩu (Mộc Giải)","Ngưu (Kim Ngưu)","Nữ (Thổ Bức)","Hư (Thái Nhật)","Nguy (Thái Nguyệt)","Thất (Hỏa Trư)","Bích (Thủy Du)",
+    "Khuê (Mộc Lang)","Lâu (Kim Cẩu)","Vị (Thổ Trĩ)","Mão (Thái Nhật)","Tất (Thái Nguyệt)","Chủy (Hỏa Hầu)","Sâm (Thủy Viên)",
+    "Tỉnh (Mộc Ngạn)","Quỷ (Kim Dương)","Liễu (Thổ Chương)","Tinh (Thái Nhật)","Trương (Thái Nguyệt)","Dực (Hỏa Xà)","Chẩn (Thủy Dẫn)"
 ];
 
-// ===== INIT =====
-function initSelect(id){
-    const el = document.getElementById(id);
-    chi.forEach(c=>{
-        let opt = document.createElement("option");
-        opt.value = c;
-        opt.text = c;
-        el.appendChild(opt);
+// ===== KHỞI TẠO =====
+function init() {
+    const mSelect = document.getElementById("selMonth");
+    const dSelect = document.getElementById("selDay");
+    
+    chi.forEach(c => {
+        mSelect.add(new Option(c, c));
+        dSelect.add(new Option(c, c));
     });
+
+    // Set ngày mặc định là hôm nay
+    document.getElementById('solarDate').valueAsDate = new Date();
+}
+init();
+
+// ===== TÍNH TRỰC =====
+function calcTruc() {
+    const m = document.getElementById("selMonth").value;
+    const d = document.getElementById("selDay").value;
+    
+    const mIndex = chi.indexOf(m);
+    const dIndex = chi.indexOf(d);
+
+    // Công thức: Trực Kiến rơi vào ngày có Chi trùng với Chi tháng
+    let index = (dIndex - mIndex + 12) % 12;
+    let name = truc[index];
+
+    const resDiv = document.getElementById("trucResult");
+    resDiv.style.display = "block";
+    resDiv.innerHTML = `Tháng <b>${m}</b>, Ngày <b>${d}</b> là:<br>👉 Trực: <span class="highlight">${name}</span>`;
 }
 
-["tqMonth","tqDay","vnMonth","vnDay"].forEach(initSelect);
+// ===== TÍNH SAO (Dựa trên Julian Day) =====
+function calcSao() {
+    const dateVal = document.getElementById("solarDate").value;
+    if(!dateVal) return alert("Vui lòng chọn ngày!");
 
-// ===== CORE =====
-function calc(type){
+    const selectedDate = new Date(dateVal);
+    
+    // Ngày gốc: 2024-01-01 là ngày sao CƠ (Index 6 trong mảng sao28)
+    const anchorDate = new Date('2024-01-01');
+    
+    // Tính số ngày chênh lệch
+    const diffTime = selectedDate - anchorDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Tính index sao (vòng lặp 28)
+    // Cần cộng thêm 6 (index của sao Cơ) và xử lý số âm nếu chọn ngày trước 2024
+    let saoIndex = (diffDays + 6) % 28;
+    if (saoIndex < 0) saoIndex += 28;
 
-    let m = document.getElementById(type+"Month").value;
-    let d = document.getElementById(type+"Day").value;
-
-    let mIndex = chi.indexOf(m);
-    let dIndex = chi.indexOf(d);
-
-    let index = (dIndex - mIndex + 12) % 12;
-    let trucName = truc[index];
-
-    let sao = sao28[dIndex % 28];
-
-    let result = `
-    <b>Tháng:</b> ${m} <br>
-    <b>Ngày:</b> ${d} <br><br>
-    👉 <b>Trực:</b> ${trucName}<br>
-    ⭐ <b>Sao:</b> ${sao}
-    `;
-
-    document.getElementById(type+"Result").innerHTML = result;
+    const name = sao28[saoIndex];
+    
+    const resDiv = document.getElementById("saoResult");
+    resDiv.style.display = "block";
+    resDiv.innerHTML = `Ngày ${selectedDate.toLocaleDateString('vi-VN')}:<br>⭐ Sao: <span class="highlight">${name}</span>`;
 }
 
 // ===== DOWNLOAD =====
-function downloadImage(){
-    html2canvas(document.body).then(canvas=>{
+function downloadImage() {
+    const btn = document.querySelector('.download-btn');
+    btn.style.display = 'none'; // Ẩn nút khi chụp
+
+    html2canvas(document.getElementById("capture-area")).then(canvas => {
         let link = document.createElement("a");
-        link.download = "truc_result.png";
+        link.download = "ket-qua-dich-hoc.png";
         link.href = canvas.toDataURL();
         link.click();
+        btn.style.display = 'block'; // Hiện lại nút
     });
 }
-
 </script>
-
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 </body>
 </html>
