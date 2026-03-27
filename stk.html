@@ -6,7 +6,7 @@
     <title>STM - TẬP QUẺ & TẢI ẢNH</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --dark-blue: #004a99; --accent: #ff3b30; --bg: #f0f2f5; }
+        :root { --dark-blue: #004a99; --accent: #ff3b30; --bg: #f0f2f5; --gemini: #4285f4; --chatgpt: #10a37f; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
 
         .input-group { width: 95%; max-width: 500px; margin-top: 15px; }
@@ -14,14 +14,25 @@
 
         .main-btn { 
             width: 95%; max-width: 500px; padding: 18px; background: var(--dark-blue); color: white; 
-            border: none; border-radius: 15px; font-size: 1.1rem; font-weight: bold; margin: 15px 0;
+            border: none; border-radius: 15px; font-size: 1.1rem; font-weight: bold; margin: 15px 0 10px 0;
             box-shadow: 0 5px 15px rgba(0,74,153,0.3); cursor: pointer;
         }
 
         .download-btn {
             width: 95%; max-width: 500px; padding: 12px; background: #28a745; color: white;
-            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: none;
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: none;
         }
+
+        /* Style cho 2 nút AI mới */
+        .ai-btn-group { width: 95%; max-width: 500px; display: flex; gap: 10px; margin-bottom: 20px; }
+        .ai-btn { 
+            flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; 
+            font-weight: bold; text-decoration: none; text-align: center; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; transition: opacity 0.2s;
+        }
+        .btn-gemini { background: var(--gemini); }
+        .btn-chatgpt { background: var(--chatgpt); }
+        .ai-btn:active { opacity: 0.8; }
 
         /* Vùng sẽ chụp ảnh */
         #capture-area { 
@@ -60,6 +71,11 @@
 
     <button class="main-btn" onclick="lapQueSTM()">CHẠM LẬP QUẺ & PHÂN TÍCH</button>
     <button id="btnDownload" class="download-btn" onclick="downloadImg()">TẢI ẢNH QUẺ VỀ MÁY</button>
+
+    <div class="ai-btn-group">
+        <a href="https://gemini.google.com/share/5427958ae484" target="_blank" class="ai-btn btn-gemini">Gemini</a>
+        <a href="https://chatgpt.com/share/69c36e54-d6a0-839f-8271-bfd6c1921fcd" target="_blank" class="ai-btn btn-chatgpt">ChatGPT</a>
+    </div>
 
     <div id="capture-area">
         <div class="summary-card">
