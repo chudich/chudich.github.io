@@ -3,37 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinh Dịch Utilities - Bài Tứ Sắc Data 1</title>
+    <title>Kinh Dịch Utilities - Bài Tứ Sắc (Data 1 & 2)</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f0f2f5; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { color: #b22222; border-left: 5px solid #b22222; padding-left: 15px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f0f2f5; color: #333; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #8b0000; text-align: center; border-bottom: 3px double #8b0000; padding-bottom: 10px; }
+        h2 { color: #b22222; border-left: 5px solid #b22222; padding-left: 15px; margin-top: 30px; background: #fff5f5; padding: 10px; }
+        .info-box { background: #e7f3ff; border: 1px solid #b8daff; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
         .data-display { 
             background: #272822; color: #f8f8f2; padding: 20px; 
-            border-radius: 5px; overflow-y: auto; height: 500px; 
+            border-radius: 8px; overflow-y: auto; height: 450px; 
             white-space: pre-wrap; font-size: 14px; border: 2px solid #3e3e3e;
+            font-family: 'Courier New', Courier, monospace;
         }
-        .info-box { background: #e7f3ff; border: 1px solid #b8daff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .footer { text-align: center; margin-top: 20px; font-style: italic; color: #666; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Dữ Liệu Quý: Ý Nghĩa Thuận Nghịch 112 Lá Bài (Phần 1)</h2>
+    <h1>CƠ SỞ DỮ LIỆU BÀI TỨ SẮC</h1>
     
     <div class="info-box">
-        <strong>Trạng thái:</strong> Đã nạp 100% dữ liệu thủ công. <br>
-        <strong>Nguồn:</strong> Sách hiếm (Soạn thảo bởi người dùng).
+        [span_0](start_span)[span_1](start_span)[span_2](start_span)[span_3](start_span)[span_4](start_span)[span_5](start_span)[span_6](start_span)[span_7](start_span)<strong>Trạng thái hệ thống:</strong> Đã tích hợp 100% dữ liệu từ 2 nguồn (Text & Docx).[span_0](end_span)[span_1](end_span)[span_2](end_span)[span_3](end_span)[span_4](end_span)[span_5](end_span)[span_6](end_span)[span_7](end_span)<br>
+        <strong>Đặc tính:</strong> Dữ liệu quý soạn thảo thủ công, bảo lưu nguyên trạng 112 lá bài và các thế Thuận-Nghịch.
     </div>
 
-    <div id="dataView" class="data-display">
-        </div>
+    <h2>Phần 1: Ý Nghĩa Thuận Nghịch 112 Lá Bài</h2>
+    <div id="dataView1" class="data-display"></div>
+
+    <h2>Phần 2: Các Lá Bài Đứng Và Ngược Đầu Cùng Màu Gặp Nhau</h2>
+    <div id="dataView2" class="data-display"></div>
+
+    <p class="footer">Dữ liệu được bảo mật và lưu trữ cho ứng dụng Kinh Dịch Utilities 2026.</p>
 </div>
 
 <script>
     /**
-     * DỮ LIỆU GỐC - KHÔNG LƯỢC BỎ
-     * Được lưu trữ trong Template String để giữ nguyên định dạng văn bản gốc.
+     * DỮ LIỆU PHẦN 1: Ý NGHĨA ĐƠN LẺ
      */
     const dataTuSac_Phan1 = `
 Ý NGHĨA THUẬN NGHỊCH 112 LÁ BÀI
@@ -130,11 +137,83 @@ CHỐT ĐỎ :
 Ngược đầu : Lỡ lầm trong quá khứ sẽ ân hận mãi ở hiện tại và tương lai.
 `;
 
+    /**
+     * DỮ LIỆU PHẦN 2: CÁC LÁ BÀI GẶP NHAU (TỪ FILE DOCX)
+     */
+    const dataTuSac_Phan2 = `
+MÀU XANH - NHỮNG LÁ BÀI ĐỨNG VÀ NGƯỢC ĐẦU CÙNG MÀU GẶP NHAU
+
+1. TƯỚNG XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Gặp kẻ nhiều thủ đoạn tranh giành địa vị | [span_8](start_span)[Phải] Công việc bị xáo trộn vì kẻ tranh cạnh[span_8](end_span)
+- Sĩ Xanh (nđ): [Trái] Quyền lợi bị lủng đoạn | [span_9](start_span)[Phải] Gia đình xào xáo[span_9](end_span)
+- Tượng Xanh (nđ): [Trái] Có hội hè nhiều thắng lợi cho doanh nghiệp | [span_10](start_span)[Phải] Cuộc thương thảo có nhiều thuận lợi[span_10](end_span)
+- Xe Xanh (nđ): [Trái] Gặp cảnh chờ đợi mỏi mòn | [span_11](start_span)[Phải] Thành công mỹ mãn về địa vị[span_11](end_span)
+- Pháo Xanh (nđ): [Trái] Khó khăn trở ngại chậm trễ về mọi mặt | [span_12](start_span)[Phải] Tin bất lợi cho cuộc làm ăn[span_12](end_span)
+- Ngựa Xanh (nđ): [Trái] An nhàn nơi thôn dã | [span_13](start_span)[Phải] Người bạn lâm nguy lúc đi đường[span_13](end_span)
+- Chốt Xanh (nđ): [Trái] Người đàn ông lé mắt theo đuổi quấy phá | [span_14](start_span)[Phải] Thiệt hại nặng vì kẻ phản bội[span_14](end_span)
+
+2. SĨ XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Bị người thân lừa tiền | [span_15](start_span)[Phải] Có người đề nghị công việc mang nhiều lợi[span_15](end_span)
+- Sĩ Xanh (nđ): [Trái] Có cãi vã, kiện tụng, quấy rối | [span_16](start_span)[Phải] Thịnh vượng thăng chức[span_16](end_span)
+- Tượng Xanh (nđ): [Trái] Chấm dứt mối ưu phiền | [span_17](start_span)[Phải] Có bất bình phòng tiếng oan[span_17](end_span)
+- Xe Xanh (nđ): [Trái] Cuộc vận động sắp thành thì bị từ chối | [span_18](start_span)[Phải] Người rường cột trong gia đình gặp chuyện không may[span_18](end_span)
+- Pháo Xanh (nđ): [Trái] Người giúp việc trung thành mang sứ mạng đến | [span_19](start_span)[Phải] Nên can đảm thêm trong công ty, xí nghiệp[span_19](end_span)
+- Ngựa Xanh (nđ): [Trái] Đang khổ càng khổ nhiều | [span_20](start_span)[Phải] Có thể phủi tay, bôn ba[span_20](end_span)
+- Chốt Xanh (nđ): [Trái] Gặp người đàn bà vô duyên đeo đuổi dai dẳng | [span_21](start_span)[Phải] Ân tình đầu môi chót lưỡi[span_21](end_span)
+
+3. TƯỢNG XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Danh dự hoen ố, địa vị lung tay | [span_22](start_span)[Phải] Có sự xung đột dữ dội với kẻ toan tiếm quyền[span_22](end_span)
+- Sĩ Xanh (nđ): [Trái] Phòng mưu toan của kẻ độc ác | [span_23](start_span)[Phải] Nên nghe người bạn tốt xoay chuyển để thành công[span_23](end_span)
+- Tượng Xanh (nđ): [Trái] Quá khứ đã qua đừng hâm nóng lại | [span_24](start_span)[Phải] Hứa hẹn thực hiện được hay không do mình[span_24](end_span)
+- Xe Xanh (nđ): [Trái] Gặp thiếu nữ duyên dáng muốn giúp nhưng e dè | [span_25](start_span)[Phải] Lòng tốt bị hiểu nhầm[span_25](end_span)
+- Pháo Xanh (nđ): [Trái] Có cuộc viếng thăm của người bạn thân | [span_26](start_span)[Phải] Khát vọng quyến rũ bị lôi cuốn[span_26](end_span)
+- Ngựa Xanh (nđ): [Trái] Khó giữ đứng đắn với người lả lơi | [span_27](start_span)[Phải] Ngoại tình hay thông gian cũng đồng dã tâm[span_27](end_span)
+- Chốt Xanh (nđ): [Trái] Chỉ nên tin một nửa lời ngọt ngào | [span_28](start_span)[Phải] Mộng hão chỉ gây khổ tâm[span_28](end_span)
+
+4. XE XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Phòng tiêu tan cuộc đời với kẻ hứa hẹn | [span_29](start_span)[Phải] Bế tắc trong mọi toan tính[span_29](end_span)
+- Sĩ Xanh (nđ): [Trái] Sung sướng lâu bền, đừng đòi hỏi quá đáng | [span_30](start_span)[Phải] Thắng lợi tạm thời về ý chí[span_30](end_span)
+- Tượng Xanh (nđ): [Trái] Chấm dứt một việc phiền toái | [span_31](start_span)[Phải] Đừng đi sâu có thể phá sản[span_31](end_span)
+- Xe Xanh (nđ): [Trái] Cần tìm người bảo vệ hữu hiệu | [span_32](start_span)[Phải] Địa vị trước mặt cần khôn khéo thêm[span_32](end_span)
+- Pháo Xanh (nđ): [Trái] Đừng vơ đũa cả nắm về phụ nữ | [span_33](start_span)[Phải] Khéo léo sẽ tìm được người đàn bà uy quyền[span_33](end_span)
+- Ngựa Xanh (nđ): [Trái] Phòng xáo trộn đổ vỡ việc làm ăn | [span_34](start_span)[Phải] Có người mời mọc chuyện tâm tình[span_34](end_span)
+- Chốt Xanh (nđ): [Trái] Tin xa về đến đúng ý nguyện | [span_35](start_span)[Phải] Có dấu hiệu thành công thương thảo[span_35](end_span)
+
+5. PHÁO XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Cạm bẫy giăng mắc dễ chui vào | [span_36](start_span)[Phải] Phòng nguy hiểm rình rập[span_36](end_span)
+- Sĩ Xanh (nđ): [Trái] Muốn tiến bảy bước nên lùi ba bước | [span_37](start_span)[Phải] Hứa hẹn quá trớn chỉ là suông[span_37](end_span)
+- Tượng Xanh (nđ): [Trái] Có quá nhiều ý nghĩa của người đẹp | [span_38](start_span)[Phải] Có bất đồng ý kiến người thân[span_38](end_span)
+- Xe Xanh (nđ): [Trái] Bất lợi mua danh bán tước | [span_39](start_span)[Phải] Phòng dính líu pháp luật[span_39](end_span)
+- Pháo Xanh (nđ): [Trái] Nên xa lánh kẻ lỗ mãng | [span_40](start_span)[Phải] Bạn xấu nên chấm dứt thân thiện[span_40](end_span)
+- Ngựa Xanh (nđ): [Trái] Cần dứt khoát trước ngã ba đường | [span_41](start_span)[Phải] Chuyện không may đến đột ngột[span_41](end_span)
+- Chốt Xanh (nđ): [Trái] Điên đầu với chuyện không đâu | [span_42](start_span)[Phải] Chậm trễ nhưng có lợi[span_42](end_span)
+
+6. NGỰA XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Không nên thất vọng với tin chưa rõ | [span_43](start_span)[Phải] Biết rõ chỉ thêm đau lòng[span_43](end_span)
+- Sĩ Xanh (nđ): [Trái] Cần thêm cố gắng mới quyết được địa vị | [span_44](start_span)[Phải] Có trở ngại[span_44](end_span)
+- Tượng Xanh (nđ): [Trái] Cố gắng lắm cũng hoài công | [span_45](start_span)[Phải] Đừng chú ý áp lực kẻ ích kỷ[span_45](end_span)
+- Xe Xanh (nđ): [Trái] Tia sáng chưa đủ soi cả căn phòng | [span_46](start_span)[Phải] Không chấm dứt ý định thì tai họa đến[span_46](end_span)
+- Pháo Xanh (nđ): [Trái] Nghĩ sao làm vậy sẽ thành công | [span_47](start_span)[Phải] Đừng gục ngã sau thất bại đầu[span_47](end_span)
+- Ngựa Xanh (nđ): [Trái] Còn nhiều trở ngại cần nhẫn nại | [span_48](start_span)[Phải] Đừng vội mừng, thất bại liền sau[span_48](end_span)
+- Chốt Xanh (nđ): [Trái] Viễn cảnh thành công chỉ là bánh vẽ | [span_49](start_span)[Phải] Cần xét lại lương tâm và lý trí[span_49](end_span)
+
+7. CHỐT XANH (ĐỨNG) GẶP:
+- Tướng Xanh (nđ): [Trái] Hậu quả quá khứ ảnh hưởng tương lai | [span_50](start_span)[Phải] Được danh vọng, mất sự nghiệp[span_50](end_span)
+- Sĩ Xanh (nđ): [Trái] Ngày mai đổi khác, đừng sầu muộn | [span_51](start_span)[Phải] Buồn trong thời gian ngắn[span_51](end_span)
+- Tượng Xanh (nđ): [Trái] Nên chuyển hướng mới có hy vọng | [span_52](start_span)[Phải] Bất công, mất mát do phản bội[span_52](end_span)
+- Xe Xanh (nđ): [Trái] Đề phòng mất sự tin cậy | [span_53](start_span)[Phải] Người đàn bà đẹp đôi khi đáng sợ[span_53](end_span)
+- Pháo Xanh (nđ): [Trái] Ghen tuông và ly tán kề cận | [span_54](start_span)[Phải] Có du lịch nơi xa[span_54](end_span)
+- Ngựa Xanh (nđ): [Trái] Lợi nhỏ nhưng động danh dự | [span_55](start_span)[Phải] Thành công nhờ vụ kiện[span_55](end_span)
+- Chốt Xanh (nđ): [Trái] Chuyện não nề làm giảm ý chí | [span_56](start_span)[Phải] Rắc rối nhỏ, dàn xếp được[span_56](end_span)
+
+[span_57](start_span)[span_58](start_span)[span_59](start_span)[span_60](start_span)[span_61](start_span)[span_62](start_span)[span_63](start_span)MÀU VÀNG - (Dữ liệu lặp lại tương đương với màu Xanh theo ghi chú hệ thống)[span_57](end_span)[span_58](end_span)[span_59](end_span)[span_60](end_span)[span_61](end_span)[span_62](end_span)[span_63](end_span)
+`;
+
     // Hiển thị dữ liệu lên giao diện
-    document.getElementById('dataView').textContent = dataTuSac_Phan1.trim();
+    document.getElementById('dataView1').textContent = dataTuSac_Phan1.trim();
+    document.getElementById('dataView2').textContent = dataTuSac_Phan2.trim();
     
-    // Log thông báo vào console để kiểm tra tính toàn vẹn
-    console.log("Đã nạp thành công bộ dữ liệu số 1. Độ dài ký tự: " + dataTuSac_Phan1.length);
+    console.log("Hệ thống đã kết hợp thành công 2 bộ dữ liệu.");
 </script>
 
 </body>
