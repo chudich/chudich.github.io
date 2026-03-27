@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinh Dịch Utilities - Bài Tứ Sắc Data 1</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #b22222; border-left: 5px solid #b22222; padding-left: 15px; }
+        .data-display { 
+            background: #272822; color: #f8f8f2; padding: 20px; 
+            border-radius: 5px; overflow-y: auto; height: 500px; 
+            white-space: pre-wrap; font-size: 14px; border: 2px solid #3e3e3e;
+        }
+        .info-box { background: #e7f3ff; border: 1px solid #b8daff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Dữ Liệu Quý: Ý Nghĩa Thuận Nghịch 112 Lá Bài (Phần 1)</h2>
+    
+    <div class="info-box">
+        <strong>Trạng thái:</strong> Đã nạp 100% dữ liệu thủ công. <br>
+        <strong>Nguồn:</strong> Sách hiếm (Soạn thảo bởi người dùng).
+    </div>
+
+    <div id="dataView" class="data-display">
+        </div>
+</div>
+
+<script>
+    /**
+     * DỮ LIỆU GỐC - KHÔNG LƯỢC BỎ
+     * Được lưu trữ trong Template String để giữ nguyên định dạng văn bản gốc.
+     */
+    const dataTuSac_Phan1 = `
+Ý NGHĨA THUẬN NGHỊCH 112 LÁ BÀI
+1.TƯỚNG
+TƯỚNG XANH :
+Đứng : Tiến thân,thi cử,mọi khuếch trương khởi sự đều thuận lợi có người đỡ đầu
+Ngược đầu : Có xung đột với người trên trước,bất lợi mọi mặt
+TƯỚNG VÀNG :
+Đứng : Thành công chắc chắn về tiền bạc,có quý nhân là người đàn ông giàu sẵn sang giúp đỡ về mọi mặt
+Ngược đầu : Phòng phản phúc trong gia tộc,mọi sự chậm trễ luôn lẩn quẩn bên mình
+TƯỚNG TRẮNG : 
+Đứng : Mọi vấn đề đều không giải quyết êm thắm,phải ra đến pháp luật,bệnh nặng khó tìm thầy
+Ngược đầu : Kiện tụng thắng lợi, bệnh hoạn bình phục
+TƯỚNG ĐỎ : 
+Đứng : Có người đàn ông đứng tuổi tận tình giúp đỡ cho hôn nhân thành tựu
+Ngược đầu : Mọi liên hệ về tình cảm tình bạn tình yêu đều tuyệt vọng,phòng kẻ vô ơn
+2.SĨ  
+SĨ XANH :
+Đứng : Được người đàn bà hoặc cô gái tận tình tiến cử,nhưng phòng ghen tuông làm hỏng công trình
+Ngược đầu : Bị người đàn bà theo đuổi quấy rầy,lừa dối gây xáo trộn
+SĨ VÀNG :
+Đứng : Người đàn bà giàu tận tình giúp đỡ trong mọi hoàn cảnh khó khan về tiền bạc
+Ngược đầu : Đừng ham bóng sắc mà gánh niềm đau,tiêu tiền tan địa vị
+SĨ TRẮNG :
+ Đứng : Phòng ghen tuông gây đổ vỡ trong gia đình,vui không có,buồn tràn ngập
+Ngược đầu : Nên yên lòng,mọi việc trước sau gì cũng được dàn xếp êm đẹp
+SĨ ĐỎ :
+Đứng : Bà Nguyệt se duyên,tác hợp xứng lứa vừa đôi,mọi tạo dựng hạnh phúc đều như ý
+Ngược đầu : Phản phúc gian xảo vô duyên đang theo đuổi quấy rầy.Nhiều đắng cay thử thách
+3.TƯỢNG
+TƯỢNG XANH :
+Đứng : Có người thanh niên tốt bụng,nhiều uy tín tận tình giúp đỡ,được tin vui,gặp bạn bất ngờ 
+Ngược đầu : Gặp kẻ xảo trá,nhân tình hay ghen,phòng hỏng việc
+TƯỢNG VÀNG :
+Đứng : Người bạn tốt một mực trung thành,môi giới,hôn nhân đẹp,có địa vị
+Ngược đầu : Mọi xáo trộn trong công việc xảy ra vì phản trắc,nên đề phòng
+TƯỢNG TRẮNG : 
+Đứng : Đừng tin người bằng cái vỏ bên ngoài,có câu hữu nhan sắc hữu ác đức,tự mình giữ mình là thượng sách.
+Ngược đầu : Hy vọng thực hiện được sở nguyện,nhất là hôn nhân
+TƯỢNG ĐỎ : 
+Đứng : Tình duyên đẹp,do mình tạo cho mình với người mình yêu và yêu mình
+Ngược đầu : Mọi sự phũ phàng đều có thể xảy ra cho gia đình và tình yêu
+4.XE
+XE XANH : 
+Đứng : Nên có thái độ dứt khoát,đừng rụt rè,chậm chạp mà hỏng cơ hội,nếu cơ hội ấy là 1 cuộc xê dịch
+Ngược đầu : Mọi trở ngại đang nhen nhúm,phòng thất bại,không nên thay đổi việc làm hay chỗ ở
+XE VÀNG : 
+Đứng : Của bất ngờ đến giữa cơn túng ngặt,mọi bối rối sẽ tiêu tan.
+Ngược đầu : Phòng trộm cắp,mất của to,thua lận
+XE TRẮNG : 
+Đứng : Có dấu hiệu sẽ lìa nơi sinh trưởng hoặc có chết chóc,ly thân,ly dị,tan rã gia đình.
+Ngược đầu : Sau cơn mưa trời lại sang,nên vui vì ngày mai hơn là buồn hôm nay
+XE ĐỎ : 
+Đứng : Cầu con sẽ được con lành,nhưng cầu duyên nợ sẽ gặp trái đắng nên đừng cầu làm gì.
+Ngược đầu : Ân tình phản bội có thể xảy ra bất cứ ở nơi nào
+5.PHÁO
+PHÁO XANH  : 
+Đứng : Sắp có thay đổi,hoặc đi xa thắng lợi về mọi mặt.Hoặc gặp ý trung nhân trở thành duyên nợ.Nếu thi cử chắc chắn sẽ đỗ cao
+Ngược đầu : Lá bài hung tin,mọi dự kiến tiến thủ đều nên xếp lại,phòng hoen hố danh dự
+PHÁO VÀNG : 
+Đứng : Mọi ý kiến nên thực hiện ngay sẽ thu thập kết quả mỹ mãn
+Ngược đầu : Đỗ vỡ,tranh chấp về tiền bạc ảnh hưởng đến hôn nhân
+PHÁO TRẮNG :
+Đứng : Pháo nổ ngay trong tâm tư,có xáo trộn về địa vị,danh vọng,nếu không cũng bị mẻ trộm to
+Ngược đầu : Tự giác hối cải là tâm niệm của kẻ lỡ lầm,nên hiểu nhau để yêu nhau hơn
+PHÁO ĐỎ :
+Đứng : Đừng nên ngập ngừng e ấp,ngưỡng của tình yêu đang sãn sang chờ đón
+Ngược đầu : Hiểu lầm đáng tiếc sẽ xảy ra nhưng được hàn gắn
+6. MÃ
+NGỰA XANH :
+Đứng : Tương lai huy hoàng đang chờ ngoài ngõ,tình duyên bất ngờ đầy thơ mộng
+Ngược đầu : Tương đương với giá trị Mã Xanh đứng,nhưng gặp Mã Trắng mọi việc bất thành 
+NGỰA VÀNG :
+Đứng : Người bạn gái dí dỏm duyên dáng,đẹp,tốt bụng sẽ xuất hiện bất ngờ,cứu vãn tình thế
+Ngược đầu : Trở ngại dồn dập cạm bẫy giăng mắc khắp nơi.
+NGỰA TRẮNG : 
+Đứng : Tình đầu ít suôn sẻ,cay đắng lỡ làng,cạm bẫy đổ vỡ tan nát cõi lòng.
+Ngược đầu : Mọi vấn đề về tình yêu sẽ được bàn tay đẹp thắt chặt thêm tươi thắm
+NGỰA ĐỎ : 
+Đứng : Duyên tình cờ cũng là duyên bất ngờ,đưa đến mọi hạnh phúc tốt đẹp như mơ.
+Ngược đầu : Phòng tranh giành tình ái mang hậu quả u buồn ray rức
+7. CHỐT
+CHỐT XANH :
+Đứng : Mọi ý định tiến thủ nên ngừng lại,có xáo trộn trong gia đình,kiện tụng,gièm pha,tranh giành.
+Ngược đầu : Lá bài hứa hẹn nhiều bất ngờ đến ngoài sự tưởng tượng.
+CHỐT VÀNG :
+Đứng : Gặp sự gièm pha bêu xấu,gắt gỏng,ganh tị nhưng cứ lặng yên thực hiện theo ý định của mình sẽ thành công . 
+Ngược đầu : Thua lỗ,công nợ lôi cuốn đến tụng đình,hoen ố danh dự.
+CHỐT TRẮNG :
+Đứng : Mọi việc đều thất bại,nên tự cứu hơn là chờ đến lúc phải gánh trọn hậu quả.
+Ngược đầu : Trì hoãn là phương thuốc hay,dùng chạy chữa tình trạng bi đát.
+CHỐT ĐỎ :
+Đứng :Tin nhạn bay về tràn ngập vui tươi trong hạnh phúc,duyên thắm tươi.
+Ngược đầu : Lỡ lầm trong quá khứ sẽ ân hận mãi ở hiện tại và tương lai.
+`;
+
+    // Hiển thị dữ liệu lên giao diện
+    document.getElementById('dataView').textContent = dataTuSac_Phan1.trim();
+    
+    // Log thông báo vào console để kiểm tra tính toàn vẹn
+    console.log("Đã nạp thành công bộ dữ liệu số 1. Độ dài ký tự: " + dataTuSac_Phan1.length);
+</script>
+
+</body>
+</html>
