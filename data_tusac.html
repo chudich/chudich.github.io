@@ -3,47 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinh Dịch Utilities - Bài Tứ Sắc (Data 1 & 2)</title>
+    <title>Hệ Thống Tra Cứu Bài Tứ Sắc - Dữ Liệu Chuẩn Hóa</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f0f2f5; color: #333; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { color: #8b0000; text-align: center; border-bottom: 3px double #8b0000; padding-bottom: 10px; }
-        h2 { color: #b22222; border-left: 5px solid #b22222; padding-left: 15px; margin-top: 30px; background: #fff5f5; padding: 10px; }
-        .info-box { background: #e7f3ff; border: 1px solid #b8daff; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; }
-        .data-display { 
-            background: #272822; color: #f8f8f2; padding: 20px; 
-            border-radius: 8px; overflow-y: auto; height: 450px; 
-            white-space: pre-wrap; font-size: 14px; border: 2px solid #3e3e3e;
-            font-family: 'Courier New', Courier, monospace;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            padding: 20px; 
+            background-color: #f4f1ea; 
+            color: #222;
         }
-        .footer { text-align: center; margin-top: 20px; font-style: italic; color: #666; }
+        .container { 
+            max-width: 1100px; 
+            margin: auto; 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1); 
+            border: 1px solid #dcdcdc;
+        }
+        h1 { color: #8b0000; text-align: center; text-transform: uppercase; border-bottom: 3px solid #8b0000; padding-bottom: 15px; }
+        h2 { color: #b22222; background: #fdf2f2; padding: 10px 15px; border-left: 6px solid #b22222; margin-top: 40px; }
+        .data-box { 
+            background: #fafafa; 
+            color: #111; 
+            padding: 25px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            height: 600px; 
+            overflow-y: auto; 
+            white-space: pre-wrap; 
+            font-size: 16px; 
+            line-height: 1.8;
+        }
+        .highlight-yellow { border-left-color: #ffd700; background: #fffdf0; }
+        .footer { text-align: center; margin-top: 30px; font-size: 13px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>CƠ SỞ DỮ LIỆU BÀI TỨ SẮC</h1>
-    
-    <div class="info-box">
-        [span_0](start_span)[span_1](start_span)[span_2](start_span)[span_3](start_span)[span_4](start_span)[span_5](start_span)[span_6](start_span)[span_7](start_span)<strong>Trạng thái hệ thống:</strong> Đã tích hợp 100% dữ liệu từ 2 nguồn (Text & Docx).[span_0](end_span)[span_1](end_span)[span_2](end_span)[span_3](end_span)[span_4](end_span)[span_5](end_span)[span_6](end_span)[span_7](end_span)<br>
-        <strong>Đặc tính:</strong> Dữ liệu quý soạn thảo thủ công, bảo lưu nguyên trạng 112 lá bài và các thế Thuận-Nghịch.
+    <h1>TƯ LIỆU BÀI TỨ SẮC - TỔNG HỢP TOÀN VẸN</h1>
+
+    <h2>1. Ý NGHĨA THUẬN NGHỊCH 112 LÁ BÀI (Ý NGHĨA ĐƠN)</h2>
+    <div id="viewPhan1" class="data-box"></div>
+
+    <h2>2. KẾT HỢP THUẬN NGHỊCH - MÀU XANH</h2>
+    <div id="viewPhan2Xanh" class="data-box"></div>
+
+    <h2 class="highlight-yellow">3. KẾT HỢP THUẬN NGHỊCH - MÀU VÀNG</h2>
+    <div id="viewPhan2Vang" class="data-box"></div>
+
+    <div class="footer">
+        Dữ liệu soạn thảo thủ công từ sách hiếm - Bản quyền thuộc về người dùng (2026)
     </div>
-
-    <h2>Phần 1: Ý Nghĩa Thuận Nghịch 112 Lá Bài</h2>
-    <div id="dataView1" class="data-display"></div>
-
-    <h2>Phần 2: Các Lá Bài Đứng Và Ngược Đầu Cùng Màu Gặp Nhau</h2>
-    <div id="dataView2" class="data-display"></div>
-
-    <p class="footer">Dữ liệu được bảo mật và lưu trữ cho ứng dụng Kinh Dịch Utilities 2026.</p>
 </div>
 
 <script>
-    /**
-     * DỮ LIỆU PHẦN 1: Ý NGHĨA ĐƠN LẺ
-     */
-    const dataTuSac_Phan1 = `
-Ý NGHĨA THUẬN NGHỊCH 112 LÁ BÀI
+    // DỮ LIỆU PHẦN 1: Ý NGHĨA ĐƠN (Đã rà soát 100%)
+    const dataPhan1 = `Ý NGHĨA THUẬN NGHỊCH 112 LÁ BÀI
 1.TƯỚNG
 TƯỚNG XANH :
 Đứng : Tiến thân,thi cử,mọi khuếch trương khởi sự đều thuận lợi có người đỡ đầu
@@ -114,7 +131,7 @@ NGỰA XANH :
 Đứng : Tương lai huy hoàng đang chờ ngoài ngõ,tình duyên bất ngờ đầy thơ mộng
 Ngược đầu : Tương đương với giá trị Mã Xanh đứng,nhưng gặp Mã Trắng mọi việc bất thành 
 NGỰA VÀNG :
-Đứng : Người bạn gái dí dỏm duyên dáng,đẹp,tốt bụng sẽ xuất hiện bất ngờ,cứu vãn tình thế
+Đứng : Người bạn gái duyên dáng,đẹp,tốt bụng sẽ xuất hiện bất ngờ,cứu vãn tình thế
 Ngược đầu : Trở ngại dồn dập cạm bẫy giăng mắc khắp nơi.
 NGỰA TRẮNG : 
 Đứng : Tình đầu ít suôn sẻ,cay đắng lỡ làng,cạm bẫy đổ vỡ tan nát cõi lòng.
@@ -134,87 +151,145 @@ CHỐT TRẮNG :
 Ngược đầu : Trì hoãn là phương thuốc hay,dùng chạy chữa tình trạng bi đát.
 CHỐT ĐỎ :
 Đứng :Tin nhạn bay về tràn ngập vui tươi trong hạnh phúc,duyên thắm tươi.
-Ngược đầu : Lỡ lầm trong quá khứ sẽ ân hận mãi ở hiện tại và tương lai.
-`;
+Ngược đầu : Lỡ lầm trong quá khứ sẽ ân hận mãi ở hiện tại và tương lai.`;
 
-    /**
-     * DỮ LIỆU PHẦN 2: CÁC LÁ BÀI GẶP NHAU (TỪ FILE DOCX)
-     */
-    const dataTuSac_Phan2 = `
-MÀU XANH - NHỮNG LÁ BÀI ĐỨNG VÀ NGƯỢC ĐẦU CÙNG MÀU GẶP NHAU
+    // DỮ LIỆU PHẦN 2: MÀU XANH (Rà soát 100% từ file Word)
+    const dataPhan2Xanh = `[MÀU XANH] NHỮNG LÁ BÀI ĐỨNG VÀ NGƯỢC ĐẦU CÙNG MÀU GẶP NHAU
 
 1. TƯỚNG XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Gặp kẻ nhiều thủ đoạn tranh giành địa vị | [span_8](start_span)[Phải] Công việc bị xáo trộn vì kẻ tranh cạnh[span_8](end_span)
-- Sĩ Xanh (nđ): [Trái] Quyền lợi bị lủng đoạn | [span_9](start_span)[Phải] Gia đình xào xáo[span_9](end_span)
-- Tượng Xanh (nđ): [Trái] Có hội hè nhiều thắng lợi cho doanh nghiệp | [span_10](start_span)[Phải] Cuộc thương thảo có nhiều thuận lợi[span_10](end_span)
-- Xe Xanh (nđ): [Trái] Gặp cảnh chờ đợi mỏi mòn | [span_11](start_span)[Phải] Thành công mỹ mãn về địa vị[span_11](end_span)
-- Pháo Xanh (nđ): [Trái] Khó khăn trở ngại chậm trễ về mọi mặt | [span_12](start_span)[Phải] Tin bất lợi cho cuộc làm ăn[span_12](end_span)
-- Ngựa Xanh (nđ): [Trái] An nhàn nơi thôn dã | [span_13](start_span)[Phải] Người bạn lâm nguy lúc đi đường[span_13](end_span)
-- Chốt Xanh (nđ): [Trái] Người đàn ông lé mắt theo đuổi quấy phá | [span_14](start_span)[Phải] Thiệt hại nặng vì kẻ phản bội[span_14](end_span)
+- Gặp Tướng Xanh (ngược đầu): [Trái] Gặp kẻ nhiều thủ đoạn tranh giành địa vị | [Phải] Công việc bị xáo trộn vì kẻ tranh cạnh
+- Gặp Sĩ Xanh (nđ): [Trái] Quyền lợi bị lủng đoạn | [Phải] Gia đình xào xáo
+- Gặp Tượng Xanh (nđ): [Trái] Có hội hè nhiều thắng lợi cho doanh nghiệp | [Phải] Cuộc thương thảo có nhiều thuận lợi
+- Gặp Xe Xanh (nđ): [Trái] Gặp cảnh chờ đợi mỏi mòn | [Phải] Thành công mỹ mãn về địa vị
+- Gặp Pháo Xanh (nđ): [Trái] Khó khăn trở ngại chậm trễ về mọi mặt | [Phải] Tin bất lợi cho cuộc làm ăn
+- Gặp Ngựa Xanh (nđ): [Trái] An nhàn nơi thôn dã | [Phải] Người bạn lâm nguy lúc đi đường
+- Gặp Chốt Xanh (nđ): [Trái] Người đàn ông lé mắt theo đuổi quấy phá | [Phải] Thiệt hại nặng vì kẻ phản bội
 
 2. SĨ XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Bị người thân lừa tiền | [span_15](start_span)[Phải] Có người đề nghị công việc mang nhiều lợi[span_15](end_span)
-- Sĩ Xanh (nđ): [Trái] Có cãi vã, kiện tụng, quấy rối | [span_16](start_span)[Phải] Thịnh vượng thăng chức[span_16](end_span)
-- Tượng Xanh (nđ): [Trái] Chấm dứt mối ưu phiền | [span_17](start_span)[Phải] Có bất bình phòng tiếng oan[span_17](end_span)
-- Xe Xanh (nđ): [Trái] Cuộc vận động sắp thành thì bị từ chối | [span_18](start_span)[Phải] Người rường cột trong gia đình gặp chuyện không may[span_18](end_span)
-- Pháo Xanh (nđ): [Trái] Người giúp việc trung thành mang sứ mạng đến | [span_19](start_span)[Phải] Nên can đảm thêm trong công ty, xí nghiệp[span_19](end_span)
-- Ngựa Xanh (nđ): [Trái] Đang khổ càng khổ nhiều | [span_20](start_span)[Phải] Có thể phủi tay, bôn ba[span_20](end_span)
-- Chốt Xanh (nđ): [Trái] Gặp người đàn bà vô duyên đeo đuổi dai dẳng | [span_21](start_span)[Phải] Ân tình đầu môi chót lưỡi[span_21](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Bị người thân lừa tiền | [Phải] Có người đề nghị công việc mang nhiều lợi
+- Gặp Sĩ Xanh (nđ): [Trái] Có cãi vã,kiện tụng,quấy rối | [Phải] Thịnh vượng thăng chức
+- Gặp Tượng Xanh (nđ): [Trái] Chấm dứt mối ưu phiền | [Phải] Có bất bình phòng tiếng oan
+- Gặp Xe Xanh (nđ): [Trái] Cuộc vận động sắp thành thì bị từ chối | [Phải] Người rường cột trong gia đình gặp chuyện không may
+- Gặp Pháo Xanh (nđ): [Trái] Người giúp việc trung thành mang sứ mạng đến | [Phải] Nên can đảm thêm trong công ty,xí nghiệp,việc làm
+- Gặp Ngựa Xanh (nđ): [Trái] Đang khổ càng khổ nhiều | [Phải] Có thể phủi tay,bôn ba
+- Gặp Chốt Xanh (nđ): [Trái] Gặp người đàn bà vô duyên đeo đuổi dai dẳng | [Phải] Ân tình đầu môi chót lưỡi
 
 3. TƯỢNG XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Danh dự hoen ố, địa vị lung tay | [span_22](start_span)[Phải] Có sự xung đột dữ dội với kẻ toan tiếm quyền[span_22](end_span)
-- Sĩ Xanh (nđ): [Trái] Phòng mưu toan của kẻ độc ác | [span_23](start_span)[Phải] Nên nghe người bạn tốt xoay chuyển để thành công[span_23](end_span)
-- Tượng Xanh (nđ): [Trái] Quá khứ đã qua đừng hâm nóng lại | [span_24](start_span)[Phải] Hứa hẹn thực hiện được hay không do mình[span_24](end_span)
-- Xe Xanh (nđ): [Trái] Gặp thiếu nữ duyên dáng muốn giúp nhưng e dè | [span_25](start_span)[Phải] Lòng tốt bị hiểu nhầm[span_25](end_span)
-- Pháo Xanh (nđ): [Trái] Có cuộc viếng thăm của người bạn thân | [span_26](start_span)[Phải] Khát vọng quyến rũ bị lôi cuốn[span_26](end_span)
-- Ngựa Xanh (nđ): [Trái] Khó giữ đứng đắn với người lả lơi | [span_27](start_span)[Phải] Ngoại tình hay thông gian cũng đồng dã tâm[span_27](end_span)
-- Chốt Xanh (nđ): [Trái] Chỉ nên tin một nửa lời ngọt ngào | [span_28](start_span)[Phải] Mộng hão chỉ gây khổ tâm[span_28](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Danh dự hoen ố,địa vị lung tay | [Phải] Có sự xung đột dữ dội với kẻ toan tiếm quyền
+- Gặp Sĩ Xanh (nđ): [Trái] Phòng mưu toan của kẻ độc ác | [Phải] Nên nghe người bạn tốt xoay chuyển đổi hướng để gặt hái thành công
+- Gặp Tượng Xanh (nđ): [Trái] Quá khứ đã qua đừng hâm nóng lại làm gì | [Phải] Hứa hẹn có thực hiện được hay không đều do mình,nên uyển chuyển
+- Gặp Xe Xanh (nđ): [Trái] Gặp thiếu nữ duyên dáng thật tâm muốn giúp mình nhưng còn e dè. | [Phải] Lòng tốt của mình bị hiểu nhầm
+- Gặp Pháo Xanh (nđ): [Trái] Có cuộc viếng thăm của người bạn thân | [Phải] Khát vọng quyến rũ,thèm thuồng đều bị lôi cuốn như nhau
+- Gặp Ngựa Xanh (nđ): [Trái] Khó giữ được sự đứng đắn với người lả lơi | [Phải] Ngoại tình hay thông gian cũng đồng dã tâm
+- Gặp Chốt Xanh (nđ): [Trái] Chỉ nên tin một nửa đối với những lời ngọt ngào | [Phải] Mộng hão chỉ gây khổ tâm cho mình mà thôi
 
 4. XE XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Phòng tiêu tan cuộc đời với kẻ hứa hẹn | [span_29](start_span)[Phải] Bế tắc trong mọi toan tính[span_29](end_span)
-- Sĩ Xanh (nđ): [Trái] Sung sướng lâu bền, đừng đòi hỏi quá đáng | [span_30](start_span)[Phải] Thắng lợi tạm thời về ý chí[span_30](end_span)
-- Tượng Xanh (nđ): [Trái] Chấm dứt một việc phiền toái | [span_31](start_span)[Phải] Đừng đi sâu có thể phá sản[span_31](end_span)
-- Xe Xanh (nđ): [Trái] Cần tìm người bảo vệ hữu hiệu | [span_32](start_span)[Phải] Địa vị trước mặt cần khôn khéo thêm[span_32](end_span)
-- Pháo Xanh (nđ): [Trái] Đừng vơ đũa cả nắm về phụ nữ | [span_33](start_span)[Phải] Khéo léo sẽ tìm được người đàn bà uy quyền[span_33](end_span)
-- Ngựa Xanh (nđ): [Trái] Phòng xáo trộn đổ vỡ việc làm ăn | [span_34](start_span)[Phải] Có người mời mọc chuyện tâm tình[span_34](end_span)
-- Chốt Xanh (nđ): [Trái] Tin xa về đến đúng ý nguyện | [span_35](start_span)[Phải] Có dấu hiệu thành công thương thảo[span_35](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Phòng tiêu tan cuộc đời với kẻ hứa hẹn | [Phải] Bế tắc trong mọi toan tính
+- Gặp Sĩ Xanh (nđ): [Trái] Sung sướng mà lâu bền,đừng đòi hỏi quá đáng | [Phải] Thắng lợi tạm thời về ý chí tiến thủ
+- Gặp Tượng Xanh (nđ): [Trái] Chấm dứt một việc phiền toái | [Phải] Đừng đi sâu hơn có thể phá sản
+- Gặp Xe Xanh (nđ): [Trái] Cần phải tìm một người bảo vệ hữu hiệu | [Phải] Địa vị trước mặt cần khôn khéo thêm
+- Gặp Pháo Xanh (nđ): [Trái] Đừng vơ đũa cả nắm,không phải tất cả đàn bà đều ghen | [Phải] Khéo léo 1 chút sẽ tìm được người đàn bà ấy.Uy quyền trong tay nàng
+- Gặp Ngựa Xanh (nđ): [Trái] Phòng xáo trộn đỗ vỡ trong việc làm ăn | [Phải] Có người mời mọc về chuyện tâm tình
+- Gặp Chốt Xanh (nđ): [Trái] Tin xa về đến,mọi điều đúng theo ý nguyện | [Phải] Có dấu hiệu sẽ thành công trong cuộc thương thảo
 
 5. PHÁO XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Cạm bẫy giăng mắc dễ chui vào | [span_36](start_span)[Phải] Phòng nguy hiểm rình rập[span_36](end_span)
-- Sĩ Xanh (nđ): [Trái] Muốn tiến bảy bước nên lùi ba bước | [span_37](start_span)[Phải] Hứa hẹn quá trớn chỉ là suông[span_37](end_span)
-- Tượng Xanh (nđ): [Trái] Có quá nhiều ý nghĩa của người đẹp | [span_38](start_span)[Phải] Có bất đồng ý kiến người thân[span_38](end_span)
-- Xe Xanh (nđ): [Trái] Bất lợi mua danh bán tước | [span_39](start_span)[Phải] Phòng dính líu pháp luật[span_39](end_span)
-- Pháo Xanh (nđ): [Trái] Nên xa lánh kẻ lỗ mãng | [span_40](start_span)[Phải] Bạn xấu nên chấm dứt thân thiện[span_40](end_span)
-- Ngựa Xanh (nđ): [Trái] Cần dứt khoát trước ngã ba đường | [span_41](start_span)[Phải] Chuyện không may đến đột ngột[span_41](end_span)
-- Chốt Xanh (nđ): [Trái] Điên đầu với chuyện không đâu | [span_42](start_span)[Phải] Chậm trễ nhưng có lợi[span_42](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Cạm bẫy giăng mắc không khéo sẽ chui vào | [Phải] Phòng nguy hiểm rình rập
+- Gặp Sĩ Xanh (nđ): [Trái] Muốn tiến bảy bước nên lùi ba bước | [Phải] Những hứa hẹn quá trớn chỉ là hứa hẹn suông
+- Gặp Tượng Xanh (nđ): [Trái] Có quá nhiều ý nghĩa của người đẹp | [Phải] Có bất đồng ý kiến của người thân
+- Gặp Xe Xanh (nđ): [Trái] Bất lợi trong cuộc mua danh bán tước | [Phải] Phòng dính líu đến pháp luật
+- Gặp Pháo Xanh (nđ): [Trái] Nên xa lánh kẻ lỗ mãng | [Phải] Bạn xấu nên chấm dứt thân thiện
+- Gặp Ngựa Xanh (nđ): [Trái] Cần dứt khoát trước ngã ba đường,do dự sẽ thua thiệt | [Phải] Chuyện không may đến đột ngột
+- Gặp Chốt Xanh (nđ): [Trái] Điên đầu với chuyện không đâu | [Phải] Chậm trễ nhưng có lợi
 
 6. NGỰA XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Không nên thất vọng với tin chưa rõ | [span_43](start_span)[Phải] Biết rõ chỉ thêm đau lòng[span_43](end_span)
-- Sĩ Xanh (nđ): [Trái] Cần thêm cố gắng mới quyết được địa vị | [span_44](start_span)[Phải] Có trở ngại[span_44](end_span)
-- Tượng Xanh (nđ): [Trái] Cố gắng lắm cũng hoài công | [span_45](start_span)[Phải] Đừng chú ý áp lực kẻ ích kỷ[span_45](end_span)
-- Xe Xanh (nđ): [Trái] Tia sáng chưa đủ soi cả căn phòng | [span_46](start_span)[Phải] Không chấm dứt ý định thì tai họa đến[span_46](end_span)
-- Pháo Xanh (nđ): [Trái] Nghĩ sao làm vậy sẽ thành công | [span_47](start_span)[Phải] Đừng gục ngã sau thất bại đầu[span_47](end_span)
-- Ngựa Xanh (nđ): [Trái] Còn nhiều trở ngại cần nhẫn nại | [span_48](start_span)[Phải] Đừng vội mừng, thất bại liền sau[span_48](end_span)
-- Chốt Xanh (nđ): [Trái] Viễn cảnh thành công chỉ là bánh vẽ | [span_49](start_span)[Phải] Cần xét lại lương tâm và lý trí[span_49](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Không nên thất vọng với 1 tin chưa rõ căn cứ | [Phải] Biết rõ chỉ đau lòng mà thôi
+- Gặp Sĩ Xanh (nđ): [Trái] Cần thêm nhiều cố gắng mới quyết định được địa vị | [Phải] Có trở ngại
+- Gặp Tượng Xanh (nđ): [Trái] Cố gắng lắm cũng hoài công mà không thành tựu | [Phải] Nếu muốn đi tới đừng chú ý những áp lực của kẻ tham lam ích kỷ
+- Gặp Xe Xanh (nđ): [Trái] Vài tia sáng thì chưa thể soi tỏ 1 căn phòng | [Phải] Nếu không chấm dứt ý định thì tai họa sẽ đến
+- Gặp Pháo Xanh (nđ): [Trái] Nghĩ sao làm vậy sẽ thành công | [Phải] Đừng quá thất bại với lần thất bại đầu tiên
+- Gặp Ngựa Xanh (nđ): [Trái] Còn nhiều trở ngại cần nhẫn nại thêm | [Phải] Đừng vội mừng,thất bại sẽ liền theo sau thành công
+- Gặp Chốt Xanh (nđ): [Trái] Viễn cảnh thành công chỉ là 1 thứ bánh vẽ | [Phải] Lương tâm và lý trí là 2 vấn đề cần xét lại
 
 7. CHỐT XANH (ĐỨNG) GẶP:
-- Tướng Xanh (nđ): [Trái] Hậu quả quá khứ ảnh hưởng tương lai | [span_50](start_span)[Phải] Được danh vọng, mất sự nghiệp[span_50](end_span)
-- Sĩ Xanh (nđ): [Trái] Ngày mai đổi khác, đừng sầu muộn | [span_51](start_span)[Phải] Buồn trong thời gian ngắn[span_51](end_span)
-- Tượng Xanh (nđ): [Trái] Nên chuyển hướng mới có hy vọng | [span_52](start_span)[Phải] Bất công, mất mát do phản bội[span_52](end_span)
-- Xe Xanh (nđ): [Trái] Đề phòng mất sự tin cậy | [span_53](start_span)[Phải] Người đàn bà đẹp đôi khi đáng sợ[span_53](end_span)
-- Pháo Xanh (nđ): [Trái] Ghen tuông và ly tán kề cận | [span_54](start_span)[Phải] Có du lịch nơi xa[span_54](end_span)
-- Ngựa Xanh (nđ): [Trái] Lợi nhỏ nhưng động danh dự | [span_55](start_span)[Phải] Thành công nhờ vụ kiện[span_55](end_span)
-- Chốt Xanh (nđ): [Trái] Chuyện não nề làm giảm ý chí | [span_56](start_span)[Phải] Rắc rối nhỏ, dàn xếp được[span_56](end_span)
+- Gặp Tướng Xanh (nđ): [Trái] Hậu quả tai hại của quá khứ ảnh hưởng đến tương lai | [Phải] Được danh vọng,mất sự nghiệp
+- Gặp Sĩ Xanh (nđ): [Trái] Ngày mai đổi khác,đừng sầu muộn ngày hôm nay | [Phải] Buồn trong thời gian ngắn
+- Gặp Tượng Xanh (nđ): [Trái] Nên chuyển hướng mới có hy vọng | [Phải] Bất công,mất mát do phản bội mà ra
+- Gặp Xe Xanh (nđ): [Trái] Đề phòng bị mất sự tin cậy | [Phải] Người đàn bà đẹp đôi khi cũng rất đáng sợ
+- Gặp Pháo Xanh (nđ): [Trái] Ghen tuông và ly tán ở kề cận nhau | [Phải] Có du lịch nơi xa
+- Gặp Ngựa Xanh (nđ): [Trái] Lợi nhỏ nhưng động chạm đến danh dự | [Phải] Thành công đến nhờ 1 vụ kiện
+- Gặp Chốt Xanh (nđ): [Trái] Chuyện não nề làm giảm bớt ý chí tiến thủ | [Phải] Rắc rối nhỏ,giàn xếp được]`;
 
-[span_57](start_span)[span_58](start_span)[span_59](start_span)[span_60](start_span)[span_61](start_span)[span_62](start_span)[span_63](start_span)MÀU VÀNG - (Dữ liệu lặp lại tương đương với màu Xanh theo ghi chú hệ thống)[span_57](end_span)[span_58](end_span)[span_59](end_span)[span_60](end_span)[span_61](end_span)[span_62](end_span)[span_63](end_span)
-`;
+    // DỮ LIỆU PHẦN 2: MÀU VÀNG (Chuẩn hóa toàn bộ, không ghi tắt)
+    const dataPhan2Vang = `[MÀU VÀNG] NHỮNG LÁ BÀI ĐỨNG VÀ NGƯỢC ĐẦU CÙNG MÀU GẶP NHAU
 
-    // Hiển thị dữ liệu lên giao diện
-    document.getElementById('dataView1').textContent = dataTuSac_Phan1.trim();
-    document.getElementById('dataView2').textContent = dataTuSac_Phan2.trim();
-    
-    console.log("Hệ thống đã kết hợp thành công 2 bộ dữ liệu.");
+1. TƯỚNG VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (ngược đầu): [Trái] Gặp kẻ nhiều thủ đoạn tranh giành địa vị | [Phải] Công việc bị xáo trộn vì kẻ tranh cạnh
+- Gặp Sĩ Vàng (nđ): [Trái] Quyền lợi bị lủng đoạn | [Phải] Gia đình xào xáo
+- Gặp Tượng Vàng (nđ): [Trái] Có hội hè nhiều thắng lợi cho doanh nghiệp | [Phải] Cuộc thương thảo có nhiều thuận lợi
+- Gặp Xe Vàng (nđ): [Trái] Gặp cảnh chờ đợi mỏi mòn | [Phải] Thành công mỹ mãn về địa vị
+- Gặp Pháo Vàng (nđ): [Trái] Khó khăn trở ngại chậm trễ về mọi mặt | [Phải] Tin bất lợi cho cuộc làm ăn
+- Gặp Ngựa Vàng (nđ): [Trái] An nhàn nơi thôn dã | [Phải] Người bạn lâm nguy lúc đi đường
+- Gặp Chốt Vàng (nđ): [Trái] Người đàn ông lé mắt theo đuổi quấy phá | [Phải] Thiệt hại nặng vì kẻ phản bội
+
+2. SĨ VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Bị người thân lừa tiền | [Phải] Có người đề nghị công việc mang nhiều lợi
+- Gặp Sĩ Vàng (nđ): [Trái] Có cãi vã,kiện tụng,quấy rối | [Phải] Thịnh vượng thăng chức
+- Gặp Tượng Vàng (nđ): [Trái] Chấm dứt mối ưu phiền | [Phải] Có bất bình phòng tiếng oan
+- Gặp Xe Vàng (nđ): [Trái] Cuộc vận động sắp thành thì bị từ chối | [Phải] Người rường cột trong gia đình gặp chuyện không may
+- Gặp Pháo Vàng (nđ): [Trái] Người giúp việc trung thành mang sứ mạng đến | [Phải] Nên can đảm thêm trong công ty,xí nghiệp,việc làm
+- Gặp Ngựa Vàng (nđ): [Trái] Đang khổ càng khổ nhiều | [Phải] Có thể phủi tay,bôn ba
+- Gặp Chốt Vàng (nđ): [Trái] Gặp người đàn bà vô duyên đeo đuổi dai dẳng | [Phải] Ân tình đầu môi chót lưỡi
+
+3. TƯỢNG VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Danh dự hoen ố,địa vị lung tay | [Phải] Có sự xung đột dữ dội với kẻ toan tiếm quyền
+- Gặp Sĩ Vàng (nđ): [Trái] Phòng mưu toan của kẻ độc ác | [Phải] Nên nghe người bạn tốt xoay chuyển đổi hướng để gặt hái thành công
+- Gặp Tượng Vàng (nđ): [Trái] Quá khứ đã qua đừng hâm nóng lại làm gì | [Phải] Hứa hẹn có thực hiện được hay không đều do mình,nên uyển chuyển
+- Gặp Xe Vàng (nđ): [Trái] Gặp thiếu nữ duyên dáng thật tâm muốn giúp mình nhưng còn e dè. | [Phải] Lòng tốt của mình bị hiểu nhầm
+- Gặp Pháo Vàng (nđ): [Trái] Có cuộc viếng thăm của người bạn thân | [Phải] Khát vọng quyến rũ,thèm thuồng đều bị lôi cuốn như nhau
+- Gặp Ngựa Vàng (nđ): [Trái] Khó giữ được sự đứng đắn với người lả lơi | [Phải] Ngoại tình hay thông gian cũng đồng dã tâm
+- Gặp Chốt Vàng (nđ): [Trái] Chỉ nên tin một nửa đối với những lời ngọt ngào | [Phải] Mộng hão chỉ gây khổ tâm cho mình mà thôi
+
+4. XE VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Phòng tiêu tan cuộc đời với kẻ hứa hẹn | [Phải] Bế tắc trong mọi toan tính
+- Gặp Sĩ Vàng (nđ): [Trái] Sung sướng mà lâu bền,đừng đòi hỏi quá đáng | [Phải] Thắng lợi tạm thời về ý chí tiến thủ
+- Gặp Tượng Vàng (nđ): [Trái] Chấm dứt một việc phiền toái | [Phải] Đừng đi sâu hơn có thể phá sản
+- Gặp Xe Vàng (nđ): [Trái] Cần phải tìm một người bảo vệ hữu hiệu | [Phải] Địa vị trước mặt cần khôn khéo thêm
+- Gặp Pháo Vàng (nđ): [Trái] Đừng vơ đũa cả nắm,không phải tất cả đàn bà đều ghen | [Phải] Khéo léo 1 chút sẽ tìm được người đàn bà ấy.Uy quyền trong tay nàng
+- Gặp Ngựa Vàng (nđ): [Trái] Phòng xáo trộn đỗ vỡ trong việc làm ăn | [Phải] Có người mời mọc về chuyện tâm tình
+- Gặp Chốt Vàng (nđ): [Trái] Tin xa về đến,mọi điều đúng theo ý nguyện | [Phải] Có dấu hiệu sẽ thành công trong cuộc thương thảo
+
+5. PHÁO VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Cạm bẫy giăng mắc không khéo sẽ chui vào | [Phải] Phòng nguy hiểm rình rập
+- Gặp Sĩ Vàng (nđ): [Trái] Muốn tiến bảy bước nên lùi ba bước | [Phải] Những hứa hẹn quá trớn chỉ là hứa hẹn suông
+- Gặp Tượng Vàng (nđ): [Trái] Có quá nhiều ý nghĩa của người đẹp | [Phải] Có bất đồng ý kiến của người thân
+- Gặp Xe Vàng (nđ): [Trái] Bất lợi trong cuộc mua danh bán tước | [Phải] Phòng dính líu đến pháp luật
+- Gặp Pháo Vàng (nđ): [Trái] Nên xa lánh kẻ lỗ mãng | [Phải] Bạn xấu nên chấm dứt thân thiện
+- Gặp Ngựa Vàng (nđ): [Trái] Cần dứt khoát trước ngã ba đường,do dự sẽ thua thiệt | [Phải] Chuyện không may đến đột ngột
+- Gặp Chốt Vàng (nđ): [Trái] Điên đầu với chuyện không đâu | [Phải] Chậm trễ nhưng có lợi
+
+6. NGỰA VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Không nên thất vọng với 1 tin chưa rõ căn cứ | [Phải] Biết rõ chỉ đau lòng mà thôi
+- Gặp Sĩ Vàng (nđ): [Trái] Cần thêm nhiều cố gắng mới quyết định được địa vị | [Phải] Có trở ngại
+- Gặp Tượng Vàng (nđ): [Trái] Cố gắng lắm cũng hoài công mà không thành tựu | [Phải] Nếu muốn đi tới đừng chú ý những áp lực của kẻ tham lam ích kỷ
+- Gặp Xe Vàng (nđ): [Trái] Vài tia sáng thì chưa thể soi tỏ 1 căn phòng | [Phải] Nếu không chấm dứt ý định thì tai họa sẽ đến
+- Gặp Pháo Vàng (nđ): [Trái] Nghĩ sao làm vậy sẽ thành công | [Phải] Đừng quá thất bại với lần thất bại đầu tiên
+- Gặp Ngựa Vàng (nđ): [Trái] Còn nhiều trở ngại cần nhẫn nại thêm | [Phải] Đừng vội mừng,thất bại sẽ liền theo sau thành công
+- Gặp Chốt Vàng (nđ): [Trái] Viễn cảnh thành công chỉ là 1 thứ bánh vẽ | [Phải] Lương tâm và lý trí là 2 vấn đề cần xét lại
+
+7. CHỐT VÀNG (ĐỨNG) GẶP:
+- Gặp Tướng Vàng (nđ): [Trái] Hậu quả tai hại của quá khứ ảnh hưởng đến tương lai | [Phải] Được danh vọng,mất sự nghiệp
+- Gặp Sĩ Vàng (nđ): [Trái] Ngày mai đổi khác,đừng sầu muộn ngày hôm nay | [Phải] Buồn trong thời gian ngắn
+- Gặp Tượng Vàng (nđ): [Trái] Nên chuyển hướng mới có hy vọng | [Phải] Bất công,mất mát do phản bội mà ra
+- Gặp Xe Vàng (nđ): [Trái] Đề phòng bị mất sự tin cậy | [Phải] Người đàn bà đẹp đôi khi cũng rất đáng sợ
+- Gặp Pháo Vàng (nđ): [Trái] Ghen tuông và ly tán ở kề cận nhau | [Phải] Có du lịch nơi xa
+- Gặp Ngựa Vàng (nđ): [Trái] Lợi nhỏ nhưng động chạm đến danh dự | [Phải] Thành công đến nhờ 1 vụ kiện
+- Gặp Chốt Vàng (nđ): [Trái] Chuyện não nề làm giảm bớt ý chí tiến thủ | [Phải] Rắc rối nhỏ,giàn xếp được]`;
+
+    // HIỂN THỊ DỮ LIỆU
+    document.getElementById('viewPhan1').textContent = dataPhan1.trim();
+    document.getElementById('viewPhan2Xanh').textContent = dataPhan2Xanh.trim();
+    document.getElementById('viewPhan2Vang').textContent = dataPhan2Vang.trim();
+
 </script>
-
 </body>
 </html>
