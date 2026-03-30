@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ngũ Linh Tứ Sắc - Thấu Chân Kinh</title>
+    <style>
+        :root { --accent: #d35400; --card-bg: #fff; }
+        body { font-family: -apple-system, sans-serif; background: #e0e0e0; margin: 0; padding: 10px; }
+        .app-container { max-width: 500px; margin: auto; background: #fdfdfd; padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        /* Màu sắc 4 hệ */
+        .c-Xanh { color: #1b5e20; background: #e8f5e9; border: 2px solid #2e7d32; }
+        .c-Vang { color: #5d4037; background: #efebe9; border: 2px solid #8d6e63; } /* Vàng/Nâu Đất */
+        .c-Trang { color: #455a64; background: #fafafa; border: 2px solid #b0bec5; }
+        .c-Do { color: #b71c1c; background: #ffebee; border: 2px solid #c62828; }
+
+        .header-menu { display: flex; gap: 8px; margin-bottom: 15px; }
+        select { flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
+        .btn-start { flex: 1; padding: 12px; background: #2c3e50; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
+        .btn-step { padding: 10px 0; font-size: 11px; font-weight: bold; background: #fff; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; }
+        .btn-step:disabled { background: #eee; color: #aaa; border: 1px dashed #ccc; }
+        .btn-step.active { background: #fff9c4; border: 2px solid #fbc02d; box-shadow: 0 0 8px rgba(251,192,45,0.4); }
+
+        .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .card { 
+            display: none; height: 80px; align-items: center; justify-content: center; 
+            text-align: center; font-size: 14px; font-weight: bold; border-radius: 8px; 
+            position: relative; flex-direction: column; transition: all 0.3s;
+        }
+        .num-tag { position: absolute; top: 2px; right: 4px; font-size: 10px; opacity: 0.4; }
+        .goc-highlight { outline: 4px solid #fbc02d; outline-offset: -4px; background: #fffde7 !important; transform: scale(1.05); z-index: 10; }
+
+        h4 { font-size: 13px; color: #666; text-transform: uppercase; margin: 25px 0 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .interpretation-box { font-size: 13px; color: #444; background: #fff3e0; padding: 12px; border-radius: 8px; margin-top: 8px; border-left: 4px solid #ff9800; line-height: 1.5; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header-menu">
+        <select id="userChoice">
+            <option value="Xanh">CÔNG DANH (XANH LÁ)</option>
+            <option value="Vang">TÀI LỘC (VÀNG/NÂU ĐẤT)</option>
+            <option value="Trang">GIA ĐẠO (TRẮNG/XÁM)</option>
+            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
+        </select>
+        <button class="btn-start" onclick="setupNgulinh()">XÀO BÀI</button>
+    </div>
+
+    <div id="gamePlay" style="display:none;">
+        <div class="btn-grid" id="buttonArea"></div>
+        
+        <h4>TRẬN PHÁP 12 LÁ</h4>
+        <div id="symbol13" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
+        <div class="card-grid" id="mainMatrix"></div>
+
+        <div id="finalReport" style="display:none;">
+            <h4>5 LÁ LINH HỒN</h4>
+            <div id="soulGrid" class="card-grid"></div>
+            
+            <div id="khomSection"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+let state = { matrix:[], tượng:null, css:'' };
+
+function setupNgulinh() {
+    const col = document.getElementById('userChoice').value;
+    state.css = 'c-' + col;
+
+    // 1. KHỞI TẠO DUY NHẤT 1 BỘ BÀI 28 LÁ CÙNG MÀU
+    const NAMES = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    let mainDeck = [];
+    NAMES.forEach(n => {
+        // Mỗi quân có 4 lá, ngẫu nhiên Đứng (Đ) hoặc Ngược (N)
+        for(let i=0; i<4; i++) mainDeck.push({ n, f: Math.random() > 0.5 ? 'Đ' : 'N' });
+    });
+    mainDeck.sort(() => Math.random() - 0.5);
+
+    // 2. THUẬT TOÁN "BỎ 3 LẤY 1" - XÀO LẠI CÁC LÁ ĐÃ BỎ
+    state.matrix = [];
+    let hand = [...mainDeck]; 
+    let discarded = []; 
+
+    for(let i=0; i<12; i++) {
+        // Bỏ 3 lá
+        for(let j=0; j<3; j++) {
+            if(hand.length === 0) { // Hết bài thì gom xấp bỏ xào lại
+                hand = discarded.sort(() => Math.random() - 0.5);
+                discarded = [];
+            }
+            discarded.push(hand.shift());
+        }
+        // Lấy lá thứ 4
+        if(hand.length === 0) {
+            hand = discarded.sort(() => Math.random() - 0.5);
+            discarded = [];
+        }
+        state.matrix.push(hand.shift());
+    }
+
+    // Lá thứ 13 (Tượng trưng) - Lá cuối cùng sau khi đã lấy đủ 12 lá
+    if(hand.length === 0) hand = discarded.sort(() => Math.random() - 0.5);
+    state.tượng = hand.shift();
+
+    // 3. RESET GIAO DIỆN
+    document.getElementById('gamePlay').style.display = 'block';
+    document.getElementById('finalReport').style.display = 'none';
+    document.getElementById('symbol13').innerHTML = "";
+    
+    let btnH = "";
+    for(let i=1; i<=12; i++) btnH += `<button id="btn${i}" class="btn-step ${i==1?'active':''}" onclick="flipCard(${i})" ${i!=1?'disabled':''}>Lần ${i}</button>`;
+    btnH += `<button id="btn13" class="btn-step" onclick="flipCard(13)" disabled style="grid-column: span 4; background:#2c3e50; color:#fff;">Lần 13: LÁ TƯỢNG TRƯNG</button>`;
+    document.getElementById('buttonArea').innerHTML = btnH;
+
+    let gridH = "";
+    for(let i=12; i>=1; i--) gridH += `<div id="card${i}" class="card ${state.css}"><span class="num-tag">${i}</span><div class="content"></div></div>`;
+    document.getElementById('mainMatrix').innerHTML = gridH;
+}
+
+function flipCard(n) {
+    document.getElementById('btn'+n).disabled = true;
+    document.getElementById('btn'+n).classList.remove('active');
+    
+    if(n <= 12) {
+        let c = document.getElementById('card'+n);
+        c.querySelector('.content').innerHTML = state.matrix[n-1].n + '<br>' + state.matrix[n-1].f;
+        c.style.display = 'flex';
+        let next = document.getElementById('btn'+(n+1));
+        if(next) { next.disabled = false; next.classList.add('active'); }
+    } else {
+        processResults();
+    }
+}
+
+function processResults() {
+    // 1. Xác định GỐC
+    let gIdx = -1;
+    for(let i=11; i>=0; i--) if(state.matrix[i].n === state.tượng.n) { gIdx = i; break; }
+    
+    let fullArr = [...state.matrix];
+    if(gIdx === -1) { 
+        fullArr.push(state.tượng); gIdx = 12; 
+        document.getElementById('symbol13').innerHTML = `<div class="card ${state.css} goc-highlight" style="display:flex; width:24%"><span class="num-tag">13</span>${state.tượng.n}<br>${state.tượng.f}</div>`;
+    } else {
+        document.getElementById('card'+(gIdx+1)).classList.add('goc-highlight');
+    }
+
+    // 2. Tính 5 LINH HỒN (Nhảy 4 bước ngược)
+    let souls = []; let current = gIdx + 1;
+    for(let i=0; i<5; i++) {
+        let target = current;
+        for(let j=0; j<4; j++) { target--; if(target < 1) target = fullArr.length; }
+        souls.push(fullArr[target - 1]);
+        current = target - 1; if(current < 1) current = fullArr.length;
+    }
+    let soulH = "";
+    souls.forEach((s, i) => soulH += `<div class="card ${state.css}" style="display:flex; border:2px solid #d35400"><span class="num-tag">L${i+1}</span>${s.n}<br>${s.f}</div>`);
+    document.getElementById('soulGrid').innerHTML = soulH;
+
+    // 3. Hiển thị 3 KHÓM (Xào lại 12 lá trận pháp)
+    let shuffle12 = [...state.matrix].sort(() => Math.random() - 0.5);
+    const labels = ["QUÁ KHỨ", "HIỆN TẠI", "TƯƠNG LAI"];
+    let khomH = "";
+    for(let i=0; i<3; i++) {
+        khomH += `<h4>KHÓM ${i+1}: ${labels[i]}</h4><div class="card-grid">`;
+        for(let j=0; j<4; j++) {
+            let item = shuffle12[i*4 + j];
+            khomH += `<div class="card ${state.css}" style="display:flex"><span class="num-tag">${j+1}</span>${item.n}<br>${item.f}</div>`;
+        }
+        khomH += `</div><div class="interpretation-box">Đang đợi nạp dữ liệu Data Thô ngày mai để giải đoán cặp 1-2 & 3-4...</div>`;
+    }
+    document.getElementById('khomSection').innerHTML = khomH;
+    document.getElementById('finalReport').style.display = 'block';
+}
+</script>
+</body>
+</html>
