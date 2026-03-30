@@ -3,193 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh - Bản Sửa Lỗi Hiển Thị</title>
+    <title>Ngũ Linh - Bản Fix Tuyệt Đối</title>
     <style>
-        :root { --bg: #f9f9f9; --accent: #d35400; --gold: #f1c40f; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .box { max-width: 420px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .menu { display: flex; gap: 8px; margin-bottom: 15px; }
-        select, button { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
-        button { background: var(--accent); color: white; border: none; font-weight: bold; flex: 1; }
-        .stt { text-align: center; color: var(--accent); font-weight: bold; min-height: 25px; margin-bottom: 10px; font-size: 14px; }
+        body { font-family: sans-serif; background: #f0f0f0; padding: 10px; margin: 0; }
+        .box { max-width: 400px; margin: auto; background: #fff; padding: 15px; border-radius: 10px; }
+        .stt { text-align: center; font-weight: bold; color: #d35400; margin: 10px 0; height: 20px; font-size: 14px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
         
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
-        .slot { 
-            background: #fff; border: 1.5px solid #eee; border-radius: 8px; 
-            min-height: 70px; display: flex; align-items: center; justify-content: center; 
-            text-align: center; font-weight: bold; font-size: 13px; position: relative;
-            visibility: hidden; opacity: 0; transition: all 0.3s ease;
+        /* Các ô bài cố định - Quan trọng để không bị trắng */
+        .s { 
+            background: #fff; border: 1px solid #ddd; border-radius: 5px; 
+            min-height: 60px; display: flex; align-items: center; justify-content: center; 
+            text-align: center; font-size: 12px; font-weight: bold; position: relative;
+            visibility: hidden; opacity: 0; transition: 0.3s;
         }
-        .num { position: absolute; top: 2px; right: 4px; font-size: 10px; color: #bbb; }
-        .visible { visibility: visible !important; opacity: 1 !important; }
-
-        /* Màu quân */
-        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #555; } .Do { color: #c0392b; }
+        .n { position: absolute; top: 2px; right: 3px; font-size: 9px; color: #999; }
         
-        /* Hiệu ứng */
-        .is-goc { border: 2.5px solid var(--gold) !important; background: #fffde7 !important; }
-        .is-scan { background: var(--gold) !important; transform: scale(1.1); z-index: 10; }
-        .is-picked { border: 2.5px solid var(--accent) !important; box-shadow: 0 0 10px rgba(211,84,0,0.4); }
-        .is-back { background: #2c3e50 !important; color: transparent !important; }
-
-        .khom-wrap { margin-top: 15px; border-top: 2px dashed #eee; padding-top: 10px; display: none; }
-        .khom-title { font-size: 11px; font-weight: bold; color: #999; margin-bottom: 5px; text-transform: uppercase; }
+        /* Màu sắc & Hiệu ứng */
+        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #555; } .Do { color: #c0392b; }
+        .goc { border: 2px solid #f1c40f !important; background: #fffde7; }
+        .scan { background: #f1c40f !important; transform: scale(1.1); }
+        .pick { border: 2px solid #d35400 !important; box-shadow: 0 0 8px rgba(211,84,0,0.5); }
+        .back { background: #2c3e50 !important; color: transparent !important; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <div class="menu">
-        <select id="selColor">
+    <div style="display:flex; gap:5px; margin-bottom:10px;">
+        <select id="m" style="flex:1; padding:10px; border-radius:5px;">
             <option value="Xanh">CÔNG DANH</option>
             <option value="Vang">TÀI LỘC</option>
             <option value="Trang">GIA ĐẠO</option>
             <option value="Do">TÌNH DUYÊN</option>
         </select>
-        <button id="btnPlay" onclick="run()">KHAI QUẺ</button>
+        <button onclick="chay()" style="padding:10px 20px; background:#d35400; color:#fff; border:none; border-radius:5px; font-weight:bold;">KHAI QUẺ</button>
     </div>
 
-    <div id="status" class="stt">Chào mừng bạn...</div>
+    <div id="txt" class="stt">Chào mừng bạn!</div>
 
-    <div style="display:flex; justify-content:center; margin-bottom:10px;">
-        <div id="slot-13" class="slot" style="width:23%;"><span class="num">13</span></div>
+    <div style="display:flex; justify-content:center; margin-bottom:5px;">
+        <div id="o13" class="s"><span class="n">13</span><div class="d"></div></div>
     </div>
 
     <div class="grid">
-        <div id="slot-12" class="slot"><span class="num">12</span></div>
-        <div id="slot-11" class="slot"><span class="num">11</span></div>
-        <div id="slot-10" class="slot"><span class="num">10</span></div>
-        <div id="slot-9" class="slot"><span class="num">9</span></div>
-        <div id="slot-8" class="slot"><span class="num">8</span></div>
-        <div id="slot-7" class="slot"><span class="num">7</span></div>
-        <div id="slot-6" class="slot"><span class="num">6</span></div>
-        <div id="slot-5" class="slot"><span class="num">5</span></div>
-        <div id="slot-4" class="slot"><span class="num">4</span></div>
-        <div id="slot-3" class="slot"><span class="num">3</span></div>
-        <div id="slot-2" class="slot"><span class="num">2</span></div>
-        <div id="slot-1" class="slot"><span class="num">1</span></div>
+        <div id="o12" class="s"><span class="n">12</span><div class="d"></div></div>
+        <div id="o11" class="s"><span class="n">11</span><div class="d"></div></div>
+        <div id="o10" class="s"><span class="n">10</span><div class="d"></div></div>
+        <div id="o9" class="s"><span class="n">9</span><div class="d"></div></div>
+        <div id="o8" class="s"><span class="n">8</span><div class="d"></div></div>
+        <div id="o7" class="s"><span class="n">7</span><div class="d"></div></div>
+        <div id="o6" class="s"><span class="n">6</span><div class="d"></div></div>
+        <div id="o5" class="s"><span class="n">5</span><div class="d"></div></div>
+        <div id="o4" class="s"><span class="n">4</span><div class="d"></div></div>
+        <div id="o3" class="s"><span class="n">3</span><div class="d"></div></div>
+        <div id="o2" class="s"><span class="n">2</span><div class="d"></div></div>
+        <div id="o1" class="s"><span class="n">1</span><div class="d"></div></div>
     </div>
 
-    <div id="khomArea" class="khom-wrap">
-        <div class="khom-title">Quá khứ - Hiện tại - Tương lai</div>
-        <div id="kGrid" class="grid"></div>
+    <div id="areaK" style="display:none; margin-top:15px; border-top:1px dashed #ccc; padding-top:10px;">
+        <div class="grid" id="khomGrid"></div>
     </div>
 </div>
 
 <script>
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wait = ms => new Promise(r => setTimeout(r, ms));
 
-async function run() {
-    const stt = document.getElementById('status');
-    const color = document.getElementById('selColor').value;
-    const btn = document.getElementById('btnPlay');
+async function chay() {
+    const txt = document.getElementById('txt');
+    const mau = document.getElementById('m').value;
     
-    btn.disabled = true;
-    document.getElementById('khomArea').style.display = 'none';
-
-    // 1. Dọn sân cỏ
+    // 1. Reset sạch sẽ
     for(let i=1; i<=13; i++) {
-        let el = document.getElementById('slot-'+i);
-        el.className = 'slot';
+        let el = document.getElementById('o'+i);
+        el.className = 's';
         el.style.visibility = 'hidden';
         el.style.opacity = '0';
-        el.innerHTML = `<span class="num">${i}</span>`;
+        el.querySelector('.d').innerText = '';
     }
+    document.getElementById('areaK').style.display = 'none';
 
-    // 2. Tạo bộ bài 28 lá (Tứ sắc)
-    const names = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
-    let deck = [];
-    names.forEach(n => {
-        deck.push({n, f:'Đ'}, {n, f:'Đ'}, {n, f:'N'}, {n, f:'N'});
-    });
-    deck.sort(() => Math.random() - 0.5);
+    // 2. Tạo bài
+    const ten = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    let d = [];
+    ten.forEach(n => d.push({n, f:'Đ'}, {n, f:'Đ'}, {n, f:'N'}, {n, f:'N'}));
+    d.sort(() => Math.random() - 0.5);
 
-    // 3. Rút bài (Lấy 12 lá chính)
     let m = [];
-    let tempDeck = [...deck];
-    for(let i=0; i<12; i++) {
-        tempDeck.splice(0, 3); // Bỏ 3
-        m.push(tempDeck.shift()); // Lấy 1
-    }
-    let laTT = tempDeck[0]; // Lá thứ 13
+    let tmp = [...d];
+    for(let i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
+    let la13 = tmp[0];
 
-    // 4. HIỂN THỊ (Sửa lỗi trắng từ lá 8)
-    stt.innerText = "Đang trải trận pháp...";
+    // 3. Trải bài (SỬA LỖI TREO LÁ 7)
+    txt.innerText = "Đang trải trận pháp...";
     for(let i=1; i<=12; i++) {
-        await sleep(150);
-        let el = document.getElementById('slot-'+i);
-        if(m[i-1]) {
-            el.classList.add('visible', color);
-            el.innerHTML += `${m[i-1].n}<br>${m[i-1].f}`;
+        await wait(100);
+        let el = document.getElementById('o'+i);
+        if(el) {
+            el.classList.add(mau);
+            el.querySelector('.d').innerHTML = m[i-1].n + '<br>' + m[i-1].f;
+            el.style.visibility = 'visible';
+            el.style.opacity = '1';
         }
     }
 
-    // 5. Xác định Gốc
-    await sleep(500);
-    let startPos = -1;
-    for(let i=11; i>=0; i--) { 
-        if(m[i] && m[i].n === laTT.n) { startPos = i+1; break; } 
-    }
-
-    let finalM = [...m];
-    if(startPos === -1) {
-        stt.innerText = "Hạ lá thứ 13...";
-        finalM.push(laTT);
-        startPos = 13;
-        let el13 = document.getElementById('slot-13');
-        el13.classList.add('visible', color, 'is-goc');
-        el13.innerHTML += `${laTT.n}<br>${laTT.f}`;
+    // 4. Tìm Gốc
+    await wait(400);
+    let goc = -1;
+    for(let i=11; i>=0; i--) { if(m[i].n === la13.n) { goc = i+1; break; } }
+    
+    let finalDeck = [...m];
+    if(goc === -1) {
+        finalDeck.push(la13);
+        goc = 13;
+        let o13 = document.getElementById('o13');
+        o13.classList.add(mau, 'goc');
+        o13.querySelector('.d').innerHTML = la13.n + '<br>' + la13.f;
+        o13.style.visibility = 'visible';
+        o13.style.opacity = '1';
     } else {
-        document.getElementById('slot-'+startPos).classList.add('is-goc');
-        stt.innerText = `Gốc tại vị trí ${startPos}`;
+        document.getElementById('o'+goc).classList.add('goc');
     }
+    txt.innerText = "Gốc tại vị trí " + goc;
 
-    // 6. NHẢY LINH HỒN (Khôi phục tính năng)
-    await sleep(800);
-    let ptr = startPos;
-    let N = finalM.length;
+    // 5. Tìm 5 Linh hồn (FIXED)
+    await wait(600);
+    let ptr = goc;
+    let N = finalDeck.length;
     for(let s=1; s<=5; s++) {
-        stt.innerText = `Lần ${s}: Tìm Linh hồn...`;
+        txt.innerText = "Linh hồn lần " + s + "...";
         let cur = ptr;
         for(let j=0; j<5; j++) {
-            let scanEl = document.getElementById('slot-'+cur);
-            if(scanEl) scanEl.classList.add('is-scan');
-            await sleep(150);
-            if(scanEl) scanEl.classList.remove('is-scan');
-            if(j < 4) {
-                cur--;
-                if(cur < 1) cur = N;
-            }
+            let el = document.getElementById('o'+cur);
+            if(el) el.classList.add('scan');
+            await wait(120);
+            if(el) el.classList.remove('scan');
+            if(j<4) { cur--; if(cur<1) cur = N; }
         }
-        document.getElementById('slot-'+cur).classList.add('is-picked');
-        await sleep(600);
+        document.getElementById('o'+cur).classList.add('pick');
+        await wait(500);
         ptr = cur - 1; if(ptr < 1) ptr = N;
     }
 
-    // 7. CHIA KHÓM (Khôi phục tính năng)
-    stt.innerText = "Đang xào bài chia 3 khóm...";
-    const kArea = document.getElementById('khomArea');
-    const kGrid = document.getElementById('kGrid');
+    // 6. 3 Khóm (FIXED)
+    txt.innerText = "Chia 3 khóm thời gian...";
+    const kGrid = document.getElementById('khomGrid');
     kGrid.innerHTML = "";
-    kArea.style.display = 'block';
-    
+    document.getElementById('areaK').style.display = 'block';
     let shuf = [...m].sort(() => Math.random() - 0.5);
     for(let i=0; i<12; i++) {
         let c = document.createElement('div');
-        c.className = `slot visible is-back`;
-        c.innerHTML = `?`;
+        c.className = 's visible back';
+        c.innerHTML = '?';
         kGrid.appendChild(c);
-        
         setTimeout(() => {
-            c.classList.remove('is-back');
-            c.classList.add(color);
-            c.innerHTML = `${shuf[i].n}<br>${shuf[i].f}`;
-        }, 1000 + (i*100));
+            c.className = 's visible ' + mau;
+            c.innerHTML = shuf[i].n + '<br>' + shuf[i].f;
+        }, 1000 + (i*80));
     }
-
-    await sleep(2500);
-    stt.innerText = "Quẻ Ngũ Linh hoàn tất.";
-    btn.disabled = false;
+    await wait(2000);
+    txt.innerText = "Quẻ Ngũ Linh đã sẵn sàng!";
 }
 </script>
 </body>
