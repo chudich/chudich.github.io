@@ -2,40 +2,33 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Trận Pháp Ngũ Linh - Tứ Sắc (Chuẩn Logic)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trận Pháp Ngũ Linh - Chuẩn Logic</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fafafa; padding: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; text-transform: uppercase; letter-spacing: 2px; }
+        :root { --main-bg: #f8f9fa; --card-border: #ddd; }
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--main-bg); margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; }
         
-        .controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
-        select, button { padding: 12px 20px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; outline: none; }
-        button { background: #e67e22; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #d35400; }
+        .menu { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; background: #eee; padding: 15px; border-radius: 8px; }
+        select { padding: 10px; border-radius: 6px; border: 1px solid #ccc; flex: 1; min-width: 150px; font-size: 14px; }
+        button { padding: 10px 20px; background: #d35400; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.95); }
+
+        /* Matrix Grid 4 cột */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .cell { background: #fff; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px 2px; text-align: center; font-weight: bold; font-size: 0.85rem; position: relative; }
+        .pos { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #999; }
         
-        /* Ma trận 4 cột */
-        .matrix-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 15px; 
-            margin-bottom: 30px;
-        }
-        .card-cell { 
-            background: #fff; border: 2px solid #eee; border-radius: 8px; padding: 20px 10px; 
-            text-align: center; font-weight: bold; font-size: 16px; position: relative;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
-        }
-        .pos-num { position: absolute; top: 5px; right: 8px; font-size: 11px; color: #aaa; }
-        
-        /* Màu sắc theo hệ bài */
-        .txt-Xanh { color: #27ae60; }
-        .txt-Vang { color: #e67e22; } /* Vàng cam dễ nhìn */
-        .txt-Trang { color: #7f8c8d; } /* Xám đậm thay cho trắng tinh */
-        .txt-Do { color: #c0392b; }
-        
-        .result-area { background: #2c3e50; color: #ecf0f1; padding: 25px; border-radius: 10px; font-family: 'Consolas', monospace; line-height: 1.7; overflow-x: auto; }
-        .copy-btn { background: #27ae60; margin-top: 15px; width: 100%; font-size: 16px; }
-        .target-highlight { border-color: #f1c40f !important; background: #fffde7; }
+        /* Màu sắc quân bài */
+        .c-Xanh { color: #27ae60; }
+        .c-Vang { color: #e67e22; }
+        .c-Trang { color: #555555; }
+        .c-Do { color: #c0392b; }
+        .active-cell { border: 2px solid #f1c40f; background: #fffde7; }
+
+        .output { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 8px; font-family: "Courier New", monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.5; overflow-x: auto; margin-top: 15px; }
+        .copy-btn { background: #27ae60; width: 100%; margin-top: 10px; padding: 12px; }
     </style>
 </head>
 <body>
@@ -43,157 +36,128 @@
 <div class="container">
     <h2>TRẬN PHÁP NGŨ LINH</h2>
     
-    <div class="controls">
-        <label><b>Chọn màu bài:</b></label>
-        <select id="colorPick">
+    <div class="menu">
+        <select id="colorSelect">
             <option value="Xanh">CÔNG DANH (XANH)</option>
             <option value="Vang">TÀI LỘC (VÀNG CAM)</option>
-            <option value="Trang">GIA ĐẠO (XÁM TRẮNG)</option>
+            <option value="Trang">GIA ĐẠO (XÁM)</option>
             <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
         </select>
-        <button onclick="startDivination()">KHAI TRẬN</button>
+        <button onclick="lapQue()">KHAI TRẬN</button>
     </div>
 
-    <div id="matrixBox" class="matrix-grid"></div>
-
-    <div id="resultText" class="result-area" style="display:none;"></div>
-    <button id="btnCopy" class="copy-btn" style="display:none;" onclick="copyToClipboard()">SAO CHÉP KẾT QUẢ THẢO LUẬN</button>
+    <div id="matrixGrid" class="grid"></div>
+    <div id="resultText" class="output" style="display:none;"></div>
+    <button id="copyBtn" class="copy-btn" style="display:none;" onclick="copyRes()">SAO CHÉP KẾT QUẢ</button>
 </div>
 
 <script>
-// Cấu trúc Data chờ sẵn
-const DIVINATION_DATA = {
-    "MUC_1": "--- Dán dữ liệu TƯỚNG ---",
-    "MUC_2": "--- Dán dữ liệu SĨ ---",
-    "MUC_3": "--- Dán dữ liệu TƯỢNG ---",
-    "MUC_4": "--- Dán dữ liệu XE ---",
-    "MUC_5": "--- Dán dữ liệu PHÁO ---",
-    "MUC_6": "--- Dán dữ liệu NGỰA ---",
-    "MUC_7": "--- Dán dữ liệu CHỐT ---"
-};
+const DATA_NGU_LINH = { /* User dán data vào đây */ };
 
-const CardEngine = {
-    generateDeck: function(color) {
+const Engine = {
+    // Khởi tạo bài
+    init: (col) => {
         const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
         const faces = ['Đ', 'N'];
         let d = [];
-        names.forEach(n => {
-            faces.forEach(f => {
-                d.push({n, f, color}, {n, f, color});
-            });
-        });
+        names.forEach(n => faces.forEach(f => { d.push({n, f, col}, {n, f, col}); }));
         return d.sort(() => Math.random() - 0.5);
     },
 
-    getMatrix: function(deck) {
-        let mat = [];
-        let disc = [];
-        let tmp = [...deck];
-        while (mat.length < 12) {
+    // Rút 12 lá theo quy tắc bỏ 3 lấy 1
+    deal: (deck) => {
+        let m = [], disc = [], tmp = [...deck];
+        while (m.length < 12) {
             if (tmp.length < 4) { tmp = [...tmp, ...disc]; disc = []; }
             disc.push(tmp.shift(), tmp.shift(), tmp.shift());
-            mat.push(tmp.shift());
+            m.push(tmp.shift());
         }
-        return { mat, laTT: tmp.length > 0 ? tmp[0] : disc[0] };
+        return { m, laTT: tmp.length > 0 ? tmp[0] : disc[0] };
     },
 
-    // LOGIC NHẢY CHUẨN: Tiến về phía Gốc (1) và vòng lại
-    calculateSteps: function(mat, laTT) {
-        let finalMat = [...mat];
-        let foundIdx = -1;
-        
-        // Tìm vị trí trùng nước bài (Ưu tiên tận cùng bên trái - Index cao)
-        for (let i = 11; i >= 0; i--) {
-            if (finalMat[i].n === laTT.n) {
-                foundIdx = i;
-                break;
-            }
+    // LOGIC ĐẾM VÒNG TRÒN TIẾN VỀ GỐC (12 < 11 < ... < 1 < 12)
+    solve: (m, laTT) => {
+        let finalM = [...m];
+        let startPos = -1;
+        // Tìm quân trùng tận cùng phía trái (Vị trí 12 -> 1)
+        for (let i = 11; i >= 0; i--) { 
+            if (finalM[i].n === laTT.n) { startPos = i + 1; break; } 
         }
 
-        let startIdx;
-        if (foundIdx !== -1) {
-            startIdx = foundIdx;
-            finalMat[startIdx] = laTT;
-        } else {
-            finalMat.push(laTT); // Vị trí 13 (Index 12)
-            startIdx = 12;
-        }
+        if (startPos !== -1) { finalM[startPos-1] = laTT; } 
+        else { finalM.push(laTT); startPos = 13; }
 
-        let results = [];
-        let currentIdx = startIdx;
-        let N = finalMat.length;
+        let steps = [];
+        let N = finalM.length;
+        let currentPos = startPos; // Vị trí người dùng (1 đến N)
 
         for (let i = 0; i < 5; i++) {
-            // Nhảy 5 nhịp tiến về phía Gốc (Index giảm dần)
-            // Nhịp 1 là chính nó, nhịp 2 là index-1... nhịp 5 là index-4
-            currentIdx = (currentIdx - 4 + N * 10) % N; 
-            results.push({
-                card: finalMat[currentIdx],
-                pos: currentIdx + 1
-            });
+            // Nhịp 1 là tại currentPos. Đếm thêm 4 nhịp nữa tiến về Gốc
+            // Quy luật: 5 -> 4 -> 3 -> 2 -> 1 -> N -> N-1...
+            for (let j = 1; j < 5; j++) {
+                currentPos--;
+                if (currentPos < 1) currentPos = N;
+            }
+            // Sau khi đếm đủ 5 nhịp, lưu lại lá bài
+            steps.push({ pos: currentPos, card: finalM[currentPos - 1] });
+            
+            // Lần nhảy tiếp theo bắt đầu đếm nhịp 1 tại lá đứng TRƯỚC lá vừa dừng
+            currentPos--;
+            if (currentPos < 1) currentPos = N;
         }
-        return { finalMat, results, startPos: startIdx + 1 };
+        return { finalM, steps, startPos };
     }
 };
 
-function startDivination() {
-    const color = document.getElementById('colorPick').value;
-    const { mat, laTT } = CardEngine.getMatrix(CardEngine.generateDeck(color));
-    const { finalMat, results, startPos } = CardEngine.calculateSteps(mat, laTT);
+function lapQue() {
+    const col = document.getElementById('colorSelect').value;
+    const { m, laTT } = Engine.deal(Engine.init(col));
+    const { finalM, steps, startPos } = Engine.solve(m, laTT);
 
-    // Hiển thị Matrix
-    const box = document.getElementById('matrixBox');
-    box.innerHTML = "";
-    const colorClass = `txt-${color}`;
+    // Hiển thị Grid
+    const grid = document.getElementById('matrixGrid');
+    grid.innerHTML = "";
+    const cClass = `c-${col}`;
 
-    // Vẽ từ 12 về 1 theo hàng (Hàng trên 12-11-10-9, v.v.)
     for (let i = 11; i >= 0; i--) {
         const div = document.createElement('div');
-        div.className = `card-cell ${colorClass}`;
-        if (i + 1 === startPos) div.classList.add('target-highlight');
-        div.innerHTML = `<span class="pos-num">${i + 1}</span>${finalMat[i].n} ${finalMat[i].f}`;
-        box.appendChild(div);
+        div.className = `cell ${cClass} ${i+1 === startPos ? 'active-cell' : ''}`;
+        div.innerHTML = `<span class="pos">${i+1}</span>${finalM[i].n}<br>${finalM[i].f}`;
+        grid.appendChild(div);
     }
 
-    // Kết quả Text
-    let txt = `--- KẾT QUẢ TRẢI BÀI NGŨ LINH (${color.toUpperCase()}) ---\n`;
+    // Xuất text kết quả
+    let txt = `--- KẾT QUẢ QUẺ NGŨ LINH (${col.toUpperCase()}) ---\n`;
     txt += `Lá Tượng Trưng: ${laTT.n} ${laTT.f}\n`;
-    txt += `Bắt đầu tại Vị trí: ${startPos}\n\n`;
+    txt += `Vị trí bắt đầu: ${startPos}\n\n`;
     
-    txt += `SƠ ĐỒ MA TRẬN:\n`;
+    txt += `MA TRẬN (3x4):\n`;
     for (let r = 2; r >= 0; r--) {
         let row = "";
         for (let c = 3; c >= 0; c--) {
             let idx = r * 4 + c;
-            row += `[${finalMat[idx].n} ${finalMat[idx].f}]`.padEnd(12);
+            row += `[${finalM[idx].n}${finalM[idx].f}]`.padEnd(10);
         }
         txt += row + "\n";
     }
-    if (finalMat.length === 13) txt += `(Lá 13 nằm ngoài bên trái: ${finalMat[12].n} ${finalMat[12].f})\n`;
 
-    txt += `\n--- 5 LÁ LINH HỒN (NHẢY TIẾN VỀ GỐC) ---\n`;
-    results.forEach((res, i) => {
-        txt += `Lần ${i+1} (nhảy đến vị trí ${res.pos}): ${res.card.n} ${res.card.f}\n`;
+    txt += `\n--- 5 LÁ LINH HỒN (TIẾN VỀ GỐC) ---\n`;
+    steps.forEach((s, i) => {
+        txt += `Lần ${i+1} (Dừng vị trí ${s.pos}): ${s.card.n} ${s.card.f}\n`;
     });
 
-    txt += `\n--- LUẬN GIẢI TỔNG ĐOÁN ---\n`;
-    for(let i=0; i < results.length - 1; i++) {
-        txt += `+ Cặp ${i+1}: ${results[i].card.n} & ${results[i+1].card.n} -> (Dán nội dung giải mã)\n`;
-    }
-
-    const resArea = document.getElementById('resultText');
-    resArea.innerText = txt;
-    resArea.style.display = 'block';
-    document.getElementById('btnCopy').style.display = 'block';
+    const res = document.getElementById('resultText');
+    res.innerText = txt; res.style.display = 'block';
+    document.getElementById('copyBtn').style.display = 'block';
+    // Cuộn xuống xem kết quả
+    res.scrollIntoView({ behavior: 'smooth' });
 }
 
-function copyToClipboard() {
-    const el = document.createElement('textarea');
-    el.value = document.getElementById('resultText').innerText;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+function copyRes() {
+    const t = document.createElement('textarea');
+    t.value = document.getElementById('resultText').innerText;
+    document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t);
     alert("Đã sao chép kết quả!");
 }
 </script>
