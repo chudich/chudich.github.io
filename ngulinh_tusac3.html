@@ -3,46 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh Tứ Sắc - Bản Hoàn Thiện 100%</title>
+    <title>Ngũ Linh Tứ Sắc - Bản Chuẩn Di Động</title>
     <style>
-        :root { --bg: #f8f9fa; --accent: #d35400; --gold: #f1c40f; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; }
+        :root { --bg: #fdfdfd; --accent: #d35400; --gold: #f1c40f; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 10px; -webkit-tap-highlight-color: transparent; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        .menu-bar { display: flex; gap: 8px; margin-bottom: 15px; background: #eee; padding: 8px; border-radius: 10px; }
-        select { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
-        button { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .menu-bar { display: flex; gap: 8px; margin-bottom: 15px; }
+        select { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
+        button { padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #ccc; }
 
-        .status { text-align: center; color: var(--accent); font-weight: bold; min-height: 24px; margin-bottom: 10px; font-size: 14px; }
+        .status { text-align: center; color: var(--accent); font-weight: bold; min-height: 30px; margin: 10px 0; font-size: 14px; }
 
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .card { 
-            background: #fff; border: 1.5px solid #ddd; border-radius: 8px; 
-            padding: 12px 2px; text-align: center; font-weight: bold; font-size: 13px;
-            position: relative; min-height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column;
-            opacity: 0; transform: translateY(10px); transition: all 0.3s ease;
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
+        
+        /* Ô bài mặc định ẩn */
+        .slot { 
+            background: #fff; border: 1.5px solid #eee; border-radius: 8px; 
+            min-height: 65px; display: none; align-items: center; justify-content: center; 
+            text-align: center; font-weight: bold; font-size: 13px; position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .card.show { opacity: 1; transform: translateY(0); }
-        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #999; }
-        
-        /* Màu quân bài */
+        .slot.visible { display: flex; animation: fadeIn 0.3s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #aaa; }
         .c-Xanh { color: #27ae60; } .c-Vang { color: #e67e22; } .c-Trang { color: #555; } .c-Do { color: #c0392b; }
 
-        /* Trạng thái */
-        .goc { border: 2.5px solid var(--gold) !important; background: #fffde7 !important; }
-        .scanning { background: var(--gold) !important; transform: scale(1.1); z-index: 10; border-color: white !important; }
-        .picked { border: 2.5px solid var(--accent) !important; box-shadow: 0 0 10px rgba(211, 84, 0, 0.4); transform: scale(1.05); }
-        .back { background: #2c3e50 !important; color: transparent !important; }
+        /* Hiệu ứng quét nhịp */
+        .scan { background: var(--gold) !important; transform: scale(1.1); z-index: 10; border-color: white !important; }
+        .is-goc { border: 2.5px solid var(--gold) !important; background: #fffde7 !important; }
+        .is-picked { border: 2.5px solid var(--accent) !important; box-shadow: 0 0 10px rgba(211,84,0,0.5); }
+        .is-back { background: #2c3e50 !important; color: transparent !important; }
 
-        .log-box { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 10px; font-family: monospace; font-size: 12px; white-space: pre-wrap; line-height: 1.6; margin-top: 15px; display: none; }
+        .log { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 10px; font-family: monospace; font-size: 12px; white-space: pre-wrap; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>TRẬN PHÁP NGŨ LINH</h2>
+    <h2 style="text-align:center; font-size:1.1rem; margin-top:0;">TRẬN PHÁP NGŨ LINH</h2>
     
     <div class="menu-bar">
         <select id="colorSel">
@@ -51,137 +52,145 @@
             <option value="Trang">GIA ĐẠO (XÁM)</option>
             <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
         </select>
-        <button id="runBtn" onclick="runApp()">KHAI QUẺ</button>
+        <button id="runBtn">KHAI QUẺ</button>
     </div>
 
-    <div id="status" class="status">Sẵn sàng khai trận...</div>
+    <div id="status" class="status">Vui lòng bấm KHAI QUẺ...</div>
+
+    <div style="display:flex; justify-content:center; margin-bottom:10px;">
+        <div id="s-13" class="slot" style="width:23%;"><span class="num">13</span></div>
+    </div>
+
+    <div class="grid">
+        <div id="s-12" class="slot"><span class="num">12</span></div>
+        <div id="s-11" class="slot"><span class="num">11</span></div>
+        <div id="s-10" class="slot"><span class="num">10</span></div>
+        <div id="s-9" class="slot"><span class="num">9</span></div>
+        <div id="s-8" class="slot"><span class="num">8</span></div>
+        <div id="s-7" class="slot"><span class="num">7</span></div>
+        <div id="s-6" class="slot"><span class="num">6</span></div>
+        <div id="s-5" class="slot"><span class="num">5</span></div>
+        <div id="s-4" class="slot"><span class="num">4</span></div>
+        <div id="s-3" class="slot"><span class="num">3</span></div>
+        <div id="s-2" class="slot"><span class="num">2</span></div>
+        <div id="s-1" class="slot"><span class="num">1</span></div>
+    </div>
     
-    <div id="area13" style="display:flex; justify-content:center; margin-bottom:10px;"></div>
-    <div id="matrix" class="grid"></div>
-    
-    <div id="khomArea" style="display:none; border-top: 2px dashed #ddd; padding-top: 15px;">
+    <div id="khomSection" style="display:none; border-top:1px solid #eee; padding-top:10px;">
         <div id="k1" class="grid"></div>
         <div id="k2" class="grid"></div>
         <div id="k3" class="grid"></div>
     </div>
 
-    <div id="finalLog" class="log-box"></div>
+    <div id="finalLog" class="log"></div>
 </div>
 
 <script>
-const wait = ms => new Promise(r => setTimeout(r, ms));
-
-async function runApp() {
+// Đảm bảo DOM tải xong hoàn toàn mới gán sự kiện
+document.addEventListener("DOMContentLoaded", function() {
     const btn = document.getElementById('runBtn');
     const stt = document.getElementById('status');
-    const matrix = document.getElementById('matrix');
-    const area13 = document.getElementById('area13');
-    const color = document.getElementById('colorSel').value;
-    const cls = `c-${color}`;
-    
-    // 1. Reset & Khởi tạo
-    btn.disabled = true;
-    matrix.innerHTML = "";
-    area13.innerHTML = "";
-    document.getElementById('khomArea').style.display = "none";
-    document.getElementById('finalLog').style.display = "none";
+    const wait = ms => new Promise(r => setTimeout(r, ms));
 
-    // 2. Logic ngầm
-    const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
-    let deck = [];
-    names.forEach(n => { for(let i=0; i<4; i++) deck.push({n, f: i%2===0?'Đ':'N'}); });
-    deck.sort(() => Math.random() - 0.5);
+    btn.addEventListener('click', async function() {
+        const color = document.getElementById('colorSel').value;
+        const cls = `c-${color}`;
+        
+        btn.disabled = true;
+        stt.innerText = "Đang khởi tạo...";
 
-    let m = [], tmp = [...deck], disc = [];
-    while (m.length < 12) {
-        disc.push(tmp.shift(), tmp.shift(), tmp.shift());
-        m.push(tmp.shift());
-    }
-    let laTT = tmp[0];
-    let start = -1;
-    for (let i = 11; i >= 0; i--) { if (m[i].n === laTT.n) { start = i + 1; break; } }
-    
-    let finalDeck = [...m];
-    if (start === -1) { finalDeck.push(laTT); start = 13; }
+        // Reset toàn bộ
+        document.querySelectorAll('.slot').forEach(s => {
+            s.className = 'slot';
+            const numVal = s.querySelector('.num').innerText;
+            s.innerHTML = `<span class="num">${numVal}</span>`;
+        });
+        document.getElementById('khomSection').style.display = "none";
+        document.getElementById('finalLog').style.display = "none";
 
-    // 3. Hiệu ứng Trải 12 lá
-    stt.innerText = "Đang bỏ 3 lấy 1 lập Ma trận...";
-    for (let i = 1; i <= 12; i++) {
-        const card = document.createElement('div');
-        card.className = `card ${cls}`;
-        card.id = `card-${i}`;
-        card.innerHTML = `<span class="num">${i}</span>${m[i-1].n}<br>${m[i-1].f}`;
-        matrix.prepend(card);
-        await wait(100);
-        card.classList.add('show');
-    }
+        // 1. Logic bài
+        const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
+        let deck = [];
+        names.forEach(n => { for(let i=0; i<4; i++) deck.push({n, f: i%2===0?'Đ':'N'}); });
+        deck.sort(() => Math.random() - 0.5);
 
-    // 4. Lá 13 & Điểm Gốc
-    await wait(400);
-    if (start === 13) {
-        stt.innerText = "Hạ lá 13 xuống...";
-        const c13 = document.createElement('div');
-        c13.className = `card show goc ${cls}`;
-        c13.id = `card-13`;
-        c13.style.width = "23%";
-        c13.innerHTML = `<span class="num">13</span>${laTT.n}<br>${laTT.f}`;
-        area13.appendChild(c13);
-    } else {
-        const elGoc = document.getElementById(`card-${start}`);
-        if (elGoc) elGoc.classList.add('goc');
-        stt.innerText = `Điểm Gốc tại vị trí ${start}`;
-    }
+        let m = [], tmp = [...deck];
+        for(let i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
+        let laTT = tmp[0];
+        let start = -1;
+        for (let i = 11; i >= 0; i--) { if (m[i].n === laTT.n) { start = i + 1; break; } }
+        
+        let finalD = [...m];
+        if (start === -1) { finalD.push(laTT); start = 13; }
 
-    // 5. Nhảy 5 Linh hồn (Logic an toàn)
-    await wait(800);
-    let steps = [], N = finalDeck.length, ptr = start;
-    for (let s = 1; s <= 5; s++) {
-        stt.innerText = `Lần ${s}: Đang nhảy tìm Linh hồn...`;
-        let cur = ptr;
-        for (let j = 0; j < 5; j++) {
-            const el = document.getElementById(`card-${cur}`);
-            if (el) el.classList.add('scanning');
-            await wait(150);
-            if (el) el.classList.remove('scanning');
-            if (j < 4) { cur--; if (cur < 1) cur = N; }
+        // 2. Trải 12 lá (Dùng vòng lặp ID có sẵn)
+        stt.innerText = "Đang trải 12 lá bài...";
+        for (let i = 1; i <= 12; i++) {
+            await wait(120);
+            const el = document.getElementById(`s-${i}`);
+            if (el) {
+                el.classList.add('visible', cls);
+                el.innerHTML += `${m[i-1].n}<br>${m[i-1].f}`;
+            }
         }
-        steps.push({ p: cur, c: finalDeck[cur-1] });
-        const pEl = document.getElementById(`card-${cur}`);
-        if (pEl) pEl.classList.add('picked');
-        await wait(600);
-        ptr = cur - 1; if (ptr < 1) ptr = N;
-    }
 
-    // 6. 3 Khóm Thời Gian
-    stt.innerText = "Chia 3 khóm thời gian...";
-    document.getElementById('khomArea').style.display = "block";
-    const shuf = [...m].sort(() => Math.random() - 0.5);
-    for (let k = 1; k <= 3; k++) {
-        const kGrid = document.getElementById(`k${k}`);
-        kGrid.innerHTML = "";
-        const sub = shuf.slice((k-1)*4, k*4);
-        for (let j = 0; j < 4; j++) {
-            const c = document.createElement('div');
-            c.className = `card show back`;
-            c.innerHTML = `?`;
-            kGrid.appendChild(c);
-            setTimeout(() => {
-                c.className = `card show ${cls}`;
-                c.innerHTML = `<span class="num">${j+1}</span>${sub[j].n}<br>${sub[j].f}`;
-            }, 800 + (j*150));
-            await wait(100);
+        // 3. Lá 13 & Gốc
+        await wait(500);
+        if (start === 13) {
+            stt.innerText = "Hạ lá 13 xuống...";
+            const el13 = document.getElementById('s-13');
+            el13.classList.add('visible', 'is-goc', cls);
+            el13.innerHTML += `${laTT.n}<br>${laTT.f}`;
+        } else {
+            document.getElementById(`s-${start}`).classList.add('is-goc');
+            stt.innerText = `Điểm Gốc: Lá ${laTT.n} vị trí ${start}`;
         }
-    }
 
-    // Kết thúc
-    await wait(1000);
-    stt.innerText = "Quẻ Ngũ Linh đã xong!";
-    let log = `--- QUẺ NGŨ LINH ---\nGốc: ${start}\n`;
-    steps.forEach((v, i) => log += `Lần ${i+1}: Vị trí ${v.p} (${v.c.n} ${v.c.f})\n`);
-    document.getElementById('finalLog').innerText = log;
-    document.getElementById('finalLog').style.display = "block";
-    btn.disabled = false;
-}
+        // 4. Nhảy Linh Hồn
+        await wait(800);
+        let steps = [], N = finalD.length, ptr = start;
+        for (let s = 1; s <= 5; s++) {
+            stt.innerText = `Lần ${s}: Đang nhảy tìm Linh hồn...`;
+            let cur = ptr;
+            for (let j = 0; j < 5; j++) {
+                const scanEl = document.getElementById(`s-${cur}`);
+                if (scanEl) scanEl.classList.add('scan');
+                await wait(150);
+                if (scanEl) scanEl.classList.remove('scan');
+                if (j < 4) { cur--; if (cur < 1) cur = N; }
+            }
+            steps.push({ p: cur, c: finalD[cur-1] });
+            document.getElementById(`s-${cur}`).classList.add('is-picked');
+            await wait(600);
+            ptr = cur - 1; if (ptr < 1) ptr = N;
+        }
+
+        // 5. 3 Khóm
+        stt.innerText = "Chia 3 khóm thời gian...";
+        const kSec = document.getElementById('khomSection');
+        kSec.style.display = "block";
+        let shuf = [...m].sort(() => Math.random() - 0.5);
+        for (let k = 1; k <= 3; k++) {
+            const kg = document.getElementById(`k${k}`);
+            kg.innerHTML = "";
+            let sub = shuf.slice((k-1)*4, k*4);
+            for (let j = 0; j < 4; j++) {
+                const c = document.createElement('div');
+                c.className = 'slot visible is-back';
+                c.innerHTML = `?`;
+                kg.appendChild(c);
+                setTimeout(() => {
+                    c.className = `slot visible ${cls}`;
+                    c.innerHTML = `<span class="num">${j+1}</span>${sub[j].n}<br>${sub[j].f}`;
+                }, 800 + (j*150));
+            }
+        }
+
+        await wait(1500);
+        stt.innerText = "Quẻ Ngũ Linh hoàn tất.";
+        btn.disabled = false;
+    });
+});
 </script>
 </body>
 </html>
