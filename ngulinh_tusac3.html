@@ -1,159 +1,100 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh Tứ Sắc - Bản Fix Lỗi Hiển Thị</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngũ Linh Bản Chốt</title>
     <style>
-        :root { --bg: #f4f7f6; --accent: #d35400; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; font-size: 1.2rem; margin-bottom: 15px; }
-        
-        .menu-bar { display: flex; gap: 8px; margin-bottom: 15px; }
-        select { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
-        button { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 5px; font-weight: bold; }
-
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
-        .card { 
-            background: #fff; border: 1px solid #ddd; border-radius: 6px; 
-            min-height: 60px; display: flex; align-items: center; justify-content: center; 
-            text-align: center; font-weight: bold; font-size: 12px; position: relative; 
-            flex-direction: column; line-height: 1.2;
-        }
-        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #aaa; }
-        
-        /* Màu sắc */
-        .c-Xanh { color: #27ae60; } .c-Vang { color: #e67e22; } .c-Trang { color: #555; } .c-Do { color: #c0392b; }
-        .active { border: 2.4px solid #f1c40f !important; background: #fffde7; }
-        .is-lh { border: 2.4px solid var(--accent) !important; box-shadow: 0 0 5px rgba(211,84,0,0.3); }
-
-        .console { background: #1a1a1a; color: #00ff00; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; white-space: pre-wrap; margin: 15px 0; display: none; }
-        .section-title { font-size: 11px; color: #888; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        body { font-family: sans-serif; padding: 10px; margin: 0; background: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
+        td { border: 1px solid #000; height: 60px; text-align: center; font-size: 12px; font-weight: bold; }
+        .goc { background: #ffff00; border: 3px solid #f00; }
+        .lh { background: #ffcccc; }
+        .btn { width: 100%; padding: 15px; background: #d35400; color: #fff; border: none; font-weight: bold; font-size: 16px; }
+        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: #555; } .Do { color: red; }
+        .head { background: #eee; font-size: 10px; height: 25px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>TRẬN PHÁP NGŨ LINH</h2>
+    <select id="sel" style="width:100%; padding:10px; margin-bottom:10px;">
+        <option value="Xanh">CÔNG DANH</option>
+        <option value="Vang">TÀI LỘC</option>
+        <option value="Trang">GIA ĐẠO</option>
+        <option value="Do">TÌNH DUYÊN</option>
+    </select>
 
-    <div class="menu-bar">
-        <select id="colorSelect">
-            <option value="Xanh">CÔNG DANH (XANH)</option>
-            <option value="Vang">TÀI LỘC (VÀNG)</option>
-            <option value="Trang">GIA ĐẠO (XÁM)</option>
-            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
-        </select>
-        <button onclick="trienKhai()">KHAI QUẺ</button>
-    </div>
+    <button class="btn" onclick="run()">KHAI QUẺ NGAY</button>
 
-    <div id="displayArea" style="display:none;">
-        <div class="section-title">Trận Pháp 12 Lá & Gốc</div>
-        <div id="vung13" style="display:flex; justify-content:center; margin-bottom:6px;"></div>
-        <div id="matrix" class="grid"></div>
-
-        <div class="section-title">5 Lá Linh Hồn (Kết Quả)</div>
-        <div id="lhGrid" class="grid"></div>
-
-        <div class="section-title">3 Khóm Thời Gian</div>
-        <div id="khom1" class="grid"></div>
-        <div id="khom2" class="grid"></div>
-        <div id="khom3" class="grid"></div>
+    <div id="re" style="display:none; margin-top:15px;">
+        <div id="v13" style="margin-bottom:10px; text-align:center;"></div>
         
-        <div id="output" class="console"></div>
+        <table id="tblMain">
+            <tr class="head"><td>Lá 12</td><td>Lá 11</td><td>Lá 10</td><td>Lá 9</td></tr>
+            <tr><td id="m12"></td><td id="m11"></td><td id="m10"></td><td id="m9"></td></tr>
+            <tr class="head"><td>Lá 8</td><td>Lá 7</td><td>Lá 6</td><td>Lá 5</td></tr>
+            <tr><td id="m8"></td><td id="m7"></td><td id="m6"></td><td id="m5"></td></tr>
+            <tr class="head"><td>Lá 4</td><td>Lá 3</td><td>Lá 2</td><td>Lá 1</td></tr>
+            <tr><td id="m4"></td><td id="m3"></td><td id="m2"></td><td id="m1"></td></tr>
+        </table>
+
+        <div style="background:#000; color:#fff; padding:5px; font-size:12px; margin-bottom:5px;">5 LÁ LINH HỒN</div>
+        <table>
+            <tr><td id="l1" class="lh"></td><td id="l2" class="lh"></td><td id="l3" class="lh"></td><td id="l4" class="lh"></td><td id="l5" class="lh"></td></tr>
+        </table>
+
+        <div style="background:#000; color:#fff; padding:5px; font-size:12px; margin-bottom:5px;">3 KHÓM THỜI GIAN</div>
+        <table id="tblKhom"></table>
     </div>
-</div>
 
 <script>
-const Engine = {
-    // 1. Khởi tạo bộ bài ngầm
-    initDeck: (col) => {
-        const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
-        let d = [];
-        names.forEach(n => {
-            d.push({n, f:'Đ', col}, {n, f:'Đ', col}, {n, f:'N', col}, {n, f:'N', col});
-        });
-        return d.sort(() => Math.random() - 0.5);
-    },
-
-    // 2. Chia bài lấy 12 lá chính ngầm
-    dealMatrix: (deck) => {
-        let m = [], tmp = [...deck];
-        for(let i=0; i<12; i++) {
-            tmp.splice(0, 3); // Bỏ 3
-            m.push(tmp.shift()); // Lấy 1
-        }
-        return { m, laTT: tmp[0] };
-    },
-
-    // 3. Tính toán Linh hồn ngầm
-    solve: (m, laTT) => {
-        let finalM = [...m];
-        let goc = -1;
-        for (let i = 11; i >= 0; i--) { if (finalM[i].n === laTT.n) { goc = i + 1; break; } }
-        
-        let pool = [...finalM];
-        if (goc === -1) { pool.push(laTT); goc = 13; }
-
-        let steps = [], N = pool.length, ptr = goc; 
-        for (let i = 0; i < 5; i++) {
-            let cur = ptr;
-            for (let j = 0; j < 4; j++) { cur--; if (cur < 1) cur = N; }
-            steps.push({ pos: cur, card: pool[cur - 1] });
-            ptr = cur - 1; if (ptr < 1) ptr = N;
-        }
-        return { pool, steps, goc };
+function run() {
+    var mau = document.getElementById('sel').value;
+    var t = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    var d = [];
+    for(var i=0; i<7; i++) {
+        d.push({n:t[i], f:'Đ'}, {n:t[i], f:'Đ'}, {n:t[i], f:'N'}, {n:t[i], f:'N'});
     }
-};
+    d.sort(function() { return 0.5 - Math.random() });
 
-function trienKhai() {
-    const col = document.getElementById('colorSelect').value;
-    const cClass = `c-${col}`;
-    
-    // BƯỚC 1: CHẠY NGẦM TOÀN BỘ DATA
-    const { m, laTT } = Engine.dealMatrix(Engine.initDeck(col));
-    const { pool, steps, goc } = Engine.solve(m, laTT);
+    var m = []; var tmp = d.slice();
+    for(var i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
+    var la13 = tmp[0];
 
-    // BƯỚC 2: HIỂN THỊ (SAU KHI ĐÃ CÓ DATA)
-    document.getElementById('displayArea').style.display = 'block';
-    
-    // Hiện Matrix 12 lá
-    const grid = document.getElementById('matrix');
-    grid.innerHTML = "";
-    for (let i = 11; i >= 0; i--) {
-        let active = (i+1 === goc) ? 'active' : '';
-        grid.innerHTML += `<div class="card ${cClass} ${active}"><span class="num">${i+1}</span>${m[i].n}<br>${m[i].f}</div>`;
+    var goc = -1;
+    for(var i=11; i>=0; i--) { if(m[i].n == la13.n) { goc = i+1; break; } }
+    var full = m.slice(); if(goc == -1) { full.push(la13); goc = 13; }
+
+    var lhs = []; var p = goc;
+    for(var s=0; s<5; s++) {
+        var c = p; for(var j=0; j<4; j++) { c--; if(c<1) c=full.length; }
+        lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
     }
 
-    // Hiện lá 13 nếu là Gốc
-    const v13 = document.getElementById('vung13');
-    v13.innerHTML = (goc === 13) ? `<div class="card ${cClass} active" style="width:23%"><span class="num">13</span>${laTT.n}<br>${laTT.f}</div>` : "";
+    document.getElementById('re').style.display = 'block';
+    for(var i=1; i<=12; i++) {
+        var el = document.getElementById('m'+i);
+        el.className = mau + (goc == i ? ' goc' : '');
+        el.innerHTML = m[i-1].n + '<br>' + m[i-1].f;
+    }
 
-    // Hiện 5 Linh hồn
-    const lhGrid = document.getElementById('lhGrid');
-    lhGrid.innerHTML = "";
-    steps.forEach((s, i) => {
-        lhGrid.innerHTML += `<div class="card ${cClass} is-lh"><span class="num">L${i+1}</span>${s.card.n}<br>${s.card.f}</div>`;
-    });
+    var v13 = document.getElementById('v13');
+    if(goc == 13) v13.innerHTML = '<table style="width:25%; margin:auto;"><tr><td class="goc '+mau+'">Lá 13<br>'+la13.n+'<br>'+la13.f+'</td></tr></table>';
+    else v13.innerHTML = '';
 
-    // Hiện 3 Khóm (Xào lại 12 lá của m)
-    const dKhom = [...m].sort(() => Math.random() - 0.5);
-    renderKhom('khom1', dKhom.slice(0, 4), cClass, 'QUÁ KHỨ');
-    renderKhom('khom2', dKhom.slice(4, 8), cClass, 'HIỆN TẠI');
-    renderKhom('khom3', dKhom.slice(8, 12), cClass, 'TƯƠNG LAI');
+    for(var i=0; i<5; i++) {
+        var li = document.getElementById('l'+(i+1));
+        li.className = 'lh ' + mau;
+        li.innerHTML = lhs[i].n + '<br>' + lhs[i].f;
+    }
 
-    // Console log kết quả
-    let txt = `--- KẾT QUẢ ---\nGốc: Vị trí ${goc}\n5 Linh hồn: ` + steps.map(s => s.card.n + s.card.f).join("-");
-    document.getElementById('output').innerText = txt;
-    document.getElementById('output').style.display = 'block';
-}
-
-function renderKhom(id, data, cClass, label) {
-    const el = document.getElementById(id);
-    el.innerHTML = "";
-    data.forEach((c, i) => {
-        el.innerHTML += `<div class="card ${cClass}"><span class="num">${label[0]}${i+1}</span>${c.n}<br>${c.f}</div>`;
-    });
+    var sh = m.slice().sort(function() { return 0.5 - Math.random() });
+    var hK = '<tr>';
+    for(var i=0; i<12; i++) {
+        hK += '<td class="'+mau+'">'+sh[i].n+'<br>'+sh[i].f+'</td>';
+        if((i+1)%4 == 0 && i<11) hK += '</tr><tr>';
+    }
+    document.getElementById('tblKhom').innerHTML = hK + '</tr>';
 }
 </script>
 </body>
