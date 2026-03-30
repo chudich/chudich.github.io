@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trận Pháp Ngũ Linh - Bài Tứ Sắc</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #1a73e8; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .btn-group { text-align: center; margin: 20px 0; }
+        button { background: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #1557b0; }
+        #resultArea { background: #f8f9fa; border: 1px solid #ddd; padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', Courier, monospace; margin-top: 20px; display: none; }
+        .copy-btn { background: #34a853; margin-top: 10px; display: none; }
+        .matrix-display { color: #d93025; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>TRẬN PHÁP NGŨ LINH (CẦU CÔNG DANH)</h2>
+    
+    <div class="btn-group">
+        <button onclick="runNguLinh()">KHAI QUẺ NGŨ LINH</button>
+    </div>
+
+    <div id="resultArea"></div>
+    <button id="copyBtn" class="copy-btn" onclick="copyResult()">SAO CHÉP KẾT QUẢ</button>
+</div>
+
+<script>
+/** * DATA Ý NGHĨA - BẠN DÁN TEXT VÀO CÁC MỤC DƯỚI ĐÂY 
+ * Cú pháp: "Quân1Mặt_Quân2Mặt": "Nội dung ý nghĩa"
+ */
+const DATA_NGU_LINH = {
+    // MỤC 1: TƯỚNG
+    "m1111111111111": "---",
+    "TướngD_ChốtN": "Trước khó sau dễ, bền chí ắt thành.",
+    
+    // MỤC 2: SĨ
+    "m222222222": "---",
+    "SĩD_PháoD": "Đừng nên xem thường người bạn gái.",
+    
+    // MỤC 3: TƯỢNG
+    "m3333333": "---",
+    
+    // MỤC 4: XE
+    "m4444444": "---",
+    
+    // MỤC 5: PHÁO
+    "m5555555": "---",
+    
+    // MỤC 6: NGỰA
+    "m6666666": "---",
+    
+    // MỤC 7: CHỐT
+    "m7777777": "---"
+};
+
+const Engine = {
+    // Khởi tạo bộ bài xanh 28 lá (D: Đứng, N: Ngược)
+    initBlueDeck: function() {
+        const types = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
+        const faces = ['D', 'N'];
+        let deck = [];
+        types.forEach(t => {
+            faces.forEach(f => {
+                deck.push({ name: t, face: f }, { name: t, face: f });
+            });
+        });
+        return deck.sort(() => Math.random() - 0.5); // Xáo bài
+    },
+
+    // Trải bài lấy 12 lá + 1 lá tượng trưng
+    dealCards: function(deck) {
+        let matrix = [];
+        let discarded = [];
+        let temp = [...deck];
+        while (matrix.length < 12) {
+            if (temp.length < 4) { temp = [...temp, ...discarded]; discarded = []; }
+            discarded.push(temp.shift(), temp.shift(), temp.shift());
+            matrix.push(temp.shift());
+        }
+        let laTT = temp.length > 0 ? temp[0] : discarded[0];
+        return { matrix, laTT };
+    },
+
+    // Xử lý logic nhảy 5 bước
+    process: function(matrix, laTT) {
+        let finalM = [...matrix];
+        let startIndex = -1;
+        let indices = [];
+        
+        matrix.forEach((c, i) => { if(c.name === laTT.name) indices.push(i); });
+
+        if (indices.length > 0) {
+            startIndex = Math.max(...indices); // Tận cùng phía trái (Index cao nhất)
+            finalM[startIndex] = laTT;
+        } else {
+            finalM.push(laTT); // Tình huống 13
+            startIndex = 12;
+        }
+
+        let steps = [];
+        let curr = startIndex;
+        let N = finalM.length;
+
+        for (let i = 0; i < 5; i++) {
+            // Nhảy 5 bước ngược chiều xếp (Trái -> Phải = Index giảm dần)
+            curr = (curr - 4 + N * 5) % N;
+            steps.push(finalM[curr]);
+        }
+        return { finalM, steps, startPos: startIndex + 1 };
+    }
+};
+
+function runNguLinh() {
+    const { matrix, laTT } = Engine.dealCards(Engine.initBlueDeck());
+    const { finalM, steps, startPos } = Engine.process(matrix, laTT);
+
+    let txt = `--- KẾT QUẢ TRẢI BÀI NGŨ LINH ---\n\n`;
+    txt += `Lá Tượng Trưng trên tay: ${laTT.name} ${laTT.face}\n`;
+    txt += `Vị trí bắt đầu trong Matrix: Vị trí ${startPos}\n\n`;
+    
+    txt += `SƠ ĐỒ TRẬN PHÁP (3x4):\n`;
+    // Vẽ matrix 3x4 (Dưới lên trên, Phải sang trái)
+    for (let r = 2; r >= 0; r--) {
+        let rowStr = "";
+        for (let c = 3; c >= 0; c--) {
+            let i = r * 4 + c;
+            let card = finalM[i] ? `${finalM[i].name.substring(0,2)}${finalM[i].face}` : "---";
+            rowStr += `| ${card.padEnd(5)} `;
+        }
+        txt += rowStr + "|\n";
+    }
+    if(finalM.length === 13) txt += `(Lá 13 nằm ngoài cực trái: ${finalM[12].name}${finalM[12].face})\n`;
+
+    txt += `\n--- 5 LÁ LINH HỒN ---\n`;
+    steps.forEach((s, i) => {
+        txt += `Lá ${i+1}: ${s.name} ${s.face}\n`;
+    });
+
+    txt += `\n--- LUẬN GIẢI ---\n`;
+    for(let i=0; i < steps.length - 1; i++) {
+        let key = `${steps[i].name}${steps[i].face}_${steps[i+1].name}${steps[i+1].face}`;
+        let mean = DATA_NGU_LINH[key] || "(Chưa có dữ liệu cho cặp này)";
+        txt += `+ ${steps[i].name} & ${steps[i+1].name}: ${mean}\n`;
+    }
+
+    const res = document.getElementById('resultArea');
+    res.innerText = txt;
+    res.style.display = 'block';
+    document.getElementById('copyBtn').style.display = 'inline-block';
+}
+
+function copyResult() {
+    const text = document.getElementById('resultArea').innerText;
+    navigator.clipboard.writeText(text).then(() => alert("Đã sao chép kết quả!"));
+}
+</script>
+
+</body>
+</html>
