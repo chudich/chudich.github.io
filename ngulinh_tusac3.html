@@ -1,57 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngũ Linh - Bản Siêu Tĩnh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ngũ Linh Tứ Sắc - Bản Chuẩn Smartphone</title>
     <style>
-        body { font-family: sans-serif; padding: 10px; text-align: center; background: #fff; }
-        .box { border: 2px solid #000; padding: 10px; margin-bottom: 10px; display: none; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .card { border: 1px solid #333; padding: 10px 0; font-weight: bold; font-size: 12px; }
-        .goc { background: #ff0; border: 2px solid #f00; }
-        .lh { background: #faa; }
-        .btn { width: 100%; padding: 20px; background: #d35400; color: #fff; border: none; font-weight: bold; }
-        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: gray; } .Do { color: red; }
+        :root { --accent: #d35400; }
+        body { font-family: sans-serif; background: #f0f0f0; margin: 0; padding: 10px; }
+        .box { max-width: 450px; margin: auto; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .menu { display: flex; gap: 5px; margin-bottom: 15px; }
+        select, button { padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+        button { background: var(--accent); color: #fff; font-weight: bold; flex: 1; border: none; }
+        
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .card { 
+            background: #fff; border: 1px solid #ddd; border-radius: 4px; 
+            min-height: 55px; display: none; align-items: center; justify-content: center; 
+            text-align: center; font-size: 12px; font-weight: bold; position: relative;
+        }
+        .num { position: absolute; top: 1px; right: 3px; font-size: 8px; color: #999; }
+        
+        /* Màu hệ */
+        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #666; } .Do { color: #c0392b; }
+        .goc { border: 2px solid #f1c40f !important; background: #fffde7; }
+        .lh { border: 2px solid var(--accent) !important; background: #fff5ee; }
+        
+        h4 { font-size: 11px; color: #888; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
     </style>
 </head>
 <body>
 
-    <button class="btn" onclick="document.getElementById('kq').style.display='block';this.style.display='none'">BẤM ĐỂ HIỆN QUẺ TỨ SẮC</button>
-
-    <div id="kq" class="box">
-        <h3 style="font-size:14px;">1. TRẬN PHÁP (GỐC TẠI 7)</h3>
-        <div class="grid">
-            <div class="card Xanh">12<br>TƯỚNG Đ</div>
-            <div class="card Xanh">11<br>SĨ N</div>
-            <div class="card Xanh">10<br>XE Đ</div>
-            <div class="card Xanh">9<br>PHÁO N</div>
-            <div class="card Xanh">8<br>NGỰA Đ</div>
-            <div class="card Xanh goc">7<br>TƯỢNG N</div>
-            <div class="card Xanh">6<br>CHỐT Đ</div>
-            <div class="card Xanh">5<br>TƯỚNG N</div>
-            <div class="card Xanh">4<br>SĨ Đ</div>
-            <div class="card Xanh">3<br>XE N</div>
-            <div class="card Xanh">2<br>PHÁO Đ</div>
-            <div class="card Xanh">1<br>CHỐT N</div>
-        </div>
-
-        <h3 style="font-size:14px;">2. 5 LÁ LINH HỒN</h3>
-        <div class="grid">
-            <div class="card Xanh lh">L1<br>XE Đ</div>
-            <div class="card Xanh lh">L2<br>PHÁO N</div>
-            <div class="card Xanh lh">L3<br>TƯỢNG Đ</div>
-            <div class="card Xanh lh">L4<br>SĨ N</div>
-            <div class="card Xanh lh">L5<br>CHỐT Đ</div>
-        </div>
-
-        <h3 style="font-size:14px;">3. 3 KHÓM THỜI GIAN</h3>
-        <div class="grid">
-            <div class="card Xanh">TƯỚNG N</div><div class="card Xanh">SĨ Đ</div><div class="card Xanh">XE N</div><div class="card Xanh">PHÁO Đ</div>
-            <div class="card Xanh">NGỰA N</div><div class="card Xanh">TƯỢNG Đ</div><div class="card Xanh">CHỐT N</div><div class="card Xanh">TƯỚNG Đ</div>
-            <div class="card Xanh">SĨ N</div><div class="card Xanh">XE Đ</div><div class="card Xanh">PHÁO N</div><div class="card Xanh">NGỰA Đ</div>
-        </div>
+<div class="box">
+    <div class="menu">
+        <select id="mau">
+            <option value="Xanh">CÔNG DANH (XANH)</option>
+            <option value="Vang">TÀI LỘC (VÀNG)</option>
+            <option value="Trang">GIA ĐẠO (XÁM)</option>
+            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
+        </select>
+        <button onclick="batDau()">KHAI QUẺ</button>
     </div>
 
+    <div id="vungHienThi" style="display:none;">
+        <h4>Trận Pháp & Gốc</h4>
+        <div id="v13" style="display:flex; justify-content:center; margin-bottom:5px;"></div>
+        <div id="matrix" class="grid"></div>
+
+        <h4>5 Lá Linh Hồn</h4>
+        <div id="lhGrid" class="grid"></div>
+
+        <h4>3 Khóm Thời Gian</h4>
+        <div id="khomGrid" class="grid"></div>
+    </div>
+</div>
+
+<script>
+function batDau() {
+    var mau = document.getElementById('mau').value;
+    var divResult = document.getElementById('vungHienThi');
+    divResult.style.display = 'block';
+
+    // 1. TÍNH TOÁN NGẦM (ENGINE)
+    var ten = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    var deck = [];
+    for(var i=0; i<7; i++) {
+        deck.push({n:ten[i], f:'Đ'}, {n:ten[i], f:'Đ'}, {n:ten[i], f:'N'}, {n:ten[i], f:'N'});
+    }
+    deck.sort(function() { return 0.5 - Math.random() });
+
+    var m = []; var tmp = deck.slice();
+    for(var i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
+    var la13 = tmp[0];
+
+    var goc = -1;
+    for(var i=11; i>=0; i--) { if(m[i].n == la13.n) { goc = i+1; break; } }
+    var full = m.slice(); if(goc == -1) { full.push(la13); goc = 13; }
+
+    var lhs = []; var p = goc;
+    for(var s=0; s<5; s++) {
+        var c = p; for(var j=0; j<4; j++) { c--; if(c<1) c=full.length; }
+        lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
+    }
+
+    // 2. HIỂN THỊ (CƠ CHẾ RENDER AN TOÀN)
+    // Reset toàn bộ vùng hiển thị
+    document.getElementById('matrix').innerHTML = "";
+    document.getElementById('v13').innerHTML = "";
+    document.getElementById('lhGrid').innerHTML = "";
+    document.getElementById('khomGrid').innerHTML = "";
+
+    // Dựng sẵn 12 khung lá bài chính
+    for(var i=12; i>=1; i--) {
+        var isGoc = (i == goc) ? " goc" : "";
+        document.getElementById('matrix').innerHTML += '<div id="card'+i+'" class="card '+mau+isGoc+'"><span class="num">'+i+'</span>'+m[i-1].n+'<br>'+m[i-1].f+'</div>';
+    }
+
+    // Hiệu ứng hiện dần 12 lá (Dùng setInterval để không treo máy)
+    var count = 1;
+    var timer = setInterval(function() {
+        var el = document.getElementById('card' + count);
+        if(el) el.style.display = 'flex';
+        count++;
+        if(count > 12) {
+            clearInterval(timer);
+            // Sau khi hiện 12 lá mới hiện tiếp các phần còn lại
+            hienPhanConLai(mau, goc, la13, lhs, m);
+        }
+    }, 100); 
+}
+
+function hienPhanConLai(mau, goc, la13, lhs, m) {
+    // Hiện lá 13
+    if(goc == 13) {
+        document.getElementById('v13').innerHTML = '<div class="card '+mau+' goc" style="display:flex; width:23%"><span class="num">13</span>'+la13.n+'<br>'+la13.f+'</div>';
+    }
+
+    // Hiện 5 Linh hồn
+    var lhH = "";
+    for(var i=0; i<5; i++) {
+        lhH += '<div class="card '+mau+' lh" style="display:flex"><span class="num">L'+(i+1)+'</span>'+lhs[i].n+'<br>'+lhs[i].f+'</div>';
+    }
+    document.getElementById('lhGrid').innerHTML = lhH;
+
+    // Hiện 3 Khóm
+    var sh = m.slice().sort(function() { return 0.5 - Math.random() });
+    var khH = "";
+    for(var i=0; i<12; i++) {
+        khH += '<div class="card '+mau+'" style="display:flex">'+sh[i].n+'<br>'+sh[i].f+'</div>';
+    }
+    document.getElementById('khomGrid').innerHTML = khH;
+}
+</script>
 </body>
 </html>
