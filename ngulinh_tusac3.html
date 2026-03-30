@@ -3,182 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh - Rút Thủ Công</title>
+    <title>Ngũ Linh - Lật Bài Thủ Công</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 10px; margin: 0; }
-        .box { max-width: 450px; margin: auto; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; background: #eee; padding: 10px; margin: 0; }
+        .box { max-width: 450px; margin: auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
-        /* Menu điều khiển */
-        .ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        select, .btn-main { padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
-        .btn-main { background: #d35400; color: #fff; font-weight: bold; border: none; cursor: pointer; }
+        /* Menu & Nút */
+        .menu { display: flex; gap: 5px; margin-bottom: 10px; }
+        select { flex: 1; padding: 10px; border-radius: 5px; }
+        .btn-init { background: #d35400; color: #fff; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; }
+        
+        .grid-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 20px; }
+        .step-btn { padding: 8px 0; font-size: 11px; cursor: pointer; background: #f8f8f8; border: 1px solid #ccc; border-radius: 4px; }
+        .step-btn:disabled { background: #ddd; color: #888; cursor: default; border: 1px dashed #aaa; }
+        .step-btn.active { background: #fffde7; border: 2px solid #f1c40f; font-weight: bold; }
 
-        /* Lưới 13 nút bấm */
-        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 20px; }
-        .btn-step { padding: 10px 2px; font-size: 11px; font-weight: bold; background: #eee; border: 1px solid #bbb; border-radius: 4px; cursor: pointer; }
-        .btn-step.done { background: #ddd; color: #aaa; border: 1px dashed #ccc; }
-        .btn-step.next { background: #fffde7; border: 2px solid #f1c40f; box-shadow: 0 0 5px rgba(241,196,15,0.5); }
-
-        /* Hiển thị lá bài */
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        /* Vùng hiển thị bài */
+        .grid-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .card { 
-            background: #fff; border: 1px solid #ddd; border-radius: 6px; min-height: 60px; 
+            background: #fff; border: 1px solid #ddd; border-radius: 5px; min-height: 60px; 
             display: none; align-items: center; justify-content: center; text-align: center; 
-            font-size: 12px; font-weight: bold; position: relative; flex-direction: column;
+            font-size: 13px; font-weight: bold; flex-direction: column; position: relative;
         }
-        .num { position: absolute; top: 1px; right: 3px; font-size: 8px; color: #999; }
-        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: #555; } .Do { color: red; }
-        .is-goc { border: 2.5px solid #f1c40f !important; background: #fffde7; }
-        .is-lh { border: 2.5px solid #d35400 !important; }
+        .num { position: absolute; top: 1px; right: 3px; font-size: 9px; color: #bbb; }
+        
+        /* Định dạng màu quẻ */
+        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #555; } .Do { color: #c0392b; }
+        .is-goc { border: 2.5px solid #f1c40f !important; background: #fffde7; z-index: 10; }
+        .is-lh { border: 2px solid #d35400 !important; box-shadow: 0 0 8px rgba(211,84,0,0.2); }
 
-        h4 { font-size: 11px; color: #888; border-bottom: 1px solid #eee; margin: 15px 0 5px; text-transform: uppercase; }
+        h4 { font-size: 12px; color: #999; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <div class="ctrl">
-        <select id="mau">
-            <option value="Xanh">CÔNG DANH</option>
-            <option value="Vang">TÀI LỘC</option>
-            <option value="Trang">GIA ĐẠO</option>
-            <option value="Do">TÌNH DUYÊN</option>
+    <div class="menu">
+        <select id="mauChon">
+            <option value="Xanh">CÔNG DANH (XANH)</option>
+            <option value="Vang">TÀI LỘC (VÀNG)</option>
+            <option value="Trang">GIA ĐẠO (XÁM)</option>
+            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
         </select>
-        <button class="btn-main" onclick="khoiTao()">XÀO BÀI</button>
+        <button class="btn-init" onclick="khoiTaoTranPhap()">XÀO BÀI</button>
     </div>
 
-    <div id="huongDan" style="text-align:center; font-size:12px; color:red; margin-bottom:10px; display:none;">
-        Hãy bấm lần lượt từ Lần 1 đến Lần 13 để khai quẻ
-    </div>
-
-    <div id="btnArea" class="btn-grid" style="display:none;">
-        <button id="bt1" class="btn-step next" onclick="rut(1)">Lần 1</button>
-        <button id="bt2" class="btn-step" onclick="rut(2)">Lần 2</button>
-        <button id="bt3" class="btn-step" onclick="rut(3)">Lần 3</button>
-        <button id="bt4" class="btn-step" onclick="rut(4)">Lần 4</button>
-        <button id="bt5" class="btn-step" onclick="rut(5)">Lần 5</button>
-        <button id="bt6" class="btn-step" onclick="rut(6)">Lần 6</button>
-        <button id="bt7" class="btn-step" onclick="rut(7)">Lần 7</button>
-        <button id="bt8" class="btn-step" onclick="rut(8)">Lần 8</button>
-        <button id="bt9" class="btn-step" onclick="rut(9)">Lần 9</button>
-        <button id="bt10" class="btn-step" onclick="rut(10)">Lần 10</button>
-        <button id="bt11" class="btn-step" onclick="rut(11)">Lần 11</button>
-        <button id="bt12" class="btn-step" onclick="rut(12)">Lần 12</button>
-        <button id="bt13" class="btn-step" onclick="rut(13)" style="grid-column: span 4; background:#333; color:#fff;">Lần 13: LÁ TƯỢNG TRƯNG</button>
-    </div>
-
-    <div id="vungHienThi" style="display:none;">
-        <h4>TRẬN PHÁP NGŨ LINH</h4>
-        <div id="v13" style="display:flex; justify-content:center; margin-bottom:6px;"></div>
-        <div id="matrix" class="grid">
-            <div id="c12" class="card"><span class="num">12</span><div class="t"></div></div>
-            <div id="c11" class="card"><span class="num">11</span><div class="t"></div></div>
-            <div id="c10" class="card"><span class="num">10</span><div class="t"></div></div>
-            <div id="c9" class="card"><span class="num">9</span><div class="t"></div></div>
-            <div id="c8" class="card"><span class="num">8</span><div class="t"></div></div>
-            <div id="c7" class="card"><span class="num">7</span><div class="t"></div></div>
-            <div id="c6" class="card"><span class="num">6</span><div class="t"></div></div>
-            <div id="c5" class="card"><span class="num">5</span><div class="t"></div></div>
-            <div id="c4" class="card"><span class="num">4</span><div class="t"></div></div>
-            <div id="c3" class="card"><span class="num">3</span><div class="t"></div></div>
-            <div id="c2" class="card"><span class="num">2</span><div class="t"></div></div>
-            <div id="c1" class="card"><span class="num">1</span><div class="t"></div></div>
+    <div id="banDien" style="display:none;">
+        <p style="text-align:center; font-size:11px; color:blue;">Bấm lần lượt để lật bài:</p>
+        <div class="grid-btns" id="nutBamArea">
+            <button id="b1" class="step-btn active" onclick="latBai(1)">Lần 1</button>
+            <button id="b2" class="step-btn" onclick="latBai(2)" disabled>Lần 2</button>
+            <button id="b3" class="step-btn" onclick="latBai(3)" disabled>Lần 3</button>
+            <button id="b4" class="step-btn" onclick="latBai(4)" disabled>Lần 4</button>
+            <button id="b5" class="step-btn" onclick="latBai(5)" disabled>Lần 5</button>
+            <button id="b6" class="step-btn" onclick="latBai(6)" disabled>Lần 6</button>
+            <button id="b7" class="step-btn" onclick="latBai(7)" disabled>Lần 7</button>
+            <button id="b8" class="step-btn" onclick="latBai(8)" disabled>Lần 8</button>
+            <button id="b9" class="step-btn" onclick="latBai(9)" disabled>Lần 9</button>
+            <button id="b10" class="step-btn" onclick="latBai(10)" disabled>Lần 10</button>
+            <button id="b11" class="step-btn" onclick="latBai(11)" disabled>Lần 11</button>
+            <button id="b12" class="step-btn" onclick="latBai(12)" disabled>Lần 12</button>
+            <button id="b13" class="step-btn" onclick="latBai(13)" disabled style="grid-column: span 4; background:#333; color:#fff;">Lần 13: LÁ TƯỢNG TRƯNG</button>
         </div>
 
-        <div id="ketQuaCuoi" style="display:none;">
+        <h4>TRẬN PHÁP 12 LÁ</h4>
+        <div id="v13" style="display:flex; justify-content:center; margin-bottom:8px;"></div>
+        <div class="grid-cards" id="tranPhapGrid">
+            <div id="c12" class="card"><span class="num">12</span><div class="txt"></div></div>
+            <div id="c11" class="card"><span class="num">11</span><div class="txt"></div></div>
+            <div id="c10" class="card"><span class="num">10</span><div class="txt"></div></div>
+            <div id="c9" class="card"><span class="num">9</span><div class="txt"></div></div>
+            <div id="c8" class="card"><span class="num">8</span><div class="txt"></div></div>
+            <div id="c7" class="card"><span class="num">7</span><div class="txt"></div></div>
+            <div id="c6" class="card"><span class="num">6</span><div class="txt"></div></div>
+            <div id="c5" class="card"><span class="num">5</span><div class="txt"></div></div>
+            <div id="c4" class="card"><span class="num">4</span><div class="txt"></div></div>
+            <div id="c3" class="card"><span class="num">3</span><div class="txt"></div></div>
+            <div id="c2" class="card"><span class="num">2</span><div class="txt"></div></div>
+            <div id="c1" class="card"><span class="num">1</span><div class="txt"></div></div>
+        </div>
+
+        <div id="vungKetQua" style="display:none;">
             <h4>5 LÁ LINH HỒN</h4>
-            <div id="lhGrid" class="grid"></div>
+            <div class="grid-cards" id="lhGrid"></div>
             <h4>3 KHÓM THỜI GIAN</h4>
-            <div id="khGrid" class="grid"></div>
+            <div class="grid-cards" id="khomGrid"></div>
         </div>
     </div>
 </div>
 
 <script>
-var data = { m:[], la13:null, goc:-1, lhs:[], mau:'' };
+var game = { m:[], la13:null, mau:'' };
 
-function khoiTao() {
-    data.mau = document.getElementById('mau').value;
-    var t = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
-    var d = [];
-    for(var i=0; i<7; i++) { d.push({n:t[i], f:'Đ'}, {n:t[i], f:'Đ'}, {n:t[i], f:'N'}, {n:t[i], f:'N'}); }
-    d.sort(function() { return 0.5 - Math.random() });
+function khoiTaoTranPhap() {
+    game.mau = document.getElementById('mauChon').value;
+    var names = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    var deck = [];
+    for(var i=0; i<7; i++) {
+        deck.push({n:names[i], f:'Đ'}, {n:names[i], f:'Đ'}, {n:names[i], f:'N'}, {n:names[i], f:'N'});
+    }
+    deck.sort(function() { return 0.5 - Math.random() });
 
-    // Lấy bài ngầm
-    data.m = []; var tmp = d.slice();
-    for(var i=0; i<12; i++) { tmp.splice(0,3); data.m.push(tmp.shift()); }
-    data.la13 = tmp[0];
+    // Lấy 12 lá chính và lá 13 ngầm
+    game.m = []; var tempDeck = deck.slice();
+    for(var i=0; i<12; i++) { tempDeck.splice(0, 3); game.m.push(tempDeck.shift()); }
+    game.la13 = tempDeck[0];
 
-    // Reset giao diện
-    document.getElementById('huongDan').style.display = 'block';
-    document.getElementById('btnArea').style.display = 'grid';
-    document.getElementById('vungHienThi').style.display = 'block';
-    document.getElementById('ketQuaCuoi').style.display = 'none';
+    // Reset giao diện nút
+    document.getElementById('banDien').style.display = 'block';
+    document.getElementById('vungKetQua').style.display = 'none';
     document.getElementById('v13').innerHTML = "";
-    for(var i=1; i<=12; i++) { 
-        var c = document.getElementById('c'+i);
-        c.style.display = 'none'; c.className = 'card ' + data.mau;
+    for(var i=1; i<=13; i++) {
+        var btn = document.getElementById('b' + i);
+        btn.disabled = (i !== 1);
+        btn.className = 'step-btn' + (i === 1 ? ' active' : '');
     }
-    for(var i=1; i<=13; i++) { 
-        document.getElementById('bt'+i).className = 'btn-step' + (i==1?' next':'');
-        document.getElementById('bt'+i).disabled = false;
-    }
-}
-
-function rut(n) {
-    document.getElementById('bt'+n).className = 'btn-step done';
-    document.getElementById('bt'+n).disabled = true;
-    if(n < 13 && document.getElementById('bt'+(n+1))) {
-        document.getElementById('bt'+(n+1)).className = 'btn-step next';
-    }
-
-    if(n <= 12) {
-        var el = document.getElementById('c'+n);
-        el.querySelector('.t').innerHTML = data.m[n-1].n + '<br>' + data.m[n-1].f;
-        el.style.display = 'flex';
-    } else {
-        // Lần 13: Xử lý Gốc và Linh hồn
-        tinhToanCuoi();
+    // Ẩn 12 lá bài
+    for(var i=1; i<=12; i++) {
+        var card = document.getElementById('c' + i);
+        card.style.display = 'none';
+        card.className = 'card ' + game.mau;
     }
 }
 
-function tinhToanCuoi() {
-    // Tìm Gốc
-    for(var i=11; i>=0; i--) { 
-        if(data.m[i].n == data.la13.n) { data.goc = i+1; break; } 
-    }
-    var full = data.m.slice();
-    if(data.goc == -1) { full.push(data.la13); data.goc = 13; }
+function latBai(n) {
+    var curBtn = document.getElementById('b' + n);
+    curBtn.disabled = true;
+    curBtn.className = 'step-btn';
 
-    // Hiện Gốc trên Matrix
-    if(data.goc <= 12) {
-        document.getElementById('c'+data.goc).className += ' is-goc';
+    if (n < 13) {
+        // Lật lá bài trên Grid
+        var card = document.getElementById('c' + n);
+        card.querySelector('.txt').innerHTML = game.m[n-1].n + '<br>' + game.m[n-1].f;
+        card.style.display = 'flex';
+        
+        // Mở nút tiếp theo
+        var nextBtn = document.getElementById('b' + (n + 1));
+        nextBtn.disabled = false;
+        nextBtn.className = 'step-btn active';
     } else {
-        document.getElementById('v13').innerHTML = '<div class="card '+data.mau+' is-goc" style="display:flex; width:23%"><span class="num">13</span>'+data.la13.n+'<br>'+data.la13.f+'</div>';
+        // Xử lý lá 13 và kết thúc quẻ
+        xuLyKetQuaCuoi();
+    }
+}
+
+function xuLyKetQuaCuoi() {
+    // 1. Tìm Gốc
+    var goc = -1;
+    for (var i = 11; i >= 0; i--) { if (game.m[i].n === game.la13.n) { goc = i + 1; break; } }
+    
+    var fullTran = game.m.slice();
+    if (goc === -1) { fullTran.push(game.la13); goc = 13; }
+
+    // Đánh dấu Gốc trên màn hình
+    if (goc <= 12) {
+        document.getElementById('c' + goc).classList.add('is-goc');
+    } else {
+        document.getElementById('v13').innerHTML = '<div class="card '+game.mau+' is-goc" style="display:flex; width:23%"><span class="num">13</span>'+game.la13.n+'<br>'+game.la13.f+'</div>';
     }
 
-    // Tính Linh Hồn
-    data.lhs = []; var p = data.goc;
-    for(var s=0; s<5; s++) {
-        var c = p; for(var j=0; j<4; j++) { c--; if(c<1) c=full.length; }
-        data.lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
+    // 2. Tìm 5 Linh hồn
+    var linhHones = []; var pointer = goc;
+    for (var s = 0; s < 5; s++) {
+        var cur = pointer;
+        for (var j = 0; j < 4; j++) { cur--; if (cur < 1) cur = fullTran.length; }
+        linhHones.push(fullTran[cur - 1]);
+        pointer = cur - 1; if (pointer < 1) pointer = fullTran.length;
     }
 
-    // Hiển thị 5 Linh hồn
-    var lhH = "";
-    for(var i=0; i<5; i++) {
-        lhH += '<div class="card '+data.mau+' is-lh" style="display:flex"><span class="num">L'+(i+1)+'</span>'+data.lhs[i].n+'<br>'+data.lhs[i].f+'</div>';
+    // Hiển thị Linh hồn
+    var lhHtml = "";
+    for (var i = 0; i < 5; i++) {
+        lhHtml += '<div class="card '+game.mau+' is-lh" style="display:flex"><span class="num">L'+(i+1)+'</span>'+linhHones[i].n+'<br>'+linhHones[i].f+'</div>';
     }
-    document.getElementById('lhGrid').innerHTML = lhH;
+    document.getElementById('lhGrid').innerHTML = lhHtml;
 
-    // Hiển thị 3 Khóm (Xào lại 12 lá chính)
-    var sh = data.m.slice().sort(function() { return 0.5 - Math.random() });
-    var khH = "";
-    for(var i=0; i<12; i++) {
-        khH += '<div class="card '+data.mau+'" style="display:flex">'+sh[i].n+'<br>'+sh[i].f+'</div>';
+    // 3. Hiển thị 3 Khóm (Xào lại 12 lá bài gốc)
+    var khomDeck = game.m.slice().sort(function() { return 0.5 - Math.random() });
+    var khomHtml = "";
+    for (var i = 0; i < 12; i++) {
+        khomHtml += '<div class="card '+game.mau+'" style="display:flex">'+khomDeck[i].n+'<br>'+khomDeck[i].f+'</div>';
     }
-    document.getElementById('khGrid').innerHTML = khH;
-    document.getElementById('ketQuaCuoi').style.display = 'block';
+    document.getElementById('khomGrid').innerHTML = khomHtml;
+
+    document.getElementById('vungKetQua').style.display = 'block';
 }
 </script>
 </body>
