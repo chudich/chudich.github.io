@@ -2,110 +2,100 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngũ Linh - Bản Chốt</title>
+    <title>NGŨ LINH TỨ SẮC</title>
     <style>
-        body { font-family: sans-serif; padding: 10px; background: #fff; }
-        .o { border: 1px solid #000; height: 50px; text-align: center; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; position: relative; }
-        .n { position: absolute; top: 0; right: 2px; font-size: 8px; color: #888; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 10px; }
-        .goc { background: #ffff00; border: 2px solid #000; }
-        .lh { background: #ffcccc; border: 2px solid #ff0000; }
-        button { width: 100%; padding: 15px; background: #000; color: #fff; font-weight: bold; margin-bottom: 10px; }
-        h5 { margin: 10px 0 5px; border-bottom: 1px solid #ccc; font-size: 11px; }
-        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: gray; } .Do { color: red; }
+        body { font-family: sans-serif; text-align: center; background: #eee; }
+        .khung { max-width: 380px; margin: auto; background: #fff; padding: 10px; border: 2px solid #000; }
+        .o { border: 1px solid #333; height: 55px; margin: 2px; display: inline-block; width: 22%; vertical-align: top; font-size: 11px; font-weight: bold; background: #fff; padding-top: 5px; }
+        .goc { background: #ff0 !important; border: 2px solid #f00 !important; }
+        .lh { background: #faa !important; }
+        button { width: 100%; padding: 15px; font-weight: bold; background: #d35400; color: #fff; border: none; font-size: 16px; margin-bottom: 10px; }
+        h3 { font-size: 14px; margin: 10px 0 5px; background: #333; color: #fff; padding: 5px; }
+        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: #555; } .Do { color: red; }
     </style>
 </head>
 <body>
 
-    <select id="mau" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-        <option value="Xanh">CÔNG DANH</option>
-        <option value="Vang">TÀI LỘC</option>
-        <option value="Trang">GIA ĐẠO</option>
-        <option value="Do">TÌNH DUYÊN</option>
+<div class="khung">
+    <select id="mau_chon" style="width:100%; padding: 10px; margin-bottom: 10px;">
+        <option value="Xanh">CÔNG DANH (XANH)</option>
+        <option value="Vang">TÀI LỘC (VÀNG)</option>
+        <option value="Trang">GIA ĐẠO (TRẮNG)</option>
+        <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
     </select>
 
-    <button onclick="xem()">KHAI QUẺ (HIỆN NGAY)</button>
+    <button onclick="bat_dau()">BẤM ĐỂ HIỆN QUẺ</button>
 
-    <div id="vung_chay" style="display:none;">
-        <h5>TRẬN PHÁP & GỐC</h5>
-        <div style="display:flex; justify-content:center; margin-bottom:5px;">
-            <div id="b13" class="o" style="width:23%"><span class="n">13</span><div class="txt"></div></div>
-        </div>
-        <div class="grid">
-            <div id="b12" class="o"><span class="n">12</span><div class="txt"></div></div>
-            <div id="b11" class="o"><span class="n">11</span><div class="txt"></div></div>
-            <div id="b10" class="o"><span class="n">10</span><div class="txt"></div></div>
-            <div id="b9" class="o"><span class="n">9</span><div class="txt"></div></div>
-            <div id="b8" class="o"><span class="n">8</span><div class="txt"></div></div>
-            <div id="b7" class="o"><span class="n">7</span><div class="txt"></div></div>
-            <div id="b6" class="o"><span class="n">6</span><div class="txt"></div></div>
-            <div id="b5" class="o"><span class="n">5</span><div class="txt"></div></div>
-            <div id="b4" class="o"><span class="n">4</span><div class="txt"></div></div>
-            <div id="b3" class="o"><span class="n">3</span><div class="txt"></div></div>
-            <div id="b2" class="o"><span class="n">2</span><div class="txt"></div></div>
-            <div id="b1" class="o"><span class="n">1</span><div class="txt"></div></div>
-        </div>
+    <div id="ket_qua" style="display:none; text-align: left;">
+        <h3>1. TRẬN PHÁP (LÁ 13 Ở TRÊN)</h3>
+        <div id="vung_13" style="text-align:center"></div>
+        <div id="vung_12" style="text-align:center"></div>
 
-        <h5>5 LÁ LINH HỒN</h5>
-        <div id="lh_area" class="grid"></div>
+        <h3>2. 5 LÁ LINH HỒN</h3>
+        <div id="vung_lh" style="text-align:center"></div>
 
-        <h5>3 KHÓM THỜI GIAN</h5>
-        <div id="k_area" class="grid"></div>
+        <h3>3. 3 KHÓM (Q.KHỨ - H.TẠI - T.LAI)</h3>
+        <div id="vung_khom" style="text-align:center"></div>
     </div>
+</div>
 
 <script>
-function xem() {
-    const mau = document.getElementById('mau').value;
-    const ten = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
-    let d = [];
-    ten.forEach(n => { d.push({n, f:'Đ'}, {n, f:'Đ'}, {n, f:'N'}, {n, f:'N'}); });
-    d.sort(() => Math.random() - 0.5);
+function bat_dau() {
+    var mau = document.getElementById('mau_chon').value;
+    var ten = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    var d = [];
+    // Tạo bộ bài
+    for(var i=0; i<ten.length; i++) {
+        d.push({n:ten[i], f:'Đ'}, {n:ten[i], f:'Đ'}, {n:n=ten[i], f:'N'}, {n:n=ten[i], f:'N'});
+    }
+    d.sort(function(){ return 0.5 - Math.random() });
 
-    // Lấy 12 lá
-    let m = []; let tmp = [...d];
-    for(let i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
-    let la13 = tmp[0];
+    // Rút 12 lá
+    var m = []; var tmp = d.slice();
+    for(var i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
+    var la13 = tmp[0];
 
-    // Gốc
-    let goc = -1;
-    for(let i=11; i>=0; i--) { if(m[i].n === la13.n) { goc = i+1; break; } }
-    let full = [...m]; if(goc === -1) { full.push(la13); goc = 13; }
+    // Tìm Gốc
+    var goc = -1;
+    for(var i=11; i>=0; i--) { if(m[i].n == la13.n) { goc = i+1; break; } }
+    var full = m.slice(); if(goc == -1) { full.push(la13); goc = 13; }
 
-    // Linh hồn
-    let lhs = []; let p = goc;
-    for(let s=0; s<5; s++) {
-        let c = p; for(let j=0; j<4; j++) { c--; if(c<1) c=full.length; }
+    // Tìm Linh hồn
+    var lhs = []; var p = goc;
+    for(var s=0; s<5; s++) {
+        var c = p; for(var j=0; j<4; j++) { c--; if(c<1) c=full.length; }
         lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
     }
 
-    // HIỂN THỊ TỨC THÌ
-    document.getElementById('vung_chay').style.display = 'block';
+    // HIỂN THỊ
+    document.getElementById('ket_qua').style.display = 'block';
     
-    // Điền 12 ô
-    for(let i=1; i<=12; i++) {
-        let o = document.getElementById('b'+i);
-        o.className = 'o ' + mau;
-        if(goc === i) o.className += ' goc';
-        o.querySelector('.txt').innerHTML = m[i-1].n + '<br>' + m[i-1].f;
+    // In 12 lá
+    var h12 = "";
+    for(var i=12; i>=1; i--) {
+        var cls = "o " + mau + (goc == i ? " goc" : "");
+        h12 += "<div class='"+cls+"'><b>"+i+"</b><br>"+m[i-1].n+"<br>"+m[i-1].f+"</div>";
     }
-    
-    // Ô 13
-    let o13 = document.getElementById('b13');
-    if(goc === 13) {
-        o13.style.display = 'flex';
-        o13.className = 'o ' + mau + ' goc';
-        o13.querySelector('.txt').innerHTML = la13.n + '<br>' + la13.f;
-    } else { o13.style.display = 'none'; }
+    document.getElementById('vung_12').innerHTML = h12;
 
-    // Linh hồn
-    const lha = document.getElementById('lh_area'); lha.innerHTML = "";
-    lhs.forEach(x => { lha.innerHTML += `<div class="o lh ${mau}">${x.n}<br>${x.f}</div>`; });
+    // In lá 13
+    if(goc == 13) {
+        document.getElementById('vung_13').innerHTML = "<div class='o "+mau+" goc'><b>13</b><br>"+la13.n+"<br>"+la13.f+"</div>";
+    } else { document.getElementById('vung_13').innerHTML = "(Lá 13 ẩn)"; }
 
-    // Khóm
-    const ka = document.getElementById('k_area'); ka.innerHTML = "";
-    let sh = [...m].sort(() => Math.random() - 0.5);
-    sh.forEach(x => { ka.innerHTML += `<div class="o ${mau}">${x.n}<br>${x.f}</div>`; });
+    // In Linh hồn
+    var hlh = "";
+    for(var i=0; i<5; i++) {
+        hlh += "<div class='o lh "+mau+"'>L"+(i+1)+"<br>"+lhs[i].n+"<br>"+lhs[i].f+"</div>";
+    }
+    document.getElementById('vung_lh').innerHTML = hlh;
+
+    // In Khóm
+    var hk = ""; var sh = m.slice().sort(function(){ return 0.5 - Math.random() });
+    for(var i=0; i<12; i++) {
+        hk += "<div class='o "+mau+"'>"+sh[i].n+"<br>"+sh[i].f+"</div>";
+    }
+    document.getElementById('vung_khom').innerHTML = hk;
 }
 </script>
 </body>
