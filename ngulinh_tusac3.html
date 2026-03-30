@@ -1,74 +1,66 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh Tứ Sắc - Bản Chuẩn Smartphone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngũ Linh - Bản Một Chạm</title>
     <style>
-        :root { --accent: #d35400; }
-        body { font-family: sans-serif; background: #f0f0f0; margin: 0; padding: 10px; }
-        .box { max-width: 450px; margin: auto; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; background: #fff; padding: 10px; margin: 0; }
         .menu { display: flex; gap: 5px; margin-bottom: 15px; }
-        select, button { padding: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
-        button { background: var(--accent); color: #fff; font-weight: bold; flex: 1; border: none; }
+        select, button { padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; flex: 1; }
+        button { background: #d35400; color: #fff; font-weight: bold; border: none; }
         
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
         .card { 
-            background: #fff; border: 1px solid #ddd; border-radius: 4px; 
-            min-height: 55px; display: none; align-items: center; justify-content: center; 
+            border: 1px solid #ddd; border-radius: 4px; min-height: 55px; 
+            display: flex; align-items: center; justify-content: center; 
             text-align: center; font-size: 12px; font-weight: bold; position: relative;
         }
         .num { position: absolute; top: 1px; right: 3px; font-size: 8px; color: #999; }
         
         /* Màu hệ */
-        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #666; } .Do { color: #c0392b; }
+        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: #666; } .Do { color: red; }
         .goc { border: 2px solid #f1c40f !important; background: #fffde7; }
-        .lh { border: 2px solid var(--accent) !important; background: #fff5ee; }
+        .lh { border: 2px solid #d35400 !important; background: #fff5ee; }
         
-        h4 { font-size: 11px; color: #888; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+        h4 { font-size: 11px; color: #888; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-<div class="box">
     <div class="menu">
-        <select id="mau">
+        <select id="mauChon">
             <option value="Xanh">CÔNG DANH (XANH)</option>
             <option value="Vang">TÀI LỘC (VÀNG)</option>
             <option value="Trang">GIA ĐẠO (XÁM)</option>
             <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
         </select>
-        <button onclick="batDau()">KHAI QUẺ</button>
+        <button onclick="xemQue()">KHAI QUẺ</button>
     </div>
 
-    <div id="vungHienThi" style="display:none;">
-        <h4>Trận Pháp & Gốc</h4>
-        <div id="v13" style="display:flex; justify-content:center; margin-bottom:5px;"></div>
-        <div id="matrix" class="grid"></div>
+    <div id="vungKQ" style="display:none;">
+        <h4>TRẬN PHÁP & GỐC</h4>
+        <div id="o13" style="display:flex; justify-content:center; margin-bottom:5px;"></div>
+        <div id="o12" class="grid"></div>
 
-        <h4>5 Lá Linh Hồn</h4>
-        <div id="lhGrid" class="grid"></div>
+        <h4>5 LÁ LINH HỒN</h4>
+        <div id="oLH" class="grid"></div>
 
-        <h4>3 Khóm Thời Gian</h4>
-        <div id="khomGrid" class="grid"></div>
+        <h4>3 KHÓM THỜI GIAN</h4>
+        <div id="oKH" class="grid"></div>
     </div>
-</div>
 
 <script>
-function batDau() {
-    var mau = document.getElementById('mau').value;
-    var divResult = document.getElementById('vungHienThi');
-    divResult.style.display = 'block';
-
-    // 1. TÍNH TOÁN NGẦM (ENGINE)
-    var ten = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
-    var deck = [];
+function xemQue() {
+    var mau = document.getElementById('mauChon').value;
+    var t = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    var d = [];
     for(var i=0; i<7; i++) {
-        deck.push({n:ten[i], f:'Đ'}, {n:ten[i], f:'Đ'}, {n:ten[i], f:'N'}, {n:ten[i], f:'N'});
+        d.push({n:t[i], f:'Đ'}, {n:t[i], f:'Đ'}, {n:t[i], f:'N'}, {n:t[i], f:'N'});
     }
-    deck.sort(function() { return 0.5 - Math.random() });
+    d.sort(function() { return 0.5 - Math.random() });
 
-    var m = []; var tmp = deck.slice();
+    var m = []; var tmp = d.slice();
     for(var i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
     var la13 = tmp[0];
 
@@ -82,53 +74,33 @@ function batDau() {
         lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
     }
 
-    // 2. HIỂN THỊ (CƠ CHẾ RENDER AN TOÀN)
-    // Reset toàn bộ vùng hiển thị
-    document.getElementById('matrix').innerHTML = "";
-    document.getElementById('v13').innerHTML = "";
-    document.getElementById('lhGrid').innerHTML = "";
-    document.getElementById('khomGrid').innerHTML = "";
-
-    // Dựng sẵn 12 khung lá bài chính
+    // HIỂN THỊ TỨC THÌ
+    document.getElementById('vungKQ').style.display = 'block';
+    
+    // 12 lá
+    var h12 = "";
     for(var i=12; i>=1; i--) {
-        var isGoc = (i == goc) ? " goc" : "";
-        document.getElementById('matrix').innerHTML += '<div id="card'+i+'" class="card '+mau+isGoc+'"><span class="num">'+i+'</span>'+m[i-1].n+'<br>'+m[i-1].f+'</div>';
+        var cls = "card " + mau + (i == goc ? " goc" : "");
+        h12 += '<div class="'+cls+'"><span class="num">'+i+'</span>'+m[i-1].n+'<br>'+m[i-1].f+'</div>';
     }
+    document.getElementById('o12').innerHTML = h12;
 
-    // Hiệu ứng hiện dần 12 lá (Dùng setInterval để không treo máy)
-    var count = 1;
-    var timer = setInterval(function() {
-        var el = document.getElementById('card' + count);
-        if(el) el.style.display = 'flex';
-        count++;
-        if(count > 12) {
-            clearInterval(timer);
-            // Sau khi hiện 12 lá mới hiện tiếp các phần còn lại
-            hienPhanConLai(mau, goc, la13, lhs, m);
-        }
-    }, 100); 
-}
+    // Lá 13
+    document.getElementById('o13').innerHTML = (goc == 13) ? '<div class="card '+mau+' goc" style="width:23%"><span class="num">13</span>'+la13.n+'<br>'+la13.f+'</div>' : "";
 
-function hienPhanConLai(mau, goc, la13, lhs, m) {
-    // Hiện lá 13
-    if(goc == 13) {
-        document.getElementById('v13').innerHTML = '<div class="card '+mau+' goc" style="display:flex; width:23%"><span class="num">13</span>'+la13.n+'<br>'+la13.f+'</div>';
-    }
-
-    // Hiện 5 Linh hồn
-    var lhH = "";
+    // 5 Linh hồn
+    var hLH = "";
     for(var i=0; i<5; i++) {
-        lhH += '<div class="card '+mau+' lh" style="display:flex"><span class="num">L'+(i+1)+'</span>'+lhs[i].n+'<br>'+lhs[i].f+'</div>';
+        hLH += '<div class="card '+mau+' lh"><span class="num">L'+(i+1)+'</span>'+lhs[i].n+'<br>'+lhs[i].f+'</div>';
     }
-    document.getElementById('lhGrid').innerHTML = lhH;
+    document.getElementById('oLH').innerHTML = hLH;
 
-    // Hiện 3 Khóm
-    var sh = m.slice().sort(function() { return 0.5 - Math.random() });
-    var khH = "";
+    // 3 Khóm
+    var hKH = ""; var sh = m.slice().sort(function() { return 0.5 - Math.random() });
     for(var i=0; i<12; i++) {
-        khH += '<div class="card '+mau+'" style="display:flex">'+sh[i].n+'<br>'+sh[i].f+'</div>';
+        hKH += '<div class="card '+mau+'">'+sh[i].n+'<br>'+sh[i].f+'</div>';
     }
-    document.getElementById('khomGrid').innerHTML = khH;
+    document.getElementById('oKH').innerHTML = hKH;
 }
 </script>
 </body>
