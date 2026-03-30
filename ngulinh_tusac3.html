@@ -3,44 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ngũ Linh Tứ Sắc - Ổn Định Tuyệt Đối</title>
+    <title>Ngũ Linh Tứ Sắc - Bản Hoàn Thiện</title>
     <style>
-        :root { --bg: #f4f4f9; --accent: #d35400; --gold: #f1c40f; }
+        :root { --bg: #fdfdfd; --accent: #d35400; --gold: #f1c40f; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .menu { display: flex; gap: 8px; margin-bottom: 15px; background: #eee; padding: 10px; border-radius: 10px; }
-        select { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .menu { display: flex; gap: 8px; margin-bottom: 15px; }
+        select { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
         button { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         button:disabled { opacity: 0.5; }
 
-        .status { text-align: center; color: var(--accent); font-weight: bold; min-height: 30px; margin: 10px 0; font-size: 14px; }
+        .status { text-align: center; color: var(--accent); font-weight: bold; height: 30px; margin: 10px 0; font-size: 14px; }
         
-        /* Grid 4 cột cố định */
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
         .slot { 
-            background: #fff; border: 1px solid #ddd; border-radius: 8px; 
+            background: #fff; border: 1.5px solid #eee; border-radius: 8px; 
             min-height: 60px; display: flex; align-items: center; justify-content: center; 
             text-align: center; font-weight: bold; font-size: 13px; position: relative;
-            transition: all 0.2s; visibility: hidden; /* Ẩn khi chưa có bài */
+            opacity: 0; transform: scale(0.9); transition: all 0.3s;
         }
-        .slot.has-card { visibility: visible; border: 1.5px solid #ccc; }
-        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #aaa; }
+        .slot.show { opacity: 1; transform: scale(1); }
+        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #bbb; }
         
         .c-Xanh { color: #27ae60; } .c-Vang { color: #e67e22; } .c-Trang { color: #555; } .c-Do { color: #c0392b; }
         
-        /* Hiệu ứng */
-        .active-tt { border: 2.5px solid var(--gold) !important; background: #fffde7 !important; }
-        .scanning { background: var(--gold) !important; transform: scale(1.1); z-index: 5; }
-        .picked { border: 2.5px solid var(--accent) !important; box-shadow: 0 0 8px rgba(211,84,0,0.4); }
-        .card-back { background: #2c3e50 !important; color: transparent !important; }
+        /* Hiệu ứng quét nhịp */
+        .scan { background: var(--gold) !important; transform: scale(1.1); z-index: 10; border-color: #fff !important; }
+        .active-goc { border: 2.5px solid var(--gold) !important; background: #fffde7 !important; }
+        .picked { border: 2.5px solid var(--accent) !important; box-shadow: 0 0 10px rgba(211,84,0,0.4); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
+        .card-back { background: #2c3e50 !important; color: transparent !important; }
         .log { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 10px; font-family: monospace; font-size: 12px; white-space: pre-wrap; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align:center; font-size:1.1rem;">TRẬN PHÁP NGŨ LINH</h2>
+    <h2 style="text-align:center; font-size:1rem; margin:0 0 15px;">TRẬN PHÁP NGŨ LINH</h2>
     
     <div class="menu">
         <select id="colorSelect">
@@ -52,14 +52,12 @@
         <button id="btnRun" onclick="start()">KHAI QUẺ</button>
     </div>
 
-    <div id="stt" class="status">Sẵn sàng...</div>
+    <div id="stt" class="status">Cẩn trọng chọn màu khai trận...</div>
 
-    <div id="slot-13" class="slot" style="margin: 0 auto 10px; width: 23%;"></div>
-    <div id="mainGrid" class="grid">
-        </div>
+    <div id="slot-13" class="slot" style="margin: 0 auto 10px; width: 23.5%; border-color: #ddd;"></div>
+    <div id="mainGrid" class="grid"></div>
     
-    <div id="khomArea" style="display:none; border-top:1px solid #ddd; padding-top:10px;">
-        <div style="font-size:11px; font-weight:bold; color:#888;">QUÁ KHỨ - HIỆN TẠI - TƯƠNG LAI</div>
+    <div id="khomArea" style="display:none; border-top:1px solid #eee; padding-top:15px;">
         <div id="k1" class="grid"></div>
         <div id="k2" class="grid"></div>
         <div id="k3" class="grid"></div>
@@ -71,15 +69,11 @@
 <script>
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-// Khởi tạo khung lưới cố định
-function initSlots() {
-    const grid = document.getElementById('mainGrid');
-    grid.innerHTML = "";
-    for (let i = 12; i >= 1; i--) {
-        grid.innerHTML += `<div id="slot-${i}" class="slot"><span class="num">${i}</span></div>`;
-    }
+// Khởi tạo 12 ô cố định
+const grid = document.getElementById('mainGrid');
+for (let i = 12; i >= 1; i--) {
+    grid.innerHTML += `<div id="slot-${i}" class="slot"><span class="num">${i}</span></div>`;
 }
-initSlots();
 
 async function start() {
     const btn = document.getElementById('btnRun');
@@ -88,7 +82,8 @@ async function start() {
     const cls = `c-${color}`;
     
     btn.disabled = true;
-    // Reset toàn bộ slot
+    
+    // Reset giao diện
     document.querySelectorAll('.slot').forEach(s => {
         s.className = 'slot';
         const num = s.querySelector('.num');
@@ -97,11 +92,12 @@ async function start() {
     document.getElementById('khomArea').style.display = "none";
     document.getElementById('finalLog').style.display = "none";
 
-    // 1. Lấy dữ liệu
+    // 1. LOGIC NGẦM (Tính trước toàn bộ kết quả)
     const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
-    const faces = ['Đ', 'N'];
     let deck = [];
-    names.forEach(n => faces.forEach(f => { deck.push({n, f}, {n, f}); }));
+    names.forEach(n => { 
+        for(let j=0; j<4; j++) deck.push({n, f: j%2===0?'Đ':'N'}); 
+    });
     deck.sort(() => Math.random() - 0.5);
 
     let m = [], tmp = [...deck], disc = [];
@@ -110,61 +106,62 @@ async function start() {
         m.push(tmp.shift());
     }
     let laTT = tmp[0];
-
-    // 2. Chia bài vào slot
-    stt.innerText = "Đang trải 12 lá bài...";
-    for (let i = 0; i < 12; i++) {
-        await wait(150);
-        const el = document.getElementById(`slot-${i+1}`);
-        el.classList.add('has-card', cls);
-        el.innerHTML += `${m[i].n}<br>${m[i].f}`;
-    }
-
-    // 3. Tìm Gốc
-    await wait(500);
     let startPos = -1;
     for (let i = 11; i >= 0; i--) { if (m[i].n === laTT.n) { startPos = i + 1; break; } }
     
     let finalDeck = [...m];
-    if (startPos !== -1) {
-        document.getElementById(`slot-${startPos}`).classList.add('active-tt');
-        stt.innerText = `Gốc tại vị trí ${startPos}`;
-    } else {
-        stt.innerText = "Hạ lá 13 xuống...";
-        await wait(600);
-        finalDeck.push(laTT);
-        const el13 = document.getElementById('slot-13');
-        el13.classList.add('has-card', cls, 'active-tt');
-        el13.innerHTML += `${laTT.n}<br>${laTT.f}`;
-        startPos = 13;
-    }
+    if (startPos === -1) { finalDeck.push(laTT); startPos = 13; }
 
-    // 4. Nhảy 5 Linh Hồn (QUAN TRỌNG: FIX LỖI TREO)
-    await wait(800);
+    // Tính 5 bước nhảy
     let steps = [], N = finalDeck.length, ptr = startPos;
-
-    for (let s = 1; s <= 5; s++) {
-        stt.innerText = `Lần ${s}: Đang đếm nhịp...`;
+    for (let s = 0; s < 5; s++) {
         let cur = ptr;
-        for (let j = 0; j < 5; j++) {
-            const el = document.getElementById(`slot-${cur}`);
-            if (el) el.classList.add('scanning');
-            await wait(150);
-            if (el) el.classList.remove('scanning');
-            
-            if (j < 4) {
-                cur--;
-                if (cur < 1) cur = N;
-            }
-        }
+        for (let j = 0; j < 4; j++) { cur--; if (cur < 1) cur = N; }
         steps.push({ p: cur, c: finalDeck[cur-1] });
-        document.getElementById(`slot-${cur}`).classList.add('picked');
-        await wait(600);
         ptr = cur - 1; if (ptr < 1) ptr = N;
     }
 
-    // 5. 3 Khóm
-    stt.innerText = "Chia 3 khóm thời gian...";
+    // 2. HIỆU ỨNG HIỂN THỊ (Chạy sau khi đã có data)
+    stt.innerText = "Đang trải 12 lá bài...";
+    for (let i = 1; i <= 12; i++) {
+        await wait(150);
+        const el = document.getElementById(`slot-${i}`);
+        el.classList.add('show', cls);
+        el.innerHTML += `${m[i-1].n}<br>${m[i-1].f}`;
+    }
+
+    await wait(500);
+    if (startPos === 13) {
+        stt.innerText = "Hạ lá 13 xuống...";
+        const el13 = document.getElementById('slot-13');
+        el13.classList.add('show', cls, 'active-goc');
+        el13.innerHTML += `${laTT.n}<br>${laTT.f}`;
+    } else {
+        document.getElementById(`slot-${startPos}`).classList.add('active-goc');
+        stt.innerText = `Điểm Gốc: Lá ${laTT.n} vị trí ${startPos}`;
+    }
+
+    await wait(1000);
+    // Nhảy Linh Hồn
+    let currentPtr = startPos;
+    for (let s = 1; s <= 5; s++) {
+        stt.innerText = `Lần ${s}: Đang đếm nhịp...`;
+        let scanCur = currentPtr;
+        for (let j = 0; j < 5; j++) {
+            const el = document.getElementById(`slot-${scanCur}`);
+            if (el) el.classList.add('scan');
+            await wait(120);
+            if (el) el.classList.remove('scan');
+            
+            if (j < 4) { scanCur--; if (scanCur < 1) scanCur = N; }
+        }
+        document.getElementById(`slot-${steps[s-1].p}`).classList.add('picked');
+        await wait(600);
+        currentPtr = steps[s-1].p - 1; if (currentPtr < 1) currentPtr = N;
+    }
+
+    // 3. Hiển thị 3 Khóm
+    stt.innerText = "Chia 3 khóm Quá khứ - Hiện tại - Tương lai...";
     document.getElementById('khomArea').style.display = "block";
     let shuf = [...m].sort(() => Math.random() - 0.5);
     for (let k = 1; k <= 3; k++) {
@@ -173,18 +170,18 @@ async function start() {
         let sub = shuf.slice((k-1)*4, k*4);
         for (let j = 0; j < 4; j++) {
             const c = document.createElement('div');
-            c.className = `slot has-card card-back`;
+            c.className = `slot show card-back`;
             c.innerHTML = `?`;
             g.appendChild(c);
             setTimeout(() => {
-                c.className = `slot has-card ${cls}`;
+                c.className = `slot show ${cls}`;
                 c.innerHTML = `<span class="num">${j+1}</span>${sub[j].n}<br>${sub[j].f}`;
-            }, 1000 + (j*200));
+            }, 800 + (j*150));
         }
     }
 
-    await wait(2000);
-    stt.innerText = "Hoàn tất quẻ.";
+    await wait(1500);
+    stt.innerText = "Quẻ Ngũ Linh hoàn tất.";
     let log = `--- KẾT QUẢ NGŨ LINH ---\nGốc: ${startPos}\n`;
     steps.forEach((v, i) => log += `Lần ${i+1}: Vị trí ${v.p} (${v.c.n} ${v.c.f})\n`);
     document.getElementById('finalLog').innerText = log;
