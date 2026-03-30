@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trận Pháp Ngũ Linh & 3 Khóm Thời Gian</title>
+    <style>
+        :root { --bg: #f4f7f6; --accent: #d35400; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
+        .container { max-width: 650px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2, h3 { text-align: center; color: #2c3e50; text-transform: uppercase; margin: 15px 0; }
+        h3 { font-size: 1rem; border-bottom: 2px solid #eee; padding-bottom: 5px; color: var(--accent); }
+        
+        .menu-bar { display: flex; gap: 8px; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px; }
+        select { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+        button { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+
+        /* Grid chung cho các lá bài */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 12px 2px; text-align: center; font-weight: bold; font-size: 13px; position: relative; min-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #aaa; }
+        
+        /* Màu sắc hệ bài */
+        .c-Xanh { color: #27ae60; }
+        .c-Vang { color: #e67e22; }
+        .c-Trang { color: #555; }
+        .c-Do { color: #c0392b; }
+        .active { border: 2px solid #f1c40f; background: #fffde7; }
+
+        .console { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px; white-space: pre-wrap; line-height: 1.6; overflow-x: auto; margin: 15px 0; border-left: 4px solid #00ff00; }
+        .copy-btn { background: #27ae60; width: 100%; margin-top: 5px; padding: 12px; color: white; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        
+        .khom-section { margin-top: 25px; padding-top: 10px; border-top: 3px double #ddd; }
+        .label-khom { font-size: 11px; color: #7f8c8d; margin-bottom: 5px; font-weight: normal; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>TRẬN PHÁP NGŨ LINH</h2>
+    
+    <div class="menu-bar">
+        <select id="colorSelect">
+            <option value="Xanh">CÔNG DANH (XANH)</option>
+            <option value="Vang">TÀI LỘC (VÀNG CAM)</option>
+            <option value="Trang">GIA ĐẠO (XÁM)</option>
+            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
+        </select>
+        <button onclick="trienKhai()">KHAI QUẺ</button>
+    </div>
+
+    <div id="matrix" class="grid"></div>
+    <div id="output" class="console" style="display:none;"></div>
+    <button id="copyBtn" class="copy-btn" style="display:none;" onclick="copyRes('output')">SAO CHÉP NGŨ LINH</button>
+
+    <div id="khomArea" class="khom-section" style="display:none;">
+        <h3>Phán Đoán Thời Gian (3 Khóm)</h3>
+        
+        <div class="label-khom">KHÓM 1: QUÁ KHỨ (12 < 11 < 10 < 9)</div>
+        <div id="khom1" class="grid"></div>
+
+        <div class="label-khom">KHÓM 2: HIỆN TẠI (8 < 7 < 6 < 5)</div>
+        <div id="khom2" class="grid"></div>
+
+        <div class="label-khom">KHÓM 3: TƯƠNG LAI (4 < 3 < 2 < 1)</div>
+        <div id="khom3" class="grid"></div>
+
+        <div id="outputKhom" class="console"></div>
+        <button class="copy-btn" onclick="copyRes('outputKhom')">SAO CHÉP LỜI GIẢI 3 KHÓM</button>
+    </div>
+</div>
+
+<script>
+const Engine = {
+    initDeck: (col) => {
+        const names = ['TƯỚNG', 'SĨ', 'TƯỢNG', 'XE', 'PHÁO', 'NGỰA', 'CHỐT'];
+        const faces = ['Đ', 'N'];
+        let d = [];
+        names.forEach(n => faces.forEach(f => { d.push({n, f, col}, {n, f, col}); }));
+        return d.sort(() => Math.random() - 0.5);
+    },
+
+    dealMatrix: (deck) => {
+        let m = [], disc = [], tmp = [...deck];
+        while (m.length < 12) {
+            if (tmp.length < 4) { tmp = [...tmp, ...disc]; disc = []; }
+            disc.push(tmp.shift(), tmp.shift(), tmp.shift());
+            m.push(tmp.shift());
+        }
+        return { m, laTT: tmp.length > 0 ? tmp[0] : disc[0] };
+    },
+
+    solveNguLinh: (m, laTT) => {
+        let finalM = [...m];
+        let startPos = -1;
+        for (let i = 11; i >= 0; i--) { if (finalM[i].n === laTT.n) { startPos = i + 1; break; } }
+        if (startPos !== -1) finalM[startPos-1] = laTT; 
+        else { finalM.push(laTT); startPos = 13; }
+
+        let steps = [], N = finalM.length, pointer = startPos; 
+        for (let i = 0; i < 5; i++) {
+            let current = pointer;
+            for (let j = 1; j < 5; j++) { current--; if (current < 1) current = N; }
+            steps.push({ pos: current, card: finalM[current - 1] });
+            pointer = current - 1; if (pointer < 1) pointer = N;
+        }
+        return { finalM, steps, startPos };
+    }
+};
+
+function trienKhai() {
+    const col = document.getElementById('colorSelect').value;
+    const { m, laTT } = Engine.dealMatrix(Engine.initDeck(col));
+    const { finalM, steps, startPos } = Engine.solveNguLinh(m, laTT);
+
+    const cClass = `c-${col}`;
+    
+    // 1. Hiển thị Matrix Ngũ Linh
+    const grid = document.getElementById('matrix');
+    grid.innerHTML = "";
+    for (let i = 11; i >= 0; i--) {
+        grid.innerHTML += `<div class="card ${cClass} ${i+1 === startPos ? 'active' : ''}"><span class="num">${i+1}</span>${finalM[i].n}<br>${finalM[i].f}</div>`;
+    }
+
+    let txt = `--- KẾT QUẢ NGŨ LINH (${col.toUpperCase()}) ---\nLá Tượng Trưng: ${laTT.n} ${laTT.f} (Vị trí ${startPos})\n\n--- 5 LÁ LINH HỒN ---\n`;
+    steps.forEach((s, i) => { txt += `Lần ${i+1} (Vị trí ${s.pos}): ${s.card.n} ${s.card.f}\n`; });
+    document.getElementById('output').innerText = txt;
+    document.getElementById('output').style.display = 'block';
+    document.getElementById('copyBtn').style.display = 'block';
+
+    // 2. Hiển thị 3 Khóm Thời Gian
+    // Theo yêu cầu: Xào lại 12 lá bài của Matrix để chia khóm
+    const deckForKhom = [...m].sort(() => Math.random() - 0.5);
+    const khom1Data = deckForKhom.slice(0, 4);  // Quá khứ
+    const khom2Data = deckForKhom.slice(4, 8);  // Hiện tại
+    const khom3Data = deckForKhom.slice(8, 12); // Tương lai
+
+    renderKhom('khom1', khom1Data, cClass);
+    renderKhom('khom2', khom2Data, cClass);
+    renderKhom('khom3', khom3Data, cClass);
+
+    let txtKhom = `--- PHÁN ĐOÁN 3 KHÓM THỜI GIAN ---\n\n`;
+    txtKhom += `QUÁ KHỨ: ${formatKhomText(khom1Data)}\n`;
+    txtKhom += `HIỆN TẠI: ${formatKhomText(khom2Data)}\n`;
+    txtKhom += `TƯƠNG LAI: ${formatKhomText(khom3Data)}\n\n`;
+    txtKhom += `(Dán lời giải chi tiết cho các cặp quân bài gặp nhau tại đây)`;
+
+    document.getElementById('outputKhom').innerText = txtKhom;
+    document.getElementById('khomArea').style.display = 'block';
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+function renderKhom(id, data, cClass) {
+    const el = document.getElementById(id);
+    el.innerHTML = "";
+    // Hiển thị từ 1 (Trái) đến 4 (Phải)
+    data.forEach((card, i) => {
+        el.innerHTML += `<div class="card ${cClass}"><span class="num">${i+1}</span>${card.n}<br>${card.f}</div>`;
+    });
+}
+
+function formatKhomText(data) {
+    return data.map((c, i) => `[${i+1}]${c.n}${c.f}`).join(" ");
+}
+
+function copyRes(id) {
+    const t = document.createElement('textarea');
+    t.value = document.getElementById(id).innerText;
+    document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t);
+    alert("Đã sao chép!");
+}
+</script>
+</body>
+</html>
