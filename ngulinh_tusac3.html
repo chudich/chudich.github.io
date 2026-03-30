@@ -2,63 +2,68 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngũ Linh Tứ Sắc - Bản Fix Lỗi Vĩnh Viễn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trận Pháp Ngũ Linh - 112 Lá Chuẩn</title>
     <style>
-        body { font-family: sans-serif; background: #f0f0f0; padding: 15px; margin: 0; }
-        .container { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .menu { display: flex; gap: 10px; margin-bottom: 20px; }
-        select, button { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; flex: 1; }
-        button { background: #d35400; color: #fff; font-weight: bold; border: none; cursor: pointer; }
+        :root { --bg: #f8f9fa; --shadow: rgba(0,0,0,0.15); }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px var(--shadow); }
         
-        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
-        .btn-step { padding: 10px 0; font-size: 11px; font-weight: bold; background: #eee; border: 1px solid #bbb; border-radius: 4px; cursor: pointer; }
-        .btn-step:disabled { background: #ddd; color: #999; border: 1px dashed #ccc; }
-        .btn-step.active { background: #fffde7; border: 2px solid #f1c40f; box-shadow: 0 0 5px rgba(241,196,15,0.5); }
+        /* Menu điều khiển */
+        .menu { display: flex; gap: 8px; margin-bottom: 15px; }
+        select { flex: 1; padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; background: #fff; }
+        .btn-main { padding: 12px 20px; background: #2c3e50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        /* Nút bấm lật bài */
+        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 20px; }
+        .btn-step { padding: 10px 0; font-size: 11px; font-weight: bold; background: #eee; border: 1px solid #bbb; border-radius: 4px; cursor: pointer; }
+        .btn-step:disabled { background: #e0e0e0; color: #999; border: 1px dashed #ccc; cursor: default; }
+        .btn-step.active { background: #fffde7; border: 2px solid #f1c40f; box-shadow: 0 0 8px rgba(241,196,15,0.4); }
+
+        /* Định nghĩa màu sắc 4 hệ */
+        .c-Xanh { color: #1b5e20; background: #e8f5e9; border-color: #2e7d32; } /* CÔNG DANH */
+        .c-Vang { color: #bf360c; background: #fff3e0; border-color: #e65100; } /* TÀI LỘC - Cam Đất */
+        .c-Trang { color: #424242; background: #f5f5f5; border-color: #9e9e9e; } /* GIA ĐẠO - Xám */
+        .c-Do { color: #b71c1c; background: #ffebee; border-color: #c62828; } /* TÌNH DUYÊN */
+
+        /* Lá bài */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .card { 
-            background: #fff; border: 1px solid #ddd; border-radius: 6px; min-height: 70px; 
+            border: 1px solid #ddd; border-radius: 6px; min-height: 65px; 
             display: none; align-items: center; justify-content: center; text-align: center; 
             font-size: 13px; font-weight: bold; position: relative; flex-direction: column;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .num { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #aaa; }
-        .Xanh { color: #27ae60; } .Vang { color: #e67e22; } .Trang { color: #555; } .Do { color: #c0392b; }
-        .goc { border: 2.5px solid #f1c40f !important; background: #fffde7; box-shadow: 0 0 10px rgba(241,196,15,0.4); }
-        .lh { border: 2px solid #d35400 !important; }
-        h4 { font-size: 12px; color: #888; border-bottom: 1px solid #eee; margin: 20px 0 10px; text-transform: uppercase; }
+        .num { position: absolute; top: 1px; right: 3px; font-size: 9px; color: rgba(0,0,0,0.3); }
+        .goc { border: 3px solid #f1c40f !important; background: #fffde7 !important; z-index: 5; }
+        .lh { border: 2.5px solid #d35400 !important; }
+
+        h4 { font-size: 11px; color: #7f8c8d; text-transform: uppercase; margin: 20px 0 8px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <h3 style="text-align:center; margin-top:0;">TRẬN PHÁP NGŨ LINH</h3>
+
     <div class="menu">
-        <select id="selMau">
-            <option value="Xanh">CÔNG DANH</option>
-            <option value="Vang">TÀI LỘC</option>
-            <option value="Trang">GIA ĐẠO</option>
-            <option value="Do">TÌNH DUYÊN</option>
+        <select id="selColor">
+            <option value="Xanh">CÔNG DANH (XANH LÁ)</option>
+            <option value="Vang">TÀI LỘC (CAM ĐẤT)</option>
+            <option value="Trang">GIA ĐẠO (XÁM TRẮNG)</option>
+            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
         </select>
-        <button onclick="khoiTaoGame()">XÀO BÀI</button>
+        <button class="btn-main" onclick="khoiTaoBoBai()">XÀO BÀI</button>
     </div>
 
-    <div id="gameArea" style="display:none;">
-        <div class="btn-grid">
-            <script>
-                for(let i=1; i<=12; i++) document.write(`<button id="b${i}" class="btn-step" onclick="lat(${i})" disabled>Lần ${i}</button>`);
-            </script>
-            <button id="b13" class="btn-step" onclick="lat(13)" disabled style="grid-column: span 4; background:#333; color:#fff;">Lần 13: LÁ TƯỢNG TRƯNG</button>
-        </div>
+    <div id="playZone" style="display:none;">
+        <div class="btn-grid" id="btnArea"></div>
 
-        <h4>TRẬN PHÁP NGŨ LINH</h4>
+        <h4>TRẬN PHÁP 12 LÁ</h4>
         <div id="v13" style="display:flex; justify-content:center; margin-bottom:8px;"></div>
-        <div class="grid" id="mainGrid">
-            <script>
-                for(let i=12; i>=1; i--) document.write(`<div id="c${i}" class="card"><span class="num">${i}</span><div class="t"></div></div>`);
-            </script>
-        </div>
+        <div class="grid" id="matrixArea"></div>
 
-        <div id="finalPart" style="display:none;">
+        <div id="resultArea" style="display:none;">
             <h4>5 LÁ LINH HỒN</h4>
             <div id="lhGrid" class="grid"></div>
             <h4>3 KHÓM THỜI GIAN</h4>
@@ -68,125 +73,124 @@
 </div>
 
 <script>
-var state = { m:[], la13:null, mau:'' };
+let state = { m:[], la13:null, colorClass:'' };
 
-function khoiTaoGame() {
-    state.mau = document.getElementById('selMau').value;
-    
-    // BỘ BÀI TỨ SẮC CHUẨN (112 LÁ)
+function khoiTaoBoBai() {
+    const col = document.getElementById('selColor').value;
+    state.colorClass = 'c-' + col;
+
+    // 1. TẠO BỘ BÀI 112 LÁ (7 quân x 4 màu x 4 lá)
     const names = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
+    const colors = ['Xanh','Vang','Trang','Do'];
     let deck = [];
-    // Tạo 4 màu (Xanh, Vàng, Trắng, Đỏ), mỗi màu 4 lá cho mỗi loại quân
-    ['X','V','T','D'].forEach(c => {
+    
+    colors.forEach(c => {
         names.forEach(n => {
-            for(let i=0; i<4; i++) deck.push({n, f: Math.random() > 0.5 ? 'Đ' : 'N'});
+            for(let i=0; i<4; i++) {
+                deck.push({ n, f: Math.random() > 0.5 ? 'Đ' : 'N' });
+            }
         });
     });
-    
-    // Xào bài thật kỹ
+
+    // Xào bài (Fisher-Yates)
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
     }
 
-    // Chia bài theo đúng logic: Bỏ 3 lấy 1
+    // 2. CHIA BÀI THEO LOGIC: BỎ 3 LẤY 1
     state.m = [];
     let p = 0;
     for(let i=0; i<12; i++) {
-        p += 3; // Bỏ 3 lá
-        state.m.push(deck[p]); // Lấy lá thứ 4
+        p += 3; // Bỏ 3
+        state.m.push(deck[p]); // Lấy 1
         p += 1;
     }
-    state.la13 = deck[p + 3]; // Lá thứ 13 sau khi bỏ tiếp 3 lá
+    state.la13 = deck[p + 3]; // Lấy lá tượng trưng (13)
 
-    // Reset giao diện
-    document.getElementById('gameArea').style.display = 'block';
-    document.getElementById('finalPart').style.display = 'none';
+    // 3. DỰNG GIAO DIỆN
+    document.getElementById('playZone').style.display = 'block';
+    document.getElementById('resultArea').style.display = 'none';
     document.getElementById('v13').innerHTML = "";
-    
-    for(let i=1; i<=13; i++) {
-        let btn = document.getElementById('b'+i);
-        btn.disabled = (i !== 1);
-        btn.className = 'btn-step' + (i === 1 ? ' active' : '');
-        if(i <= 12) {
-            let card = document.getElementById('c'+i);
-            card.style.display = 'none';
-            card.className = 'card ' + state.mau;
-            card.querySelector('.t').innerHTML = "";
-        }
+
+    // Nút bấm
+    let btnH = "";
+    for(let i=1; i<=12; i++) {
+        btnH += `<button id="b${i}" class="btn-step ${i==1?'active':''}" onclick="lat(${i})" ${i!=1?'disabled':''}>Lần ${i}</button>`;
     }
+    btnH += `<button id="b13" class="btn-step" onclick="lat(13)" disabled style="grid-column: span 4; background:#333; color:#fff;">Lần 13: LÁ TƯỢNG TRƯNG</button>`;
+    document.getElementById('btnArea').innerHTML = btnH;
+
+    // Khung 12 lá
+    let matH = "";
+    for(let i=12; i>=1; i--) {
+        matH += `<div id="c${i}" class="card ${state.colorClass}"><span class="num">${i}</span><div class="txt"></div></div>`;
+    }
+    document.getElementById('matrixArea').innerHTML = matH;
 }
 
 function lat(n) {
-    let btn = document.getElementById('b'+n);
-    btn.disabled = true;
-    btn.className = 'btn-step';
+    let b = document.getElementById('b'+n);
+    b.disabled = true;
+    b.className = 'btn-step';
 
     if(n <= 12) {
-        let card = document.getElementById('c'+n);
-        card.querySelector('.t').innerHTML = state.m[n-1].n + '<br>' + state.m[n-1].f;
-        card.style.display = 'flex';
+        let c = document.getElementById('c'+n);
+        c.querySelector('.txt').innerHTML = state.m[n-1].n + '<br>' + state.m[n-1].f;
+        c.style.display = 'flex';
         
-        let nextBtn = document.getElementById('b'+(n+1));
-        if(nextBtn) {
-            nextBtn.disabled = false;
-            nextBtn.className = 'btn-step active';
-        }
+        let nextB = document.getElementById('b'+(n+1));
+        if(nextB) { nextB.disabled = false; nextB.className = 'btn-step active'; }
     } else {
-        tinhToanKetThuc();
+        ketThucQuẻ();
     }
 }
 
-function tinhToanKetThuc() {
+function ketThucQuẻ() {
     // 1. Tìm Gốc
     let gocIdx = -1;
     for(let i=11; i>=0; i--) {
         if(state.m[i].n === state.la13.n) { gocIdx = i; break; }
     }
 
-    let arrayLinhHon = [...state.m];
+    let arrayFull = [...state.m];
     let startPos = gocIdx + 1;
 
     if(gocIdx === -1) {
-        arrayLinhHon.push(state.la13);
+        arrayFull.push(state.la13);
         startPos = 13;
-        document.getElementById('v13').innerHTML = `<div class="card ${state.mau} goc" style="display:flex; width:23.5%"><span class="num">13</span>${state.la13.n}<br>${state.la13.f}</div>`;
+        document.getElementById('v13').innerHTML = `<div class="card ${state.colorClass} goc" style="display:flex; width:24%"><span class="num">13</span>${state.la13.n}<br>${state.la13.f}</div>`;
     } else {
         document.getElementById('c'+startPos).classList.add('goc');
     }
 
-    // 2. Tính 5 Linh Hồn (Nhảy 4 bước ngược)
+    // 2. Tính 5 Linh Hồn
     let lhs = [];
-    let currentPtr = startPos;
-    let N = arrayLinhHon.length;
-
+    let ptr = startPos;
+    let N = arrayFull.length;
     for(let i=0; i<5; i++) {
-        let target = currentPtr;
-        for(let j=0; j<4; j++) {
-            target--;
-            if(target < 1) target = N;
-        }
-        lhs.push(arrayLinhHon[target - 1]);
-        currentPtr = target - 1;
-        if(currentPtr < 1) currentPtr = N;
+        let target = ptr;
+        for(let j=0; j<4; j++) { target--; if(target < 1) target = N; }
+        lhs.push(arrayFull[target - 1]);
+        ptr = target - 1; if(ptr < 1) ptr = N;
     }
 
-    // Hiển thị 5 Linh hồn
+    // Hiển thị Linh hồn
     let lhH = "";
     lhs.forEach((x, i) => {
-        lhH += `<div class="card ${state.mau} lh" style="display:flex"><span class="num">L${i+1}</span>${x.n}<br>${x.f}</div>`;
+        lhH += `<div class="card ${state.colorClass} lh" style="display:flex"><span class="num">L${i+1}</span>${x.n}<br>${x.f}</div>`;
     });
     document.getElementById('lhGrid').innerHTML = lhH;
 
-    // Hiển thị 3 Khóm (Xào lại 12 lá bài gốc)
+    // Hiển thị 3 Khóm (Xào lại 12 lá gốc)
     let khomDeck = [...state.m].sort(() => Math.random() - 0.5);
     let khH = "";
     khomDeck.forEach(x => {
-        khH += `<div class="card ${state.mau}" style="display:flex">${x.n}<br>${x.f}</div>`;
+        khH += `<div class="card ${state.colorClass}" style="display:flex">${x.n}<br>${x.f}</div>`;
     });
     document.getElementById('khomGrid').innerHTML = khH;
 
-    document.getElementById('finalPart').style.display = 'block';
+    document.getElementById('resultArea').style.display = 'block';
 }
 </script>
 </body>
