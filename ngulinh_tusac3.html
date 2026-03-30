@@ -3,99 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngũ Linh Bản Chốt</title>
+    <title>Ngũ Linh - Bản Siêu Tĩnh</title>
     <style>
-        body { font-family: sans-serif; padding: 10px; margin: 0; background: #fff; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
-        td { border: 1px solid #000; height: 60px; text-align: center; font-size: 12px; font-weight: bold; }
-        .goc { background: #ffff00; border: 3px solid #f00; }
-        .lh { background: #ffcccc; }
-        .btn { width: 100%; padding: 15px; background: #d35400; color: #fff; border: none; font-weight: bold; font-size: 16px; }
-        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: #555; } .Do { color: red; }
-        .head { background: #eee; font-size: 10px; height: 25px; }
+        body { font-family: sans-serif; padding: 10px; text-align: center; background: #fff; }
+        .box { border: 2px solid #000; padding: 10px; margin-bottom: 10px; display: none; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .card { border: 1px solid #333; padding: 10px 0; font-weight: bold; font-size: 12px; }
+        .goc { background: #ff0; border: 2px solid #f00; }
+        .lh { background: #faa; }
+        .btn { width: 100%; padding: 20px; background: #d35400; color: #fff; border: none; font-weight: bold; }
+        .Xanh { color: green; } .Vang { color: orange; } .Trang { color: gray; } .Do { color: red; }
     </style>
 </head>
 <body>
 
-    <select id="sel" style="width:100%; padding:10px; margin-bottom:10px;">
-        <option value="Xanh">CÔNG DANH</option>
-        <option value="Vang">TÀI LỘC</option>
-        <option value="Trang">GIA ĐẠO</option>
-        <option value="Do">TÌNH DUYÊN</option>
-    </select>
+    <button class="btn" onclick="document.getElementById('kq').style.display='block';this.style.display='none'">BẤM ĐỂ HIỆN QUẺ TỨ SẮC</button>
 
-    <button class="btn" onclick="run()">KHAI QUẺ NGAY</button>
+    <div id="kq" class="box">
+        <h3 style="font-size:14px;">1. TRẬN PHÁP (GỐC TẠI 7)</h3>
+        <div class="grid">
+            <div class="card Xanh">12<br>TƯỚNG Đ</div>
+            <div class="card Xanh">11<br>SĨ N</div>
+            <div class="card Xanh">10<br>XE Đ</div>
+            <div class="card Xanh">9<br>PHÁO N</div>
+            <div class="card Xanh">8<br>NGỰA Đ</div>
+            <div class="card Xanh goc">7<br>TƯỢNG N</div>
+            <div class="card Xanh">6<br>CHỐT Đ</div>
+            <div class="card Xanh">5<br>TƯỚNG N</div>
+            <div class="card Xanh">4<br>SĨ Đ</div>
+            <div class="card Xanh">3<br>XE N</div>
+            <div class="card Xanh">2<br>PHÁO Đ</div>
+            <div class="card Xanh">1<br>CHỐT N</div>
+        </div>
 
-    <div id="re" style="display:none; margin-top:15px;">
-        <div id="v13" style="margin-bottom:10px; text-align:center;"></div>
-        
-        <table id="tblMain">
-            <tr class="head"><td>Lá 12</td><td>Lá 11</td><td>Lá 10</td><td>Lá 9</td></tr>
-            <tr><td id="m12"></td><td id="m11"></td><td id="m10"></td><td id="m9"></td></tr>
-            <tr class="head"><td>Lá 8</td><td>Lá 7</td><td>Lá 6</td><td>Lá 5</td></tr>
-            <tr><td id="m8"></td><td id="m7"></td><td id="m6"></td><td id="m5"></td></tr>
-            <tr class="head"><td>Lá 4</td><td>Lá 3</td><td>Lá 2</td><td>Lá 1</td></tr>
-            <tr><td id="m4"></td><td id="m3"></td><td id="m2"></td><td id="m1"></td></tr>
-        </table>
+        <h3 style="font-size:14px;">2. 5 LÁ LINH HỒN</h3>
+        <div class="grid">
+            <div class="card Xanh lh">L1<br>XE Đ</div>
+            <div class="card Xanh lh">L2<br>PHÁO N</div>
+            <div class="card Xanh lh">L3<br>TƯỢNG Đ</div>
+            <div class="card Xanh lh">L4<br>SĨ N</div>
+            <div class="card Xanh lh">L5<br>CHỐT Đ</div>
+        </div>
 
-        <div style="background:#000; color:#fff; padding:5px; font-size:12px; margin-bottom:5px;">5 LÁ LINH HỒN</div>
-        <table>
-            <tr><td id="l1" class="lh"></td><td id="l2" class="lh"></td><td id="l3" class="lh"></td><td id="l4" class="lh"></td><td id="l5" class="lh"></td></tr>
-        </table>
-
-        <div style="background:#000; color:#fff; padding:5px; font-size:12px; margin-bottom:5px;">3 KHÓM THỜI GIAN</div>
-        <table id="tblKhom"></table>
+        <h3 style="font-size:14px;">3. 3 KHÓM THỜI GIAN</h3>
+        <div class="grid">
+            <div class="card Xanh">TƯỚNG N</div><div class="card Xanh">SĨ Đ</div><div class="card Xanh">XE N</div><div class="card Xanh">PHÁO Đ</div>
+            <div class="card Xanh">NGỰA N</div><div class="card Xanh">TƯỢNG Đ</div><div class="card Xanh">CHỐT N</div><div class="card Xanh">TƯỚNG Đ</div>
+            <div class="card Xanh">SĨ N</div><div class="card Xanh">XE Đ</div><div class="card Xanh">PHÁO N</div><div class="card Xanh">NGỰA Đ</div>
+        </div>
     </div>
 
-<script>
-function run() {
-    var mau = document.getElementById('sel').value;
-    var t = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
-    var d = [];
-    for(var i=0; i<7; i++) {
-        d.push({n:t[i], f:'Đ'}, {n:t[i], f:'Đ'}, {n:t[i], f:'N'}, {n:t[i], f:'N'});
-    }
-    d.sort(function() { return 0.5 - Math.random() });
-
-    var m = []; var tmp = d.slice();
-    for(var i=0; i<12; i++) { tmp.splice(0,3); m.push(tmp.shift()); }
-    var la13 = tmp[0];
-
-    var goc = -1;
-    for(var i=11; i>=0; i--) { if(m[i].n == la13.n) { goc = i+1; break; } }
-    var full = m.slice(); if(goc == -1) { full.push(la13); goc = 13; }
-
-    var lhs = []; var p = goc;
-    for(var s=0; s<5; s++) {
-        var c = p; for(var j=0; j<4; j++) { c--; if(c<1) c=full.length; }
-        lhs.push(full[c-1]); p = c-1; if(p<1) p=full.length;
-    }
-
-    document.getElementById('re').style.display = 'block';
-    for(var i=1; i<=12; i++) {
-        var el = document.getElementById('m'+i);
-        el.className = mau + (goc == i ? ' goc' : '');
-        el.innerHTML = m[i-1].n + '<br>' + m[i-1].f;
-    }
-
-    var v13 = document.getElementById('v13');
-    if(goc == 13) v13.innerHTML = '<table style="width:25%; margin:auto;"><tr><td class="goc '+mau+'">Lá 13<br>'+la13.n+'<br>'+la13.f+'</td></tr></table>';
-    else v13.innerHTML = '';
-
-    for(var i=0; i<5; i++) {
-        var li = document.getElementById('l'+(i+1));
-        li.className = 'lh ' + mau;
-        li.innerHTML = lhs[i].n + '<br>' + lhs[i].f;
-    }
-
-    var sh = m.slice().sort(function() { return 0.5 - Math.random() });
-    var hK = '<tr>';
-    for(var i=0; i<12; i++) {
-        hK += '<td class="'+mau+'">'+sh[i].n+'<br>'+sh[i].f+'</td>';
-        if((i+1)%4 == 0 && i<11) hK += '</tr><tr>';
-    }
-    document.getElementById('tblKhom').innerHTML = hK + '</tr>';
-}
-</script>
 </body>
 </html>
