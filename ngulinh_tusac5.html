@@ -5,20 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ngũ Linh Tứ Sắc - Thấu Chân Kinh</title>
     <style>
-        :root { --accent: #d35400; --card-bg: #fff; }
+        :root { --accent: #26a69a; --card-bg: #fff; }
         body { font-family: -apple-system, sans-serif; background: #e0e0e0; margin: 0; padding: 10px; }
         .app-container { max-width: 500px; margin: auto; background: #fdfdfd; padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* MÀU SẮC 4 HỆ - ĐÃ CẬP NHẬT MÀU VÀNG MỚI */
+        /* MÀU SẮC 4 HỆ */
         .c-Xanh { color: #1b5e20; background: #e8f5e9; border: 2px solid #2e7d32; }
-        /* Màu vàng mới: Chữ đậm, nền vàng sáng, viền cam đậm để nổi bật */
-        .c-Vang { color: #000000; background: #FFD700; border: 2px solid #DAA520; font-weight: 800 !important; } 
-        .c-Trang { color: #455a64; background: #fafafa; border: 2px solid #b0bec5; }
-        .c-Do { color: #b71c1c; background: #ffebee; border: 2px solid #c62828; }
+        .c-Vang { color: #000; background: #FFD700; border: 2px solid #DAA520; font-weight: 800 !important; } 
+        .c-Trang { color: #455a64; background: #fafafa; border: 2px solid #b0bec5; font-weight: 800 !important; }
+        .c-Do { color: #b71c1c; background: #ffebee; border: 2px solid #c62828; font-weight: 800 !important; }
 
         .header-menu { display: flex; gap: 8px; margin-bottom: 15px; }
-        select { flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
-        .btn-start { flex: 1; padding: 12px; background: #2c3e50; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        select { flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: white; }
+        
+        /* Button XÀO BÀI: Màu Xanh Ngọc dịu tâm trí, nổi bật */
+        .btn-start { 
+            flex: 1; padding: 12px; 
+            background: linear-gradient(135deg, #26a69a, #00897b); 
+            color: white; border: none; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(38, 166, 154, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-start:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
         .btn-step { padding: 10px 0; font-size: 11px; font-weight: bold; background: #fff; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; }
@@ -36,9 +45,7 @@
 
         h4 { font-size: 13px; color: #666; text-transform: uppercase; margin: 25px 0 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
         
-        /* Nút Sao Chép */
-        .btn-copy { width: 100%; padding: 15px; background: #d35400; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(211,84,0,0.3); }
-        .btn-copy:active { transform: scale(0.98); }
+        .btn-copy { width: 100%; padding: 15px; background: #5d4037; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .interpretation-box { font-size: 13px; color: #444; background: #fff3e0; padding: 12px; border-radius: 8px; margin-top: 8px; border-left: 4px solid #ff9800; line-height: 1.5; font-style: italic; }
     </style>
@@ -49,9 +56,9 @@
     <div class="header-menu">
         <select id="userChoice">
             <option value="Xanh">CÔNG DANH (XANH LÁ)</option>
-            <option value="Vang">TÀI LỘC (VÀNG/NÂU ĐẤT)</option>
-            <option value="Trang">GIA ĐẠO (TRẮNG/XÁM)</option>
-            <option value="Do">TÌNH DUYÊN (ĐỎ)</option>
+            <option value="Vàng">TÀI LỘC (VÀNG/NÂU ĐẤT)</option>
+            <option value="Trắng">GIA ĐẠO (TRẮNG/XÁM)</option>
+            <option value="Đỏ">TÌNH DUYÊN (ĐỎ)</option>
         </select>
         <button class="btn-start" onclick="setupNgulinh()">XÀO BÀI</button>
     </div>
@@ -66,9 +73,7 @@
         <div id="finalReport" style="display:none;">
             <h4>5 LÁ LINH HỒN</h4>
             <div id="soulGrid" class="card-grid"></div>
-
             <div id="khomSection"></div>
-            
             <button class="btn-copy" onclick="copyToClipboard()">📑 SAO CHÉP TRẬN PHÁP</button>
         </div>
     </div>
@@ -77,11 +82,20 @@
 <script>
 let state = { matrix:[], tượng:null, css:'', colorName: '', souls: [], khoms: [] };
 
+// Hàm chuẩn hóa CSS class vì value bây giờ có dấu
+function getCssClass(val) {
+    if(val === "Xanh") return "c-Xanh";
+    if(val === "Vàng") return "c-Vang";
+    if(val === "Trắng") return "c-Trang";
+    if(val === "Đỏ") return "c-Do";
+    return "";
+}
+
 function setupNgulinh() {
     const select = document.getElementById('userChoice');
     const col = select.value;
-    state.colorName = col.toUpperCase(); // Để thêm vào text sao chép
-    state.css = 'c-' + col;
+    state.colorName = col.toUpperCase(); 
+    state.css = getCssClass(col);
 
     const NAMES = ['TƯỚNG','SĨ','TƯỢNG','XE','PHÁO','NGỰA','CHỐT'];
     let mainDeck = [];
@@ -173,7 +187,7 @@ function processResults() {
             khomH += `<div class="card ${state.css}" style="display:flex"><span class="num-tag">${j+1}</span><strong>${item.n}</strong><br><strong>${item.f}</strong></div>`;
         }
         state.khoms.push(currentKhom);
-        khomH += `</div><div class="interpretation-box">Đang đợi nạp dữ liệu Data Thô ngày mai...</div>`;
+        khomH += `</div><div class="interpretation-box">Đang đợi nạp dữ liệu...</div>`;
     }
     document.getElementById('khomSection').innerHTML = khomH;
     document.getElementById('finalReport').style.display = 'block';
@@ -192,7 +206,7 @@ function copyToClipboard() {
     });
 
     navigator.clipboard.writeText(text).then(() => {
-        alert("Đã sao chép trận pháp vào bộ nhớ tạm!");
+        alert("Đã sao chép trận pháp có dấu đầy đủ!");
     }).catch(err => {
         alert("Lỗi khi sao chép: " + err);
     });
