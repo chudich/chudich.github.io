@@ -18,7 +18,7 @@
         .header-menu { display: flex; gap: 8px; margin-bottom: 15px; }
         select { flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: white; }
 
-        /* Button XÀO BÀI: Màu Xanh Ngọc dịu tâm trí, nổi bật */
+        /* Button XÀO BÀI */
         .btn-start { 
             flex: 1; padding: 12px; 
             background: linear-gradient(135deg, #26a69a, #00897b); 
@@ -47,6 +47,15 @@
 
         .btn-copy { width: 100%; padding: 15px; background: #5d4037; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
+        /* Style cho 2 Button AI mới */
+        .ai-buttons-container { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-ai { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; transition: opacity 0.2s; }
+        .btn-gemini { background: #1a73e8; } /* Màu xanh Gemini */
+        .btn-other-ai { background: #333; } /* Màu đen AI khác */
+        .btn-ai:hover { opacity: 0.9; }
+        
+        .ai-instruction { font-size: 16px; font-weight: bold; color: #2c3e50; text-align: center; margin-top: 15px; line-height: 1.4; padding: 0 10px; }
+
         .interpretation-box { font-size: 13px; color: #444; background: #fff3e0; padding: 12px; border-radius: 8px; margin-top: 8px; border-left: 4px solid #ff9800; line-height: 1.5; font-style: italic; }
     </style>
 </head>
@@ -74,7 +83,16 @@
             <h4>5 LÁ LINH HỒN</h4>
             <div id="soulGrid" class="card-grid"></div>
             <div id="khomSection"></div>
+            
             <button class="btn-copy" onclick="copyToClipboard()">📑 SAO CHÉP TRẬN PHÁP</button>
+
+            <div class="ai-buttons-container">
+                <button class="btn-ai btn-gemini" onclick="window.open('https://g.co/gemini/share/bc207ab4b2bf', '_blank')">Gemini Giải Bài</button>
+                <button class="btn-ai btn-other-ai" onclick="window.open('https://chatgpt.com/share/69cce7ea-a670-8323-9ee2-1707b6012235', '_blank')">AI khác Giải Bài</button>
+            </div>
+            <div class="ai-instruction">
+                Hãy Dán / Paste dữ liệu trận pháp đã SAO CHÉP vào hội thoại chat của AI bạn chọn để được luận giải nghĩa của trận pháp
+            </div>
         </div>
     </div>
 </div>
@@ -82,7 +100,6 @@
 <script>
 let state = { matrix:[], tượng:null, css:'', colorName: '', souls: [], khoms: [] };
 
-// Hàm chuẩn hóa CSS class vì value bây giờ có dấu
 function getCssClass(val) {
     if(val === "Xanh") return "c-Xanh";
     if(val === "Vàng") return "c-Vang";
