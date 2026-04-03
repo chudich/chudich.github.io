@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LUẬN QUẺ TỨ SẮC - PHẨM HÀM</title>
+    <title>HỆ THỐNG TRUY XUẤT TỨ SẮC 03 - CHUẨN XÁC</title>
     <style>
-        :root { --primary: #2e7d32; --bg: #f1f8e9; --text: #1b5e20; }
-        body { font-family: sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; }
-        .wrapper { max-width: 100%; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
-        h2 { text-align: center; color: var(--primary); font-size: 26px; margin-bottom: 20px; }
+        :root { --green-tâm: #1b5e20; --vàng-nhạt: #fffde7; }
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #eceff1; }
+        .container { max-width: 100%; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        h2 { text-align: center; color: var(--green-tâm); font-size: 24px; margin-bottom: 20px; }
         
-        .f-item { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; font-size: 20px; margin-bottom: 8px; color: var(--text); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 20px; margin-bottom: 5px; color: #333; }
         input { 
-            width: 100%; padding: 18px; border: 3px solid var(--primary); border-radius: 12px; 
-            font-size: 24px; font-weight: bold; box-sizing: border-box; background: #fff; 
+            width: 100%; padding: 18px; border: 3px solid #777; border-radius: 10px; 
+            font-size: 24px; font-weight: bold; box-sizing: border-box; background: var(--vàng-nhạt); 
         }
-
-        #result { 
-            margin-top: 25px; padding: 15px; border: 4px double var(--primary); border-radius: 12px; 
-            min-height: 250px; white-space: pre-wrap; background: #fdfffd; 
+        
+        #result-box { 
+            margin-top: 25px; padding: 15px; border: 4px solid var(--green-tâm); border-radius: 10px; 
+            min-height: 300px; white-space: pre-wrap; background: #fff; 
             font-size: 22px; line-height: 1.6; font-weight: bold; color: #000;
         }
 
@@ -28,253 +28,118 @@
             padding: 22px; font-size: 22px; font-weight: bold; border: none; 
             border-radius: 12px; color: #fff; text-transform: uppercase; cursor: pointer;
         }
-        .btn-find { background: var(--primary); box-shadow: 0 4px #1b5e20; }
-        .btn-copy { background: #1565c0; box-shadow: 0 4px #0d47a1; }
-        button:active { transform: translateY(4px); box-shadow: none; }
+        .btn-find { background: var(--green-tâm); }
+        .btn-copy { background: #0d47a1; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <h2>TÌM Ý NGHĨA PHẨM HÀM</h2>
+<div class="container">
+    <h2>TRA CỨU PHẨM HÀM 03</h2>
     
-    <div class="f-item"><label>Lá 1 (Trái):</label><input type="text" id="f1" class="in" placeholder="Ví dụ: CHỐT ĐỎ Đ"></div>
-    <div class="f-item"><label>Lá 2:</label><input type="text" id="f2" class="in"></div>
-    <div class="f-item"><label>Lá 3:</label><input type="text" id="f3" class="in"></div>
-    <div class="f-item"><label>Lá 4 (Phải):</label><input type="text" id="f4" class="in"></div>
+    <div class="form-group"><label>Lá 1 (Trái):</label><input type="text" id="input1" class="in"></div>
+    <div class="form-group"><label>Lá 2:</label><input type="text" id="input2" class="in"></div>
+    <div class="form-group"><label>Lá 3:</label><input type="text" id="input3" class="in"></div>
+    <div class="form-group"><label>Lá 4 (Phải):</label><input type="text" id="input4" class="in"></div>
 
     <div class="btn-zone">
-        <button class="btn-find" onclick="analyze()">TÌM Ý NGHĨA</button>
-        <button class="btn-copy" onclick="copyResult()">SAO CHÉP KẾT QUẢ</button>
+        <button class="btn-find" onclick="processAnalysis()">TÌM Ý NGHĨA</button>
+        <button class="btn-copy" onclick="copyToClipboard()">SAO CHÉP KẾT QUẢ</button>
     </div>
 
-    <div id="result"></div>
+    <div id="result-box"></div>
 </div>
 
 <script>
-    // THỨ TỰ PHẨM HÀM (Cao đến thấp)
-    const HIERARCHY = ["TƯỚNG", "SĨ", "TƯỢNG", "XE", "PHÁO", "NGỰA", "CHỐT"];
-
-    // THƯ VIỆN DATA (Thay thế "text aaaaaaa" bằng toàn bộ nội dung File 03 của bạn)
-    const DATABASE_TRUNG_TAM = `
-MÀU XANH
-1. TƯỚNG XANH Đ :
-Gặp SĨ XANH Đ : Địa vị vững vàng | Tiến thân đúng lúc
-Gặp TƯỢNG XANH Đ : Đã đúng chỗ,nên đi tới | Phòng mưu mô của người đàn bà
-Gặp XE XANH Đ : Thi cử gặp thời,may mắn mọi mặt | Dã tràng se cát,hoài công vô ích
-Gặp PHÁO XANH Đ : Được sự che chở của người có quyền uy | Thành công nhỏ
-Gặp NGỰA XANH Đ : Đừng mơ mộng,nên tin cậy ở sức mình | Càng đi tới càng thấy tức,tốt hơn nên thủ phận
-Gặp CHỐT XANH Đ : Gặp người tốt đẹp mọi việc sẽ thành |  Trước khó,sau dễ
-2. SĨ XANH Đ :
-
-Gặp TƯỢNG XANH Đ : Có lợi lộc mới nói công danh,không lợi lộc nên khoanh tay chờ | Gia đình không yên,mong gì danh phận
-Gặp XE XANH Đ : Công danh như bọt nước,thi cử như trò đùa | Địa vị bị lung lạc
-Gặp PHÁO XANH Đ : Đừng xem thường người bạn gái | Gặp bạn tốt,danh phận ắt đạt được
-Gặp NGỰA XANH Đ : Có tin tốt lành | Đừng tin chuyện người bên đường,tin đồn
-Gặp CHỐT XANH Đ : Gặp chuyện bất ngờ,nhiều sự thích thú | Sắp phải đi xa,đừng do dự
-3. TƯỢNG XANH Đ :
-Gặp XE XANH Đ : Quyền lợi lâm nguy nên dừng chân lại | Có cãi vã,buồn rầu vì công việc chậm trễ
-Gặp PHÁO XANH Đ : Có người mang đề nghị đến,không nên từ chối | Phòng mất của vô ích
-Gặp NGỰA XANH Đ : Gặp lại người bạn gái cũ,việc tốt đẹp sẽ đến | Mọi dàn xếp bất thành
-Gặp CHỐT XANH Đ : Được tin bất lợi | Kết quả vui về việc tiến thân
-
-4. XE XANH Đ :
-Gặp PHÁO XANH Đ : Mọi ý định đều ngưng trệ vì tính do dự | Nên tiến bước,dự định sẽ thành công
-Gặp NGỰA XANH Đ : Danh lợi đều tốt,thi cử thuận lợi | Sẽ có tin tốt lành về việc đang mong
-Gặp CHỐT XANH Đ : Người đi xa sẽ trở về an lành,mang lại niềm vui và tin tốt | Nên nghe người có kinh nghiệm đừng hấp tấp
-
-5. PHÁO XANH Đ :
-Gặp NGỰA XANH Đ : Thành công bất ngờ,danh lợi đi đôi | Mọi hứa hẹn sẽ được thực hiện
-Gặp CHỐT XANH Đ : Càng vẫy vùng thì càng lún sâu | Gặp thời gặp vận,gặp người thương
-6. NGỰA XANH Đ :
-Gặp CHỐT XANH Đ : Gặp bạn tốt đưa đường dẫn lối | Người bạn xưa là những người bạn tốt có thể tin cậy
-MÀU VÀNG
-1. TƯỚNG VÀNG Đ :
-Gặp SĨ VÀNG Đ : Được hưởng tài sản,có hoạnh tài | Hoạnh tài vào tay bất ngờ
-Gặp TƯỢNG VÀNG Đ : Thịnh vượng phát tài,sự nghiệp vững | Phòng kẻ xấu cố tâm rình rập,dòm ngó
-Gặp XE VÀNG Đ : Sự se sua của người đàn bà chỉ mang đến điều bất lợi | Tiền vào tay nên cất giữ hơn là phô trương
-Gặp PHÁO VÀNG Đ : Mất của mất tiền mất cả hi vọng | Thành công trong việc đang làm
-Gặp NGỰA VÀNG Đ : Bôn ba không qua thời vận,ở hiền gặp lành | Chấm dứt được ung nhọt bên trong gia đình
-Gặp Chốt Vàng Đ : Mọi ước vọng đều thành đạt nhờ sự giúp đỡ của người bạn gái | Có quà bất ngờ từ người bạn ngày xưa
-
-2. SĨ VÀNG Đ :
-Gặp TƯỢNG VÀNG Đ : Mưu sự tại nhân,hành sự tại thiên,chạy chọt lắm cũng không kết quả | Nên cậy vào vốn liếng ở trong tay mình đừng hi vọng ở người
-Gặp XE VÀNG Đ : Thành công chắc chắn về tiền bạc | Gặp người đồng hành đắc lực,cộng tác mang nhiều lợi lạc
-Gặp PHÁO VÀNG Đ : Hoạnh tài vào tháng 3 – ra tháng 7, phòng thua lỗ | Không nên thử vận may bằng cờ bạc, càng đánh càng thua to
-Gặp NGỰA VÀNG Đ : Phòng mất của nhiều đáng kể | Những hi vọng về tiền bạc đều tiêu tan
-Gặp CHỐT VÀNG Đ : Nợ hay mòn,con chóng lớn.Trả nợ nhỏ hơn chạy nợ to | Sản nghiệp vào tay sớm là sản nghiệp khó cầm
-
-3. TƯỢNG VÀNG Đ :
-Gặp XE VÀNG Đ : Thất bại keo này ta bày keo khác,thành công theo sau thất bại | Gặp duyên tình cờ làm nên sự nghiệp
-Gặp PHÁO VÀNG Đ : Vận đang lên,lo gì không nên sự nghiệp | Cứu tinh đến đúng lúc,có lợi lạc bất ngờ
-Gặp NGỰA VÀNG Đ : Nên di chuyển,khởi sự hơn là thủ cựu.Đất cũ đãi người mới,ngại gì | Do dự làm mất hết phân nửa cuộc đời,nên hăng hái lên
-Gặp CHỐT VÀNG Đ : Vạn sự khởi đầu nan,gặp việc khó gian nan mới thành công | Sự nghiệp sẽ thành nên hăng hái bước tới
-
-4. XE VÀNG Đ :
-Gặp PHÁO VÀNG Đ : Việc toan tính nên tiến hành ngay | Lợi nhỏ đôi khi cũng giải quyết được việc to
-Gặp NGỰA VÀNG Đ : Có tin rất hay về công việc cũng như tiền bạc | Đừng nghe lời ngon ngọt mà mắc lừa,phòng cạm bẫy
-Gặp CHỐT VÀNG Đ : Đồng tiền do chính mình kiếm được mới bền,đừng hão vọng | Đừng chê người bạn nghèo,thành công nhờ lời khuyên tốt
-
-5. PHÁO VÀNG Đ :
-Gặp NGỰA VÀNG Đ : Đừng ghen mà hỏng việc,sự nghiệp trong tay người đàn bà | Sự nghiệp không thể xây trên nền móng lãng mạn
-Gặp CHỐT VÀNG Đ : Rượu vào lời ra,phòng xa mới nên việc | Kiếm tiền chớ đừng say tiền,dừng chân kịp lúc kẻo có hại
-6. NGỰA VÀNG Đ :
-Gặp CHỐT VÀNG Đ : Mọi trở ngại được san bằng,đã đến lúc nắm thời cơ | Tiền bạc,ước vọng chỉ là thứ bọt bể,thấy đó rồi mất đó
-MÀU TRẮNG
-1. TƯỚNG TRẮNG Đ :
-Gặp SĨ TRẮNG Đ : Với kẻ có quyền thế ta nên tránh trước,đó mới là thượng sách | Cần hết sức thận trọng lúc đi đường
-Gặp TƯỢNG TRẮNG Đ :
-Thắng kiện cũng chưa phải chấm dứt tai nạn,nên lo ngại hậu quả | Phòng khẩu thiệt làm hoen ố danh dự
-Gặp XE TRẮNG Đ : Nên tránh xa một người có tướng lùn,nước da ngăm | Có tang thương,biến đổi
-Gặp PHÁO TRẮNG Đ : Hoa đẹp là hoa có gai,cẩn thận với người,tuy đẹp nhưng lòng có ác ý | Thua thiệt với bạn thân thì không mất,dính dấp với người đẹp qua đường là tiêu tan sự nghiệp
-Gặp NGỰA TRẮNG Đ : Có tin đau buồn bất ngờ | Gặp khổ tâm do người thân gây ra
-Gặp CHỐT TRẮNG Đ : Phòng bệnh nặng kéo dài | Có bực mình vì ghen tuông bóng gió
-2. SĨ TRẮNG Đ :
-Gặp TƯỢNG TRẮNG Đ : Phòng bị phao vu do kẻ tâm phúc gây ra | Đừng chứa chấp người cũng như đồ vật bất minh
-Gặp XE TRẮNG : Bị mất trộm lớn | Nên lánh xa những nơi ồn ào kẻo bị liên lụy
-Gặp PHÁO TRẮNG Đ : Tang khó không thể tránh | Trông chừng con cái,con hư phần lớn do sự chểnh mảng của cha mẹ
-Gặp NGỰA TRẮNG Đ : Phòng sa ngã,tan nát hạnh phúc gia đình | Một phút lỡ lầm ngàn năm ân hận,nên giữ mình
-Gặp CHỐT TRẮNG Đ : Không nên nghe lời đường mật của kẻ khác,kẻo bị lợi dụng với âm mưu quỷ quyệt | Mật ngọt chết ruồi,một câu nhịn chín câu lành
-
-3. TƯỢNG TRẮNG Đ :
-Gặp XE TRẮNG Đ : Không biết bơi đừng tắm sông,qua sông qua đò nên cẩn thận | Bị phụ tình vẫn còn tốt hơn cảnh ông ăn chả bà ăn nem
-Gặp PHÁO TRẮNG Đ : Có sóng gió trong gia đình | Không nên đem tiền mua tình,tiền mất mà tình cũng mất
-Gặp NGỰA TRẮNG Đ : Hãy dàn xếp bằng thái độ tình cảm hơn là để thua thiệt trước pháp lý | Khổ tâm vì bị bỏ rơi
-Gặp CHỐT TRẮNG Đ : Cẩn thận trong việc mua bán,vừa mất của còn lôi thôi | Vàng bạc không mua được ân tình,nên trọng tình nghĩa tào khang
-4. XE TRẮNG Đ :
-Gặp PHÁO TRẮNG Đ : Chuyện ngoài đường đừng mang vào trong nhà,thương người mà hại mình | Có sanh tâm ngay trong gia đình
-Gặp NGỰA TRẮNG Đ : Mất của vì ham lợi | Hôn nhân đổ vỡ
-Gặp CHỐT TRẮNG Đ : Sức khỏe vị đe dọa vì chuyện không đâu | Chơi dao có ngày đứt tay,đi đêm có ngày gặp ma
-5. PHÁO TRẮNG Đ :
-Gặp NGỰA TRẮNG Đ : Có người đàn bà không tốt đem đau thương đến | Không nên nghe lời êm ái của người đàn ông mang lòng lợi dụng
-Gặp CHỐT TRẮNG Đ : Buồn rầu,khổ sở khó tránh | Có tin buồn được đưa đến	
-6. NGỰA TRẮNG Đ :
-Gặp CHỐT TRẮNG Đ : Nên hứa hẹn bằng lời,đừng nên hứa hẹn bằng giấy mực | Phòng tâm địa kẻ bất lương lâu nay ở bên mình
-
-MÀU ĐỎ
-1. TƯỚNG ĐỎ Đ :
-Gặp SĨ ĐỎ Đ : Hôn nhân giàu,hạnh phúc | Nhờ sự giúp đỡ của người đàn bà tốt,hôn nhân sẽ thành tựu
-Gặp TƯỢNG ĐỎ Đ : Đừng ngờ vực lòng tốt của người bạn gái mà bỏ lỡ hạnh phúc | Nhường duyên đôi khi cũng thấy sung sướng
-Gặp XE ĐỎ Đ : Duyên tình cờ trở thành duyên nợ | May mắn mọi mặt trong hôn nhân
-Gặp PHÁO ĐỎ Đ : Mọi ngăn cách trong tình đầu đều được giải quyết | Đừng tham lam,có bà hai còn gấm ghé bà ba
-Gặp NGỰA ĐỎ Đ : Có của hồi môn xứng đáng trong hôn nhân | Gặp lại người bạn xưa,tính chuyện lứa đôi
+    // THƯ VIỆN DATA FILE 03 (Bạn dán dữ liệu thật vào giữa hai dấu ` bên dưới)
+    const FILE_03_DATABASE = `
+TƯỚNG ĐỎ Đ :
 Gặp CHỐT ĐỎ Đ : Bạn cũ lâu ngày thăm viếng,cuộc hội ngộ mang nhiều e ấp | Có tin bất ngờ gây rạo rực trong tâm hồn
-
-2. SĨ ĐỎ Đ :
-Gặp TƯỢNG ĐỎ Đ : Cá đã cắn câu sao không giở cần | Ái tình cao đẹp nên giữ mãi
-Gặp XE ĐỎ Đ : Ai bảo rằng tình đầu không thơ mộng | Nũng nịu không phải từ chối mà để được yêu nhiều
-Gặp PHÁO ĐỎ Đ : Trên đường xa gặp được duyên nợ | Nên rút lui thay vì theo đuổi 1 cách tuyệt vọng
-Gặp NGỰA ĐỎ Đ : Dừng chân ở đây là vừa,đừng tiến thêm nữa mà gánh lấy thất bại | Hi sinh 1 chút để bạn mình được hạnh phúc,mình sẽ gặp nhiều hạnh phúc hơn
-Gặp CHỐT ĐỎ Đ : Dù ai gièm pha ,mình hãy hiểu và tin người mình yêu mới khỏi lầm mưu kẻ gian | Yêu mà thiếu độ lượng thì chưa phải thật sự yêu
-		
-3. TƯỢNG ĐỎ Đ :
-Gặp XE ĐỎ Đ : Có cuộc hẹn hò duyên tình | Có cuộc viếng thăm của người mình thầm yêu
-Gặp PHÁO ĐỎ Đ : Vui bất ngờ gây hồi hộp lo sợ nhưng hạnh phúc | Tác hợp đẹp,do sự trung gian của 1 người đàn bà
-Gặp NGỰA ĐỎ Đ : Có cuộc hạnh ngộ với người đẹp e ấp,rụt rè không dám tỏ tình | Có thư từ nói chuyện tâm tình của người bạn
-Gặp CHỐT ĐỎ Đ : Đối diện với người góa vợ ( hay góa chồng ) yêu mình và mình yêu | Có cuộc du lịch và nảy sinh tình cảm
-
-4. XE ĐỎ Đ :
-Gặp PHÁO ĐỎ Đ : Hạnh phúc gia đình,được tin vui về con cái | Sinh con đầu lòng vừa ý
-Gặp NGỰA ĐỎ Đ : Có người đề nghị hôn nhân | Mọi hiểu lầm được san bằng,duyên tình thêm gắn bó
-Gặp CHỐT ĐỎ Đ : Đừng nhìn người qua vẻ bề ngoài,thành thật sẽ gặt hái được hạnh phúc |
-Người mình đang mong đợi sẽ trở về trong ngày gần
-
-5. PHÁO ĐỎ Đ :
-Gặp NGỰA ĐỎ Đ : Được sự thương yêu của người đỡ đầu lớn hơn mình ít tuổi | Cuộc hôn nhân chênh lệch về tuổi tác
-Gặp CHỐT ĐỎ Đ : Yêu 1 người có họ hàng rất gần | Được tỏ tình,nhiều vui vẻ
-6. NGỰA ĐỎ Đ :
-Gặp CHỐT ĐỎ Đ : Vui vẻ đang chờ đón,tình đầu nhiều hứa hẹn |  Hôn nhân được thực hiện sau nhiều.
+NGỰA TRẮNG Đ :
+Gặp CHỐT TRẮNG Đ : Ý nghĩa Ngựa bên trái Chốt | Ý nghĩa Ngựa bên phải Chốt
+text aaaaaaa
     `;
 
-    function getRank(cardName) {
-        for (let i = 0; i < HIERARCHY.length; i++) {
-            if (cardName.toUpperCase().includes(HIERARCHY[i])) return i;
-        }
-        return 99;
-    }
+    function findExactMeaning(chu, gap, gapIsOnRight) {
+        const lines = FILE_03_DATABASE.split('\n');
+        let currentGroupHead = "";
+        let targetChu = chu.toUpperCase().trim();
+        let targetGap = "GẶP " + gap.toUpperCase().trim();
 
-    function findMeaning(laA, laB, posOfBRelativeA) {
-        // laA: Lá bài làm chuẩn (Trung tâm), laB: Lá bài đi kèm
-        // posOfBRelativeA: 0 là B nằm Trái A, 1 là B nằm Phải A
-        const db = DATABASE_TRUNG_TAM.split('\n');
-        let blockFound = false;
-        let result = "";
-
-        for (let i = 0; i < db.length; i++) {
-            let line = db[i].trim().toUpperCase();
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim().toUpperCase();
             
-            // Tìm tiêu đề Nhóm (Lá bài chủ)
-            if (line.includes(laA.toUpperCase() + " :")) {
-                blockFound = true;
+            // Tìm tiêu đề nhóm (Ví dụ: "TƯỚNG ĐỎ Đ :")
+            if (line === targetChu + " :") {
+                currentGroupHead = targetChu;
                 continue;
             }
 
-            if (blockFound) {
-                // Nếu gặp tiêu đề nhóm mới thì dừng
-                if (line.includes(" :") && !line.startsWith("GẶP")) break;
+            // Nếu đang nằm trong nhóm tiêu đề đúng
+            if (currentGroupHead === targetChu) {
+                // Nếu chạm tới tiêu đề nhóm khác thì dừng ngay
+                if (line.includes(" :") && !line.startsWith("GẶP")) {
+                    currentGroupHead = "";
+                    continue;
+                }
 
-                if (line.startsWith("GẶP " + laB.toUpperCase())) {
-                    let parts = db[i].split(":")[1].split("|");
-                    result = (posOfBRelativeA === 0) ? parts[0].trim() : parts[1].trim();
-                    break;
+                // Nếu tìm thấy dòng "Gặp [Lá đi kèm]"
+                if (line.startsWith(targetGap)) {
+                    let fullContent = lines[i].substring(lines[i].indexOf(":") + 1);
+                    let splitParts = fullContent.split("|");
+                    if (splitParts.length < 2) return null;
+                    return gapIsOnRight ? splitParts[1].trim() : splitParts[0].trim();
                 }
             }
         }
-        return result;
+        return null;
     }
 
-    function analyze() {
-        const f = [
-            document.getElementById('f1').value.trim(),
-            document.getElementById('f2').value.trim(),
-            document.getElementById('f3').value.trim(),
-            document.getElementById('f4').value.trim()
+    function processAnalysis() {
+        const cards = [
+            document.getElementById('input1').value.trim(),
+            document.getElementById('input2').value.trim(),
+            document.getElementById('input3').value.trim(),
+            document.getElementById('input4').value.trim()
         ];
 
-        let pairs = [[f[0], f[1]], [f[1], f[2]], [f[2], f[3]]];
-        let outputs = [];
+        let results = [];
+        // Xét 3 cặp bài cạnh nhau
+        for (let i = 0; i < 3; i++) {
+            let L = cards[i]; 
+            let R = cards[i+1];
+            if (!L || !R) continue;
 
-        pairs.forEach((pair, index) => {
-            if (!pair[0] || !pair[1]) return;
+            let finalMeaning = "";
 
-            let cardL = pair[0]; // Lá bên trái
-            let cardR = pair[1]; // Lá bên phải
-            let meaning = "";
+            // BƯỚC 1: Tìm L làm Chủ, R làm Lá Gặp (R nằm bên Phải L)
+            finalMeaning = findExactMeaning(L, R, true);
 
-            // ƯU TIÊN 1: Tìm Lá bên trái làm Trung tâm
-            meaning = findMeaning(cardL, cardR, 1); // cardR nằm PHẢI cardL
-
-            // ƯU TIÊN 2: QUYỀN BIẾN - Nếu không có, tìm Lá bên phải làm Trung tâm
-            if (!meaning) {
-                let rankL = getRank(cardL);
-                let rankR = getRank(cardR);
-
-                // Nếu lá bên phải có phẩm hàm cao hơn hoặc bằng
-                if (rankR <= rankL) {
-                    meaning = findMeaning(cardR, cardL, 0); // cardL nằm TRÁI cardR
-                }
+            // BƯỚC 2: Quyền biến - Tìm R làm Chủ, L làm Lá Gặp (L nằm bên Trái R)
+            if (!finalMeaning) {
+                finalMeaning = findExactMeaning(R, L, false);
             }
 
-            if (meaning) {
-                outputs.push(`Cặp ${index + 1} (${cardL} - ${cardR}):\n=> ${meaning}`);
+            if (finalMeaning) {
+                results.push(`Cặp ${i+1} (${L} - ${R}):\n=> ${finalMeaning}`);
             } else {
-                outputs.push(`Cặp ${index + 1} (${cardL} - ${cardR}):\n=> (Chưa có dữ liệu phối hợp)`);
+                results.push(`Cặp ${i+1} (${L} - ${R}):\n=> (Không tìm thấy phối hợp)`);
             }
-        });
+        }
 
-        document.getElementById('result').innerText = outputs.join("\n\n------------------\n\n");
+        document.getElementById('result-box').innerText = results.join("\n\n--------------------\n\n");
     }
 
-    function copyResult() {
-        const text = document.getElementById('result').innerText;
+    function copyToClipboard() {
+        const text = document.getElementById('result-box').innerText;
         if (!text) return;
-        const area = document.createElement('textarea');
-        area.value = text;
-        document.body.appendChild(area);
-        area.select();
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
         document.execCommand('copy');
-        document.body.removeChild(area);
-        alert("Đã sao chép ý nghĩa quẻ!");
+        document.body.removeChild(textarea);
+        alert("Đã sao chép kết quả!");
     }
 </script>
 
