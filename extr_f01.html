@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truy Xuất Thư Viện Tứ Sắc</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 20px auto; padding: 15px; background-color: #eef2f3; line-height: 1.6; }
+        .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        input[type="text"] { padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 15px; }
+        input[type="text"]:focus { border-color: #3498db; outline: none; box-shadow: 0 0 5px rgba(52,152,219,0.3); }
+        #result-area { margin-top: 25px; padding: 20px; border: 1px solid #d1d8e0; border-radius: 8px; min-height: 150px; white-space: pre-wrap; background: #fdfdfd; color: #2d3436; font-size: 16px; border-left: 5px solid #3498db; }
+        .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 10px; }
+        button { padding: 12px 25px; cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: all 0.3s; font-size: 16px; }
+        .btn-extract { background-color: #27ae60; color: white; }
+        .btn-copy { background-color: #2980b9; color: white; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>HỆ THỐNG TRUY XUẤT THẤU CHÂN KINH</h2>
+    
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Lá bài 1:</label>
+            <input type="text" class="card-input" placeholder="Ví dụ: 1 : TƯỚNG XANH Đ">
+        </div>
+        <div class="form-group">
+            <label>Lá bài 2:</label>
+            <input type="text" class="card-input" placeholder="Ví dụ: TƯỚNG XANH N">
+        </div>
+        <div class="form-group">
+            <label>Lá bài 3:</label>
+            <input type="text" class="card-input">
+        </div>
+        <div class="form-group">
+            <label>Lá bài 4:</label>
+            <input type="text" class="card-input">
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="btn-extract" onclick="extractFromLibrary()">TRÍCH XUẤT DATA</button>
+        <button class="btn-copy" onclick="copyResult()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="result-area">Kết quả sẽ hiển thị tại đây...</div>
+</div>
+
+<script>
+    /**
+     * THƯ VIỆN DATA ĐỒ SỘ (DẠNG TEXT)
+     * Bạn hãy replace toàn bộ nội dung bên dưới bằng Data File 01 của bạn.
+     * Lưu ý: Giữ nguyên biến `THU_VIEN_DATA` và dấu quặc ` ` (backtick) bao quanh.
+     */
+    const THU_VIEN_DATA = `
+    1 : Ý NGHĨA CỦA CÁC LÁ BÀI TỨ SẮC
+    TƯỚNG XANH Đ : Lá TƯỚNG XANH Đứng là lá bài tuyệt vời trong mọi ao ước,xin xỏ về công danh,thi cử,tiến thân…hoặc mọi sự khơi mào cho công việc làm ăn trong bất kì ngành nghề nào.Mọi khuếch trương vừa mang lại danh dự vừa thu thập lợi lộc.Lá TƯỚNG XANH Đứng trong quẻ bài là 1 quý nhân đứng tuổi,nghiêm nghị,có uy quyền và có tấm lòng vị tha,tha thiết bảo vệ ,tiến cử và giúp đỡ về mọi mặt của người xin quẻ
+    TƯỚNG XANH N : Lá TƯỚNG XANH Ngược đầu là viễn cảnh của mọi mưu tính sẽ thất bại,thất vọng vì bị lừa dối của người trên trước,tuy có uy quyền nhưng không đức độ.Ngoài ra còn báo hiệu cho sự xích mích giữa người xin quẻ với kẻ trên trước có thể có những phiền toái khó tránh.
+    TƯỚNG VÀNG Đ : text aaaaaa
+    TƯỚNG VÀNG N : text aaaaaa
+    SĨ XANH Đ : text aaaaaa
+    SĨ XANH N : text aaaaaa
+    `;
+
+    function extractFromLibrary() {
+        const inputs = document.querySelectorAll('.card-input');
+        const resultArea = document.getElementById('result-area');
+        let finalResults = [];
+
+        // Làm sạch thư viện: loại bỏ xuống dòng thừa, khoảng trắng đầu cuối để dễ dò tìm
+        const library = THU_VIEN_DATA.replace(/\s+/g, ' ');
+
+        inputs.forEach(input => {
+            let userText = input.value.trim();
+            if (!userText) return;
+
+            // Thuật toán: Loại bỏ số thứ tự "1 : " nếu có, chỉ lấy phần "TÊN LÁ BÀI + Đ/N"
+            let keyword = userText.replace(/^\d+\s*:\s*/, "").toUpperCase();
+
+            // Tìm vị trí bắt đầu của keyword trong thư viện
+            let startIndex = library.toUpperCase().indexOf(keyword);
+
+            if (startIndex !== -1) {
+                // Tìm vị trí của lá bài tiếp theo (dấu mốc là chữ "Đ :" hoặc "N :") 
+                // hoặc điểm kết thúc để cắt đoạn text ý nghĩa
+                let subText = library.substring(startIndex);
+                
+                // Thuật toán tìm điểm kết thúc: 
+                // Tìm lá bài tiếp theo bằng cách tìm từ khóa " : " sau vị trí keyword
+                // (Thường mỗi lá bài sẽ kết thúc khi bắt đầu lá mới có cấu trúc TÊN + Đ/N + :)
+                let nextKeywordIndex = subText.indexOf(" : ", keyword.length + 5); 
+                
+                let resultText = "";
+                if (nextKeywordIndex !== -1) {
+                    // Tìm ngược lại tên lá bài phía trước dấu ":" đó để cắt đúng chỗ
+                    let lastSpaceBeforeNext = subText.lastIndexOf(" ", nextKeywordIndex - 4);
+                    resultText = subText.substring(0, lastSpaceBeforeNext).trim();
+                } else {
+                    resultText = subText.trim(); // Nếu là lá cuối cùng trong thư viện
+                }
+                
+                finalResults.push(resultText);
+            } else {
+                finalResults.push("⚠️ KHÔNG TÌM THẤY DỮ LIỆU CHO: " + userText);
+            }
+        });
+
+        resultArea.innerText = finalResults.length > 0 ? finalResults.join("\n\n---\n\n") : "Vui lòng nhập tên lá bài.";
+    }
+
+    function copyResult() {
+        const text = document.getElementById('result-area').innerText;
+        if (text === "Kết quả sẽ hiển thị tại đây..." || !text) return;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Đã sao chép kết quả vào bộ nhớ tạm!");
+        });
+    }
+</script>
+
+</body>
+</html>
