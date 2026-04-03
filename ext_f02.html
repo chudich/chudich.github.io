@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TRÍCH XUẤT THƯ VIỆN 2</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #e0e0e0; }
+        .box { max-width: 100%; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        h2 { text-align: center; color: #1b5e20; font-size: 26px; margin-bottom: 20px; text-transform: uppercase; }
+        .f-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 22px; margin-bottom: 8px; color: #222; }
+        input { 
+            width: 100%; padding: 18px; border: 4px solid #444; border-radius: 12px; 
+            font-size: 24px; font-weight: bold; box-sizing: border-box; background: #fffdeb; 
+        }
+        #res { 
+            margin-top: 25px; padding: 15px; border: 4px solid #1b5e20; border-radius: 12px; 
+            min-height: 250px; white-space: pre-wrap; background: #fff; 
+            font-size: 24px; line-height: 1.6; font-weight: bold; color: #000;
+        }
+        .btns { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        button { 
+            padding: 22px; font-size: 24px; font-weight: bold; border: none; 
+            border-radius: 12px; color: #fff; text-transform: uppercase;
+        }
+        .btn-go { background: #1b5e20; }
+        .btn-cp { background: #0d47a1; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>HỆ THỐNG TRÍCH DATA 2</h2>
+    
+    <div class="f-group"><label>Lá 1:</label><input type="text" class="in-card" placeholder="Vd: TƯỚNG XANH Đ"></div>
+    <div class="f-group"><label>Lá 2:</label><input type="text" class="in-card"></div>
+    <div class="f-group"><label>Lá 3:</label><input type="text" class="in-card"></div>
+    <div class="f-group"><label>Lá 4:</label><input type="text" class="in-card"></div>
+
+    <div class="btns">
+        <button class="btn-go" onclick="run()">TRÍCH XUẤT NGAY</button>
+        <button class="btn-cp" onclick="copy()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="res"></div>
+</div>
+
+<script>
+    /**
+     * PHẦN THƯ VIỆN DATA:
+     * Bạn hãy replace toàn bộ nội dung "text aaaaaaaaaa" bằng data thực tế của bạn.
+     */
+    const DATA_LIBRARY = `
+1. TƯỚNG :
+TƯỚNG XANH :
+Đứng : Tiến thân,thi cử,mọi khuếch trương khởi sự đều thuận lợi có người đỡ đầu
+Ngược : Có xung đột với người trên trước,bất lợi mọi mặt
+TƯỚNG VÀNG :
+Đứng : Thành công chắc chắn về tiền bạc,có quý nhân là người đàn ông giàu sẵn sang giúp đỡ về mọi mặt
+Ngược : Phòng phản phúc trong gia tộc,mọi sự chậm trễ luôn lẩn quẩn bên mình
+text aaaaaaaaaa
+    `;
+
+    function run() {
+        const inputs = document.querySelectorAll('.in-card');
+        const output = document.getElementById('res');
+        let final = [];
+        const lines = DATA_LIBRARY.split('\n');
+
+        inputs.forEach(input => {
+            let val = input.value.trim();
+            if (!val) return;
+
+            // 1. Phân tích Form: Tách lấy Tên+Màu và Ký hiệu Đ/N
+            // Ví dụ: "TƯỚNG XANH Đ" -> namePart = "TƯỚNG XANH", typePart = "Đ"
+            let namePart = val.substring(0, val.length - 2).trim().toUpperCase();
+            let typePart = val.substring(val.length - 1).toUpperCase();
+
+            // Quy ước loại: Đ = Đứng, N = Ngược
+            let searchLabel = (typePart === 'Đ') ? "ĐỨNG :" : "NGƯỢC :";
+
+            let foundNameIdx = -1;
+            // Bước 1: Tìm dòng chứa đúng Tên Lá + Màu (Ví dụ: TƯỚNG XANH :)
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].toUpperCase().includes(namePart + " :")) {
+                    foundNameIdx = i;
+                    break;
+                }
+            }
+
+            if (foundNameIdx !== -1) {
+                let targetText = "";
+                // Bước 2: Dò các dòng ngay bên dưới cho đến khi gặp đúng dòng Đứng/Ngược
+                // Hoặc dừng lại nếu gặp một Tên Lá khác
+                for (let j = foundNameIdx + 1; j < lines.length; j++) {
+                    let curLine = lines[j].trim().toUpperCase();
+                    if (curLine === "") continue;
+
+                    // Nếu dòng bắt đầu bằng nhãn Đứng/Ngược mà mình cần tìm
+                    if (curLine.startsWith(searchLabel)) {
+                        targetText = lines[j].trim();
+                        break; 
+                    }
+
+                    // QUY TẮC DỪNG: Nếu gặp một lá bài mới (có dấu :) trước khi thấy nhãn cần tìm
+                    // Hoặc gặp tiêu đề số (1. TƯỚNG)
+                    if ((curLine.includes(" : ") && !curLine.startsWith("ĐỨNG :") && !curLine.startsWith("NGƯỢC :")) || /^\d+\./.test(curLine)) {
+                        break;
+                    }
+                }
+
+                if (targetText) {
+                    final.push(val.toUpperCase() + " => " + targetText);
+                } else {
+                    final.push("❌ KHÔNG TÌM THẤY TRẠNG THÁI " + typePart + " CHO: " + namePart);
+                }
+            } else {
+                final.push("❌ KHÔNG KHỚP TÊN LÁ: " + namePart);
+            }
+        });
+
+        output.innerText = final.join("\n\n--------------------\n\n");
+    }
+
+    function copy() {
+        const text = document.getElementById('res').innerText;
+        if (!text) return;
+        const tmp = document.createElement('textarea');
+        tmp.value = text;
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand('copy');
+        document.body.removeChild(tmp);
+        alert("Đã copy xong!");
+    }
+</script>
+
+</body>
+</html>
