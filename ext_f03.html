@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LUẬN QUẺ TỨ SẮC - PHẨM HÀM</title>
+    <style>
+        :root { --primary: #2e7d32; --bg: #f1f8e9; --text: #1b5e20; }
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; }
+        .wrapper { max-width: 100%; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); box-sizing: border-box; }
+        h2 { text-align: center; color: var(--primary); font-size: 26px; margin-bottom: 20px; }
+        
+        .f-item { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 20px; margin-bottom: 8px; color: var(--text); }
+        input { 
+            width: 100%; padding: 18px; border: 3px solid var(--primary); border-radius: 12px; 
+            font-size: 24px; font-weight: bold; box-sizing: border-box; background: #fff; 
+        }
+
+        #result { 
+            margin-top: 25px; padding: 15px; border: 4px double var(--primary); border-radius: 12px; 
+            min-height: 250px; white-space: pre-wrap; background: #fdfffd; 
+            font-size: 22px; line-height: 1.6; font-weight: bold; color: #000;
+        }
+
+        .btn-zone { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        button { 
+            padding: 22px; font-size: 22px; font-weight: bold; border: none; 
+            border-radius: 12px; color: #fff; text-transform: uppercase; cursor: pointer;
+        }
+        .btn-find { background: var(--primary); box-shadow: 0 4px #1b5e20; }
+        .btn-copy { background: #1565c0; box-shadow: 0 4px #0d47a1; }
+        button:active { transform: translateY(4px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h2>TÌM Ý NGHĨA PHẨM HÀM</h2>
+    
+    <div class="f-item"><label>Lá 1 (Trái):</label><input type="text" id="f1" class="in" placeholder="Ví dụ: CHỐT ĐỎ Đ"></div>
+    <div class="f-item"><label>Lá 2:</label><input type="text" id="f2" class="in"></div>
+    <div class="f-item"><label>Lá 3:</label><input type="text" id="f3" class="in"></div>
+    <div class="f-item"><label>Lá 4 (Phải):</label><input type="text" id="f4" class="in"></div>
+
+    <div class="btn-zone">
+        <button class="btn-find" onclick="analyze()">TÌM Ý NGHĨA</button>
+        <button class="btn-copy" onclick="copyResult()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // THỨ TỰ PHẨM HÀM (Cao đến thấp)
+    const HIERARCHY = ["TƯỚNG", "SĨ", "TƯỢNG", "XE", "PHÁO", "NGỰA", "CHỐT"];
+
+    // THƯ VIỆN DATA (Thay thế "text aaaaaaa" bằng toàn bộ nội dung File 03 của bạn)
+    const DATABASE_TRUNG_TAM = `
+TƯỚNG ĐỎ Đ :
+Gặp CHỐT ĐỎ Đ : Bạn cũ lâu ngày thăm viếng,cuộc hội ngộ mang nhiều e ấp | Có tin bất ngờ gây rạo rực trong tâm hồn
+TƯỚNG XANH Đ :
+Gặp SĨ XANH Đ : Địa vị vững vàng | Tiến thân đúng lúc
+text aaaaaaa
+    `;
+
+    function getRank(cardName) {
+        for (let i = 0; i < HIERARCHY.length; i++) {
+            if (cardName.toUpperCase().includes(HIERARCHY[i])) return i;
+        }
+        return 99;
+    }
+
+    function findMeaning(laA, laB, posOfBRelativeA) {
+        // laA: Lá bài làm chuẩn (Trung tâm), laB: Lá bài đi kèm
+        // posOfBRelativeA: 0 là B nằm Trái A, 1 là B nằm Phải A
+        const db = DATABASE_TRUNG_TAM.split('\n');
+        let blockFound = false;
+        let result = "";
+
+        for (let i = 0; i < db.length; i++) {
+            let line = db[i].trim().toUpperCase();
+            
+            // Tìm tiêu đề Nhóm (Lá bài chủ)
+            if (line.includes(laA.toUpperCase() + " :")) {
+                blockFound = true;
+                continue;
+            }
+
+            if (blockFound) {
+                // Nếu gặp tiêu đề nhóm mới thì dừng
+                if (line.includes(" :") && !line.startsWith("GẶP")) break;
+
+                if (line.startsWith("GẶP " + laB.toUpperCase())) {
+                    let parts = db[i].split(":")[1].split("|");
+                    result = (posOfBRelativeA === 0) ? parts[0].trim() : parts[1].trim();
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    function analyze() {
+        const f = [
+            document.getElementById('f1').value.trim(),
+            document.getElementById('f2').value.trim(),
+            document.getElementById('f3').value.trim(),
+            document.getElementById('f4').value.trim()
+        ];
+
+        let pairs = [[f[0], f[1]], [f[1], f[2]], [f[2], f[3]]];
+        let outputs = [];
+
+        pairs.forEach((pair, index) => {
+            if (!pair[0] || !pair[1]) return;
+
+            let cardL = pair[0]; // Lá bên trái
+            let cardR = pair[1]; // Lá bên phải
+            let meaning = "";
+
+            // ƯU TIÊN 1: Tìm Lá bên trái làm Trung tâm
+            meaning = findMeaning(cardL, cardR, 1); // cardR nằm PHẢI cardL
+
+            // ƯU TIÊN 2: QUYỀN BIẾN - Nếu không có, tìm Lá bên phải làm Trung tâm
+            if (!meaning) {
+                let rankL = getRank(cardL);
+                let rankR = getRank(cardR);
+
+                // Nếu lá bên phải có phẩm hàm cao hơn hoặc bằng
+                if (rankR <= rankL) {
+                    meaning = findMeaning(cardR, cardL, 0); // cardL nằm TRÁI cardR
+                }
+            }
+
+            if (meaning) {
+                outputs.push(`Cặp ${index + 1} (${cardL} - ${cardR}):\n=> ${meaning}`);
+            } else {
+                outputs.push(`Cặp ${index + 1} (${cardL} - ${cardR}):\n=> (Chưa có dữ liệu phối hợp)`);
+            }
+        });
+
+        document.getElementById('result').innerText = outputs.join("\n\n------------------\n\n");
+    }
+
+    function copyResult() {
+        const text = document.getElementById('result').innerText;
+        if (!text) return;
+        const area = document.createElement('textarea');
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        document.body.removeChild(area);
+        alert("Đã sao chép ý nghĩa quẻ!");
+    }
+</script>
+
+</body>
+</html>
