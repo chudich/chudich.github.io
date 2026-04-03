@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Truy Xuất Ngũ Linh</title>
+    <style>
+        /* Tối ưu hiển thị cho người mắt kém và thiết bị di động */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 15px; 
+            background-color: #f0f2f5; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 600px; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+            box-sizing: border-box;
+        }
+        h2 { 
+            color: #d32f2f; 
+            text-align: center; 
+            font-size: 28px; 
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: 900;
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+            width: 100%;
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            font-size: 20px; 
+            color: #333;
+        }
+        input[type="text"] { 
+            width: 100%; 
+            padding: 18px; 
+            border: 3px solid #bcbcbc; 
+            border-radius: 10px; 
+            font-size: 22px; /* Chữ rất to */
+            font-weight: bold;
+            box-sizing: border-box;
+            background-color: #fffdec; /* Nền vàng nhạt dễ nhìn */
+        }
+        input[type="text"]:focus { 
+            border-color: #d32f2f; 
+            outline: none; 
+        }
+        #result-area { 
+            margin-top: 25px; 
+            padding: 20px; 
+            border: 4px solid #333; 
+            border-radius: 12px; 
+            min-height: 150px; 
+            white-space: pre-wrap; 
+            background: #ffffff; 
+            font-size: 22px; /* Nội dung kết quả to rõ */
+            font-weight: 600;
+            line-height: 1.5;
+            color: #000;
+        }
+        .button-group { 
+            display: flex; 
+            flex-direction: column; /* Nút bấm xếp chồng trên mobile */
+            gap: 15px; 
+            margin-top: 10px; 
+        }
+        button { 
+            padding: 20px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 900; 
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+        .btn-extract { background-color: #b71c1c; color: white; }
+        .btn-copy { background-color: #1565c0; color: white; }
+        button:active { transform: scale(0.95); }
+
+        /* Ngăn chữ quá nhỏ trên một số trình duyệt */
+        @media screen and (max-width: 480px) {
+            h2 { font-size: 24px; }
+            input[type="text"], button { font-size: 20px; }
+            #result-area { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>TRA CỨU DỮ LIỆU</h2>
+    
+    <div class="form-group">
+        <label>Lá bài 1:</label>
+        <input type="text" class="card-input" placeholder="Ví dụ: 1 : TƯỚNG XANH Đ">
+    </div>
+    <div class="form-group">
+        <label>Lá bài 2:</label>
+        <input type="text" class="card-input">
+    </div>
+    <div class="form-group">
+        <label>Lá bài 3:</label>
+        <input type="text" class="card-input">
+    </div>
+    <div class="form-group">
+        <label>Lá bài 4:</label>
+        <input type="text" class="card-input">
+    </div>
+
+    <div class="button-group">
+        <button class="btn-extract" onclick="extractFromLibrary()">TRÍCH XUẤT NGAY</button>
+        <button class="btn-copy" onclick="copyResult()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="result-area">Dữ liệu sẽ hiện ở đây...</div>
+</div>
+
+<script>
+    /**
+     * THƯ VIỆN DATA ĐỒ SỘ
+     * Thay thế toàn bộ chữ text aaaaaa bên dưới bằng nội dung File 01 của bạn.
+     */
+    const THU_VIEN_DATA = `
+1 : Ý NGHĨA CỦA CÁC LÁ BÀI TỨ SẮC
+TƯỚNG XANH Đ : Lá TƯỚNG XANH Đứng là lá bài tuyệt vời trong mọi ao ước,xin xỏ về công danh,thi cử,tiến thân…hoặc mọi sự khơi mào cho công việc làm ăn trong bất kì ngành nghề nào.Mọi khuếch trương vừa mang lại danh dự vừa thu thập lợi lộc.Lá TƯỚNG XANH Đứng trong quẻ bài là 1 quý nhân đứng tuổi,nghiêm nghị,có uy quyền và có tấm lòng vị tha,tha thiết bảo vệ ,tiến cử và giúp đỡ về mọi mặt của người xin quẻ
+TƯỚNG XANH N : Lá TƯỚNG XANH Ngược đầu là viễn cảnh của mọi mưu tính sẽ thất bại,thất vọng vì bị lừa dối của người trên trước,tuy có uy quyền nhưng không đức độ.Ngoài ra còn báo hiệu cho sự xích mích giữa người xin quẻ với kẻ trên trước có thể có những phiền toái khó tránh.
+TƯỚNG VÀNG Đ : text aaaaaa
+TƯỚNG VÀNG N : text aaaaaa
+SĨ XANH Đ : text aaaaaa
+    `;
+
+    function extractFromLibrary() {
+        const inputs = document.querySelectorAll('.card-input');
+        const resultArea = document.getElementById('result-area');
+        let finalResults = [];
+
+        // Giữ nguyên format thư viện để dò tìm chính xác
+        const lib = THU_VIEN_DATA;
+
+        inputs.forEach(input => {
+            let userText = input.value.trim();
+            if (!userText) return;
+
+            // Làm sạch input (bỏ "1 : ", chuyển hoa)
+            let searchKey = userText.replace(/^\d+\s*:\s*/, "").toUpperCase();
+
+            // Tìm vị trí của Key trong thư viện
+            let startPos = lib.toUpperCase().indexOf(searchKey);
+
+            if (startPos !== -1) {
+                // Cắt từ vị trí tìm thấy
+                let remainText = lib.substring(startPos);
+                
+                // Tìm điểm kết thúc bằng cách tìm lá bài tiếp theo (thường có dấu " : ")
+                // Ta bỏ qua dấu ":" của chính lá bài đang xét
+                let endPos = remainText.indexOf(" : ", searchKey.length + 2);
+                
+                let foundText = "";
+                if (endPos !== -1) {
+                    // Tìm ngược lại tên lá bài phía trước dấu ":" để ngắt dòng
+                    let segment = remainText.substring(0, endPos);
+                    let lastNewline = segment.lastIndexOf("\n");
+                    foundText = (lastNewline !== -1) ? segment.substring(0, lastNewline) : segment;
+                } else {
+                    foundText = remainText; // Lá cuối cùng
+                }
+                finalResults.push(foundText.trim());
+            } else {
+                finalResults.push("❌ Không tìm thấy: " + userText);
+            }
+        });
+
+        resultArea.innerText = finalResults.join("\n\n------------------\n\n");
+    }
+
+    function copyResult() {
+        const text = document.getElementById('result-area').innerText;
+        if (!text || text.includes("Dữ liệu sẽ hiện")) return;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Đã sao chép!");
+        });
+    }
+</script>
+
+</body>
+</html>
