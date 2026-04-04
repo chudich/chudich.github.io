@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HỆ THỐNG TRÍCH XUẤT 06 - ĐỒNG GIÁ TRỊ</title>
+    <style>
+        :root { --primary: #455a64; --accent: #ff8f00; --bg: #fdfefe; }
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #eceff1; }
+        .app-container { max-width: 100%; background: var(--bg); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary); font-size: 22px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 18px; margin-bottom: 5px; color: #546e7a; }
+        input { 
+            width: 100%; padding: 18px; border: 3px solid #cfd8dc; border-radius: 12px; 
+            font-size: 22px; font-weight: bold; box-sizing: border-box; background: #fffde7; 
+        }
+
+        #result-box { 
+            margin-top: 25px; padding: 15px; border: 4px solid var(--primary); border-radius: 15px; 
+            min-height: 250px; white-space: pre-wrap; background: #fff; 
+            font-size: 20px; line-height: 1.6; font-weight: bold; color: #1a237e;
+        }
+
+        .btn-flex { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        button { 
+            padding: 20px; font-size: 20px; font-weight: bold; border: none; 
+            border-radius: 12px; color: #fff; text-transform: uppercase; cursor: pointer;
+        }
+        .btn-exe { background: var(--primary); box-shadow: 0 4px #263238; }
+        .btn-copy { background: #1976d2; box-shadow: 0 4px #0d47a1; }
+        button:active { transform: translateY(2px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>TRUY XUẤT FILE 06<br><small style="font-size:14px;">CÁC LÁ ĐỒNG GIÁ TRỊ</small></h2>
+
+    <div class="input-group"><label>Form 1:</label><input type="text" id="i1" placeholder="VD: TƯỚNG XANH Đ"></div>
+    <div class="input-group"><label>Form 2:</label><input type="text" id="i2"></div>
+    <div class="input-group"><label>Form 3:</label><input type="text" id="i3"></div>
+    <div class="input-group"><label>Form 4:</label><input type="text" id="i4"></div>
+
+    <div class="btn-flex">
+        <button class="btn-exe" onclick="solve06()">TÌM Ý NGHĨA</button>
+        <button class="btn-copy" onclick="copyRes()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="result-box"></div>
+</div>
+
+<script>
+    // THƯ VIỆN DỮ LIỆU FILE 06
+    const DATA_06 = `
+PHẦN 1 : 4 LÁ CÙNG TRẠNG THÁI
+4 TƯỚNG XANH :
+Cuộc gặp gỡ tuyệt vời. Công danh không hẹn gặp gỡ mà nên | Được sự đỡ đầu đắc lực, danh phận kèm hôn nhân.
+
+PHẦN 2 : 4 LÁ (3 ĐỨNG 1 NGƯỢC HOẶC 3 NGƯỢC 1 ĐỨNG)
+4 TƯỚNG XANH :
+Công danh còn dài, chầm chậm tiến tới | Danh phận tốt nhưng bị hôn nhân chi phối.
+
+PHẦN 3 : 3 LÁ CÙNG TRẠNG THÁI
+3 TƯỚNG XANH :
+Thỏa mãn hoàn toàn trong ước vọng | Hy vọng đạt thành trong ngày gần.
+
+PHẦN 4 : 3 LÁ (2 ĐỨNG 1 NGƯỢC HOẶC 2 NGƯỢC 1 ĐỨNG)
+3 TƯỚNG XANH :
+Có tin về công danh, lợi về tiền bạc | Dự tính bị đảo lộn bởi bàn tay đàn bà
+
+PHẦN 5 : 2 LÁ CÙNG TRẠNG THÁI
+2 TƯỚNG XANH :
+Cuộc giao thiệp nhiều hứa hẹn | Khổ lụy sau cuộc vui.
+    `;
+
+    function findTextInPart(partLabel, cardName, isRight) {
+        const db = DATA_06.split('\n');
+        let inPart = false;
+        let inBlock = false;
+        let searchName = cardName.toUpperCase().trim();
+
+        for (let i = 0; i < db.length; i++) {
+            let row = db[i].trim().toUpperCase();
+
+            // Tìm đúng PHẦN
+            if (row.includes(partLabel.toUpperCase())) {
+                inPart = true; continue;
+            }
+            if (inPart && row.startsWith("PHẦN")) { inPart = false; }
+
+            if (inPart) {
+                // Tìm đúng tên lá (có thể có số phía trước)
+                if (row.includes(searchName) && row.includes(":")) {
+                    inBlock = true; continue;
+                }
+
+                if (inBlock) {
+                    if (row.includes("|")) {
+                        let parts = db[i].split("|");
+                        return isRight ? parts[1].trim() : parts[0].trim();
+                    }
+                    // Nếu gặp tên lá khác thì thoát block
+                    if (row.includes(":") && !row.includes(searchName)) inBlock = false;
+                }
+            }
+        }
+        return null;
+    }
+
+    function solve06() {
+        let raw = [
+            document.getElementById('i1').value.trim(),
+            document.getElementById('i2').value.trim(),
+            document.getElementById('i3').value.trim(),
+            document.getElementById('i4').value.trim()
+        ].filter(x => x !== "");
+
+        // Gom nhóm các lá cùng loại (Bỏ Đ/N để đếm số lượng)
+        let groups = {};
+        raw.forEach(full => {
+            let nameOnly = full.replace(/ Đ$/i, "").replace(/ N$/i, "").toUpperCase();
+            if (!groups[nameOnly]) groups[nameOnly] = [];
+            groups[nameOnly].push(full.toUpperCase());
+        });
+
+        let output = [];
+
+        for (let name in groups) {
+            let cluster = groups[name];
+            let count = cluster.length;
+            if (count < 2) continue; // Chỉ xử lý từ 2 lá trở lên
+
+            let dCount = cluster.filter(c => c.endsWith(" Đ")).length;
+            let nCount = cluster.filter(c => c.endsWith(" N")).length;
+            let result = "";
+
+            if (count === 4) {
+                if (dCount === 4) result = findTextInPart("PHẦN 1", name, false);
+                else if (nCount === 4) result = findTextInPart("PHẦN 1", name, true);
+                else if (dCount === 3) result = findTextInPart("PHẦN 2", name, false);
+                else if (nCount === 3) result = findTextInPart("PHẦN 2", name, true);
+            } 
+            else if (count === 3) {
+                if (dCount === 3) result = findTextInPart("PHẦN 3", name, false);
+                else if (nCount === 3) result = findTextInPart("PHẦN 3", name, true);
+                else if (dCount === 2) result = findTextInPart("PHẦN 4", name, false);
+                else if (nCount === 2) result = findTextInPart("PHẦN 4", name, true);
+            }
+            else if (count === 2) {
+                if (dCount === 2) result = findTextInPart("PHẦN 5", name, false);
+                else if (nCount === 2) result = findTextInPart("PHẦN 5", name, true);
+            }
+
+            if (result) {
+                output.push(`NHÓM ${count} LÁ ${name}:\n=> ${result}`);
+            } else {
+                output.push(`NHÓM ${count} LÁ ${name}:\n=> (Chưa có dữ liệu phối hợp Đ/N trong thư viện)`);
+            }
+        }
+
+        document.getElementById('result-box').innerText = output.length > 0 ? output.join("\n\n---\n\n") : "Không tìm thấy bộ 2, 3 hoặc 4 lá đồng giá trị.";
+    }
+
+    function copyRes() {
+        const text = document.getElementById('result-box').innerText;
+        if (!text) return;
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert("Đã sao chép kết quả!");
+    }
+</script>
+
+</body>
+</html>
