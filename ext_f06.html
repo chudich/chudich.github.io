@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TRUY XUẤT 06 - CHUẨN DATA</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #cfd8dc; }
+        .box { max-width: 100%; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h2 { text-align: center; color: #1a237e; border-bottom: 4px solid #ff8f00; padding-bottom: 10px; }
+        input { width: 100%; padding: 18px; margin-bottom: 10px; border: 3px solid #90a4ae; border-radius: 10px; font-size: 24px; font-weight: bold; box-sizing: border-box; background: #fffde7; }
+        #res { margin-top: 20px; padding: 15px; border: 5px solid #1a237e; border-radius: 12px; min-height: 250px; white-space: pre-wrap; background: #fafafa; font-size: 24px; line-height: 1.5; font-weight: bold; color: #b71c1c; }
+        button { width: 100%; padding: 22px; font-size: 22px; font-weight: bold; border: none; border-radius: 12px; color: #fff; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .b-run { background: #1a237e; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>TRUY XUẤT 06 - FIXED DATA</h2>
+    <input type="text" id="v1" placeholder="Form 1">
+    <input type="text" id="v2" placeholder="Form 2">
+    <input type="text" id="v3" placeholder="Form 3">
+    <input type="text" id="v4" placeholder="Form 4">
+    
+    <button class="b-run" onclick="xu_ly()">TÌM Ý NGHĨA</button>
+    
+    <div id="res"></div>
+</div>
+
+<script>
+    // DÁN DỮ LIỆU CỦA BẠN VÀO ĐÂY
+    const DATA_06 = `
+PHẦN 1 : 4 LÁ CÙNG TRẠNG THÁI
+4 NGỰA TRẮNG : Ách ngoài đàng mang vào cổ | Đừng ham của rẻ.
+4 NGỰA ĐỎ : Hạnh phúc thoảng qua có thể điên đầu | Kẻ tình địch đang giăng lưới.
+4 CHỐT XANH : Khổ tâm vì con cái | Mang nhiều tai tiếng vì gia đình.
+    `;
+
+    function tim_data(phan, ten_la, ve_phai) {
+        const lines = DATA_06.split('\n');
+        let trong_phan = false;
+        let search = ten_la.toUpperCase().trim();
+
+        for (let i = 0; i < lines.length; i++) {
+            let row = lines[i].trim().toUpperCase();
+            if (!row) continue;
+
+            if (row.includes("PHẦN") && row.includes(phan.toUpperCase())) {
+                trong_phan = true; continue;
+            }
+            if (trong_phan && row.startsWith("PHẦN") && !row.includes(phan.toUpperCase())) {
+                trong_phan = false;
+            }
+
+            if (trong_phan) {
+                // TÌM DÒNG CHỨA TÊN LÁ (VD: 4 NGỰA ĐỎ)
+                if (row.includes(search) && row.includes(":")) {
+                    let full_text = "";
+                    
+                    // Kiểm tra xem dữ liệu nằm cùng dòng hay dòng dưới
+                    if (row.includes("|")) {
+                        full_text = lines[i].trim(); // Lấy ngay tại dòng đó
+                    } else {
+                        full_text = lines[i+1] ? lines[i+1].trim() : ""; // Lấy dòng dưới
+                    }
+
+                    if (full_text.includes("|")) {
+                        let content = full_text.split(":")[1] || full_text;
+                        let parts = content.split("|");
+                        return ve_phai ? parts[1].trim() : parts[0].trim();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    function xu_ly() {
+        let inputs = [document.getElementById('v1').value.trim(), document.getElementById('v2').value.trim(), document.getElementById('v3').value.trim(), document.getElementById('v4').value.trim()].filter(x => x !== "");
+        let groups = {};
+        inputs.forEach(v => {
+            let name = v.replace(/ [ĐN]$/i, "").toUpperCase().trim();
+            if (!groups[name]) groups[name] = [];
+            groups[name].push(v.toUpperCase());
+        });
+
+        let out = [];
+        for (let name in groups) {
+            let list = groups[name];
+            let n = list.length;
+            if (n < 2) continue;
+
+            let d = list.filter(x => x.endsWith(" Đ")).length;
+            let ng = list.filter(x => x.endsWith(" N")).length;
+            let val = "";
+
+            if (n === 4) {
+                if (d === 4) val = tim_data("PHẦN 1", name, false);
+                else if (ng === 4) val = tim_data("PHẦN 1", name, true);
+                else if (d === 3) val = tim_data("PHẦN 2", name, false);
+                else if (ng === 3) val = tim_data("PHẦN 2", name, true);
+            } else if (n === 3) {
+                if (d === 3) val = tim_data("PHẦN 3", name, false);
+                else if (ng === 3) val = tim_data("PHẦN 3", name, true);
+                else if (d === 2) val = tim_data("PHẦN 4", name, false);
+                else if (ng === 2) val = tim_data("PHẦN 4", name, true);
+            } else if (n === 2) {
+                if (d === 2) val = tim_data("PHẦN 5", name, false);
+                else if (ng === 2) val = tim_data("PHẦN 5", name, true);
+            }
+            out.push(`NHÓM ${n} LÁ ${name}:\n=> ${val || "KHÔNG THẤY DỮ LIỆU"}`);
+        }
+        document.getElementById('res').innerText = out.join("\n\n---\n\n");
+    }
+</script>
+</body>
+</html>
