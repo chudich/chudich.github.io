@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HỆ THỐNG TRÍCH XUẤT 05 - LÁ ĐỨNG (Đ) & NGƯỢC (N)</title>
+    <style>
+        :root { --mau-chinh: #1b5e20; --mau-nen: #f1f8e9; --mau-o-nhap: #fffde7; }
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #e0e0e0; }
+        .wrapper { max-width: 100%; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        h2 { text-align: center; color: var(--mau-chinh); font-size: 24px; margin-bottom: 20px; text-transform: uppercase; line-height: 1.4; }
+        
+        .form-row { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 20px; margin-bottom: 8px; color: #333; }
+        input { 
+            width: 100%; padding: 18px; border: 3px solid #757575; border-radius: 12px; 
+            font-size: 24px; font-weight: bold; box-sizing: border-box; background: var(--mau-o-nhap); 
+        }
+        input:focus { border-color: var(--mau-chinh); outline: none; }
+
+        #output { 
+            margin-top: 25px; padding: 15px; border: 4px solid var(--mau-chinh); border-radius: 12px; 
+            min-height: 300px; white-space: pre-wrap; background: #fff; 
+            font-size: 22px; line-height: 1.6; font-weight: bold; color: #000;
+        }
+
+        .btn-container { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        button { 
+            padding: 22px; font-size: 22px; font-weight: bold; border: none; 
+            border-radius: 12px; color: #fff; text-transform: uppercase; cursor: pointer;
+        }
+        .btn-search { background: var(--mau-chinh); box-shadow: 0 4px #0d3b10; }
+        .btn-copy { background: #1565c0; box-shadow: 0 4px #0d47a1; }
+        button:active { transform: translateY(4px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h2>DÒ Ý NGHĨA FILE 05<br><small style="font-size: 14px; color: #666;">(Lá Đứng gặp lá Ngược)</small></h2>
+    
+    <div class="form-row"><label>Form 1 (Lá 1):</label><input type="text" id="f1" class="in-card" placeholder="Ví dụ: TƯỚNG XANH Đ"></div>
+    <div class="form-row"><label>Form 2 (Lá 2):</label><input type="text" id="f2" class="in-card"></div>
+    <div class="form-row"><label>Form 3 (Lá 3):</label><input type="text" id="f3" class="in-card"></div>
+    <div class="form-row"><label>Form 4 (Lá 4):</label><input type="text" id="f4" class="in-card"></div>
+
+    <div class="btn-container">
+        <button class="btn-search" onclick="thucHienTruyVan()">TÌM Ý NGHĨA</button>
+        <button class="btn-copy" onclick="copyKetQua()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="output"></div>
+</div>
+
+<script>
+    // THƯ VIỆN DATA FILE 05 (Dán dữ liệu thực tế của bạn vào đây)
+    const DATA_FILE_05 = `
+TƯỚNG XANH Đ :
+Gặp TƯỚNG XANH N : Gặp kẻ nhiều thủ đoạn tranh giành địa vị | Công việc bị xáo trộn vì kẻ tranh cạnh
+Gặp SĨ XANH N : Quyền lợi bị lủng đoạn | Gia đình xào xáo
+Gặp TƯỢNG XANH N : Có hội hè nhiều thắng lợi cho doanh nghiệp | Cuộc thương thảo có nhiều thuận lợi
+
+TƯỚNG ĐỎ Đ :
+Gặp TƯỚNG ĐỎ N : Ý nghĩa Trái của Tướng Đỏ | Ý nghĩa Phải của Tướng Đỏ
+text aaaaaaa
+    `;
+
+    function findData05(laChu, laGap, gapNamBenPhai) {
+        const db = DATA_FILE_05.split('\n');
+        let currentChuBlock = "";
+        let targetChu = laChu.toUpperCase().trim();
+        let targetGap = "GẶP " + laGap.toUpperCase().trim();
+
+        for (let i = 0; i < db.length; i++) {
+            let row = db[i].trim().toUpperCase();
+            if (!row) continue;
+
+            // 1. Nhận diện tiêu đề nhóm (Lá Đứng :)
+            if (row.includes(":") && !row.startsWith("GẶP")) {
+                if (row.includes(targetChu)) {
+                    currentChuBlock = targetChu;
+                    continue;
+                } else {
+                    currentChuBlock = ""; // Gặp nhóm khác thì thoát
+                }
+            }
+
+            // 2. Tìm dòng "Gặp" trong nhóm đã xác định
+            if (currentChuBlock === targetChu && row.startsWith(targetGap)) {
+                let textHau = db[i].split(":")[1] || "";
+                let vế = textHau.split("|");
+                if (vế.length >= 2) {
+                    return gapNamBenPhai ? vế[1].trim() : vế[0].trim();
+                } else {
+                    return vế[0].trim();
+                }
+            }
+        }
+        return null;
+    }
+
+    function thucHienTruyVan() {
+        const la = [
+            document.getElementById('f1').value.trim(),
+            document.getElementById('f2').value.trim(),
+            document.getElementById('f3').value.trim(),
+            document.getElementById('f4').value.trim()
+        ];
+
+        let ketQua = [];
+
+        // Duyệt 3 cặp cạnh nhau: (1-2), (2-3), (3-4)
+        for (let i = 0; i < 3; i++) {
+            let A = la[i];
+            let B = la[i+1];
+            if (!A || !B) continue;
+
+            let result = "";
+
+            // Kiểm tra A là ĐỨNG (Đ) và B là NGƯỢC (N)
+            if (A.toUpperCase().includes("Đ") && B.toUpperCase().includes("N")) {
+                result = findData05(A, B, true); // B nằm bên phải A
+            } 
+            // Hoặc kiểm tra B là ĐỨNG (Đ) và A là NGƯỢC (N)
+            else if (B.toUpperCase().includes("Đ") && A.toUpperCase().includes("N")) {
+                result = findData05(B, A, false); // A nằm bên trái B
+            }
+
+            if (result) {
+                ketQua.push(`Cặp ${i+1} (${A} - ${B}):\n=> ${result}`);
+            } else {
+                ketQua.push(`Cặp ${i+1} (${A} - ${B}):\n=> (Không tìm thấy dữ liệu phù hợp quy ước Đ-N)`);
+            }
+        }
+
+        document.getElementById('output').innerText = ketQua.join("\n\n--------------------\n\n");
+    }
+
+    function copyKetQua() {
+        const text = document.getElementById('output').innerText;
+        if (!text) return;
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        alert("Đã sao chép vào Clipboard!");
+    }
+</script>
+
+</body>
+</html>
