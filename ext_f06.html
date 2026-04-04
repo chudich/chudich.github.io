@@ -27,14 +27,202 @@
 <script>
     // DÁN DỮ LIỆU THẬT CỦA BẠN VÀO ĐÂY
     const DATA_GOC = `
-PHẦN 1 : 
-4 TƯỚNG XANH : Text A (4 Đứng) | Text A (4 Ngược)
-PHẦN 2 : 
-4 TƯỚNG XANH : Text B (3 Đ - 1 N) | Text B (3 N - 1 Đ)
-PHẦN 3 : 
-3 TƯỚNG XANH : Text C (3 Đứng) | Text C (3 Ngược)
-PHẦN 4 : 
-3 TƯỚNG XANH : Text D (2 Đ - 1 N) | Text D (2 N - 1 Đ)
+4 LÁ BÀI ĐỒNG GIÁ TRỊ CÙNG MÀU GẶP NHAU
+PHẦN 1 : 4 Lá cùng giá trị , cùng màu gặp nhau chia làm 2 trường hợp 4 lá cùng vị trí Đứng ( Đ ) và 4 lá cùng vị trí Ngược ( N )
+4 TƯỚNG XANH : Cuộc gặp gỡ tuyệt vời. Công danh không hẹn gặp gỡ mà nên | Được sự đỡ đầu đắc lực, danh phân kèm hôn nhân.
+4 TƯỚNG VÀNG : Sự nghiệp rỡ ràng lúc tuổi còn trẻ | Phá sản, tiêu tan địa vị.
+4 TƯỚNG TRẮNG : Mây mù bao phủ khắp vòm trời, tìm chỗ đục kẻo gặp giông bão | Địa vị được củng cố một cách kỳ lạ ngoài ý muốn.
+4 TƯỚNG ĐỎ : Hôn nhân giàu đầy dẫy hạnh phúc, sung túc và thịnh vượng | Đổ vỡ trong đêm tân hôn.
+4 SĨ XANH : Người đàn bà giàu, từ thiện nhưng không con, tận tình nâng đỡ như con ruột | Gặp sự đương đầu vô lý của người đàn bà đanh ác.
+4 SĨ VÀNG : Sự nghiệp to tát bỗng nhiên được đưa tận tay | Hoạnh tài to.
+4 SĨ TRẮNG : Ác mộng qua rồi, lo gì không hạnh phúc | Đoàn tụ gia đình, con cái nên danh.
+4 SĨ ĐỎ : Mọi chướng ngại đều lùi bước | Người bạn tốt tính chuyện vầy duyên cang lệ.
+4 TƯỢNG XANH : Nổi danh lừng lẫy | Địa vị sớm đến tay.
+4 TƯỢNG VÀNG : Tiền vào như nước lũ | Thành công vững vàng trong sự nghiệp.
+4 TƯỢNG TRẮNG : Tai họa bất ngờ khó tránh | Có quới nhơn bên mình.
+4 TƯỢNG ĐỎ : Hôn nhân rời rã vì hiểu lầm | Có cuộc thăm viếng bất ngờ.
+4 XE XANH : Hãnh diện vì đỗ cao | Phòng bị lôi cuốn vì ham địa vị.
+4 XE VÀNG : Sự nghiệp tăng trưởng | Sụp đổ không hay.
+4 XE TRẮNG : Thất kiện đau đớn | Thắng cuộc rỡ ràng.
+4 XE ĐỎ : Hạnh phúc gia đình, sanh con tốt | Có phản phúc trong thân tộc.
+4 PHÁO XANH : Tin vui từ xa về, mừng khấp khởi | Danh dự bị bôi nhọ.
+4 PHÁO VÀNG : Thắng một vụ tranh chấp tiền bạc | Gia tài lớn sẽ vào tay.
+4 PHÁO TRẮNG : Tang khó không thể tránh | Gặp thầy hay thuốc giỏi.
+4 PHÁO ĐỎ : Tiếng pháo vu quy đưa vào | Lệ cạn dòng, ân tình bạc bẽo.
+4 NGỰA XANH : Thi cử gặp may mắn | Lỡ một cơ hội, mất địa vị.
+4 NGỰA VÀNG : Thử mua số sẽ thấy bất ngờ | Tiền liền với tai.
+4 NGỰA TRẮNG : Phòng kẻ thù lợi hại | Kẻ bị nguyền rủa không còn nữa.
+4 NGỰA ĐỎ : Mừng bạn xưa đang mong đợi | Phản phúc, cạm bẫy, gian ác.
+4 CHỐT XANH : Tin vui vì được cất nhắc | Chán nản vì sự tranh giành địa vị.
+4 CHỐT VÀNG : Chuyện đang tính sắp thành tựu | Phòng kẻ ganh tị nguy hiểm.
+4 CHỐT TRẮNG : Khánh kiệt, bôn đào | Dừng lại kịp lúc.
+4 CHỐT ĐỎ : Đời lên hương sum vầy con cái | Triệu chứng có thai.
+
+PHẦN 2 : 4 Lá cùng giá trị , cùng màu gặp nhau chia làm 2 trường hợp 3 lá ở vị trí Đứng ( Đ ) đi với 1 lá ở vị trí Ngược ( N )  và trường hợp 3 lá cùng vị trí Ngược ( N ) đi cùng với 1 lá ở vị trí Đứng ( Đ )
+Text chữ in hoa là tên các lá : ví dụ “ 4 TƯỚNG XANH “ :
+Text bên TRÁI ( phía trước dấu “ | “ )  là ý nghĩa của 3 lá vị trí ĐỨNG ( ký hiệu Đ ) & 1 lá vị trí NGƯỢC đầu ( ký hiệu N )
+Text bên PHẢI ( phía sau dấu “ | “ ) là ý nghĩa của 3 lá vị trí NGƯỢC đầu ( ký hiệu N ) & 1 lá vị trí ĐỨNG ( ký hiệu Đ )
+Ví dụ cụ thể :
+4 TƯỚNG XANH :
+Công danh còn dài, chầm chậm tiến tới | Danh phận tốt nhưng bị hôn nhân chi phối.
+Công danh còn dài, chầm chậm tiến tới : text này là ý nghĩa của 3 lá vị trí ĐỨNG & 1 lá vị trí NGƯỢC đầu.
+Danh phận tốt nhưng bị hôn nhân chi phối : text này là ý nghĩa của 3 lá vị trí NGƯỢC đầu & 1 lá vị trí ĐỨNG
+
+4 TƯỚNG XANH : Công danh còn dài, chầm chậm tiến tới | Danh phận tốt nhưng bị hôn nhân chi phối.
+4 TƯỚNG VÀNG : Sự nghiệp đến chậm | Phòng mất của to.
+4 TƯỚNG TRẮNG : Nạn tai sẽ gặp quới nhơn trong phút chót | Cẩn thận kẻo danh dự bị bôi nhọ.
+4 TƯỚNG ĐỎ : Duyên thơ mộng nhưng gặp nhiều khổ sở khi nói đến hôn nhân | Đừng liều lĩnh nhắm mắt đưa tay mà ân hận suốt đời.
+4 SĨ XANH : Người ôm mộng đang chờ ngày nên danh | Ghen tuông làm hoen ố danh dự.
+4 SĨ VÀNG : Sự nghiệp bị chi phối | Phá hoại ngay trong gia đình.
+4 SĨ TRẮNG : Phòng bạo bệnh | Thanh toán được món nợ danh dự.
+4 SĨ ĐỎ : Đường còn xa, lắm nỗi gập ghềnh | Một bước tới hai bước lùi, thật khó nghĩ.
+4 TƯỢNG XANH : Thăng địa vị nhờ người đẹp | Thi cử nhiều rủi ít may.
+4 TƯỢNG VÀNG : Tiền vào cửa trước, tiền ra cửa sau | Công việc còn gặp vài ngưng gặp trệ.
+4 TƯỢNG TRẮNG : Phòng khi qua suối, trèo cao | Bệnh xoàng.
+4 TƯỢNG ĐỎ : Người yêu đang có ý sang ngang | Sắp có người mang trầu cau đến.
+4 XE XANH : Có rắc rối trong gia đình, ảnh hưởng đến địa vị | Thay đổi một công việc.
+4 XE VÀNG : Món tiền đang mong, sắp sửa vào | Nên ngừng mọi hoạt động để tránh hậu quả.
+4 XE TRẮNG : Phòng âm mưu lừa tiền | Nên tránh xa những chỗ đông người.
+4 XE ĐỎ : Có sự tranh giành về tình duyên | Buồn rầu vì lỗi hẹn.
+4 PHÁO XANH : Đang khổ vì danh vọng | Lời đùa cợt trở thành sự thật.
+4 PHÁO VÀNG : Bị vu khống vì món tiền | Hứa hẹn khó thực hiện.
+4 PHÁO TRẮNG : Tin buồn từ nơi xa đưa về | Bệnh khó qua.
+4 PHÁO ĐỎ : Hôn nhân bị ngờ vực | Buồn rầu vì tính ngang ngược của người đàn bà.
+4 NGỰA XANH : Được tin về địa vị | Phòng ác ý của kẻ tiểu nhân.
+4 NGỰA VÀNG : Hoạnh tài nhỏ | Có sự tranh giành lợi hại về công việc.
+4 NGỰA TRẮNG : Ách ngoài đàng mang vào cổ | Đừng ham của rẻ.
+4 NGỰA ĐỎ : Hạnh phúc thoảng qua có thể điên đầu | Kẻ tình địch đang giăng lưới.
+4 CHỐT XANH : Khổ tâm vì con cái | Mang nhiều tai tiếng vì gia đình.
+4 CHỐT VÀNG : Tin vui về việc làm | Phòng mất sở.
+4 CHỐT TRẮNG : Đừng đi sâu vào trụy lạc | Đừng tin kẻ hay rủ ren.
+4 CHỐT ĐỎ : Phòng tranh tụng vì một chữ tình | Có cãi vã với người cận lân.
+Phần 3 : 3 lá cùng giá trị , cùng màu gặp nhau chia làm 2 trường hợp { 3 lá cùng vị trí Đứng ( Đ ) gặp nhau & 3 lá cùng vị trí Ngược ( N ) gặp nhau }
+PHẦN 3 : 3 Lá cùng giá trị , cùng màu gặp nhau chia làm 2 trường hợp { 3 lá cùng ở vị trí Đứng ( Đ ) và trường hợp 3 lá cùng vị trí Ngược ( N ) }
+BA LÁ CÙNG MÀU GẶP NHAU
+Quy ước đọc text :
+Text ở trên : ( 3 LÁ AAA )
+Text bên dưới :
+Text phía bên TRÁI ( trước dấu | ) là ứng với 3 LÁ AAA vị trí ĐỨNG ( ký hiệu là Đ ) gặp nhau
+Text phía bên PHẢI ( sau dấu | ) là ứng với 3 LÁ AAA vị trí NGƯỢC đầu ( ký hiệu là N ) gặp nhau
+Ví dụ cụ thể : 
+3 LÁ BÀI ĐỒNG GIÁ TRỊ CÙNG MÀU GẶP NHAU
+
+3 TƯỚNG XANH :
+Thỏa mãn hoàn toàn trong ước vọng | Hy vọng đạt thành trong ngày gần.
+
+Thỏa mãn hoàn toàn trong ước vọng => text này là ý nghĩa của 3 lá TƯỚNG XANH Đứng ( Đ ) gặp nhau
+Hy vọng đạt thành trong ngày gần => text này là ý nghĩa của 3 lá TƯỚNG XANH NGƯỢC đầu ( Đ )  gặp nhau
+
+3 TƯỚNG XANH : Thỏa mãn hoàn toàn trong ước vọng | Hy vọng đạt thành trong ngày gần.
+3 TƯỚNG VÀNG : Sự nghiệp được củng cố thêm | Tiền không mong mà được.
+3 TƯỚNG TRẮNG : Mọi sự hùn hạp nên chấm dứt | Sóng gió chỉ tạm dừng trong giai đoạn.
+3 TƯỚNG ĐỎ : Duyên thơ mộng nhưng phải trải nhiều cay đắng | Đừng nghĩ đến hôn nhân là thượng sách.
+3 SĨ XANH : Vài tia sáng về địa vị | Buồn rầu cũng vậy thôi.
+3 SĨ VÀNG : Tiền chưa phải tuyệt vọng, nên cố gắng thêm | Thất bại dồn dập, đừng liều lĩnh.
+3 SĨ TRẮNG : Thất bại ê chề trước cuộc tranh chấp | Đình hoãn lại kiện tụng để được yên thân.
+3 SĨ ĐỎ : Hôn nhân còn xa nên bằng lòng với hiện tại | Chậm trễ nhưng vẫn còn hy vọng.
+3 TƯỢNG XANH : Được một việc này mất một việc khác | Do dự là nơi xuống vũng lầy.
+3 TƯỢNG VÀNG : Tiền bạc vào tay nhờ xê dịch | Đừng mơ nhiều, khi việc chưa thành.
+3 TƯỢNG TRẮNG : Gặp kẻ đanh ác, đừng nên nói nghĩa nhân | Ba lần gượng lên ba lần chìm xuống.
+3 TƯỢNG ĐỎ : Duyên tình cờ thắm thía | Tốt hơn nên quay về với gia đình.
+3 XE XANH : Địa vị chưa tìm thấy | Công danh chỉ là thứ bánh vẽ.
+3 XE VÀNG : Cuộc du lịch thắng lợi | "Chuyến đi gặp trắc trở, hao tốn tiền bạc"
+3 XE TRẮNG : Phòng tai nạn nguy hiểm | "Sức khỏe hồi phục, tai qua nạn khỏi"
+3 XE ĐỎ : Được tin vui về bạn cũ | "Bạn cũ mang đến phiền phức không đáng có"
+3 PHÁO XANH : Chấm dứt một mối thù | "Hận thù dai dẳng, tiểu nhân rập rình"
+3 PHÁO VÀNG : Có kẻ rình rập, phòng mất của | "Của cải dồi dào, không sợ kẻ gian"
+3 PHÁO TRẮNG : Lệ tràn đôi mi | "Nỗi buồn vơi đi, tâm hồn thanh thản"
+3 PHÁO ĐỎ : Vu qui chưa hẳn hoàn toàn hạnh phúc | "Hôn nhân vẹn tròn, trăm năm hạnh phúc"
+3 NGỰA XANH : Thành công nhỏ về một vấn đề | "Thất bại đáng tiếc ngay phút cuối"
+3 NGỰA VÀNG : Kết quả đột ngột | "Kết quả đến chậm, đòi hỏi kiên nhẫn"
+3 NGỰA TRẮNG : Mọi tiến thủ đều bất lợi | "Càng xông xáo càng dễ gặp thời cơ"
+3 NGỰA ĐỎ : Hạnh phúc còn trải thêm giai đoạn thử thách | "Tình cảm rạn nứt vì thiếu sự tin tưởng"
+3 CHỐT XANH : Có người đưa tin đến | "Tin tức bị trì hoãn, chờ đợi trong mỏi mệt”
+3 CHỐT VÀNG : Lợi không đáng kể, đừng ham | Có xáo trộn vì lời châm biếm.
+3 CHỐT TRẮNG : Điều mong đợi đã tiêu tan | Buồn nhiều vì lương tâm cắn rứt.
+3 CHỐT ĐỎ : Gặp gỡ người bạn mới | Tình qua đường ở đầu môi chót lưỡi.
+
+PHẦN 4 : 3 Lá cùng giá trị , cùng màu chia làm 2 trường hợp { 2 lá ở vị trí Đứng ( Đ ) đi cùng 1 lá ở vị trí Ngược ( N ) và trường hợp 2 lá ở vị trí Ngược ( N ) đi cùng 1 lá ở vị trí Đứng ( Đ ) 
+Quy ước :
+Tên lá : AAAA :
+Bên dưới là text , text bên TRÁI ( phía trước dấu “ | “ ) là text mang ý nghĩa của 2 lá vị trí ĐỨNG ( Đ ) & 1 lá vị trí NGƯỢC đầu ( N ) , text bên PHẢI ( phía sau dấu “ | “ ) là text mang ý nghĩa của 2 lá vị trí NGƯỢC đầu ( N ) & 1 lá vị trí ĐỨNG ( Đ )
+Ví dụ cụ thể :
+3 TƯỚNG XANH
+Có tin về công danh, lợi về tiền bạc | Dự tính bị đảo lộn bởi bàn tay đàn bà
+
+Có tin về công danh, lợi về tiền bạc : là text mang ý nghĩa của 2 lá vị trí ĐỨNG ( Đ ) & 1 lá vị trí NGƯỢC đầu ( N )
+Dự tính bị đảo lộn bởi bàn tay đàn bà : là text mang ý nghĩa của 2 lá vị trí NGƯỢC đầu ( N ) & 1 lá vị trí ĐỨNG ( Đ )
+
+3 TƯỚNG XANH : Có tin về công danh, lợi về tiền bạc | Dự tính bị đảo lộn bởi bàn tay đàn bà.
+3 TƯỚNG VÀNG : Vận may đã đến | Mất của không đáng kể.
+3 TƯỚNG TRẮNG : Người đàn ông phỉnh gạt tiền bạc | Có người đến đòi nợ, rắc rối.
+3 TƯỚNG ĐỎ : Hôn nhân thuận chiều | Có ganh tị về duyên nợ.
+3 SĨ XANH : Người đàn bà lợi dụng danh nghĩa mình | Tin mất ăn mất ngủ.
+3 SĨ VÀNG : Gặp khổ sở nơi xa lạ | Có kẻ lân la nguy hiểm.
+3 SĨ TRẮNG : Bất hạnh trong gia đình | Có người mời dự tiệc.
+3 SĨ ĐỎ : Tổn thương trầm trọng về tình duyên | Câu chuyện bất lợi với người thiếu nữ qua đường.
+3 TƯỢNG XANH : Thư nặc danh gây ngờ vực | Phải đương đầu với dã tâm độc ác.
+3 TƯỢNG ĐỎ : Đổ vỡ lúc sắp thành tựu | Mọi hoạt động môi giới đều hỏng.
+3 TƯỢNG TRẮNG : Sức khỏe bị đe dọa | Người bạc tình ngầm ám hại.
+3 TƯỢNG VÀNG : Thưa kiện không đủ yếu tố nên hòa giải | Âm mưu về tình ái.
+3 XE XANH : Người bạn tận tâm giúp đỡ | Thắng lợi giữa cơn sóng gió.
+3 XE VÀNG : Phòng bị lường gạt đồ vật | Đi xa mới có lợi.
+3 XE TRẮNG : Có hò hẹn về đêm | Có người mang thư đến.
+3 XE ĐỎ : Mọi lo liệu về hôn nhân đều bị chối từ | Tin tức sinh đẻ.
+3 PHÁO XANH : Được tin mừng về thi cử | Thắng được đối phương.
+3 PHÁO VÀNG : Công việc bị xáo trộn | Gặp khó khăn.
+3 PHÁO TRẮNG : Địa vị lung lay | Tang khó gần kề.
+3 PHÁO ĐỎ : Được thư tình | Quà yêu đương.
+3 NGỰA XANH : Có thay đổi vị trí | Thành công bấp bênh.
+3 NGỰA VÀNG : Sự liên kết không mang lợi lộc | Thất bại.
+3 NGỰA TRẮNG : Lôi thôi vì cuộc giao dịch | Chuyện kín bị phản bội.
+3 NGỰA ĐỎ : Phòng cạm bẫy ái tình | Tình duyên chia rẽ.
+3 CHỐT XANH : Nhận được tin bất an | Địa vị bị dòm ngó.
+3 CHỐT VÀNG : Thành công giả tạo | Dối trá trong việc hợp tác.
+3 CHỐT TRẮNG : Mất của lúc đi đường | Tai vạ đến bất ngờ.
+3 CHỐT ĐỎ : Tình cảm bị dao động | Có kẻ xỏ xiên về hôn nhân.
+
+PHẦN 5 : HAI LÁ GẶP NHAU , đây là trường hợp 2 lá cùng giá trị cùng màu ở 2 tình huống ( 2 lá cùng vị trí Đứng ( Đ ) và 2 lá cùng vị trí Ngược ( N )
+Quy ước đọc text :
+Text ở trên : 2 LÁ AAA :
+Text bên dưới :
+Text phía bên TRÁI ( trước dấu | ) là ứng với 2 LÁ AAA vị trí ĐỨNG ( ký hiệu là Đ ) gặp nhau
+Text phía bên PHẢI ( sau dấu | ) là ứng với 2 LÁ AAA vị trí NGƯỢC đầu ( ký hiệu là N ) gặp nhau
+Ví dụ cụ thể :
+2 LÁ BÀI ĐỒNG GIÁ TRỊ CÙNG MÀU GẶP NHAU
+2 TƯỚNG XANH :
+Cuộc giao thiệp nhiều hứa hẹn | Khổ lụy sau cuộc vui.
+Cuộc giao thiệp nhiều hứa hẹn => text này là ý nghĩa của 2 lá cùng màu vị trí ĐỨNG ( Đ ) gặp nhau.
+Khổ lụy sau cuộc vui => text này là ý nghĩa của 2 lá cùng màu vị trí NGƯỢC đầu ( Đ ) gặp nhau.
+
+2 TƯỚNG XANH : Cuộc giao thiệp nhiều hứa hẹn | Khổ lụy sau cuộc vui.
+2 TƯỚNG VÀNG : Gặp bạn mới | Có phiền phức trong công việc.
+2 TƯỚNG TRẮNG : Nguy cơ nặng nề | Nhiều khổ tâm.
+2 TƯỚNG ĐỎ : Kết quả vui vẻ về tình duyên | Hậu quả của cuộc ái ân thầm lén.
+2 SĨ XANH : Chấm dứt một mưu toan | Buồn bã liên miên.
+2 SĨ VÀNG : Hưởng gia tài hoặc tiền thưởng | Một kẻ xấu đi qua, một kẻ xấu khác đến.
+2 SĨ TRẮNG : Bất lợi mọi mặt | Khổ tâm vì gia đình.
+2 SĨ ĐỎ : Ý trung nhân nhiều thân thế và địa vị | Cô độc, buồn rầu vì tình.
+2 TƯỢNG XANH : Có cuộc vận động che chở | Hy vọng khó thành.
+2 TƯỢNG VÀNG : Có di chúc | Có sự chống đối về tài sản.
+2 TƯỢNG TRẮNG : Qua một khổ sở gặp một khổ sở khác | Tin, thư tuyệt giao.
+2 TƯỢNG ĐỎ : Tình cảm được xoa dịu | Tình duyên ngang trái.
+2 XE XANH : Có cuộc thăm viếng về địa vị | Tin không được may mắn về cuộc vận động.
+2 XE VÀNG : Tiền bạc vào bằng cuộc đen đỏ | Thất bại theo liền thành công.
+2 XE TRẮNG : Có tổn hại vì xấu bụng | Lợi không đáng kể.
+2 XE ĐỎ : Gặp người đẹp dễ mến | Nên để ý lời nịnh bợ.
+2 PHÁO XANH : Một cuộc hợp tác nhiều ý nghĩa | Một sự nguy ngập.
+2 PHÁO VÀNG : Có đề nghị về tiền bạc | Mất tiền hoặc của quý.
+2 PHÁO TRẮNG : Tiền cho vay hoặc cho mượn bị mất | Có thù nghịch.
+2 PHÁO ĐỎ : Có sanh con hoặc duyên mới | Giận dữ vì mắc lừa.
+2 NGỰA XANH : Có đề nghị hữu ích | Nhận được giấy tờ không hay.
+2 NGỰA VÀNG : Thịnh vượng nhờ sự giúp đỡ của người đàn bà | Chướng ngại trong công việc.
+2 NGỰA TRẮNG : Có cãi vã, gấu ó | Buồn tủi, rơi lệ căm hờn.
+2 NGỰA ĐỎ : Hạnh phúc ở tầm tay | Tình cảm sứt mẻ.
+2 CHỐT XANH : Tin tức chậm trễ | Lỡ một chuyến đò.
+2 CHỐT VÀNG : Lợi lộc đáng kể | Thất bại nhưng vẫn cứu kịp.
+2 CHỐT TRẮNG : Phá sản, khánh tận | Bất hạnh, tang khó, sụp đổ.
+2 CHỐT ĐỎ : Gặp gỡ bất ngờ nhiều hứa hẹn | Người yêu dứt áo ra đi.
     `;
 
     function lay_du_lieu_tu_phan(soPhan, tieuDeLa, layPhai) {
