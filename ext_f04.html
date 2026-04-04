@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HỆ THỐNG TRÍCH XUẤT 04 - LÁ NGƯỢC (N)</title>
+    <style>
+        :root { --nen: #f4f7f6; --chu-dao: #2e7d32; --nhan: #fff9c4; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 10px; background: var(--nen); color: #333; }
+        .container { max-width: 100%; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); box-sizing: border-box; }
+        h2 { text-align: center; color: var(--chu-dao); font-size: 24px; margin-bottom: 20px; text-transform: uppercase; border-bottom: 2px solid var(--chu-dao); padding-bottom: 10px; }
+        
+        .f-item { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; font-size: 20px; margin-bottom: 8px; color: #1b5e20; }
+        input { 
+            width: 100%; padding: 18px; border: 3px solid #bcbcbc; border-radius: 12px; 
+            font-size: 24px; font-weight: bold; box-sizing: border-box; background: var(--nhan); 
+        }
+        input:focus { border-color: var(--chu-dao); outline: none; background: #fff; }
+
+        #display { 
+            margin-top: 25px; padding: 15px; border: 4px double var(--chu-dao); border-radius: 12px; 
+            min-height: 300px; white-space: pre-wrap; background: #fafafa; 
+            font-size: 22px; line-height: 1.6; font-weight: bold; color: #000;
+        }
+
+        .action-btns { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        button { 
+            padding: 22px; font-size: 22px; font-weight: bold; border: none; 
+            border-radius: 12px; color: #fff; text-transform: uppercase; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-find { background: var(--chu-dao); box-shadow: 0 4px #1b5e20; }
+        .btn-copy { background: #1565c0; box-shadow: 0 4px #0d47a1; }
+        button:active { transform: translateY(4px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>DÒ TÌM Ý NGHĨA FILE 04</h2>
+    
+    <div class="f-item"><label>Lá 1 (Trái):</label><input type="text" id="m1" class="card" placeholder="VD: TƯỚNG ĐỎ N"></div>
+    <div class="f-item"><label>Lá 2:</label><input type="text" id="m2" class="card"></div>
+    <div class="f-item"><label>Lá 3:</label><input type="text" id="m3" class="card"></div>
+    <div class="f-item"><label>Lá 4 (Phải):</label><input type="text" id="m4" class="card"></div>
+
+    <div class="action-btns">
+        <button class="btn-find" onclick="runAnalysis()">TÌM Ý NGHĨA</button>
+        <button class="btn-copy" onclick="copyData()">SAO CHÉP KẾT QUẢ</button>
+    </div>
+
+    <div id="display"></div>
+</div>
+
+<script>
+    // THỨ TỰ PHẨM HÀM (Ưu tiên từ cao xuống thấp)
+    const RANKING = ["TƯỚNG", "SĨ", "TƯỢNG", "XE", "PHÁO", "NGỰA", "CHỐT"];
+
+    // THƯ VIỆN DATA FILE 04 (Dán dữ liệu thực tế vào đây)
+    const DATA_04 = `
+TƯỚNG XANH N :
+Gặp SĨ XANH N : Gièm pha,bêu xấu gây trở ngại làm lung lạc địa vị | Mọi tiến thủ đều nên tiến hành thật dè dặt
+TƯỚNG ĐỎ N :
+Gặp CHỐT ĐỎ N : Có sự ép uổng trong hôn nhân | Tình đầu dang dở vì kém bạc tiền
+SĨ ĐỎ N :
+Gặp CHỐT ĐỎ N : Ý nghĩa Sĩ bên trái Chốt | Ý nghĩa Sĩ bên phải Chốt
+text aaaaaaa
+    `;
+
+    function getRankValue(name) {
+        let n = name.toUpperCase();
+        for (let i = 0; i < RANKING.length; i++) {
+            if (n.includes(RANKING[i])) return i;
+        }
+        return 99;
+    }
+
+    // Hàm truy tìm dữ liệu chuẩn xác
+    function searchLogic(chu, gap, gapIsRight) {
+        const lines = DATA_04.split('\n');
+        let currentChu = "";
+        let targetChu = chu.toUpperCase().trim();
+        let targetGap = "GẶP " + gap.toUpperCase().trim();
+
+        for (let i = 0; i < lines.length; i++) {
+            let rawLine = lines[i].trim();
+            if (!rawLine) continue;
+            let lineUp = rawLine.toUpperCase();
+
+            // 1. Tìm tiêu đề nhóm (Có dấu : và chứa tên Lá Chủ)
+            // Chấp nhận cả "6. NGỰA ĐỎ N :"
+            if (lineUp.includes(":") && !lineUp.startsWith("GẶP")) {
+                if (lineUp.includes(targetChu)) {
+                    currentChu = targetChu;
+                    continue;
+                } else {
+                    currentChu = ""; // Nếu gặp tiêu đề khác thì thoát nhóm
+                }
+            }
+
+            // 2. Nếu đang ở trong đúng nhóm Lá Chủ, tìm dòng Gặp
+            if (currentChu === targetChu && lineUp.startsWith(targetGap)) {
+                let content = rawLine.split(":")[1];
+                if (!content) return null;
+                let parts = content.split("|");
+                // Nếu lá đi kèm nằm bên PHẢI (gapIsRight = true) -> lấy phần sau dấu |
+                return gapIsRight ? (parts[1] ? parts[1].trim() : parts[0].trim()) : parts[0].trim();
+            }
+        }
+        return null;
+    }
+
+    function runAnalysis() {
+        const inputs = [
+            document.getElementById('m1').value.trim(),
+            document.getElementById('m2').value.trim(),
+            document.getElementById('m3').value.trim(),
+            document.getElementById('m4').value.trim()
+        ];
+
+        let finalResults = [];
+
+        // Duyệt 3 cặp (1-2), (2-3), (3-4)
+        for (let i = 0; i < 3; i++) {
+            let A = inputs[i];
+            let B = inputs[i+1];
+            if (!A || !B) continue;
+
+            let resultValue = "";
+
+            // BƯỚC 1: Tìm A làm Chủ, B làm Lá Gặp (B nằm bên Phải A)
+            resultValue = searchLogic(A, B, true);
+
+            // BƯỚC 2: QUYỀN BIẾN (Nếu bước 1 không có)
+            if (!resultValue) {
+                let rankA = getRankValue(A);
+                let rankB = getRankValue(B);
+
+                // Nếu B có phẩm hàm cao hơn hoặc bằng A, tìm B làm Chủ (A nằm bên Trái B)
+                if (rankB <= rankA) {
+                    resultValue = searchLogic(B, A, false);
+                }
+            }
+
+            if (resultValue) {
+                finalResults.push(`Cặp ${i+1} (${A} - ${B}):\n=> ${resultValue}`);
+            } else {
+                finalResults.push(`Cặp ${i+1} (${A} - ${B}):\n=> (Không có dữ liệu phối hợp phù hợp)`);
+            }
+        }
+
+        document.getElementById('display').innerText = finalResults.join("\n\n--------------------\n\n");
+    }
+
+    function copyData() {
+        const res = document.getElementById('display').innerText;
+        if (!res) return;
+        const el = document.createElement('textarea');
+        el.value = res;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert("Đã chép kết quả vào bộ nhớ tạm!");
+    }
+</script>
+
+</body>
+</html>
