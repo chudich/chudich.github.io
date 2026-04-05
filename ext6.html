@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HỆ THỐNG TRUY XUẤT 06 - CHUẨN PHẦN 2 & 3</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 10px; background: #cfd8dc; }
+        .box { max-width: 100%; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        input { width: 100%; padding: 18px; margin-bottom: 10px; border: 3px solid #90a4ae; border-radius: 10px; font-size: 24px; font-weight: bold; box-sizing: border-box; background: #fffde7; }
+        #res { margin-top: 20px; padding: 15px; border: 5px solid #1a237e; border-radius: 12px; min-height: 250px; white-space: pre-wrap; background: #fafafa; font-size: 24px; line-height: 1.5; font-weight: bold; color: #b71c1c; }
+        button { width: 100%; padding: 22px; font-size: 22px; font-weight: bold; border: none; border-radius: 12px; color: #fff; cursor: pointer; text-transform: uppercase; background: #1a237e; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2 style="text-align:center">TRUY XUẤT 06 - FIX PHẦN 2</h2>
+    <input type="text" id="v1" placeholder="Form 1">
+    <input type="text" id="v2" placeholder="Form 2">
+    <input type="text" id="v3" placeholder="Form 3">
+    <input type="text" id="v4" placeholder="Form 4">
+    <button onclick="chay_he_thong()">TRUY XUẤT NGAY</button>
+    <div id="res"></div>
+</div>
+
+<script>
+    // THƯ VIỆN DỮ LIỆU GỐC
+    const THU_VIEN = `
+PHẦN 1 : 
+4 SĨ XANH : Ý nghĩa 4 Đ đứng | Ý nghĩa 4 N ngược
+PHẦN 2 : 
+4 SĨ XANH : Ý nghĩa 3-1 lệch | Ý nghĩa 1-3 lệch
+PHẦN 3 : 
+3 SĨ XANH : Tin vui từ xa (Vế Trái) | Tin buồn (Vế Phải)
+PHẦN 4 : 
+3 SĨ XANH : Ý nghĩa 2-1 lệch | Ý nghĩa 1-2 lệch
+    `;
+
+    function tim_chinh_xac(soPhan, tenLa, layPhai) {
+        const lines = THU_VIEN.split('\n');
+        let trongVung = false;
+        let searchKey = tenLa.toUpperCase().trim();
+
+        for (let i = 0; i < lines.length; i++) {
+            let row = lines[i].trim().toUpperCase();
+            if (!row) continue;
+
+            if (row.startsWith("PHẦN") && row.includes(soPhan.toString())) {
+                trongVung = true;
+                continue;
+            }
+            if (trongVung && row.startsWith("PHẦN") && !row.includes(soPhan.toString())) {
+                trongVung = false;
+            }
+
+            if (trongVung) {
+                if (row.includes(searchKey) && row.includes(":")) {
+                    let content = lines[i].split(":")[1] || "";
+                    if (content.includes("|")) {
+                        let parts = content.split("|");
+                        return layPhai ? parts[1].trim() : parts[0].trim();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    function chay_he_thong() {
+        let inputs = [
+            document.getElementById('v1').value.trim(),
+            document.getElementById('v2').value.trim(),
+            document.getElementById('v3').value.trim(),
+            document.getElementById('v4').value.trim()
+        ].filter(x => x !== ""); 
+
+        let map = {};
+        inputs.forEach(v => {
+            // Tách Name và Ký hiệu Đ/N bằng cách lấy chữ cuối cùng
+            let parts = v.split(" ");
+            let symbol = parts.pop().toUpperCase(); 
+            let name = parts.join(" ").toUpperCase().trim(); 
+            
+            if (!map[name]) map[name] = [];
+            map[name].push(symbol);
+        });
+
+        let ketQua = [];
+        for (let name in map) {
+            let listSymbol = map[name];
+            let tong = listSymbol.length;
+            if (tong < 2) continue;
+
+            let soD = listSymbol.filter(s => s === "Đ").length;
+            let soN = listSymbol.filter(s => s === "N").length;
+            let finalVal = "";
+
+            // --- BỘ QUY TẮC CỨNG: FIX TRỰC TIẾP PHÂN LUỒNG ---
+
+            if (tong === 4) {
+                // ƯU TIÊN 1: Nếu thấy lệch 3-1 hoặc 1-3 -> Bắt buộc vào PHẦN 2
+                if (soD === 3 && soN === 1) {
+                    finalVal = tim_chinh_xac(2, "4 " + name, false);
+                }
+                else if (soN === 3 && soD === 1) {
+                    finalVal = tim_chinh_xac(2, "4 " + name, true);
+                }
+                // ƯU TIÊN 2: Nếu cùng 4-0 -> Vào PHẦN 1
+                else if (soD === 4) {
+                    finalVal = tim_chinh_xac(1, "4 " + name, false);
+                }
+                else if (soN === 4) {
+                    finalVal = tim_chinh_xac(1, "4 " + name, true);
+                }
+            } 
+            else if (tong === 3) {
+                // PHẦN 4: Lệch 2-1 hoặc 1-2
+                if (soD === 2 && soN === 1) finalVal = tim_chinh_xac(4, "3 " + name, false);
+                else if (soN === 2 && soD === 1) finalVal = tim_chinh_xac(4, "3 " + name, true);
+                // PHẦN 3: Cùng 3-0
+                else if (soD === 3) finalVal = tim_chinh_xac(3, "3 " + name, false); 
+                else if (soN === 3) finalVal = tim_chinh_xac(3, "3 " + name, true);  
+            }
+            else if (tong === 2) {
+                if (soD === 2) finalVal = tim_chinh_xac(5, "2 " + name, false);
+                else if (soN === 2) finalVal = tim_chinh_xac(5, "2 " + name, true);
+            }
+
+            ketQua.push(`BỘ ${tong} LÁ ${name}:\n=> ${finalVal || "KHÔNG CÓ DỮ LIỆU"}`);
+        }
+        document.getElementById('res').innerText = ketQua.join("\n\n---\n\n");
+    }
+</script>
+</body>
+</html>
