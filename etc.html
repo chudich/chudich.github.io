@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tứ Sắc Tool</title>
+<style>
+body { font-family: Arial; padding:20px; background:#f5f5f5;}
+input { width:100%; padding:10px; margin:5px 0; font-size:16px;}
+button { padding:10px 20px; font-size:16px; margin-top:10px;}
+.result { background:#fff; padding:15px; margin-top:15px; border-radius:8px;}
+.debug { font-size:13px; color:#555; margin-top:10px;}
+</style>
+</head>
+<body>
+
+<h2>Tool Tứ Sắc</h2>
+
+<label>Form 1:</label>
+<input id="form1" placeholder="VD: 2 CHỐT VÀNG Đ">
+
+<label>Form 2:</label>
+<input id="form2" placeholder="VD: 1 CHỐT VÀNG N">
+
+<button onclick="run()">Xem Kết Quả</button>
+
+<div class="result" id="output"></div>
+<div class="debug" id="debug"></div>
+
+<script>
+
+// ===== DATA =====
+const rawData = `PASTE_DATA_HERE`;
+
+// ===== AUTO FIX INPUT =====
+function normalize(input){
+  if(!input) return null;
+
+  input = input.toUpperCase().trim();
+
+  // sửa ký hiệu
+  input = input.replace(/\bD\b/g,"Đ");
+  input = input.replace(/Đ|D/g,"Đ");
+  input = input.replace(/N|M/g,"N");
+
+  // tách
+  let parts = input.split(" ");
+
+  let so = parseInt(parts[0]);
+  let loai = parts[1];
+  let mau = parts[2];
+  let ky = parts[3];
+
+  if(!so || !loai || !mau || !ky) return null;
+
+  return {
+    count: so,
+    key: `${so} ${loai} ${mau}`,
+    sign: ky
+  };
+}
+
+// ===== PARSE DATA =====
+function parseData(){
+  let data = {};
+  let current = null;
+
+  rawData.split("\n").forEach(line=>{
+    line = line.trim();
+    if(!line) return;
+
+    if(line.startsWith("[SECTION=")){
+      current = line.match(/\d+/)[0];
+      data[current] = {};
+    } else {
+      let [key, val] = line.split(" : ");
+      data[current][key.trim()] = val.trim();
+    }
+  });
+
+  return data;
+}
+
+const DATA = parseData();
+
+// ===== DETECT CASE =====
+function detectCase(f1, f2){
+  let total = f1.count + (f2?.count || 0);
+
+  if(total === 4) return "1";
+  if(total === 3){
+    if(!f2) return "3";
+    return "4";
+  }
+  if(total === 2) return "5";
+
+  return null;
+}
+
+// ===== CHOOSE LEFT RIGHT =====
+function pickText(text, f1, f2){
+  let [left, right] = text.split("|").map(x=>x.trim());
+
+  let d = 0, n = 0;
+
+  [f1, f2].forEach(f=>{
+    if(!f) return;
+    if(f.sign === "Đ") d += f.count;
+    if(f.sign === "N") n += f.count;
+  });
+
+  return d >= n ? left : right;
+}
+
+// ===== MAIN =====
+function run(){
+  let f1 = normalize(document.getElementById("form1").value);
+  let f2 = normalize(document.getElementById("form2").value);
+
+  if(!f1){
+    alert("Form 1 sai format");
+    return;
+  }
+
+  let section = detectCase(f1, f2);
+
+  if(!section){
+    alert("Không xác định được SECTION");
+    return;
+  }
+
+  let key = f1.key;
+  if(f2 && f1.key !== f2.key){
+    key = (f1.count + f2.count) + " " + f1.key.split(" ").slice(1).join(" ");
+  }
+
+  let text = DATA[section][key];
+
+  if(!text){
+    document.getElementById("output").innerHTML = "Không tìm thấy dữ liệu";
+    return;
+  }
+
+  let result = pickText(text, f1, f2);
+
+  document.getElementById("output").innerHTML = "<b>Kết quả:</b><br>" + result;
+
+  document.getElementById("debug").innerHTML =
+    `SECTION: ${section} <br> KEY: ${key}`;
+}
+
+</script>
+
+</body>
+</html>
