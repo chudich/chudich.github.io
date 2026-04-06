@@ -134,12 +134,12 @@
   <div class="form-area">
     <div style="margin-bottom: 20px;">
       <label for="form1">Form 1 (chính):</label>
-      <input type="text" id="form1" placeholder="Ví dụ: 4 TƯỚNG ĐỎ Đ" autocomplete="off">
+      <input type="text" id="form1" placeholder="Ví dụ: 3 TƯỚNG XANH Đ" autocomplete="off">
     </div>
 
     <div>
       <label for="form2">Form 2 (có thể để trống):</label>
-      <input type="text" id="form2" placeholder="Ví dụ: 1 TƯỚNG ĐỎ N" autocomplete="off">
+      <input type="text" id="form2" placeholder="Ví dụ: 1 TƯỚNG XANH N" autocomplete="off">
     </div>
 
     <div class="btn-container">
@@ -152,7 +152,7 @@
 </div>
 
 <script>
-// ==================== THƯ VIỆN DATA (đã nhúng data bạn cung cấp) ====================
+// ==================== THƯ VIỆN DATA ====================
 const LIBRARY_DATA = `
 [SECTION=1]
 4 TƯỚNG XANH : Cuộc gặp gỡ tuyệt vời. Công danh không hẹn gặp gỡ mà nên | Được sự đỡ đầu đắc lực, danh phân kèm hôn nhân.
@@ -309,30 +309,36 @@ const LIBRARY_DATA = `
 function normalizeInput(str) {
   if (!str || !str.trim()) return null;
   let s = str.trim().toUpperCase().replace(/\s+/g, ' ');
-  
-  const match = s.match(/^(\d+)\s+([A-ZÀÁẠÃẦẤẬẪẨÈÉẸẼẺÊỀẾỆỄỂÌÍỊĨỈÒÓỌÕỎÔỒỐỘỖỔÙÚỤŨỦƯỪỨỰỮỬỲÝỴỸỶĐ\s]+?)\s+(XANH|VÀNG|TRẮNG|ĐỎ)\s+(Đ|N)$/);
+
+  // Regex hỗ trợ tên lá có nhiều từ: số + (tên lá nhiều từ) + màu + vị trí
+  const match = s.match(/^(\d+)\s+(.+?)\s+(XANH|VÀNG|TRẮNG|ĐỎ)\s+(Đ|N)$/);
   if (!match) return null;
+
+  const namePart = match[2].trim();
+  // Tên lá phải có ít nhất 1 từ, màu phải là một trong 4 màu
+  if (!namePart || !['XANH','VÀNG','TRẮNG','ĐỎ'].includes(match[3])) return null;
 
   return {
     count: parseInt(match[1]),
-    name: match[2].trim(),
+    name: namePart,        // ví dụ: "TƯỚNG XANH"
     color: match[3],
     position: match[4]
   };
 }
 
 function findMeaning(section, key, useLeft) {
+  // Tìm chính xác key (ví dụ: "4 TƯỚNG XANH" hoặc "3 TƯỢNG VÀNG")
   const regex = new RegExp(`(?:^|\\n)${key}\\s*:\\s*([^\\n|]*?)(?:\\s*\\|\\s*([^\\n]*?))?(?=\\n|$)`, 'i');
   const match = LIBRARY_DATA.match(regex);
   
-  if (!match || !match[1]) return "Không tìm thấy dữ liệu cho lá bài này.";
+  if (!match || !match[1]) return `Không tìm thấy dữ liệu cho "${key}".`;
   
   return useLeft ? match[1].trim() : (match[2] ? match[2].trim() : match[1].trim());
 }
 
 function processInput(form1Str, form2Str) {
   const f1 = normalizeInput(form1Str);
-  if (!f1) return { error: "Form 1 nhập sai định dạng!\n\nĐúng chuẩn: SỐ TÊN_LÁ MÀU VỊ_TRÍ\nVí dụ: 4 TƯỚNG ĐỎ Đ" };
+  if (!f1) return { error: "Form 1 nhập sai định dạng!\n\nĐúng chuẩn: SỐ TÊN_LÁ MÀU VỊ_TRÍ\nVí dụ: 3 TƯỚNG XANH Đ" };
 
   const f2 = form2Str ? normalizeInput(form2Str) : null;
 
@@ -350,31 +356,31 @@ function processInput(form1Str, form2Str) {
   let section, key, useLeft;
 
   if (total === 4) {
-    if (!f2) { // 4-0 → SECTION 1
+    if (!f2) {                    // Tình huống 1: 4-0 → SECTION=1
       section = 1;
       key = `4 ${f1.name} ${f1.color}`;
-      useLeft = f1.position === "Đ";
-    } else { // 3-1 → SECTION 2
+      useLeft = (f1.position === "Đ");
+    } else {                      // Tình huống 2: 3-1 → SECTION=2
       section = 2;
       key = `4 ${f1.name} ${f1.color}`;
-      useLeft = f1.position === "Đ"; // Đ chiếm đa số thì trái
+      useLeft = (f1.position === "Đ");   // 3 Đ thì lấy trái
     }
   } 
   else if (total === 3) {
-    if (!f2) { // 3-0 → SECTION 3
+    if (!f2) {                    // Tình huống 3: 3-0 → SECTION=3
       section = 3;
       key = `3 ${f1.name} ${f1.color}`;
-      useLeft = f1.position === "Đ";
-    } else { // 2-1 → SECTION 4
+      useLeft = (f1.position === "Đ");
+    } else {                      // Tình huống 4: 2-1 → SECTION=4
       section = 4;
       key = `3 ${f1.name} ${f1.color}`;
-      useLeft = f1.position === "Đ"; // 2 Đ thì trái
+      useLeft = (f1.position === "Đ");   // 2 Đ thì lấy trái
     }
   } 
-  else if (total === 2 && !f2) { // 2-0 → SECTION 5
+  else if (total === 2 && !f2) {  // Tình huống 5: 2-0 → SECTION=5
     section = 5;
     key = `2 ${f1.name} ${f1.color}`;
-    useLeft = f1.position === "Đ";
+    useLeft = (f1.position === "Đ");
   }
 
   const meaning = findMeaning(section, key, useLeft);
@@ -387,7 +393,7 @@ function processInput(form1Str, form2Str) {
   };
 }
 
-// Event
+// ====================== XỬ LÝ NÚT ======================
 document.getElementById("btnFind").addEventListener("click", () => {
   const input1 = document.getElementById("form1").value;
   const input2 = document.getElementById("form2").value;
@@ -420,9 +426,9 @@ document.getElementById("btnCopy").addEventListener("click", () => {
   const text = resultDiv.textContent.split("Section")[0].trim();
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById("btnCopy");
-    const oldText = btn.textContent;
+    const old = btn.textContent;
     btn.textContent = "✅ ĐÃ SAO CHÉP";
-    setTimeout(() => btn.textContent = oldText, 1800);
+    setTimeout(() => btn.textContent = old, 1800);
   });
 });
 </script>
